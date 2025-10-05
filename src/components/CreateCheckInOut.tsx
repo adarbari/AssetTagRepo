@@ -249,13 +249,14 @@ export function CreateCheckInOut({
                     </div>
 
                     <div className="space-y-2">
-                      <Label>
+                      <Label htmlFor="expected-return-date">
                         <CalendarIcon className="h-4 w-4 inline mr-2" />
                         Expected Return Date
                       </Label>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
+                            id="expected-return-date"
                             variant="outline"
                             className={cn(
                               "w-full justify-start text-left",
