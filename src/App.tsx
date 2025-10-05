@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { AppSidebar } from "./components/AppSidebar";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { Button } from "./components/ui/button";
@@ -25,7 +25,8 @@ import { ComplianceTracking } from "./components/ComplianceTracking";
 import { Geofences } from "./components/Geofences";
 import { Reports } from "./components/Reports";
 import { Settings } from "./components/Settings";
-import { Alerts } from "./components/alerts/Alerts";
+import { Alerts, AlertsRef } from "./components/alerts/Alerts";
+import { AlertWorkflow } from "./components/alerts/AlertWorkflow";
 import { HierarchicalAlertConfiguration } from "./components/alerts/HierarchicalAlertConfiguration";
 import { HistoricalPlayback } from "./components/HistoricalPlayback";
 import { NotificationPreferencesNew } from "./components/NotificationPreferencesNew";
@@ -77,6 +78,7 @@ export type ViewType =
 
 function AppContent() {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+  const alertsRef = useRef<AlertsRef>(null);
   const [highlightedAsset, setHighlightedAsset] = useState<string | null>(null);
   const [selectedJob, setSelectedJob] = useState<any>(null);
   
@@ -339,10 +341,11 @@ function AppContent() {
       case "alerts":
         return (
           <Alerts 
+            ref={alertsRef}
             initialFilter={undefined}
             onTakeAction={(alert) => {
-              // Handle alert action - could navigate to alert workflow
-              console.log("Alert action taken:", alert);
+              // Navigate to alert workflow
+              navigation.navigateToAlertWorkflow(alert);
             }}
             onNavigateToConfiguration={() => {
               // Handle navigation to alert configuration
@@ -574,6 +577,29 @@ function AppContent() {
             onBack={() => navigation.handleViewChange("asset-details")}
             preselectedAsset={selectedAsset || undefined}
           />
+        );
+      case "alert-workflow":
+        return navigation.selectedAlertForWorkflow ? (
+          <AlertWorkflow 
+            alert={navigation.selectedAlertForWorkflow}
+            onBack={navigation.handleBackFromAlertWorkflow}
+            onActionComplete={async () => {
+              // Refresh alerts to show updated status
+              if (alertsRef.current) {
+                await alertsRef.current.refresh();
+              }
+              // Navigate back to alerts
+              navigation.handleBackFromAlertWorkflow();
+            }}
+          />
+        ) : (
+          <div className="p-8">
+            <h2>Alert Workflow</h2>
+            <p>No alert selected for workflow</p>
+            <Button onClick={() => navigation.handleViewChange("alerts")}>
+              Back to Alerts
+            </Button>
+          </div>
         );
       default:
         return (

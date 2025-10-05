@@ -23,6 +23,7 @@ import {
   MapPinned,
 } from "lucide-react";
 import { toast } from "sonner";
+import { acknowledgeAlert, resolveAlert, executeWorkflowAction } from "../../services/alertService";
 
 interface AlertWorkflowProps {
   alert: Alert;
@@ -373,31 +374,60 @@ export function AlertWorkflow({
 
     setIsProcessing(true);
 
-    // Simulate workflow execution
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      // Execute workflow action using alert service
+      await executeWorkflowAction(
+        alert.id,
+        selectedWorkflow,
+        workflowInput,
+        notes
+      );
 
-    toast.success("Action executed successfully", {
-      description: selectedWorkflowConfig?.label,
-    });
+      toast.success("Action executed successfully", {
+        description: selectedWorkflowConfig?.label,
+      });
 
-    setIsProcessing(false);
-    onActionComplete?.();
+      setIsProcessing(false);
+      onActionComplete?.();
+    } catch (error) {
+      console.error("Failed to execute workflow action:", error);
+      toast.error("Failed to execute action. Please try again.");
+      setIsProcessing(false);
+    }
   };
 
   const handleAcknowledge = async () => {
     setIsProcessing(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    toast.success("Alert acknowledged");
-    setIsProcessing(false);
-    onActionComplete?.();
+
+    try {
+      // Acknowledge alert using alert service
+      await acknowledgeAlert(alert.id, notes);
+
+      toast.success("Alert acknowledged");
+      setIsProcessing(false);
+      onActionComplete?.();
+    } catch (error) {
+      console.error("Failed to acknowledge alert:", error);
+      toast.error("Failed to acknowledge alert. Please try again.");
+      setIsProcessing(false);
+    }
   };
 
   const handleResolve = async () => {
     setIsProcessing(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    toast.success("Alert resolved");
-    setIsProcessing(false);
-    onActionComplete?.();
+
+    try {
+      // Resolve alert using alert service
+      await resolveAlert(alert.id, notes);
+
+      toast.success("Alert resolved");
+      setIsProcessing(false);
+      onActionComplete?.();
+    } catch (error) {
+      console.error("Failed to resolve alert:", error);
+      toast.error("Failed to resolve alert. Please try again.");
+      setIsProcessing(false);
+    }
   };
 
   const getTimeAgo = (timestamp: string) => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useImperativeHandle, forwardRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -25,7 +25,7 @@ import {
   Settings,
   Layers,
 } from "lucide-react";
-import { mockAlerts } from "../../data/mockData";
+import { getAllAlerts, acknowledgeAlert, resolveAlert } from "../../services/alertService";
 import type { Alert, AlertType } from "../../types";
 import { AlertCard } from "../common";
 import { toast } from "sonner";
@@ -41,6 +41,10 @@ interface AlertsProps {
   initialFilter?: AlertFilter;
   onTakeAction?: (alert: Alert) => void;
   onNavigateToConfiguration?: () => void;
+}
+
+export interface AlertsRef {
+  refresh: () => Promise<void>;
 }
 
 const alertTypeIcons: Record<AlertType, any> = {
@@ -99,7 +103,7 @@ const saveUserPreferences = (prefs: any) => {
   }
 };
 
-export function Alerts({ initialFilter, onTakeAction, onNavigateToConfiguration }: AlertsProps) {
+export const Alerts = forwardRef<AlertsRef, AlertsProps>(({ initialFilter, onTakeAction, onNavigateToConfiguration }, ref) => {
   const userPrefs = loadUserPreferences();
   
   const [searchText, setSearchText] = useState(initialFilter?.searchText || "");
@@ -107,9 +111,28 @@ export function Alerts({ initialFilter, onTakeAction, onNavigateToConfiguration 
   const [severityFilter, setSeverityFilter] = useState(initialFilter?.severity || userPrefs.defaultSeverity || "all");
   const [statusFilter, setStatusFilter] = useState(initialFilter?.status || "all");
   const [activeTab, setActiveTab] = useState(initialFilter?.status === "resolved" ? "resolved" : userPrefs.defaultView || "all");
-  const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [activeStatFilter, setActiveStatFilter] = useState<string | null>(null);
   const [groupBy, setGroupBy] = useState<'none' | 'type' | 'severity' | 'asset'>(userPrefs.groupBy || 'none');
+
+  // Load alerts from service
+  useEffect(() => {
+    const loadAlerts = async () => {
+      try {
+        setIsLoading(true);
+        const alertsData = await getAllAlerts();
+        setAlerts(alertsData);
+      } catch (error) {
+        console.error("Failed to load alerts:", error);
+        toast.error("Failed to load alerts");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadAlerts();
+  }, []);
 
   // Update filters when initialFilter changes
   useEffect(() => {
@@ -278,23 +301,52 @@ export function Alerts({ initialFilter, onTakeAction, onNavigateToConfiguration 
 
   const handleQuickAcknowledge = async (alertId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setAlerts(prev =>
-      prev.map(a =>
-        a.id === alertId ? { ...a, status: "acknowledged" as const } : a
-      )
-    );
-    toast.success("Alert acknowledged");
+    
+    try {
+      await acknowledgeAlert(alertId);
+      // Refresh alerts to get updated data
+      const updatedAlerts = await getAllAlerts();
+      setAlerts(updatedAlerts);
+      toast.success("Alert acknowledged");
+    } catch (error) {
+      console.error("Failed to acknowledge alert:", error);
+      toast.error("Failed to acknowledge alert");
+    }
   };
 
   const handleQuickResolve = async (alertId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setAlerts(prev =>
-      prev.map(a =>
-        a.id === alertId ? { ...a, status: "resolved" as const } : a
-      )
-    );
-    toast.success("Alert resolved");
+    
+    try {
+      await resolveAlert(alertId);
+      // Refresh alerts to get updated data
+      const updatedAlerts = await getAllAlerts();
+      setAlerts(updatedAlerts);
+      toast.success("Alert resolved");
+    } catch (error) {
+      console.error("Failed to resolve alert:", error);
+      toast.error("Failed to resolve alert");
+    }
   };
+
+  const handleRefresh = async () => {
+    try {
+      setIsLoading(true);
+      const updatedAlerts = await getAllAlerts();
+      setAlerts(updatedAlerts);
+      toast.success("Alerts refreshed");
+    } catch (error) {
+      console.error("Failed to refresh alerts:", error);
+      toast.error("Failed to refresh alerts");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Expose refresh function to parent components
+  useImperativeHandle(ref, () => ({
+    refresh: handleRefresh,
+  }));
 
   const getTimeAgo = (timestamp: string) => {
     const now = new Date();
@@ -672,4 +724,6 @@ export function Alerts({ initialFilter, onTakeAction, onNavigateToConfiguration 
       </Tabs>
     </div>
   );
-}
+});
+
+Alerts.displayName = "Alerts";

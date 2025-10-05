@@ -126,6 +126,17 @@ export interface Alert {
   suggestedAction?: string;    // Recommended action to take
   autoResolvable?: boolean;    // Can be auto-resolved
   metadata?: Record<string, any>; // Additional alert-specific data
+  // Status update timestamps
+  acknowledgedAt?: string;     // When alert was acknowledged
+  resolvedAt?: string;         // When alert was resolved
+  resolutionNotes?: string;    // Notes added during resolution
+  // Workflow execution history
+  workflowActions?: Array<{
+    action: string;
+    input?: string;
+    notes?: string;
+    executedAt: string;
+  }>;
 }
 
 export interface MaintenanceRecord {
