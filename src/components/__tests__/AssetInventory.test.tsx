@@ -83,7 +83,7 @@ describe('AssetInventory Component - Button Click Tests', () => {
       await user.click(filterDropdown)
 
       // Look for filter options
-      await waitFor(() => {
+      await waitFor(async () => {
         const activeOption = screen.queryByText(/active/i)
         if (activeOption) {
           await user.click(activeOption)

@@ -17,7 +17,7 @@ vi.mock('sonner', () => ({
 
 // Mock getIssueById
 vi.mock('../../data/mockIssueData', () => ({
-  getIssueById: vi.fn().mockResolvedValue(mockIssue)
+  getIssueById: vi.fn()
 }))
 
 describe('EditIssue Component - Button Click Tests', () => {
@@ -29,6 +29,9 @@ describe('EditIssue Component - Button Click Tests', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    // Mock getIssueById implementation
+    const { getIssueById } = require('../../data/mockIssueData')
+    getIssueById.mockResolvedValue(mockIssue)
   })
 
   describe('Navigation and Header Buttons', () => {

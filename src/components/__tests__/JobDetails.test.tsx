@@ -4,7 +4,7 @@ import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { JobDetails } from '../JobDetails'
 import { render } from '../../test/test-utils'
-import { mockJobData } from '../../data/mockJobData'
+import { mockJobs } from '../../data/mockJobData'
 
 // Mock toast
 vi.mock('sonner', () => ({
@@ -16,7 +16,7 @@ vi.mock('sonner', () => ({
 }))
 
 describe('JobDetails Component - Button Click Tests', () => {
-  const mockJob = mockJobData[0]
+  const mockJob = Object.values(mockJobs)[0]
   const mockProps = {
     jobId: mockJob.id,
     onBack: vi.fn(),

@@ -201,7 +201,7 @@ describe('AssetDetails Component - Button Click Tests', () => {
       await user.click(editButton)
 
       // Look for form inputs
-      await waitFor(() => {
+      await waitFor(async () => {
         const nameInput = screen.queryByDisplayValue(mockAsset.name)
         if (nameInput) {
           expect(nameInput).toBeInTheDocument()

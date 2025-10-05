@@ -24,6 +24,10 @@ vi.mock('../../services/configService', () => ({
     assetStatuses: [
       { value: 'active', label: 'Active' },
       { value: 'inactive', label: 'Inactive' }
+    ],
+    assetOwners: [
+      { value: 'owner1', label: 'Owner 1' },
+      { value: 'owner2', label: 'Owner 2' }
     ]
   }),
   fetchAvailableSites: vi.fn().mockResolvedValue([
