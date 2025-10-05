@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
-import { LoadingState, EmptyState, StatsCard, PageHeader, StatusBadge } from "../common";
+import { LoadingState, EmptyState, StatsCard, PageHeader, StatusBadge, PageLayout } from "../common";
 import { useAsyncDataAll } from "../../hooks/useAsyncData";
 import {
   getComplianceRecords,
@@ -112,7 +112,7 @@ export function ComplianceTracking() {
 
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="wide" padding="lg">
       <PageHeader
         title="Compliance Tracking"
         description="Manage certifications, inspections, and regulatory compliance"
@@ -310,6 +310,6 @@ export function ComplianceTracking() {
           </Tabs>
         </CardContent>
       </Card>
-    </div>
+    </PageLayout>
   );
 }

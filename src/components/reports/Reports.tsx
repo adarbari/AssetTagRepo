@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { GenerateReportDialog } from "./GenerateReportDialog";
-import { LoadingState, EmptyState, StatsCard, PageHeader } from "../common";
+import { LoadingState, EmptyState, StatsCard, PageHeader, PageLayout } from "../common";
 import { useAsyncDataAll } from "../../hooks/useAsyncData";
 import {
   getUtilizationData,
@@ -100,7 +100,7 @@ export function Reports() {
   const totalInsuranceSavings = costSavings.reduce((sum, m) => sum + m.insurance, 0);
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="standard" padding="lg">
       <PageHeader
         title="Reports & Analytics"
         description="Insights and performance metrics"
@@ -322,6 +322,6 @@ export function Reports() {
         onOpenChange={setIsReportDialogOpen}
         reportType={selectedReportType}
       />
-    </div>
+    </PageLayout>
   );
 }

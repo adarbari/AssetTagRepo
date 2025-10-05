@@ -13,7 +13,7 @@ import {
 import { Badge } from "../ui/badge";
 import { AlertTriangle, Camera, Upload, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { PageHeader, AssetContextCard } from "../common";
+import { PageHeader, AssetContextCard, PageLayout } from "../common";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "../ui/breadcrumb";
 import { issueTypes, issueSeverities } from "../../data/dropdownOptions";
 import type { Asset } from "../../types";
@@ -78,9 +78,11 @@ export function CreateIssue({
   };
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* Header with Breadcrumbs */}
-      <div className="border-b bg-background px-8 py-4">
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <div className="border-b bg-background px-8 py-4">
         <div className="flex items-center gap-4 mb-4">
           <Button variant="ghost" size="icon" onClick={onBack}>
             <ArrowLeft className="h-5 w-5" />
@@ -105,10 +107,8 @@ export function CreateIssue({
           icon={AlertTriangle}
         />
       </div>
-
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-3xl mx-auto space-y-6">
+      }
+    >
           {/* Asset Info Card */}
           <AssetContextCard
             assetId={assetId}
@@ -254,7 +254,6 @@ export function CreateIssue({
             </div>
           </form>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

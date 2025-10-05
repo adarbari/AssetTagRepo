@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import { Slider } from "../ui/slider";
-import { LoadingState, PageHeader, AlertCard } from "../common";
+import { LoadingState, PageHeader, AlertCard, PageLayout, StatusBadge } from "../common";
 import {
   Table,
   TableBody,
@@ -274,22 +274,6 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
     }
   };
 
-  const getStatusColor = (status: Asset["status"]) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "inactive":
-        return "bg-gray-100 text-gray-700 border-gray-200";
-      case "checked-out":
-        return "bg-purple-100 text-purple-700 border-purple-200";
-      case "in-transit":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "maintenance":
-        return "bg-orange-100 text-orange-700 border-orange-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -380,9 +364,11 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
   }
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* Header */}
-      <div className="border-b bg-background px-8 py-4">
+    <PageLayout 
+      variant="standard" 
+      padding="md"
+      header={
+        <div className="border-b bg-background px-8 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={onBack}>
@@ -405,9 +391,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className={getStatusColor(currentAsset.status)}>
-              {currentAsset.status}
-            </Badge>
+            <StatusBadge status={currentAsset.status} />
             {!isEditMode && (
               <>
                 {/* Conditionally show Check Out button for assets that can be checked out */}
@@ -512,10 +496,8 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
           </div>
         </div>
       </div>
-
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-7xl mx-auto space-y-6">
+      }
+    >
           {/* Quick Stats */}
           <div className="grid gap-4 md:grid-cols-4">
             <Card>
@@ -626,9 +608,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                             </SelectContent>
                           </Select>
                         ) : (
-                          <Badge variant="outline" className={getStatusColor(currentAsset.status)}>
-                            {currentAsset.status}
-                          </Badge>
+                          <StatusBadge status={currentAsset.status} />
                         )}
                       </div>
                       <Separator />
@@ -1483,6 +1463,6 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
         onOpenChange={setIsEditMaintenanceOpen}
         task={selectedMaintenance}
       />
-    </div>
+    </PageLayout>
   );
 }

@@ -3,7 +3,7 @@ import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { StatusBadge, InfoRow } from "../common";
+import { StatusBadge, InfoRow, PageLayout } from "../common";
 import {
   Table,
   TableBody,
@@ -133,7 +133,7 @@ export function Sites({ onSiteClick }: SitesProps) {
   };
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="wide" padding="lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -399,6 +399,6 @@ export function Sites({ onSiteClick }: SitesProps) {
           </Button>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

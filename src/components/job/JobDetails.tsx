@@ -15,7 +15,7 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 import { Progress } from "../ui/progress";
-import { PageHeader } from "../common";
+import { PageHeader, PageLayout, StatusBadge, PriorityBadge } from "../common";
 import {
   Tabs,
   TabsContent,
@@ -81,67 +81,29 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
     });
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "completed":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "planning":
-        return "bg-purple-100 text-purple-700 border-purple-200";
-      case "on-hold":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "cancelled":
-        return "bg-red-100 text-red-700 border-red-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "critical":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "high":
-        return "bg-orange-100 text-orange-700 border-orange-200";
-      case "medium":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "low":
-        return "bg-gray-100 text-gray-700 border-gray-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
 
   return (
-    <div className="h-full flex flex-col">
+    <PageLayout 
+      variant="standard" 
+      padding="md"
+      header={
       <PageHeader
         title={job.name}
         subtitle={job.jobNumber}
+        onBack={onBack}
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <Button onClick={() => onEdit(job)}>
-              <Edit className="h-4 w-4 mr-2" />
-              Edit Job
-            </Button>
-          </div>
+          <Button onClick={() => onEdit(job)}>
+            <Edit className="h-4 w-4 mr-2" />
+            Edit Job
+          </Button>
         }
       />
-
-      <div className="flex-1 overflow-auto p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
+      }
+    >
           {/* Status and Priority Badges */}
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className={getStatusColor(job.status)}>
-              {job.status}
-            </Badge>
-            <Badge variant="outline" className={getPriorityColor(job.priority)}>
-              {job.priority} priority
-            </Badge>
+            <StatusBadge status={job.status} />
+            <PriorityBadge priority={job.priority} />
             {job.hasActiveAlerts && (
               <Badge variant="outline" className="bg-red-100 text-red-700 border-red-200">
                 <AlertTriangle className="h-3 w-3 mr-1" />
@@ -654,7 +616,6 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
             )}
           </Tabs>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

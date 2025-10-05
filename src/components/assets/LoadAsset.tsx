@@ -162,17 +162,12 @@ export function LoadAsset({ onBack, onAssetsLoaded, preselectedVehicleId }: Load
       <PageHeader
         title="Load Assets"
         description="Assign assets to a vehicle for transport or deployment"
+        onBack={onBack}
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Cancel
-            </Button>
-            <Button type="submit" form="load-asset-form">
-              <Truck className="h-4 w-4 mr-2" />
-              Load Assets
-            </Button>
-          </div>
+          <Button type="submit" form="load-asset-form">
+            <Truck className="h-4 w-4 mr-2" />
+            Load Assets
+          </Button>
         }
       />
 

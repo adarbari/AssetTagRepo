@@ -54,8 +54,8 @@ import {
   type MaintenanceHistory as MaintenanceHistoryType,
   type PredictiveAlert,
 } from "../../services/maintenanceService";
-import { LoadingState } from "../common/LoadingState";
-import { AuditLogList, type AuditLogEntry } from "../common";
+import { LoadingState, StatusBadge, PriorityBadge } from "../common";
+import { AuditLogList, PageLayout, type AuditLogEntry } from "../common";
 
 // Data will be loaded from service
 
@@ -285,42 +285,13 @@ export function Maintenance({ onAssetClick }: MaintenanceProps) {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "overdue":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "in-progress":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "scheduled":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "completed":
-        return "bg-gray-100 text-gray-700 border-gray-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "critical":
-        return "bg-red-100 text-red-700 border-red-200";
-      case "high":
-        return "bg-orange-100 text-orange-700 border-orange-200";
-      case "medium":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "low":
-        return "bg-green-100 text-green-700 border-green-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
 
   if (loading) {
     return <LoadingState message="Loading maintenance data..." />;
   }
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="wide" padding="lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -473,14 +444,10 @@ export function Maintenance({ onAssetClick }: MaintenanceProps) {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className={getPriorityColor(task.priority)}>
-                          {task.priority}
-                        </Badge>
+                        <PriorityBadge priority={task.priority} />
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className={getStatusColor(task.status)}>
-                          {task.status}
-                        </Badge>
+                        <StatusBadge status={task.status} />
                       </TableCell>
                       <TableCell className="text-sm">{task.assignedTo}</TableCell>
                       <TableCell onClick={(e) => e.stopPropagation()}>
@@ -703,6 +670,6 @@ export function Maintenance({ onAssetClick }: MaintenanceProps) {
         onOpenChange={setIsAuditLogDialogOpen}
         task={selectedTask}
       />
-    </div>
+    </PageLayout>
   );
 }

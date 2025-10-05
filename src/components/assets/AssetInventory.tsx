@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { EmptyState, StatsCard, Section, StatusBadge, InfoRow, FilterPanel, TableActionMenu, type FilterConfig, type TableAction } from "../common";
+import { EmptyState, StatsCard, Section, StatusBadge, InfoRow, FilterPanel, TableActionMenu, PageLayout, type FilterConfig, type TableAction } from "../common";
 import { ExportDialog } from "../reports/ExportDialog";
 import { EditAssetDialog } from "./EditAssetDialog";
 import {
@@ -289,7 +289,7 @@ export function AssetInventory({ onAssetClick, onNavigateToCreateAsset }: AssetI
   };
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="wide" padding="lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -538,6 +538,6 @@ export function AssetInventory({ onAssetClick, onNavigateToCreateAsset }: AssetI
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageLayout>
   );
 }

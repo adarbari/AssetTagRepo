@@ -33,7 +33,7 @@ import {
   DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { PageHeader, EmptyState, StatsCard } from "../common";
+import { PageHeader, EmptyState, StatsCard, PageLayout } from "../common";
 import {
   AlertTriangle,
   Search,
@@ -131,19 +131,19 @@ export function IssueTracking({
   ).length;
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* Header */}
-      <div className="border-b bg-background px-8 py-6">
-        <PageHeader
-          title="Issue Tracking"
-          description="View and manage all reported asset issues"
-          icon={AlertTriangle}
-        />
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-[1600px] mx-auto space-y-6">
+    <PageLayout 
+      variant="wide" 
+      padding="lg"
+      header={
+        <div className="border-b bg-background px-8 py-6">
+          <PageHeader
+            title="Issue Tracking"
+            description="View and manage all reported asset issues"
+            icon={AlertTriangle}
+          />
+        </div>
+      }
+    >
           {/* Stats Cards */}
           <div className="grid gap-4 md:grid-cols-4">
             <StatsCard
@@ -354,8 +354,6 @@ export function IssueTracking({
               </Tabs>
             </CardContent>
           </Card>
-        </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

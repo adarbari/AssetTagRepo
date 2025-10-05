@@ -11,6 +11,7 @@ import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Switch } from "../ui/switch";
 import { Skeleton } from "../ui/skeleton";
+import { PageLayout, StatusBadge } from "../common";
 import { fetchSiteActivity, getPresetDateRange, type SiteActivityData } from "../../services/api";
 import { GeofenceMapEditor } from "../geofences/GeofenceMapEditor";
 import {
@@ -354,16 +355,6 @@ export function SiteDetails({
     setIsEditing(false);
   };
 
-  const getStatusColor = (status: SiteStatus) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "maintenance":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "inactive":
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
 
   const getEventIcon = (type: string) => {
     switch (type) {
@@ -379,7 +370,7 @@ export function SiteDetails({
   };
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="standard" padding="lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -389,9 +380,7 @@ export function SiteDetails({
           <div>
             <div className="flex items-center gap-3">
               <h1>{isEditing ? editedSite.name : editedSite.name}</h1>
-              <Badge variant="outline" className={getStatusColor(editedSite.status)}>
-                {editedSite.status}
-              </Badge>
+              <StatusBadge status={editedSite.status} />
             </div>
             <p className="text-muted-foreground">{editedSite.id}</p>
           </div>
@@ -1099,6 +1088,6 @@ export function SiteDetails({
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </PageLayout>
   );
 }

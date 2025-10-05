@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
-import { PageHeader } from "../common";
+import { PageHeader, PageLayout } from "../common";
 import { useFormSubmit } from "../../hooks/useFormSubmit";
 import { ArrowLeft, Briefcase } from "lucide-react";
 import { toast } from "sonner";
@@ -120,20 +120,17 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <PageHeader
-        title="Create New Job"
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader
+          title="Create New Job"
         subtitle="Set up a new project with budget allocation and team assignments"
-        actions={
-          <Button variant="outline" onClick={onBack}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-        }
+        onBack={onBack}
       />
-
-      <div className="flex-1 overflow-auto p-6">
-        <div className="max-w-4xl mx-auto">
+      }
+    >
           <form onSubmit={onSubmit} className="space-y-6">
             <Card>
               <CardContent className="p-6">
@@ -208,7 +205,6 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
             </div>
           </form>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

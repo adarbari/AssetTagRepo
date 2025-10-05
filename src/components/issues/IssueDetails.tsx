@@ -19,7 +19,7 @@ import {
   Save
 } from "lucide-react";
 import { toast } from "sonner";
-import { PageHeader, SeverityBadge, StatusBadge, AuditLogList, LoadingState } from "../common";
+import { PageHeader, SeverityBadge, StatusBadge, AuditLogList, LoadingState, PageLayout } from "../common";
 import { getIssueById } from "../../data/mockIssueData";
 import { IssueForm, IssueFormData } from "./IssueForm";
 import { formatAuditDate } from "../../utils/dateFormatter";
@@ -196,9 +196,12 @@ export function IssueDetails({
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <PageHeader 
-        title={`${issue.id} - ${issue.title}`} 
+    <PageLayout 
+      variant="standard" 
+      padding="md"
+      header={
+        <PageHeader 
+          title={`${issue.id} - ${issue.title}`} 
         onBack={onBack}
         description={`Asset: ${issue.assetName} (${issue.assetId})`}
         actions={
@@ -222,9 +225,8 @@ export function IssueDetails({
           </div>
         }
       />
-      
-      <div className="flex-1 overflow-auto p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
+      }
+    >
           {/* Status Badges */}
           <div className="flex gap-2">
             <StatusBadge status={issue.status} />
@@ -385,6 +387,6 @@ export function IssueDetails({
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

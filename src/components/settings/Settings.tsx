@@ -7,7 +7,7 @@ import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
 import { Textarea } from "../ui/textarea";
-import { PageHeader } from "../common";
+import { PageHeader, PageLayout } from "../common";
 import {
   Table,
   TableBody,
@@ -392,7 +392,7 @@ export function Settings() {
   };
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="standard" padding="lg">
       <PageHeader
         title="Settings"
         description="Manage system configuration, users, and integrations"
@@ -1410,6 +1410,6 @@ export function Settings() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageLayout>
   );
 }

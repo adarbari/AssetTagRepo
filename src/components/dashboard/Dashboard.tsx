@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ViewType } from "../App";
 import { AlertFilter } from "../alerts/Alerts";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
-import { LoadingState, StatsCard, Section } from "../common";
+import { LoadingState, StatsCard, Section, PageLayout } from "../common";
+import { useAsyncDataAll } from "../../hooks/useAsyncData";
 import {
   Activity,
   Package,
@@ -53,55 +54,38 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onViewChange, onNavigateToAlerts }: DashboardProps) {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [locationData, setLocationData] = useState<LocationDataPoint[]>([]);
-  const [assetsByType, setAssetsByType] = useState<AssetTypeDistribution[]>([]);
-  const [batteryStatus, setBatteryStatus] = useState<BatteryStatusRange[]>([]);
-  const [recentActivity, setRecentActivity] = useState<RecentActivityType[]>([]);
-  const [alertBreakdown, setAlertBreakdown] = useState<AlertBreakdownType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, loading, error } = useAsyncDataAll({
+    stats: () => getDashboardStats(),
+    locationData: () => getLocationData(),
+    assetsByType: () => getAssetsByType(),
+    batteryStatus: () => getBatteryStatus(),
+    recentActivity: () => getRecentActivity(5),
+    alertBreakdown: () => getAlertBreakdown(),
+  });
 
-  useEffect(() => {
-    async function fetchDashboardData() {
-      try {
-        const [
-          statsData,
-          locData,
-          assetsData,
-          batteryData,
-          activityData,
-          alertsData,
-        ] = await Promise.all([
-          getDashboardStats(),
-          getLocationData(),
-          getAssetsByType(),
-          getBatteryStatus(),
-          getRecentActivity(5),
-          getAlertBreakdown(),
-        ]);
-
-        setStats(statsData);
-        setLocationData(locData);
-        setAssetsByType(assetsData);
-        setBatteryStatus(batteryData);
-        setRecentActivity(activityData);
-        setAlertBreakdown(alertsData);
-      } catch (error) {
-        console.error("Failed to fetch dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchDashboardData();
-  }, []);
-
-  if (loading || !stats) {
+  if (loading) {
     return <LoadingState message="Loading dashboard..." fullScreen />;
   }
 
+  if (error) {
+    return (
+      <div className="p-8">
+        <div className="text-center">
+          <h2 className="text-lg font-semibold text-red-600">Failed to load dashboard</h2>
+          <p className="text-muted-foreground mt-2">{error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  const { stats, locationData, assetsByType, batteryStatus, recentActivity, alertBreakdown } = data;
+
   return (
-    <div className="p-8 space-y-8">
+    <PageLayout variant="standard" padding="lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -345,6 +329,6 @@ export function Dashboard({ onViewChange, onNavigateToAlerts }: DashboardProps) 
           </Card>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

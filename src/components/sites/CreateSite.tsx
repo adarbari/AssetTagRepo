@@ -76,17 +76,12 @@ export function CreateSite({ onBack }: CreateSiteProps) {
       <PageHeader
         title="Create New Site"
         description="Define a new physical site location with boundary configurations"
+        onBack={onBack}
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Cancel
-            </Button>
-            <Button type="submit" form="create-site-form">
-              <Building2 className="h-4 w-4 mr-2" />
-              Create Site
-            </Button>
-          </div>
+          <Button type="submit" form="create-site-form">
+            <Building2 className="h-4 w-4 mr-2" />
+            Create Site
+          </Button>
         }
       />
 

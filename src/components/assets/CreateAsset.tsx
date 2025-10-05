@@ -14,7 +14,7 @@ import { Switch } from "../ui/switch";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
-import { PageHeader, LoadingState } from "../common";
+import { PageHeader, LoadingState, PageLayout } from "../common";
 import { Package, ArrowLeft, X } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -198,26 +198,23 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <PageHeader
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader
         title="Add New Asset"
         description="Register a new asset to the tracking system"
+        onBack={onBack}
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Cancel
-            </Button>
-            <Button type="submit" form="create-asset-form">
-              <Package className="h-4 w-4 mr-2" />
-              Add Asset
-            </Button>
-          </div>
+          <Button type="submit" form="create-asset-form">
+            <Package className="h-4 w-4 mr-2" />
+            Add Asset
+          </Button>
         }
       />
-
-      {/* Form Content */}
+      }
+    >
       <div className="flex-1 overflow-auto p-8">
         <div className="max-w-4xl mx-auto">
           <form id="create-asset-form" onSubmit={handleSubmit} className="space-y-6">
@@ -512,6 +509,6 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
           </form>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

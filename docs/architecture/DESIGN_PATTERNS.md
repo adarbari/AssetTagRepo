@@ -10,8 +10,12 @@ This document captures the established design patterns and UI/UX guidelines used
 4. [Component Structure](#component-structure)
 5. [Button & Action Patterns](#button--action-patterns)
 6. [Data Display Patterns](#data-display-patterns)
-7. [Error Handling](#error-handling)
-8. [Code Organization](#code-organization)
+7. [Filter UI Patterns](#filter-ui-patterns)
+8. [Breadcrumb Usage Guidelines](#breadcrumb-usage-guidelines)
+9. [Tab Usage Patterns](#tab-usage-patterns)
+10. [Max-Width Guidelines](#max-width-guidelines)
+11. [Error Handling](#error-handling)
+12. [Code Organization](#code-organization)
 
 ---
 
@@ -635,5 +639,257 @@ export function DetailPage({ data, onBack, onUpdate }: DetailPageProps) {
   );
 }
 ```
+
+---
+
+## Filter UI Patterns
+
+### Standardized FilterBar Component
+
+**Pattern**: Use the `FilterBar` component for consistent filter UI across all list pages.
+
+```tsx
+import { FilterBar, type FilterConfig } from "../common";
+
+const filters: FilterConfig[] = [
+  {
+    key: "status",
+    label: "Status",
+    options: [
+      { value: "all", label: "All Status" },
+      { value: "active", label: "Active" },
+      { value: "inactive", label: "Inactive" },
+    ],
+    currentValue: statusFilter,
+    onValueChange: setStatusFilter,
+  },
+  {
+    key: "type",
+    label: "Type",
+    options: [
+      { value: "all", label: "All Types" },
+      { value: "equipment", label: "Equipment" },
+      { value: "tools", label: "Tools" },
+    ],
+    currentValue: typeFilter,
+    onValueChange: setTypeFilter,
+  },
+];
+
+<FilterBar
+  searchTerm={searchTerm}
+  onSearchChange={setSearchTerm}
+  searchPlaceholder="Search items..."
+  filters={filters}
+  showAdvancedFilters={showAdvancedFilters}
+  onToggleAdvancedFilters={() => setShowAdvancedFilters(!showAdvancedFilters)}
+  activeFiltersCount={activeFiltersCount}
+  onClearAllFilters={handleClearAllFilters}
+/>
+```
+
+**Key Principles**:
+- First 2 filters shown inline with search
+- Additional filters in collapsible advanced section
+- Active filters displayed as removable badges
+- Clear all filters button when filters are active
+- Consistent search input with icon
+
+### Filter Configuration
+
+**Pattern**: Define filter configurations with consistent structure.
+
+```tsx
+interface FilterConfig {
+  key: string;
+  label: string;
+  placeholder?: string;
+  options: FilterOption[];
+  currentValue: string;
+  onValueChange: (value: string) => void;
+  width?: string;
+}
+```
+
+---
+
+## Breadcrumb Usage Guidelines
+
+### When to Use Breadcrumbs
+
+**Pattern**: Use breadcrumbs for sub-actions from detail pages, not for top-level navigation.
+
+**✅ Correct Usage**:
+- Asset Details → Report Issue
+- Asset Details → Check In/Out
+- Asset Details → Schedule Maintenance
+- Site Details → Create Geofence
+
+**❌ Incorrect Usage**:
+- List Page → Create New Item (use PageHeader with onBack)
+- Dashboard → Any page (use sidebar navigation)
+
+### Breadcrumb Implementation
+
+**Pattern**: Breadcrumbs appear in a separate header section before PageHeader.
+
+```tsx
+<div className="h-screen flex flex-col">
+  {/* Header with Breadcrumbs */}
+  <div className="border-b bg-background px-8 py-4">
+    <div className="flex items-center gap-4 mb-4">
+      <Button variant="ghost" size="icon" onClick={onBack}>
+        <ArrowLeft className="h-5 w-5" />
+      </Button>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink onClick={onBack} className="cursor-pointer">
+              {parentPageName}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Current Action</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
+    <PageHeader
+      title="Current Action"
+      description="Description of current action"
+      icon={ActionIcon}
+    />
+  </div>
+  
+  {/* Content */}
+  <div className="flex-1 overflow-auto p-8">
+    {/* Page content */}
+  </div>
+</div>
+```
+
+---
+
+## Tab Usage Patterns
+
+### When to Use Tabs
+
+**Pattern**: Use tabs for organizing related content within a single page.
+
+**✅ Good Tab Usage**:
+- Detail pages with multiple sections (AssetDetails, SiteDetails, JobDetails)
+- List pages with different status views (IssueTracking, Maintenance)
+- Configuration pages with different categories (Settings)
+
+**❌ Avoid Tabs For**:
+- Simple forms (use single page)
+- Navigation between different pages (use sidebar)
+
+### Tab Implementation
+
+**Pattern**: Consistent tab structure with proper content organization.
+
+```tsx
+<Tabs value={activeTab} onValueChange={setActiveTab}>
+  <TabsList>
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="details">Details</TabsTrigger>
+    <TabsTrigger value="history">History</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="overview" className="space-y-4">
+    {/* Overview content */}
+  </TabsContent>
+  
+  <TabsContent value="details" className="space-y-4">
+    {/* Details content */}
+  </TabsContent>
+</Tabs>
+```
+
+### Tab Content Guidelines
+
+- Use `space-y-4` or `space-y-6` for consistent spacing
+- Keep tab content focused and related
+- Use consistent card layouts within tabs
+- Provide clear visual hierarchy
+
+---
+
+## Max-Width Guidelines
+
+### Page Type Max-Width Standards
+
+**Pattern**: Consistent max-width values based on page type and content.
+
+```tsx
+// Forms and Create/Edit pages
+<div className="max-w-4xl mx-auto">
+  {/* Form content */}
+</div>
+
+// Detail pages with comprehensive information
+<div className="max-w-7xl mx-auto space-y-6">
+  {/* Detail content */}
+</div>
+
+// List/Management pages with tables
+<div className="max-w-[1600px] mx-auto space-y-6">
+  {/* List content */}
+</div>
+
+// Dashboard (full width with internal constraints)
+<div className="p-8 space-y-8">
+  {/* Dashboard content with internal max-widths */}
+</div>
+```
+
+### Max-Width Guidelines by Page Type
+
+| Page Type | Max-Width | Use Case |
+|-----------|-----------|----------|
+| Forms | `max-w-4xl` | Create/Edit forms, simple detail pages |
+| Detail Pages | `max-w-7xl` | Comprehensive detail pages with tabs |
+| List Pages | `max-w-[1600px]` | Tables and data-heavy list pages |
+| Dashboard | Full width | Dashboard with internal card constraints |
+
+### Responsive Considerations
+
+- Use responsive classes: `max-w-4xl mx-auto`
+- Ensure content is readable on all screen sizes
+- Consider mobile-first design principles
+- Use appropriate padding: `p-6` for detail pages, `p-8` for list pages
+
+---
+
+## Component Usage Guidelines
+
+### When to Use Each Generic Component
+
+**PageHeader**: All pages that need a header with title, description, and actions
+**EmptyState**: Empty lists, tables, or content areas
+**LoadingState**: Async operations and data loading
+**StatsCard**: Dashboard summaries and key metrics
+**AssetContextCard**: Asset-related forms and actions
+**FilterBar**: List pages with filtering needs
+**StatusBadge**: Status indicators with consistent colors
+**AuditLogList**: Change history and activity logs
+
+### Component Import Pattern
+
+```tsx
+// Import from common index
+import { 
+  PageHeader, 
+  EmptyState, 
+  LoadingState, 
+  StatsCard,
+  FilterBar,
+  type FilterConfig 
+} from "../common";
+```
+
+---
 
 This document serves as a living guide for maintaining consistency across the application. When adding new features or components, always refer to these patterns to ensure a cohesive user experience.

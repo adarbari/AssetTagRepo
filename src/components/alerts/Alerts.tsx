@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { getAllAlerts, acknowledgeAlert, resolveAlert } from "../../services/alertService";
 import type { Alert, AlertType } from "../../types";
-import { AlertCard } from "../common";
+import { AlertCard, PageLayout } from "../common";
 import { toast } from "sonner";
 
 export interface AlertFilter {
@@ -441,7 +441,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(({ initialFilter, onTak
   }), [alerts]);
 
   return (
-    <div className="p-6 space-y-6">
+    <PageLayout variant="wide" padding="md">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -722,7 +722,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(({ initialFilter, onTak
           {renderAlertsList(resolvedAlerts)}
         </TabsContent>
       </Tabs>
-    </div>
+    </PageLayout>
   );
 });
 

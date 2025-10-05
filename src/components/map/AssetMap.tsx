@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
+import { StatusBadge } from "../common";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
@@ -426,20 +427,6 @@ export function AssetMap({
     }
   };
 
-  const getStatusColor = (status: AssetStatus) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "idle":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "in-transit":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "offline":
-        return "bg-red-100 text-red-700 border-red-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
-    }
-  };
 
   const flyToAsset = (asset: Asset) => {
     if (mapInstanceRef.current) {
@@ -772,9 +759,7 @@ export function AssetMap({
                       </div>
                       <div className="text-xs text-muted-foreground mb-2">{asset.id}</div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className={`${getStatusColor(asset.status)} text-xs`}>
-                          {asset.status}
-                        </Badge>
+                        <StatusBadge status={asset.status} className="text-xs" />
                         <span className="text-xs text-muted-foreground flex items-center gap-1">
                           <Battery className="h-3 w-3" />
                           {asset.battery}%
@@ -843,9 +828,7 @@ export function AssetMap({
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Status:</span>
-                  <Badge variant="outline" className={getStatusColor(selectedAsset.status)}>
-                    {selectedAsset.status}
-                  </Badge>
+                  <StatusBadge status={selectedAsset.status} />
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Battery:</span>

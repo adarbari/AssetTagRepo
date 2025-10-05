@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
-import { StatusBadge, PriorityBadge, StatsCard } from "../common";
+import { StatusBadge, PriorityBadge, StatsCard, PageLayout } from "../common";
 import {
   Select,
   SelectContent,
@@ -138,7 +138,7 @@ export function JobManagement({
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <PageLayout variant="wide" padding="md">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -354,6 +354,6 @@ export function JobManagement({
           </Table>
         </CardContent>
       </Card>
-    </div>
+    </PageLayout>
   );
 }

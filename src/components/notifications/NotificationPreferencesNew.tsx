@@ -48,7 +48,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { ConfigurationInspector } from "../common/ConfigurationInspector";
+import { ConfigurationInspector, PageLayout } from "../common";
 import type {
   NotificationPreferences,
   NotificationLevel,
@@ -282,7 +282,7 @@ export function NotificationPreferencesNew({
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <PageLayout variant="standard" padding="md">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -789,6 +789,6 @@ export function NotificationPreferencesNew({
           </Card>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

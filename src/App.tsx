@@ -144,7 +144,6 @@ function AppContent() {
   };
 
   const renderCurrentView = () => {
-    console.log("Rendering view:", currentView);
     switch (currentView) {
       case "dashboard":
         return (
@@ -376,12 +375,10 @@ function AppContent() {
             jobs={{}}
             onSaveConfig={async (config) => {
               // Handle saving alert configuration
-              console.log("Saving alert config:", config);
               return { success: true };
             }}
             onDeleteConfig={async (level, entityId, alertType) => {
               // Handle deleting alert configuration
-              console.log("Deleting alert config:", level, entityId, alertType);
               return { success: true };
             }}
             onBack={() => navigation.handleViewChange("dashboard")}
@@ -397,17 +394,14 @@ function AppContent() {
             notificationConfigs={{}}
             onSaveConfig={async (config) => {
               // Handle saving notification configuration
-              console.log("Saving notification config:", config);
               return { success: true };
             }}
             onDeleteConfig={async (level, entityId) => {
               // Handle deleting notification configuration
-              console.log("Deleting notification config:", level, entityId);
               return { success: true };
             }}
             onGetConfig={(level, entityId) => {
               // Handle getting notification configuration
-              console.log("Getting notification config:", level, entityId);
               // Return a default configuration with correct structure
               return {
                 id: `${level}-${entityId}`,
@@ -465,13 +459,11 @@ function AppContent() {
             onBack={() => navigation.handleViewChange("inventory")}
             onAssetCreated={(asset) => {
               // Handle asset creation success
-              console.log("Asset created:", asset);
               navigation.handleViewChange("inventory");
             }}
           />
         );
       case "check-in-out":
-        console.log("Rendering check-in-out view, data:", navigation.checkInOutData);
         return navigation.checkInOutData ? (
           <CreateCheckInOut 
             onBack={navigation.handleBackFromCheckInOut}
@@ -490,7 +482,6 @@ function AppContent() {
           </div>
         );
       case "create-maintenance":
-        console.log("🎯 Rendering create-maintenance view, data:", navigation.maintenanceCreationData);
         return (
           <CreateMaintenance 
             onBack={navigation.handleBackFromCreateMaintenance}
@@ -500,7 +491,6 @@ function AppContent() {
           />
         );
       case "edit-maintenance":
-        console.log("🎯 Rendering edit-maintenance view, data:", navigation.maintenanceEditData);
         return navigation.maintenanceEditData ? (
           <EditMaintenance 
             maintenanceId={navigation.maintenanceEditData.maintenanceId}
@@ -518,7 +508,6 @@ function AppContent() {
           </div>
         );
       case "edit-issue":
-        console.log("🎯 Rendering edit-issue view, issueId:", navigation.selectedIssueId);
         return navigation.selectedIssueId ? (
           <EditIssue 
             issueId={navigation.selectedIssueId}
@@ -546,7 +535,6 @@ function AppContent() {
           </div>
         );
       case "issue-details":
-        console.log("🎯 Rendering issue-details view, issueId:", navigation.selectedIssueId);
         return navigation.selectedIssueId ? (
           <IssueDetails 
             issueId={navigation.selectedIssueId}
@@ -582,7 +570,6 @@ function AppContent() {
             assetContext={navigation.issueData.assetContext}
             onCreateIssue={async (issueInput) => {
               // TODO: Backend integration - create issue
-              console.log("Creating issue:", issueInput);
               return { success: true, issue: { id: "ISSUE-001", ...issueInput } };
             }}
           />

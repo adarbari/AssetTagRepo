@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { StatusBadge } from "../common";
+import { StatusBadge, PageLayout } from "../common";
 import {
   Table,
   TableBody,
@@ -246,7 +246,7 @@ export function Geofences({ onCreateGeofence, onEditGeofence, onViewViolatingAss
 
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="wide" padding="lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -580,6 +580,6 @@ export function Geofences({ onCreateGeofence, onEditGeofence, onViewViolatingAss
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageLayout>
   );
 }

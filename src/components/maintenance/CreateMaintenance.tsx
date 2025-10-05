@@ -13,7 +13,7 @@ import {
 import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Card, CardContent } from "../ui/card";
-import { PageHeader, AssetContextCard } from "../common";
+import { PageHeader, AssetContextCard, PageLayout } from "../common";
 import { cn } from "../ui/utils";
 import { Calendar as CalendarIcon, Wrench, History, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
@@ -68,28 +68,23 @@ export function CreateMaintenance({
   };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <PageHeader
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader
         title="Schedule Maintenance"
         description="Create a new maintenance task for an asset"
+        onBack={onBack}
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Cancel
-            </Button>
-            <Button type="submit" form="create-maintenance-form">
-              <Wrench className="h-4 w-4 mr-2" />
-              Schedule Task
-            </Button>
-          </div>
+          <Button type="submit" form="create-maintenance-form">
+            <Wrench className="h-4 w-4 mr-2" />
+            Schedule Task
+          </Button>
         }
       />
-
-      {/* Form Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-4xl mx-auto space-y-6">
+      }
+    >
           {/* Asset Context Card */}
           {(preSelectedAsset || assetContext) && (preSelectedAssetName || assetContext?.name) && (
             <AssetContextCard
@@ -243,7 +238,6 @@ export function CreateMaintenance({
             </CardContent>
           </Card>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

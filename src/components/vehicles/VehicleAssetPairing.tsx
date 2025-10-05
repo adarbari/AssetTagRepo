@@ -18,7 +18,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Badge } from "../ui/badge";
-import { PageHeader, EmptyState, CapacityBar, StatusBadge, InfoRow } from "../common";
+import { PageHeader, EmptyState, CapacityBar, StatusBadge, InfoRow, PageLayout } from "../common";
 import { Separator } from "../ui/separator";
 import { Switch } from "../ui/switch";
 import {
@@ -403,9 +403,12 @@ export function VehicleAssetPairing({ onBack }: VehicleAssetPairingProps) {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <PageHeader
-        title="Vehicle-Asset Pairing"
+    <PageLayout 
+      variant="wide" 
+      padding="md"
+      header={
+        <PageHeader
+          title="Vehicle-Asset Pairing"
         description="Manage asset loading with automatic expiration mechanisms"
         action={
           <Button onClick={() => setShowAddAssetDialog(true)}>
@@ -937,6 +940,6 @@ export function VehicleAssetPairing({ onBack }: VehicleAssetPairingProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageLayout>
   );
 }

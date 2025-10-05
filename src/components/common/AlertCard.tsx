@@ -1,6 +1,7 @@
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { SeverityBadge, StatusBadge } from "./";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,37 +73,6 @@ const defaultGetTimeAgo = (timestamp: string) => {
   return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
 };
 
-const getSeverityBadge = (severity: string) => {
-  switch (severity) {
-    case "critical":
-      return <Badge variant="destructive">Critical</Badge>;
-    case "high":
-    case "warning":
-      return <Badge className="bg-orange-100 text-orange-700 border-orange-300">
-        {severity === "high" ? "High" : "Warning"}
-      </Badge>;
-    case "medium":
-      return <Badge className="bg-yellow-100 text-yellow-700 border-yellow-300">Medium</Badge>;
-    case "info":
-    case "low":
-      return <Badge variant="outline">{severity === "info" ? "Info" : "Low"}</Badge>;
-    default:
-      return <Badge variant="outline">{severity}</Badge>;
-  }
-};
-
-const getStatusBadge = (status: string) => {
-  switch (status) {
-    case "active":
-      return <Badge className="bg-red-100 text-red-700 border-red-300 text-xs">Active</Badge>;
-    case "acknowledged":
-      return <Badge className="bg-yellow-100 text-yellow-700 border-yellow-300 text-xs">Acknowledged</Badge>;
-    case "resolved":
-      return <Badge className="bg-green-100 text-green-700 border-green-300 text-xs">Resolved</Badge>;
-    default:
-      return <Badge variant="outline" className="text-xs">{status}</Badge>;
-  }
-};
 
 export function AlertCard({
   alert,
@@ -127,7 +97,7 @@ export function AlertCard({
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <h4 className="text-sm truncate">{alert.asset}</h4>
-                  {getSeverityBadge(alert.severity)}
+                  <SeverityBadge severity={alert.severity} />
                 </div>
                 <Badge variant="outline" className="text-xs">
                   {alertTypeLabels[alert.type]}
@@ -170,7 +140,7 @@ export function AlertCard({
                 <span>•</span>
                 <span>{getTimeAgo(alert.timestamp)}</span>
                 <span>•</span>
-                {getStatusBadge(alert.status)}
+                <StatusBadge status={alert.status} />
               </div>
               <Button size="sm" onClick={() => onTakeAction(alert)}>
                 Take Action

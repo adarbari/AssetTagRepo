@@ -45,6 +45,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageLayout } from "../common";
 import { AlertConfigFieldRenderer } from "./AlertConfigFieldRenderer";
 import { alertTypeConfigurations, getAllAlertTypes } from "../../data/alertConfigurations";
 import type { AlertConfigurationsStore, SavedAlertConfig, AlertConfigLevel, AlertRuleConfig } from "../../types/alertConfig";
@@ -283,7 +284,7 @@ export function HierarchicalAlertConfiguration({
   const alertTypes = getAllAlertTypes();
 
   return (
-    <div className="p-6 space-y-6">
+    <PageLayout variant="standard" padding="md">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -620,6 +621,6 @@ export function HierarchicalAlertConfiguration({
           </DialogContent>
         </Dialog>
       )}
-    </div>
+    </PageLayout>
   );
 }
