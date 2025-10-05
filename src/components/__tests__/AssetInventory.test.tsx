@@ -2,7 +2,7 @@ import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AssetInventory } from '../AssetInventory'
+import { AssetInventory } from '../assets/AssetInventory'
 import { render } from '../../test/test-utils'
 import { mockAssets } from '../../data/mockData'
 

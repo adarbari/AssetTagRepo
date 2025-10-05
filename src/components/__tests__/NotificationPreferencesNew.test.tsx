@@ -1,7 +1,7 @@
 import React from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '../../test/test-utils'
-import { NotificationPreferencesNew } from '../NotificationPreferencesNew'
+import { NotificationPreferencesNew } from '../notifications/NotificationPreferencesNew'
 import type { NotificationPreferences } from '../../types/notificationConfig'
 
 // Mock the alert configurations

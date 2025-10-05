@@ -21,6 +21,7 @@ export { FilterPanel } from "./FilterPanel";
 export { AssetContextCard } from "./AssetContextCard";
 export { TableActionMenu } from "./TableActionMenu";
 export { InfoRow } from "./InfoRow";
+export { ConfigurationInspector } from "./ConfigurationInspector";
 export type { ConfigLevel } from "./ConfigurationLevelWidget";
 export type { AuditLogEntry } from "./AuditLogList";
 export type { FilterConfig, FilterOption } from "./FilterPanel";

@@ -2,7 +2,7 @@ import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { SiteDetails } from '../SiteDetails'
+import { SiteDetails } from '../sites/SiteDetails'
 import { 
   render, 
   waitForAsync 

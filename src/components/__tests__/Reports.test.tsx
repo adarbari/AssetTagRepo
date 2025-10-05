@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { Reports } from '../Reports'
+import { Reports } from '../reports/Reports'
 import * as mockReportsData from '../../data/mockReportsData'
 import { useAsyncDataAll } from '../../hooks/useAsyncData'
 

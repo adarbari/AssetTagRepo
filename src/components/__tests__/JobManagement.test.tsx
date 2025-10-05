@@ -2,7 +2,7 @@ import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { JobManagement } from '../JobManagement'
+import { JobManagement } from '../job/JobManagement'
 import { 
   render, 
   mockJobs, 

@@ -1,1 +1,2 @@
-export { Settings } from '../Settings';
+// Settings components
+export { Settings } from './Settings';

@@ -1,7 +1,7 @@
 import React from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '../../test/test-utils'
-import { ComplianceTracking } from '../ComplianceTracking'
+import { ComplianceTracking } from '../compliance/ComplianceTracking'
 import { useAsyncDataAll } from '../../hooks/useAsyncData'
 import { getComplianceRecords, getComplianceSummary } from '../../data/mockReportsData'
 
