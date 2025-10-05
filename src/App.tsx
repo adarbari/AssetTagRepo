@@ -63,7 +63,6 @@ export type ViewType =
   | "load-asset";
 
 function AppContent() {
-  const [currentView, setCurrentView] = useState<ViewType>("dashboard");
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [highlightedAsset, setHighlightedAsset] = useState<string | null>(null);
   const [selectedJob, setSelectedJob] = useState<any>(null);
@@ -72,23 +71,26 @@ function AppContent() {
   const jobManagement = useJobManagement();
   const navigation = useNavigation();
 
+  // Use the current view from navigation context instead of local state
+  const currentView = navigation.currentView;
+
   const handleViewChange = (view: ViewType) => {
-    setCurrentView(view);
+    navigation.handleViewChange(view);
   };
 
   const handleAssetClick = (asset: Asset) => {
     setSelectedAsset(asset);
-    setCurrentView("asset-details");
+    navigation.navigateToAssetDetails(asset);
   };
 
   const handleBackToMap = () => {
-    setCurrentView("map");
+    navigation.handleViewChange("map");
     setSelectedAsset(null);
   };
 
   const handleShowOnMap = (asset: Asset) => {
     setHighlightedAsset(asset.id);
-    setCurrentView("map");
+    navigation.handleShowOnMap(asset);
   };
 
   const handleClearHighlight = () => {
@@ -97,16 +99,16 @@ function AppContent() {
 
   const handleTrackHistory = (asset: Asset) => {
     setSelectedAsset(asset);
-    setCurrentView("historical-playback");
+    navigation.handleViewHistoricalPlayback(asset);
   };
 
   const handleBackToDashboard = () => {
-    setCurrentView("dashboard");
+    navigation.handleViewChange("dashboard");
     setSelectedAsset(null);
   };
 
   const handleNavigateToAlerts = (filter?: any) => {
-    setCurrentView("alerts");
+    navigation.handleViewChange("alerts");
   };
 
   const renderCurrentView = () => {
@@ -123,7 +125,7 @@ function AppContent() {
         return (
           <AssetInventory 
             onAssetClick={handleAssetClick}
-            onNavigateToCreateAsset={() => setCurrentView("create-asset")}
+            onNavigateToCreateAsset={() => navigation.handleViewChange("create-asset")}
           />
         );
       case "map":
@@ -155,17 +157,17 @@ function AppContent() {
             onAddAssetToJob={jobManagement.addAssetToJob}
             onRemoveAssetFromJob={jobManagement.removeAssetFromJob}
             jobAlerts={jobManagement.jobAlerts}
-            onNavigateToCreateJob={() => setCurrentView("create-job")}
+            onNavigateToCreateJob={() => navigation.handleViewChange("create-job")}
             onNavigateToJobDetails={(job) => {
               setSelectedJob(job);
-              setCurrentView("job-details");
+              navigation.navigateToJobDetails({ job });
             }}
           />
         );
       case "create-job":
         return (
           <CreateJob 
-            onBack={() => setCurrentView("jobs")}
+            onBack={() => navigation.handleViewChange("jobs")}
             onCreateJob={jobManagement.createJob}
           />
         );
@@ -174,7 +176,7 @@ function AppContent() {
           <EditJob 
             jobId={selectedJob.id}
             job={selectedJob}
-            onBack={() => setCurrentView("job-details")}
+            onBack={() => navigation.handleViewChange("job-details")}
             onUpdateJob={jobManagement.updateJob}
             onAddAssetToJob={jobManagement.addAssetToJob}
             onRemoveAssetFromJob={jobManagement.removeAssetFromJob}
@@ -182,7 +184,7 @@ function AppContent() {
         ) : (
           <div className="p-6">
             <p>No job selected for editing</p>
-            <Button onClick={() => setCurrentView("jobs")}>
+            <Button onClick={() => navigation.handleViewChange("jobs")}>
               Back to Jobs
             </Button>
           </div>
@@ -191,16 +193,16 @@ function AppContent() {
         return selectedJob ? (
           <JobDetails 
             job={selectedJob}
-            onBack={() => setCurrentView("jobs")}
+            onBack={() => navigation.handleViewChange("jobs")}
             onEdit={(job) => {
               setSelectedJob(job);
-              setCurrentView("edit-job");
+              navigation.handleViewChange("edit-job");
             }}
           />
         ) : (
           <div className="p-6">
             <p>No job selected</p>
-            <Button onClick={() => setCurrentView("jobs")}>
+            <Button onClick={() => navigation.handleViewChange("jobs")}>
               Back to Jobs
             </Button>
           </div>
@@ -253,7 +255,7 @@ function AppContent() {
             }}
             onNavigateToConfiguration={() => {
               // Handle navigation to alert configuration
-              setCurrentView("alert-configuration");
+              navigation.handleViewChange("alert-configuration");
             }}
           />
         );
@@ -272,13 +274,13 @@ function AppContent() {
               console.log("Deleting alert config:", level, entityId, alertType);
               return { success: true };
             }}
-            onBack={() => setCurrentView("dashboard")}
+            onBack={() => navigation.handleViewChange("dashboard")}
           />
         );
       case "notifications":
         return (
           <NotificationPreferencesNew 
-            onBack={() => setCurrentView("dashboard")}
+            onBack={() => navigation.handleViewChange("dashboard")}
             preselectedLevel="user"
             preselectedEntityId="current-user"
             preselectedEntityName="Your Account"
@@ -350,11 +352,11 @@ function AppContent() {
       case "create-asset":
         return (
           <CreateAsset 
-            onBack={() => setCurrentView("inventory")}
+            onBack={() => navigation.handleViewChange("inventory")}
             onAssetCreated={(asset) => {
               // Handle asset creation success
               console.log("Asset created:", asset);
-              setCurrentView("inventory");
+              navigation.handleViewChange("inventory");
             }}
           />
         );
@@ -374,7 +376,7 @@ function AppContent() {
           <div className="p-8">
             <h2>Check In/Out</h2>
             <p>No check-in/out data available</p>
-            <button onClick={() => setCurrentView("asset-details")}>Back</button>
+            <button onClick={() => navigation.handleViewChange("asset-details")}>Back</button>
           </div>
         );
       case "create-maintenance":
@@ -390,13 +392,13 @@ function AppContent() {
           <div className="p-8">
             <h2>Create Maintenance</h2>
             <p>No maintenance creation data available</p>
-            <button onClick={() => setCurrentView("dashboard")}>Back to Dashboard</button>
+            <button onClick={() => navigation.handleViewChange("dashboard")}>Back to Dashboard</button>
           </div>
         );
       case "report-issue":
         return navigation.issueData ? (
           <CreateIssue 
-            onBack={() => setCurrentView("asset-details")}
+            onBack={() => navigation.handleViewChange("asset-details")}
             assetId={navigation.issueData.assetId}
             assetName={navigation.issueData.assetName}
             assetContext={navigation.issueData.assetContext}
@@ -410,7 +412,7 @@ function AppContent() {
       case "historical-playback":
         return (
           <HistoricalPlayback 
-            onBack={() => setCurrentView("asset-details")}
+            onBack={() => navigation.handleViewChange("asset-details")}
             preselectedAsset={selectedAsset || undefined}
           />
         );
