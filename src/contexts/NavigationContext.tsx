@@ -468,9 +468,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const navigateToCreateMaintenance = (data?: MaintenanceCreationData) => {
+    console.log("🚀 navigateToCreateMaintenance called with:", data);
     pushNavigationState();
     setMaintenanceCreationData(data);
     setCurrentView("create-maintenance");
+    console.log("✅ Navigation state updated to create-maintenance");
   };
 
   const handleBackFromCreateMaintenance = () => {

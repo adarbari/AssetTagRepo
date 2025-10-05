@@ -378,6 +378,7 @@ function AppContent() {
           </div>
         );
       case "create-maintenance":
+        console.log("🎯 Rendering create-maintenance view, data:", navigation.maintenanceCreationData);
         return navigation.maintenanceCreationData ? (
           <CreateMaintenance 
             onBack={navigation.handleBackFromCreateMaintenance}
@@ -385,7 +386,13 @@ function AppContent() {
             preSelectedAssetName={navigation.maintenanceCreationData.preSelectedAssetName}
             assetContext={navigation.maintenanceCreationData.assetContext}
           />
-        ) : null;
+        ) : (
+          <div className="p-8">
+            <h2>Create Maintenance</h2>
+            <p>No maintenance creation data available</p>
+            <button onClick={() => setCurrentView("dashboard")}>Back to Dashboard</button>
+          </div>
+        );
       case "report-issue":
         return navigation.issueData ? (
           <CreateIssue 
