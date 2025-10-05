@@ -1,3 +1,4 @@
+import React from "react";
 import { Badge } from "../ui/badge";
 
 type StatusType = "asset" | "site" | "job" | "vehicle" | "geofence" | "maintenance" | "issue";

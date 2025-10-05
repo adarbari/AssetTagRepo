@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ViewType } from "../App";
 import { AlertFilter } from "./alerts/Alerts";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";

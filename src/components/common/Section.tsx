@@ -4,6 +4,7 @@
  * Provides consistent section UI with optional icon and actions
  */
 
+import React from "react";
 import { LucideIcon } from "lucide-react";
 
 interface SectionProps {

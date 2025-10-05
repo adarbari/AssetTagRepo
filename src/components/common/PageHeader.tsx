@@ -4,6 +4,7 @@
  * Provides consistent page header UI across the application
  */
 
+import React from "react";
 import { ArrowLeft, LucideIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
