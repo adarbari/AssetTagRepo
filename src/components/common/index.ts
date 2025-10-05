@@ -9,6 +9,7 @@ export { EmptyState } from "./EmptyState";
 export { ErrorState } from "./ErrorState";
 export { StatsCard } from "./StatsCard";
 export { PageHeader } from "./PageHeader";
+export { PageHeaderWithBreadcrumbs } from "./PageHeaderWithBreadcrumbs";
 export { PageContainer } from "./PageContainer";
 export { PageLayout } from "./PageLayout";
 export { Section } from "./Section";

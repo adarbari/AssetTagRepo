@@ -270,7 +270,7 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
             </TabsContent>
 
             {/* Assets Tab */}
-            <TabsContent value="assets" className="space-y-4">
+            <TabsContent value="assets" className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -486,7 +486,7 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
             </TabsContent>
 
             {/* Timeline Tab */}
-            <TabsContent value="timeline" className="space-y-4">
+            <TabsContent value="timeline" className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -547,7 +547,7 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
             </TabsContent>
 
             {/* Team Tab */}
-            <TabsContent value="team" className="space-y-4">
+            <TabsContent value="team" className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -584,7 +584,7 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
 
             {/* Alerts Tab */}
             {job.hasActiveAlerts && (
-              <TabsContent value="alerts" className="space-y-4">
+              <TabsContent value="alerts" className="space-y-6">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">

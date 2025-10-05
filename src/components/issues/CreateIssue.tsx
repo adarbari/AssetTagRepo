@@ -11,10 +11,9 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Badge } from "../ui/badge";
-import { AlertTriangle, Camera, Upload, ArrowLeft } from "lucide-react";
+import { AlertTriangle, Camera, Upload } from "lucide-react";
 import { toast } from "sonner";
-import { PageHeader, AssetContextCard, PageLayout } from "../common";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "../ui/breadcrumb";
+import { AssetContextCard, PageLayout, PageHeaderWithBreadcrumbs } from "../common";
 import { issueTypes, issueSeverities } from "../../data/dropdownOptions";
 import type { Asset } from "../../types";
 import type { CreateIssueInput, IssueType, IssueSeverity } from "../../types/issue";
@@ -82,31 +81,14 @@ export function CreateIssue({
       variant="narrow" 
       padding="md"
       header={
-        <div className="border-b bg-background px-8 py-4">
-        <div className="flex items-center gap-4 mb-4">
-          <Button variant="ghost" size="icon" onClick={onBack}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink onClick={onBack} className="cursor-pointer">
-                  {assetName}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Report Issue</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-        <PageHeader
+        <PageHeaderWithBreadcrumbs
           title="Report Issue"
           description={`Report a problem or issue with ${assetName}`}
           icon={AlertTriangle}
+          onBack={onBack}
+          breadcrumbParent={assetName}
+          breadcrumbCurrent="Report Issue"
         />
-      </div>
       }
     >
           {/* Asset Info Card */}

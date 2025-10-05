@@ -354,7 +354,7 @@ export function NotificationPreferencesNew({
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="user" className="space-y-4">
+            <TabsContent value="user" className="space-y-6">
               <Alert>
                 <Info className="h-4 w-4" />
                 <AlertDescription>
@@ -363,7 +363,7 @@ export function NotificationPreferencesNew({
               </Alert>
             </TabsContent>
 
-            <TabsContent value="site" className="space-y-4">
+            <TabsContent value="site" className="space-y-6">
               <Alert>
                 <Info className="h-4 w-4" />
                 <AlertDescription>
@@ -389,7 +389,7 @@ export function NotificationPreferencesNew({
               </div>
             </TabsContent>
 
-            <TabsContent value="asset" className="space-y-4">
+            <TabsContent value="asset" className="space-y-6">
               <Alert>
                 <Info className="h-4 w-4" />
                 <AlertDescription>

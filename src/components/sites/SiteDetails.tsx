@@ -11,7 +11,7 @@ import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Switch } from "../ui/switch";
 import { Skeleton } from "../ui/skeleton";
-import { PageLayout, StatusBadge } from "../common";
+import { PageLayout, StatusBadge, PageHeader, StatsCard } from "../common";
 import { fetchSiteActivity, getPresetDateRange, type SiteActivityData } from "../../services/api";
 import { GeofenceMapEditor } from "../geofences/GeofenceMapEditor";
 import {
@@ -67,7 +67,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import type { Site as SharedSite, Geofence } from "../types";
+import type { Site as SharedSite, Geofence } from "../../types";
 
 type SiteStatus = "active" | "maintenance" | "inactive";
 
@@ -370,91 +370,69 @@ export function SiteDetails({
   };
 
   return (
-    <PageLayout variant="standard" padding="lg">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={onBack}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1>{isEditing ? editedSite.name : editedSite.name}</h1>
-              <StatusBadge status={editedSite.status} />
-            </div>
-            <p className="text-muted-foreground">{editedSite.id}</p>
-          </div>
+    <PageLayout 
+      variant="standard" 
+      padding="lg"
+      header={
+        <div className="border-b bg-background px-8 py-6">
+          <PageHeader
+            title={editedSite.name}
+            description={editedSite.id}
+            icon={Building2}
+            badge={{ label: editedSite.status, variant: editedSite.status === "active" ? "default" : "secondary" }}
+            onBack={onBack}
+            actions={
+              <div className="flex items-center gap-2">
+                {isEditing ? (
+                  <>
+                    <Button variant="outline" onClick={handleCancel}>
+                      <X className="h-4 w-4 mr-2" />
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSave}>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </Button>
+                  </>
+                ) : (
+                  <Button onClick={() => setIsEditing(true)}>
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Site
+                  </Button>
+                )}
+              </div>
+            }
+          />
         </div>
-        <div className="flex items-center gap-2">
-          {isEditing ? (
-            <>
-              <Button variant="outline" onClick={handleCancel}>
-                <X className="h-4 w-4 mr-2" />
-                Cancel
-              </Button>
-              <Button onClick={handleSave}>
-                <Save className="h-4 w-4 mr-2" />
-                Save Changes
-              </Button>
-            </>
-          ) : (
-            <Button onClick={() => setIsEditing(true)}>
-              <Edit className="h-4 w-4 mr-2" />
-              Edit Site
-            </Button>
-          )}
-        </div>
-      </div>
+      }
+    >
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-              <Package className="h-6 w-6 text-blue-700" />
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Assets On-Site</p>
-              <h3>{editedSite.assets}</h3>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-              <Users className="h-6 w-6 text-purple-700" />
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Personnel</p>
-              <h3>{editedSite.personnel}</h3>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-              <Activity className="h-6 w-6 text-green-700" />
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Active Assets</p>
-              <h3>178</h3>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-              <TrendingUp className="h-6 w-6 text-yellow-700" />
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm">Utilization</p>
-              <h3>76%</h3>
-            </div>
-          </div>
-        </Card>
+        <StatsCard
+          title="Assets On-Site"
+          value={editedSite.assets.toString()}
+          icon={Package}
+          variant="info"
+        />
+        <StatsCard
+          title="Personnel"
+          value={editedSite.personnel.toString()}
+          icon={Users}
+          variant="info"
+        />
+        <StatsCard
+          title="Active Assets"
+          value="178"
+          icon={Activity}
+          variant="success"
+        />
+        <StatsCard
+          title="Utilization"
+          value="76%"
+          icon={TrendingUp}
+          variant="warning"
+        />
       </div>
 
       {/* Tabs */}

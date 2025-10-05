@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
-import { StatusBadge, PriorityBadge, StatsCard, PageLayout } from "../common";
+import { StatusBadge, PriorityBadge, StatsCard, PageLayout, FilterBar, type FilterConfig } from "../common";
 import {
   Select,
   SelectContent,
@@ -86,8 +86,49 @@ export function JobManagement({
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   const jobsList = Object.values(jobs);
+
+  // Filter configuration for FilterBar
+  const filters: FilterConfig[] = [
+    {
+      key: "status",
+      label: "Status",
+      options: [
+        { value: "all", label: "All Status" },
+        { value: "planning", label: "Planning" },
+        { value: "active", label: "Active" },
+        { value: "completed", label: "Completed" },
+        { value: "on-hold", label: "On Hold" },
+        { value: "cancelled", label: "Cancelled" },
+      ],
+      currentValue: statusFilter,
+      onValueChange: setStatusFilter,
+    },
+    {
+      key: "priority",
+      label: "Priority",
+      options: [
+        { value: "all", label: "All Priorities" },
+        { value: "critical", label: "Critical" },
+        { value: "high", label: "High" },
+        { value: "medium", label: "Medium" },
+        { value: "low", label: "Low" },
+      ],
+      currentValue: priorityFilter,
+      onValueChange: setPriorityFilter,
+    },
+  ];
+
+  // Calculate active filters count
+  const activeFiltersCount = (statusFilter !== "all" ? 1 : 0) + (priorityFilter !== "all" ? 1 : 0);
+
+  // Clear all filters
+  const handleClearAllFilters = () => {
+    setStatusFilter("all");
+    setPriorityFilter("all");
+  };
 
   // Filter jobs
   const filteredJobs = jobsList.filter(job => {
@@ -193,42 +234,16 @@ export function JobManagement({
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search jobs, sites, or project managers..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="planning">Planning</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-            <SelectItem value="on-hold">On Hold</SelectItem>
-            <SelectItem value="cancelled">Cancelled</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by priority" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Priorities</SelectItem>
-            <SelectItem value="critical">Critical</SelectItem>
-            <SelectItem value="high">High</SelectItem>
-            <SelectItem value="medium">Medium</SelectItem>
-            <SelectItem value="low">Low</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <FilterBar
+        searchTerm={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search jobs, sites, or project managers..."
+        filters={filters}
+        showAdvancedFilters={showAdvancedFilters}
+        onToggleAdvancedFilters={() => setShowAdvancedFilters(!showAdvancedFilters)}
+        activeFiltersCount={activeFiltersCount}
+        onClearAllFilters={handleClearAllFilters}
+      />
 
       {/* Jobs Table */}
       <Card>

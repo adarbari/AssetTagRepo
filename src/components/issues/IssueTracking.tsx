@@ -237,7 +237,7 @@ export function IssueTracking({
                   </div>
                 </div>
 
-                <TabsContent value={activeTab} className="space-y-4">
+                <TabsContent value={activeTab} className="space-y-6">
                   {filteredIssues.length === 0 ? (
                     <EmptyState
                       icon={AlertTriangle}

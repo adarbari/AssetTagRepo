@@ -578,7 +578,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
             </TabsList>
 
             {/* Overview Tab */}
-            <TabsContent value="overview" className="space-y-4">
+            <TabsContent value="overview" className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <Card>
                   <CardHeader>
@@ -981,7 +981,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
             </TabsContent>
 
             {/* Track History Tab */}
-            <TabsContent value="history" className="space-y-4">
+            <TabsContent value="history" className="space-y-6">
               {/* Quick Stats */}
               <div className="grid gap-4 md:grid-cols-4">
                 <Card>
@@ -1157,7 +1157,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
             </TabsContent>
 
             {/* Activity Log Tab */}
-            <TabsContent value="activity" className="space-y-4">
+            <TabsContent value="activity" className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Recent Activity</CardTitle>
@@ -1187,7 +1187,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
             </TabsContent>
 
             {/* Maintenance Tab */}
-            <TabsContent value="maintenance" className="space-y-4">
+            <TabsContent value="maintenance" className="space-y-6">
               {/* Upcoming Maintenance */}
               <Card>
                 <CardHeader>
@@ -1318,7 +1318,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
             </TabsContent>
 
             {/* Alerts Tab */}
-            <TabsContent value="alerts" className="space-y-4">
+            <TabsContent value="alerts" className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Alert History</CardTitle>
@@ -1377,7 +1377,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
             </TabsContent>
 
             {/* Notifications Tab */}
-            <TabsContent value="notifications" className="space-y-4">
+            <TabsContent value="notifications" className="space-y-6">
               <Card className="border-2 border-dashed border-primary/20 bg-primary/5">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">

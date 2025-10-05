@@ -1,10 +1,10 @@
 import React from "react";
-import { ViewType } from "../App";
+import { ViewType } from "../../App";
 import { AlertFilter } from "../alerts/Alerts";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
-import { LoadingState, StatsCard, Section, PageLayout } from "../common";
+import { LoadingState, StatsCard, Section, PageLayout, PageHeader } from "../common";
 import { useAsyncDataAll } from "../../hooks/useAsyncData";
 import {
   Activity,
@@ -85,21 +85,25 @@ export function Dashboard({ onViewChange, onNavigateToAlerts }: DashboardProps) 
   const { stats, locationData, assetsByType, batteryStatus, recentActivity, alertBreakdown } = data;
 
   return (
-    <PageLayout variant="standard" padding="lg">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1>Dashboard</h1>
-          <p className="text-muted-foreground">Real-time asset tracking overview</p>
+    <PageLayout 
+      variant="standard" 
+      padding="lg"
+      header={
+        <div className="border-b bg-background px-8 py-6">
+          <PageHeader
+            title="Dashboard"
+            description="Real-time asset tracking overview"
+            icon={BarChart3}
+            actions={
+              <Badge variant="outline" className="gap-1">
+                <Activity className="h-3 w-3" />
+                System Status: {stats.systemStatus === "online" ? "Online" : stats.systemStatus === "degraded" ? "Degraded" : "Offline"}
+              </Badge>
+            }
+          />
         </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="gap-1">
-            <Activity className="h-3 w-3" />
-            System Status: {stats.systemStatus === "online" ? "Online" : stats.systemStatus === "degraded" ? "Degraded" : "Offline"}
-          </Badge>
-        </div>
-      </div>
-
+      }
+    >
       {/* SECTION 1: Asset & Location Overview */}
       <Section
         title="Asset & Location Overview"
