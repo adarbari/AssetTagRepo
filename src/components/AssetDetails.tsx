@@ -1278,19 +1278,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
               {/* Completed Maintenance */}
               <Card>
                 <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Maintenance History</CardTitle>
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      onClick={() => {
-                        navigation.setCurrentView("maintenance");
-                      }}
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Schedule Management
-                    </Button>
-                  </div>
+                  <CardTitle>Maintenance History</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
