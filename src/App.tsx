@@ -38,6 +38,8 @@ import { SiteDetails } from "./components/sites/SiteDetails";
 import { CreateSite } from "./components/sites/CreateSite";
 import { CreateGeofence } from "./components/geofences/CreateGeofence";
 import { VehicleAssetPairing } from "./components/vehicles/VehicleAssetPairing";
+import { CreateVehicle } from "./components/vehicles/CreateVehicle";
+import { EditVehicle } from "./components/vehicles/EditVehicle";
 import { AlertFilter } from "./components/alerts/Alerts";
 import type { Asset } from "./types";
 
@@ -69,6 +71,7 @@ export type ViewType =
   | "create-site"
   | "create-compliance"
   | "create-vehicle"
+  | "edit-vehicle"
   | "create-job"
   | "edit-job"
   | "edit-maintenance"
@@ -226,6 +229,32 @@ function AppContent() {
           <VehicleAssetPairing 
             onBack={() => navigation.handleViewChange("dashboard")}
           />
+        );
+      case "create-vehicle":
+        return (
+          <CreateVehicle 
+            onBack={() => navigation.handleViewChange("vehicle-pairing")}
+            onVehicleCreated={(vehicle) => {
+              // Handle vehicle creation success
+              navigation.handleViewChange("vehicle-pairing");
+            }}
+          />
+        );
+      case "edit-vehicle":
+        return navigation.vehicleEditData ? (
+          <EditVehicle 
+            vehicleId={navigation.vehicleEditData.vehicleId}
+            onBack={navigation.handleBackFromEditVehicle}
+            onVehicleUpdated={navigation.vehicleEditData.onVehicleUpdated}
+          />
+        ) : (
+          <div className="p-8">
+            <h2>Edit Vehicle</h2>
+            <p>No vehicle selected for editing</p>
+            <Button onClick={() => navigation.handleViewChange("vehicle-pairing")}>
+              Back to Vehicle Pairing
+            </Button>
+          </div>
         );
       case "jobs":
         return (

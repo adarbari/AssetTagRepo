@@ -241,8 +241,6 @@ export function EditVehicle({ vehicleId, onBack, onVehicleUpdated }: EditVehicle
               </form>
             </CardContent>
           </Card>
-        </div>
-      </div>
     </PageLayout>
   );
 }
