@@ -11,6 +11,8 @@ import { CreateCheckInOut } from "./components/CreateCheckInOut";
 import { CreateMaintenance } from "./components/CreateMaintenance";
 import { EditMaintenance } from "./components/EditMaintenance";
 import { CreateIssue } from "./components/CreateIssue";
+import { EditIssue } from "./components/EditIssue";
+import { IssueDetails } from "./components/IssueDetails";
 import { JobManagement } from "./components/JobManagement";
 import { JobDetails } from "./components/JobDetails";
 import { CreateJob } from "./components/CreateJob";
@@ -18,6 +20,7 @@ import { EditJob } from "./components/EditJob";
 import { useJobManagement } from "./hooks/useJobManagement";
 import { Maintenance } from "./components/Maintenance";
 import { IssueTracking } from "./components/IssueTracking";
+import { mockIssues, updateIssue, updateIssueStatus, deleteIssue } from "./data/mockIssueData";
 import { ComplianceTracking } from "./components/ComplianceTracking";
 import { Geofences } from "./components/Geofences";
 import { Reports } from "./components/Reports";
@@ -59,6 +62,8 @@ export type ViewType =
   | "create-job"
   | "edit-job"
   | "edit-maintenance"
+  | "edit-issue"
+  | "issue-details"
   | "alert-workflow"
   | "violation-map"
   | "load-asset";
@@ -225,10 +230,39 @@ function AppContent() {
       case "issues":
         return (
           <IssueTracking 
-            issues={[]}
-            onUpdateIssue={async () => ({ success: true })}
-            onUpdateStatus={async () => ({ success: true })}
-            onDeleteIssue={async () => ({ success: true })}
+            issues={mockIssues}
+            onUpdateIssue={async (issueId, input) => {
+              try {
+                const updatedIssue = updateIssue(issueId, input);
+                if (updatedIssue) {
+                  return { success: true, issue: updatedIssue };
+                } else {
+                  return { success: false, error: "Issue not found" };
+                }
+              } catch (error) {
+                return { success: false, error: error };
+              }
+            }}
+            onUpdateStatus={async (issueId, status) => {
+              try {
+                const updatedIssue = updateIssueStatus(issueId, status);
+                if (updatedIssue) {
+                  return { success: true };
+                } else {
+                  return { success: false, error: "Issue not found" };
+                }
+              } catch (error) {
+                return { success: false, error: error };
+              }
+            }}
+            onDeleteIssue={async (issueId) => {
+              try {
+                const deleted = deleteIssue(issueId);
+                return { success: deleted };
+              } catch (error) {
+                return { success: false, error: error };
+              }
+            }}
           />
         );
       case "compliance":
@@ -413,6 +447,62 @@ function AppContent() {
             <p>No maintenance edit data available</p>
             <Button onClick={() => navigation.handleViewChange("maintenance")}>
               Back to Maintenance
+            </Button>
+          </div>
+        );
+      case "edit-issue":
+        console.log("🎯 Rendering edit-issue view, issueId:", navigation.selectedIssueId);
+        return navigation.selectedIssueId ? (
+          <EditIssue 
+            issueId={navigation.selectedIssueId}
+            onBack={navigation.handleBackFromEditIssue}
+            onUpdateIssue={async (issueId, input) => {
+              try {
+                const updatedIssue = updateIssue(issueId, input);
+                if (updatedIssue) {
+                  return { success: true, issue: updatedIssue };
+                } else {
+                  return { success: false, error: "Issue not found" };
+                }
+              } catch (error) {
+                return { success: false, error: error };
+              }
+            }}
+          />
+        ) : (
+          <div className="p-8">
+            <h2>Edit Issue</h2>
+            <p>No issue selected</p>
+            <Button onClick={() => navigation.handleViewChange("issues")}>
+              Back to Issues
+            </Button>
+          </div>
+        );
+      case "issue-details":
+        console.log("🎯 Rendering issue-details view, issueId:", navigation.selectedIssueId);
+        return navigation.selectedIssueId ? (
+          <IssueDetails 
+            issueId={navigation.selectedIssueId}
+            onBack={navigation.handleBackFromEditIssue}
+            onUpdateIssue={async (issueId, input) => {
+              try {
+                const updatedIssue = updateIssue(issueId, input);
+                if (updatedIssue) {
+                  return { success: true, issue: updatedIssue };
+                } else {
+                  return { success: false, error: "Issue not found" };
+                }
+              } catch (error) {
+                return { success: false, error: error };
+              }
+            }}
+          />
+        ) : (
+          <div className="p-8">
+            <h2>Issue Details</h2>
+            <p>No issue selected</p>
+            <Button onClick={() => navigation.handleViewChange("issues")}>
+              Back to Issues
             </Button>
           </div>
         );

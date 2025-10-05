@@ -105,6 +105,7 @@ interface NavigationContextType {
   loadAssetData: LoadAssetData | undefined;
   checkInOutData: CheckInOutData | undefined;
   issueData: IssueData | undefined;
+  selectedIssueId: string | undefined;
   vehicleEditData: VehicleEditData | undefined;
   siteActiveTab: string;
   isEditingGeofence: boolean;
@@ -128,6 +129,7 @@ interface NavigationContextType {
   navigateToCreateSite: () => void;
   navigateToCreateMaintenance: (data?: MaintenanceCreationData) => void;
   navigateToEditMaintenance: (data: MaintenanceEditData) => void;
+  navigateToEditIssue: (issueId: string) => void;
   navigateToCreateCompliance: () => void;
   navigateToCreateVehicle: () => void;
   navigateToEditVehicle: (data: VehicleEditData) => void;
@@ -160,6 +162,7 @@ interface NavigationContextType {
   handleBackFromCreateSite: () => void;
   handleBackFromCreateMaintenance: () => void;
   handleBackFromEditMaintenance: () => void;
+  handleBackFromEditIssue: () => void;
   handleBackFromCreateCompliance: () => void;
   handleBackFromCreateVehicle: () => void;
   handleBackFromEditVehicle: () => void;
@@ -202,6 +205,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [loadAssetData, setLoadAssetData] = useState<LoadAssetData | undefined>(undefined);
   const [checkInOutData, setCheckInOutData] = useState<CheckInOutData | undefined>(undefined);
   const [issueData, setIssueData] = useState<IssueData | undefined>(undefined);
+  const [selectedIssueId, setSelectedIssueId] = useState<string | undefined>(undefined);
   const [vehicleEditData, setVehicleEditData] = useState<VehicleEditData | undefined>(undefined);
   const [siteActiveTab, setSiteActiveTab] = useState<string>("overview");
   const [isEditingGeofence, setIsEditingGeofence] = useState(false);
@@ -499,6 +503,17 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     popNavigationState();
   };
 
+  const navigateToEditIssue = (issueId: string) => {
+    pushNavigationState();
+    setSelectedIssueId(issueId);
+    setCurrentView("issue-details");
+  };
+
+  const handleBackFromEditIssue = () => {
+    setSelectedIssueId(undefined);
+    popNavigationState();
+  };
+
   const navigateToCreateCompliance = () => {
     pushNavigationState();
     setCurrentView("create-compliance");
@@ -624,6 +639,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     loadAssetData,
     checkInOutData,
     issueData,
+    selectedIssueId,
     vehicleEditData,
     siteActiveTab,
     isEditingGeofence,
@@ -646,6 +662,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     navigateToCreateSite,
     navigateToCreateMaintenance,
     navigateToEditMaintenance,
+    navigateToEditIssue,
     navigateToCreateCompliance,
     navigateToCreateVehicle,
     navigateToEditVehicle,
@@ -672,6 +689,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     handleBackFromCreateSite,
     handleBackFromCreateMaintenance,
     handleBackFromEditMaintenance,
+    handleBackFromEditIssue,
     handleBackFromCreateCompliance,
     handleBackFromCreateVehicle,
     handleBackFromEditVehicle,

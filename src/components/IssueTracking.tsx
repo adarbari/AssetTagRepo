@@ -147,8 +147,7 @@ export function IssueTracking({
   };
 
   const handleEditIssue = (issue: Issue) => {
-    // For now, show a toast message. In a real app, this would open an edit dialog
-    toast.info(`Edit functionality for issue "${issue.title}" - coming soon!`);
+    navigation.navigateToEditIssue(issue.id);
   };
 
   const openIssuesCount = issues.filter(i => 
@@ -295,7 +294,11 @@ export function IssueTracking({
                         </TableHeader>
                         <TableBody>
                           {filteredIssues.map((issue) => (
-                            <TableRow key={issue.id} className="cursor-pointer hover:bg-muted/50">
+                            <TableRow 
+                              key={issue.id} 
+                              className="cursor-pointer hover:bg-muted/50"
+                              onClick={() => handleEditIssue(issue)}
+                            >
                               <TableCell className="font-mono text-sm">{issue.id}</TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">

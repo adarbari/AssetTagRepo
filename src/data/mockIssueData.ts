@@ -142,3 +142,44 @@ export function getOpenIssuesCount(): number {
     issue.status === "in-progress"
   ).length;
 }
+
+export function updateIssue(issueId: string, updates: Partial<Issue>): Issue | null {
+  const issueIndex = mockIssues.findIndex(issue => issue.id === issueId);
+  if (issueIndex === -1) {
+    return null;
+  }
+  
+  mockIssues[issueIndex] = { ...mockIssues[issueIndex], ...updates };
+  return mockIssues[issueIndex];
+}
+
+export function updateIssueStatus(issueId: string, status: string): Issue | null {
+  const issueIndex = mockIssues.findIndex(issue => issue.id === issueId);
+  if (issueIndex === -1) {
+    return null;
+  }
+  
+  mockIssues[issueIndex] = { ...mockIssues[issueIndex], status: status as any };
+  return mockIssues[issueIndex];
+}
+
+export function deleteIssue(issueId: string): boolean {
+  const issueIndex = mockIssues.findIndex(issue => issue.id === issueId);
+  if (issueIndex === -1) {
+    return false;
+  }
+  
+  mockIssues.splice(issueIndex, 1);
+  return true;
+}
+
+export function createIssue(issue: Omit<Issue, 'id'>): Issue {
+  const newId = `ISS-${String(mockIssues.length + 1).padStart(3, '0')}`;
+  const newIssue: Issue = {
+    ...issue,
+    id: newId,
+  };
+  
+  mockIssues.push(newIssue);
+  return newIssue;
+}
