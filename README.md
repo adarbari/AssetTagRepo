@@ -1,23 +1,59 @@
 
-# AssetTag Repository
+# Asset Tag System
 
-A comprehensive asset tracking and management system built with React, TypeScript, and modern web technologies.
+A comprehensive asset tracking system with Bluetooth-based location estimation, real-time monitoring, and intelligent alerting.
+
+## Architecture
+
+This is a **monorepo** containing both frontend and backend components:
+
+```
+AssetTagRepo/
+├── asset-tag-frontend/     # React frontend application
+├── asset-tag-backend/      # Python FastAPI backend
+├── docs/                   # Shared documentation
+└── package.json           # Monorepo workspace configuration
+```
 
 ## 🚀 Quick Start
 
-```bash
-# Install dependencies
-npm install
+### Prerequisites
+- Node.js 18+
+- Python 3.11+
+- Docker and Docker Compose
 
-# Start development server
-npm run dev
+### Setup
 
-# Run tests
-npm test
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd AssetTagRepo
+   ```
 
-# Build for production
-npm run build
-```
+2. **Install dependencies**:
+   ```bash
+   npm run setup
+   ```
+
+3. **Start infrastructure services**:
+   ```bash
+   npm run infrastructure:up
+   ```
+
+4. **Run database migrations**:
+   ```bash
+   npm run db:migrate
+   ```
+
+5. **Start development servers**:
+   ```bash
+   npm run dev
+   ```
+
+This will start:
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
 
 ## 📋 Features
 
