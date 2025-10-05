@@ -34,6 +34,7 @@ import { Toaster } from "./components/ui/sonner";
 import { Sites } from "./components/sites/Sites";
 import { SiteDetails } from "./components/SiteDetails";
 import { CreateSite } from "./components/sites/CreateSite";
+import { CreateGeofence } from "./components/CreateGeofence";
 import { VehicleAssetPairing } from "./components/VehicleAssetPairing";
 import type { Asset } from "./types";
 
@@ -198,6 +199,17 @@ function AppContent() {
             onBack={navigation.handleBackFromCreateSite}
           />
         );
+      case "create-geofence":
+        return (
+          <CreateGeofence 
+            onBack={navigation.handleBackFromCreateGeofence}
+            onGeofenceCreated={navigation.handleGeofenceCreated}
+            onGeofenceUpdated={navigation.handleGeofenceUpdated}
+            editMode={navigation.isEditingGeofence}
+            existingGeofenceId={navigation.editingGeofenceId}
+            initialData={navigation.geofenceCreationData}
+          />
+        );
       case "vehicle-pairing":
         return (
           <VehicleAssetPairing 
@@ -313,17 +325,10 @@ function AppContent() {
       case "geofences":
         return (
           <Geofences 
-            onCreateGeofence={() => {
-              // Handle create geofence - could navigate to create geofence page
-              console.log("Create geofence");
-            }}
-            onEditGeofence={(geofenceId) => {
-              // Handle edit geofence
-              console.log("Edit geofence:", geofenceId);
-            }}
+            onCreateGeofence={() => navigation.navigateToCreateGeofence()}
+            onEditGeofence={(geofenceId) => navigation.navigateToEditGeofence(geofenceId)}
             onViewViolatingAssets={(geofenceId, violatingAssetIds, expectedAssetIds, actualAssetIds) => {
-              // Handle view violating assets
-              console.log("View violating assets for geofence:", geofenceId);
+              navigation.handleViewViolatingAssets(geofenceId, violatingAssetIds, expectedAssetIds, actualAssetIds);
             }}
           />
         );

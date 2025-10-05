@@ -85,9 +85,9 @@ export function AppSidebar({ currentView, onViewChange, onAlertTypeClick }: AppS
   ];
 
   const monitoringItems = [
+    { id: "compliance" as ViewType, label: "Compliance", icon: Shield },
     { id: "geofences" as ViewType, label: "Geofences", icon: MapPin },
     { id: "alerts" as ViewType, label: "Alerts", icon: Bell, badge: alertStats.total },
-    { id: "compliance" as ViewType, label: "Compliance", icon: Shield },
   ];
 
 
