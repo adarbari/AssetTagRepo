@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { 
   AlertTriangle, 
   ArrowLeft, 
@@ -16,7 +15,8 @@ import {
   Tag,
   CheckCircle2,
   XCircle,
-  AlertCircle
+  AlertCircle,
+  Save
 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "./common";
@@ -118,8 +118,10 @@ export function IssueDetails({
     setAuditLog(mockAuditLog);
   };
 
-  const handleFormSubmit = async (formData: IssueFormData) => {
-    if (!issue) return;
+  const handleFormSubmit = async (formData: IssueFormData): Promise<{ success: boolean; error?: any }> => {
+    if (!issue) {
+      return { success: false, error: "No issue found" };
+    }
 
     setSaving(true);
     
@@ -160,12 +162,15 @@ export function IssueDetails({
         
         // Navigate back to issue tracking
         onBack();
+        return { success: true };
       } else {
         toast.error("Failed to update issue");
+        return { success: false, error: result.error };
       }
     } catch (error) {
       toast.error("Failed to update issue");
       console.error("Error updating issue:", error);
+      return { success: false, error };
     } finally {
       setSaving(false);
     }
@@ -245,11 +250,17 @@ export function IssueDetails({
         description={`Asset: ${issue.assetName} (${issue.assetId})`}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            {!isEditing && (
+            {isEditing ? (
+              <>
+                <Button variant="outline" onClick={() => setIsEditing(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" form="issue-form">
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Changes
+                </Button>
+              </>
+            ) : (
               <Button onClick={() => setIsEditing(true)}>
                 <Edit className="h-4 w-4 mr-2" />
                 Edit Issue
@@ -267,73 +278,98 @@ export function IssueDetails({
             {getSeverityBadge(issue.severity)}
           </div>
           
-          <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="edit">Edit</TabsTrigger>
-            <TabsTrigger value="audit">Audit Log</TabsTrigger>
-          </TabsList>
-
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid gap-6 lg:grid-cols-2">
-              {/* Issue Information */}
+          {/* Unified Form Interface */}
+          <div className="space-y-6">
+            {isEditing ? (
               <Card>
                 <CardHeader>
-                  <CardTitle>Issue Information</CardTitle>
+                  <CardTitle>Edit Issue</CardTitle>
+                  <CardDescription>Update the issue information</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Issue Type</label>
-                      <p className="text-sm">{issue.type}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Severity</label>
-                      <div className="mt-1">
-                        {getSeverityBadge(issue.severity)}
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Status</label>
-                      <div className="mt-1">
-                        {getStatusBadge(issue.status)}
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Reported</label>
-                      <p className="text-sm">{formatDate(issue.reportedDate)}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Reported By</label>
-                      <p className="text-sm">{issue.reportedBy}</p>
-                    </div>
-                  </div>
+                <CardContent>
+                  <IssueForm
+                    mode="edit"
+                    initialData={{
+                      type: issue.type,
+                      severity: issue.severity,
+                      status: issue.status,
+                      title: issue.title,
+                      description: issue.description,
+                      assignedTo: issue.assignedTo,
+                      notes: issue.notes,
+                      tags: issue.tags,
+                    }}
+                    assetId={issue.assetId}
+                    assetName={issue.assetName}
+                    onSubmit={handleFormSubmit}
+                    onCancel={() => setIsEditing(false)}
+                    isSubmitting={saving}
+                    showAssetInfo={false}
+                    showStatusField={true}
+                    showAdvancedFields={true}
+                  />
                 </CardContent>
               </Card>
+            ) : (
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* Issue Information */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Issue Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Issue Type</label>
+                        <p className="text-sm">{issue.type}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Severity</label>
+                        <div className="mt-1">
+                          {getSeverityBadge(issue.severity)}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Status</label>
+                        <div className="mt-1">
+                          {getStatusBadge(issue.status)}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Reported</label>
+                        <p className="text-sm">{formatDate(issue.reportedDate)}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Reported By</label>
+                        <p className="text-sm">{issue.reportedBy}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-              {/* Asset Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Package className="h-5 w-5" />
-                    Asset Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Asset Name</label>
-                      <p className="text-sm font-medium">{issue.assetName}</p>
+                {/* Asset Information */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Package className="h-5 w-5" />
+                      Asset Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Asset Name</label>
+                        <p className="text-sm font-medium">{issue.assetName}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Asset ID</label>
+                        <p className="text-sm font-mono">{issue.assetId}</p>
+                      </div>
                     </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Asset ID</label>
-                      <p className="text-sm font-mono">{issue.assetId}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
 
             {/* Description */}
             <Card>
@@ -385,43 +421,8 @@ export function IssueDetails({
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
 
-          {/* Edit Tab */}
-          <TabsContent value="edit">
-            <Card>
-              <CardHeader>
-                <CardTitle>Edit Issue</CardTitle>
-                <CardDescription>Update the issue information</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <IssueForm
-                  mode="edit"
-                  initialData={{
-                    type: issue.type,
-                    severity: issue.severity,
-                    status: issue.status,
-                    title: issue.title,
-                    description: issue.description,
-                    assignedTo: issue.assignedTo,
-                    notes: issue.notes,
-                    tags: issue.tags,
-                  }}
-                  assetId={issue.assetId}
-                  assetName={issue.assetName}
-                  onSubmit={handleFormSubmit}
-                  onCancel={onBack}
-                  isSubmitting={saving}
-                  showAssetInfo={false}
-                  showStatusField={true}
-                  showAdvancedFields={true}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Audit Log Tab */}
-          <TabsContent value="audit">
+            {/* Audit Log */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -462,8 +463,7 @@ export function IssueDetails({
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
         </div>
       </div>
     </div>
