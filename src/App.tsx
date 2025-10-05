@@ -31,6 +31,10 @@ import { HistoricalPlayback } from "./components/HistoricalPlayback";
 import { NotificationPreferencesNew } from "./components/NotificationPreferencesNew";
 import { NavigationProvider, useNavigation } from "./contexts/NavigationContext";
 import { Toaster } from "./components/ui/sonner";
+import { Sites } from "./components/sites/Sites";
+import { SiteDetails } from "./components/SiteDetails";
+import { CreateSite } from "./components/sites/CreateSite";
+import { VehicleAssetPairing } from "./components/VehicleAssetPairing";
 import type { Asset } from "./types";
 
 export type ViewType = 
@@ -39,6 +43,8 @@ export type ViewType =
   | "map"
   | "asset-details"
   | "site-details"
+  | "sites"
+  | "vehicle-pairing"
   | "jobs"
   | "job-details"
   | "maintenance"
@@ -161,6 +167,43 @@ function AppContent() {
             onAssetUpdate={handleAssetUpdate}
           />
         ) : null;
+      case "sites":
+        return (
+          <Sites 
+            onSiteClick={(site) => navigation.navigateToSiteDetails(site)}
+          />
+        );
+      case "site-details":
+        return navigation.selectedSite ? (
+          <SiteDetails
+            site={navigation.selectedSite}
+            onBack={navigation.handleBackFromSiteDetails}
+            onCreateGeofence={(data, currentTab) => navigation.navigateToCreateGeofence(data, currentTab)}
+            onEditGeofence={(geofenceId, data, currentTab) => navigation.navigateToEditGeofence(geofenceId, data, currentTab)}
+            onSiteUpdate={navigation.handleSiteUpdate}
+            initialTab={navigation.siteActiveTab}
+            onTabChange={navigation.setSiteActiveTab}
+          />
+        ) : (
+          <div className="p-6">
+            <p>No site selected</p>
+            <Button onClick={() => navigation.handleViewChange("sites")}>
+              Back to Sites
+            </Button>
+          </div>
+        );
+      case "create-site":
+        return (
+          <CreateSite 
+            onBack={navigation.handleBackFromCreateSite}
+          />
+        );
+      case "vehicle-pairing":
+        return (
+          <VehicleAssetPairing 
+            onBack={() => navigation.handleViewChange("dashboard")}
+          />
+        );
       case "jobs":
         return (
           <JobManagement 

@@ -1,5 +1,5 @@
+import React, { useState, useMemo } from "react";
 import { ViewType } from "../App";
-import { useState, useMemo } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,16 +19,12 @@ import {
   Building2,
   MapPin,
   Bell,
-  BarChart3,
   Settings,
   Radio,
   Wrench,
-  Target,
-  Activity,
   Shield,
   Truck,
   BellRing,
-  DollarSign,
   ChevronDown,
   ChevronRight,
   Battery,
@@ -53,6 +49,7 @@ export function AppSidebar({ currentView, onViewChange, onAlertTypeClick }: AppS
     { id: "dashboard" as ViewType, label: "Dashboard", icon: LayoutDashboard },
     { id: "map" as ViewType, label: "Live Map", icon: Map },
     { id: "inventory" as ViewType, label: "Asset Inventory", icon: Package },
+    { id: "sites" as ViewType, label: "Sites", icon: Building2 },
   ];
 
   // Calculate alert statistics
@@ -84,6 +81,7 @@ export function AppSidebar({ currentView, onViewChange, onAlertTypeClick }: AppS
     { id: "jobs" as ViewType, label: "Jobs", icon: Package },
     { id: "maintenance" as ViewType, label: "Maintenance", icon: Wrench },
     { id: "issues" as ViewType, label: "Issues", icon: AlertTriangle },
+    { id: "vehicle-pairing" as ViewType, label: "Vehicle Pairing", icon: Truck },
   ];
 
   const monitoringItems = [
@@ -92,10 +90,6 @@ export function AppSidebar({ currentView, onViewChange, onAlertTypeClick }: AppS
     { id: "compliance" as ViewType, label: "Compliance", icon: Shield },
   ];
 
-  const analyticsItems = [
-    { id: "reports" as ViewType, label: "Reports", icon: BarChart3 },
-    { id: "historical-playback" as ViewType, label: "Historical Playback", icon: Activity },
-  ];
 
   return (
     <Sidebar>
@@ -222,27 +216,6 @@ export function AppSidebar({ currentView, onViewChange, onAlertTypeClick }: AppS
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Analytics</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {analyticsItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <SidebarMenuItem key={item.id}>
-                    <SidebarMenuButton
-                      onClick={() => onViewChange(item.id)}
-                      isActive={currentView === item.id}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-4">
@@ -253,7 +226,7 @@ export function AppSidebar({ currentView, onViewChange, onAlertTypeClick }: AppS
               isActive={currentView === "notifications"}
             >
               <BellRing className="h-4 w-4" />
-              <span>Notifications</span>
+              <span>Notification Configuration</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
