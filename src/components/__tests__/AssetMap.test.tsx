@@ -35,6 +35,11 @@ vi.mock('leaflet', () => ({
   divIcon: vi.fn(),
   LatLng: vi.fn(),
   LatLngBounds: vi.fn(),
+  Icon: {
+    Default: {
+      mergeOptions: vi.fn(),
+    },
+  },
 }))
 
 // Mock the mock data

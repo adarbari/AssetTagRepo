@@ -19,10 +19,12 @@ import {
   Save
 } from "lucide-react";
 import { toast } from "sonner";
-import { PageHeader } from "./common";
+import { PageHeader, SeverityBadge, StatusBadge, AuditLogList, LoadingState } from "./common";
 import { getIssueById } from "../data/mockIssueData";
 import { IssueForm, IssueFormData } from "./IssueForm";
+import { formatAuditDate } from "../utils/dateFormatter";
 import type { Issue, UpdateIssueInput } from "../types/issue";
+import type { AuditLogEntry } from "./common";
 
 interface IssueDetailsProps {
   issueId: string;
@@ -30,15 +32,7 @@ interface IssueDetailsProps {
   onUpdateIssue: (issueId: string, input: UpdateIssueInput) => Promise<{ success: boolean; issue?: Issue; error?: any }>;
 }
 
-interface AuditLogEntry {
-  id: string;
-  timestamp: string;
-  action: string;
-  field: string;
-  oldValue: string;
-  newValue: string;
-  changedBy: string;
-}
+// AuditLogEntry type is now imported from common components
 
 export function IssueDetails({
   issueId,
@@ -176,54 +170,13 @@ export function IssueDetails({
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: string; className: string; icon: any }> = {
-      open: { variant: "default", className: "bg-red-100 text-red-700 border-red-300", icon: AlertCircle },
-      acknowledged: { variant: "default", className: "bg-yellow-100 text-yellow-700 border-yellow-300", icon: Clock },
-      "in-progress": { variant: "default", className: "bg-blue-100 text-blue-700 border-blue-300", icon: Clock },
-      resolved: { variant: "default", className: "bg-green-100 text-green-700 border-green-300", icon: CheckCircle2 },
-      closed: { variant: "default", className: "bg-gray-100 text-gray-700 border-gray-300", icon: XCircle },
-      cancelled: { variant: "default", className: "bg-gray-100 text-gray-700 border-gray-300", icon: XCircle },
-    };
-    
-    const variant = variants[status] || variants.open;
-    const Icon = variant.icon;
-    
-    return (
-      <Badge variant="outline" className={variant.className}>
-        <Icon className="h-3 w-3 mr-1" />
-        {status.replace("-", " ")}
-      </Badge>
-    );
-  };
-
-  const getSeverityBadge = (severity: string) => {
-    const variants: Record<string, { variant: string; className: string }> = {
-      low: { variant: "default", className: "bg-green-100 text-green-700 border-green-300" },
-      medium: { variant: "default", className: "bg-yellow-100 text-yellow-700 border-yellow-300" },
-      high: { variant: "default", className: "bg-orange-100 text-orange-700 border-orange-300" },
-      critical: { variant: "default", className: "bg-red-100 text-red-700 border-red-300" },
-    };
-    
-    const variant = variants[severity] || variants.medium;
-    return (
-      <Badge variant="outline" className={variant.className}>
-        {severity}
-      </Badge>
-    );
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
-  };
+  // Using generic components for badges and date formatting
 
   if (loading) {
     return (
       <div className="p-6">
         <PageHeader title="Issue Details" onBack={onBack} />
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
+        <LoadingState message="Loading issue details..." />
       </div>
     );
   }
@@ -274,8 +227,8 @@ export function IssueDetails({
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Status Badges */}
           <div className="flex gap-2">
-            {getStatusBadge(issue.status)}
-            {getSeverityBadge(issue.severity)}
+            <StatusBadge status={issue.status} />
+            <SeverityBadge severity={issue.severity} />
           </div>
           
           {/* Unified Form Interface */}
@@ -326,18 +279,18 @@ export function IssueDetails({
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Severity</label>
                         <div className="mt-1">
-                          {getSeverityBadge(issue.severity)}
+                          <SeverityBadge severity={issue.severity} />
                         </div>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Status</label>
                         <div className="mt-1">
-                          {getStatusBadge(issue.status)}
+                          <StatusBadge status={issue.status} />
                         </div>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Reported</label>
-                        <p className="text-sm">{formatDate(issue.reportedDate)}</p>
+                        <p className="text-sm">{formatAuditDate(issue.reportedDate)}</p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Reported By</label>
@@ -423,46 +376,12 @@ export function IssueDetails({
             </div>
 
             {/* Audit Log */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5" />
-                  Audit Log
-                </CardTitle>
-                <CardDescription>
-                  Complete history of all changes made to this issue
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {auditLog.map((entry) => (
-                    <div key={entry.id} className="flex items-start gap-4 p-4 border rounded-lg">
-                      <div className="flex-shrink-0">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                          <User className="h-4 w-4 text-primary" />
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-sm">{entry.changedBy}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {formatDate(entry.timestamp)}
-                          </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {entry.action === "created" ? "Created" : "Updated"} {entry.field}
-                          {entry.oldValue && entry.newValue && (
-                            <span className="ml-1">
-                              from "{entry.oldValue}" to "{entry.newValue}"
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <AuditLogList
+              entries={auditLog}
+              title="Audit Log"
+              description="Complete history of all changes made to this issue"
+              formatDate={formatAuditDate}
+            />
           </div>
         </div>
       </div>

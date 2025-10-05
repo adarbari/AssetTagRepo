@@ -13,7 +13,7 @@ import {
 import { Badge } from "./ui/badge";
 import { AlertTriangle, Camera, Upload, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { PageHeader } from "./common";
+import { PageHeader, AssetContextCard } from "./common";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "./ui/breadcrumb";
 import { issueTypes, issueSeverities } from "../data/dropdownOptions";
 import type { Asset } from "../types";
@@ -110,28 +110,12 @@ export function CreateIssue({
       <div className="flex-1 overflow-auto p-8">
         <div className="max-w-3xl mx-auto space-y-6">
           {/* Asset Info Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Asset Information</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="p-4 bg-muted rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4>{assetName}</h4>
-                    <p className="text-sm text-muted-foreground">{assetId}</p>
-                    {assetContext && (
-                      <div className="mt-2 text-sm space-y-1">
-                        <p><span className="text-muted-foreground">Type:</span> {assetContext.type}</p>
-                        <p><span className="text-muted-foreground">Status:</span> {assetContext.status}</p>
-                        <p><span className="text-muted-foreground">Location:</span> {assetContext.location}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <AssetContextCard
+            assetId={assetId}
+            assetName={assetName}
+            assetContext={assetContext}
+            title="Asset Information"
+          />
 
           {/* Issue Form Card */}
           <form onSubmit={handleSubmit}>

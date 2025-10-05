@@ -10,7 +10,7 @@ import {
 } from "../ui/select";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { PageHeader } from "../common";
+import { PageHeader, LoadingState } from "../common";
 import { Truck, Package, ArrowLeft, Plus, X, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -153,14 +153,7 @@ export function LoadAsset({ onBack, onAssetsLoaded, preselectedVehicleId }: Load
   const availableAssets = assets.filter((asset) => !selectedAssets.includes(asset.value));
 
   if (loading) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Loading assets and vehicles..." fullScreen />;
   }
 
   return (

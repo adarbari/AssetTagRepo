@@ -4,6 +4,7 @@
  * Provides consistent statistics card UI across the application
  */
 
+import React from "react";
 import { LucideIcon, TrendingUp, TrendingDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { cn } from "../ui/utils";

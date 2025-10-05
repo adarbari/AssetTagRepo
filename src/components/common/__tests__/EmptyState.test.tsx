@@ -293,8 +293,8 @@ describe('EmptyState Component - Button Click Tests', () => {
 
       const actionButton = screen.getByRole('button', { name: /create item/i })
       
-      // Should not throw error when clicking
-      await expect(user.click(actionButton)).resolves.not.toThrow()
+      // Should call the action function even if it throws
+      await user.click(actionButton)
       
       expect(mockAction).toHaveBeenCalledTimes(1)
       

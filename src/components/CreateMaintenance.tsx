@@ -13,7 +13,7 @@ import {
 import { Calendar } from "./ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Card, CardContent } from "./ui/card";
-import { PageHeader } from "./common";
+import { PageHeader, AssetContextCard } from "./common";
 import { cn } from "./ui/utils";
 import { Calendar as CalendarIcon, Wrench, History, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
@@ -92,22 +92,13 @@ export function CreateMaintenance({
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Asset Context Card */}
           {(preSelectedAsset || assetContext) && (preSelectedAssetName || assetContext?.name) && (
-            <Card>
-              <CardContent className="pt-6">
-                <p className="text-sm text-muted-foreground">Scheduling maintenance for:</p>
-                <h4 className="mt-1">{assetContext?.name || preSelectedAssetName}</h4>
-                <p className="text-sm text-muted-foreground">{assetContext?.id || preSelectedAsset}</p>
-                {assetContext && (
-                  <div className="mt-4 text-sm space-y-1">
-                    <p><span className="text-muted-foreground">Type:</span> {assetContext.type}</p>
-                    <p><span className="text-muted-foreground">Location:</span> {assetContext.location}</p>
-                    {assetContext.lastMaintenance && (
-                      <p><span className="text-muted-foreground">Last Maintenance:</span> {assetContext.lastMaintenance}</p>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <AssetContextCard
+              assetId={assetContext?.id || preSelectedAsset || ""}
+              assetName={assetContext?.name || preSelectedAssetName || ""}
+              assetContext={assetContext}
+              description="Scheduling maintenance for:"
+              variant="compact"
+            />
           )}
 
           {/* Main Form */}

@@ -25,6 +25,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { format } from "date-fns";
+import { LoadingState } from "./common";
 import type { Asset } from "../types";
 import { mockAssets as allMockAssets } from "../data/mockData";
 
@@ -362,10 +363,7 @@ export function HistoricalPlayback({ onBack, preselectedAsset }: HistoricalPlayb
               <div ref={mapRef} className="h-full w-full rounded-lg overflow-hidden" />
               {mapLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-muted/50 rounded-lg">
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-                    <p className="text-sm text-muted-foreground">Loading map...</p>
-                  </div>
+                  <LoadingState message="Loading map..." size="sm" />
                 </div>
               )}
               

@@ -14,6 +14,7 @@ import {
 import { Badge } from "./ui/badge";
 import { AlertTriangle, Save, Upload, Camera } from "lucide-react";
 import { toast } from "sonner";
+import { SeverityBadge, StatusBadge } from "./common";
 import { issueTypes, issueSeverities } from "../data/dropdownOptions";
 import type { IssueType, IssueSeverity, IssueStatus } from "../types/issue";
 
@@ -93,39 +94,7 @@ export function IssueForm({
     await onSubmit(processedData);
   };
 
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: string; className: string }> = {
-      open: { variant: "default", className: "bg-red-100 text-red-700 border-red-300" },
-      acknowledged: { variant: "default", className: "bg-yellow-100 text-yellow-700 border-yellow-300" },
-      "in-progress": { variant: "default", className: "bg-blue-100 text-blue-700 border-blue-300" },
-      resolved: { variant: "default", className: "bg-green-100 text-green-700 border-green-300" },
-      closed: { variant: "default", className: "bg-gray-100 text-gray-700 border-gray-300" },
-      cancelled: { variant: "default", className: "bg-gray-100 text-gray-700 border-gray-300" },
-    };
-    
-    const variant = variants[status] || variants.open;
-    return (
-      <Badge variant="outline" className={variant.className}>
-        {status.replace("-", " ")}
-      </Badge>
-    );
-  };
-
-  const getSeverityBadge = (severity: string) => {
-    const variants: Record<string, { variant: string; className: string }> = {
-      low: { variant: "default", className: "bg-green-100 text-green-700 border-green-300" },
-      medium: { variant: "default", className: "bg-yellow-100 text-yellow-700 border-yellow-300" },
-      high: { variant: "default", className: "bg-orange-100 text-orange-700 border-orange-300" },
-      critical: { variant: "default", className: "bg-red-100 text-red-700 border-red-300" },
-    };
-    
-    const variant = variants[severity] || variants.medium;
-    return (
-      <Badge variant="outline" className={variant.className}>
-        {severity}
-      </Badge>
-    );
-  };
+  // Using generic SeverityBadge component
 
   return (
     <div className="space-y-6">
@@ -150,8 +119,8 @@ export function IssueForm({
                   )}
                 </div>
                 <div className="flex gap-2">
-                  {formData.status && getStatusBadge(formData.status)}
-                  {getSeverityBadge(formData.severity)}
+                  {formData.status && <StatusBadge status={formData.status} />}
+                  <SeverityBadge severity={formData.severity} />
                 </div>
               </div>
             </div>

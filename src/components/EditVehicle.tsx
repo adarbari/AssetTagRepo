@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Card, CardContent } from "./ui/card";
-import { PageHeader } from "./common";
+import { PageHeader, LoadingState } from "./common";
 import { Truck, ArrowLeft, Save } from "lucide-react";
 import { toast } from "sonner";
 import { vehicleTypes, drivers } from "../data/dropdownOptions";
@@ -99,14 +99,7 @@ export function EditVehicle({ vehicleId, onBack, onVehicleUpdated }: EditVehicle
   };
 
   if (loading) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading vehicle details...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Loading vehicle details..." fullScreen />;
   }
 
   return (

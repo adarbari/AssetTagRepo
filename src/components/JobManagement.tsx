@@ -9,12 +9,12 @@
  * - Monitoring job alerts
  */
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
-import { StatusBadge, PriorityBadge } from "./common";
+import { StatusBadge, PriorityBadge, StatsCard } from "./common";
 import {
   Select,
   SelectContent,
@@ -158,59 +158,38 @@ export function JobManagement({
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm">Total Jobs</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl">{stats.total}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.active} active, {stats.planning} planning
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          title="Total Jobs"
+          value={stats.total}
+          icon={FileText}
+          description={`${stats.active} active, ${stats.planning} planning`}
+        />
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm">Total Budget</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl">{formatCurrency(stats.totalBudget)}</div>
-            <p className="text-xs text-muted-foreground">
-              Across all jobs
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          title="Total Budget"
+          value={formatCurrency(stats.totalBudget)}
+          icon={DollarSign}
+          description="Across all jobs"
+        />
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm">Actual Costs</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl">{formatCurrency(stats.totalActualCosts)}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.totalBudget > 0 
-                ? `${((stats.totalActualCosts / stats.totalBudget) * 100).toFixed(1)}% of budget`
-                : "No budget allocated"}
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          title="Actual Costs"
+          value={formatCurrency(stats.totalActualCosts)}
+          icon={TrendingUp}
+          description={
+            stats.totalBudget > 0 
+              ? `${((stats.totalActualCosts / stats.totalBudget) * 100).toFixed(1)}% of budget`
+              : "No budget allocated"
+          }
+        />
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm">Active Alerts</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl">{stats.activeAlerts}</div>
-            <p className="text-xs text-muted-foreground">
-              Requires attention
-            </p>
-          </CardContent>
-        </Card>
+        <StatsCard
+          title="Active Alerts"
+          value={stats.activeAlerts}
+          icon={AlertTriangle}
+          description="Requires attention"
+          variant={stats.activeAlerts > 0 ? "warning" : "default"}
+        />
       </div>
 
       {/* Filters */}

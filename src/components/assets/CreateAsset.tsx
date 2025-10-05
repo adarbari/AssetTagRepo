@@ -14,7 +14,7 @@ import { Switch } from "../ui/switch";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
-import { PageHeader } from "../common";
+import { PageHeader, LoadingState } from "../common";
 import { Package, ArrowLeft, X } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -194,14 +194,7 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
   };
 
   if (loading) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading configuration...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Loading configuration..." fullScreen />;
   }
 
   return (
