@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { updateAsset } from "../data/mockData";
 import { PageHeader } from "./common";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "./ui/breadcrumb";
 import type { Asset } from "../types";
@@ -95,13 +96,11 @@ export function CreateCheckInOut({
     }
     
     // Update mock data for persistence across components
-    import("../data/mockData").then(({ updateAsset }) => {
-      try {
-        updateAsset(assetId, updates);
-      } catch (error) {
-        console.error("Error updating asset in mock data:", error);
-      }
-    });
+    try {
+      updateAsset(assetId, updates);
+    } catch (error) {
+      console.error("Error updating asset in mock data:", error);
+    }
     
     // Navigate back
     onBack();

@@ -214,31 +214,39 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [selectedAlertForWorkflow, setSelectedAlertForWorkflow] = useState<Alert | null>(null);
 
   const pushNavigationState = () => {
-    setNavigationStack(prev => [...prev, {
-      view: currentView,
-      asset: selectedAsset,
-      site: selectedSite,
-      highlightAsset: highlightAsset,
-      historicalPlaybackAsset: historicalPlaybackAsset,
-      alertFilter: alertFilter,
-      geofenceData: geofenceCreationData,
-      siteActiveTab: siteActiveTab,
-      filteredAssetIds: filteredAssetIds,
-      geofenceViolationMode: geofenceViolationMode,
-      violatingGeofenceId: violatingGeofenceId,
-      expectedAssetIds: expectedAssetIds,
-      actualAssetIds: actualAssetIds,
-      selectedAlertForWorkflow: selectedAlertForWorkflow,
-    }]);
+    console.log("📚 Pushing navigation state, current view:", currentView);
+    setNavigationStack(prev => {
+      const newStack = [...prev, {
+        view: currentView,
+        asset: selectedAsset,
+        site: selectedSite,
+        highlightAsset: highlightAsset,
+        historicalPlaybackAsset: historicalPlaybackAsset,
+        alertFilter: alertFilter,
+        geofenceData: geofenceCreationData,
+        siteActiveTab: siteActiveTab,
+        filteredAssetIds: filteredAssetIds,
+        geofenceViolationMode: geofenceViolationMode,
+        violatingGeofenceId: violatingGeofenceId,
+        expectedAssetIds: expectedAssetIds,
+        actualAssetIds: actualAssetIds,
+        selectedAlertForWorkflow: selectedAlertForWorkflow,
+      }];
+      console.log("📚 Navigation stack after push:", newStack.map(s => s.view));
+      return newStack;
+    });
   };
 
   const popNavigationState = () => {
+    console.log("📚 Popping navigation state, current stack:", navigationStack.map(s => s.view));
     if (navigationStack.length === 0) {
+      console.log("📚 Navigation stack is empty, going to dashboard");
       handleViewChange("dashboard");
       return;
     }
 
     const previousState = navigationStack[navigationStack.length - 1];
+    console.log("📚 Restoring previous state:", previousState.view);
     setNavigationStack(prev => prev.slice(0, -1));
 
     setCurrentView(previousState.view);

@@ -83,6 +83,13 @@ function AppContent() {
     navigation.navigateToAssetDetails(asset);
   };
 
+  const handleAssetUpdate = (updates: Partial<Asset>) => {
+    if (selectedAsset) {
+      const updatedAsset = { ...selectedAsset, ...updates };
+      setSelectedAsset(updatedAsset);
+    }
+  };
+
   const handleBackToMap = () => {
     navigation.handleViewChange("map");
     setSelectedAsset(null);
@@ -142,9 +149,10 @@ function AppContent() {
         return selectedAsset ? (
           <AssetDetails
             asset={selectedAsset}
-            onBack={handleBackToMap}
+            onBack={navigation.handleBackFromAssetDetails}
             onShowOnMap={handleShowOnMap}
             onViewHistoricalPlayback={handleTrackHistory}
+            onAssetUpdate={handleAssetUpdate}
           />
         ) : null;
       case "jobs":

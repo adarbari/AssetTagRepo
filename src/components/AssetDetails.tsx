@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "./ui/table";
 import { ExportDialog } from "./ExportDialog";
-import { mockAssets } from "../data/mockData";
+import { mockAssets, getAssetById } from "../data/mockData";
 import QRCode from "qrcode";
 import { EditMaintenanceDialog } from "./EditMaintenanceDialog";
 import { toast } from "sonner";
@@ -95,6 +95,7 @@ interface AssetDetailsProps {
   onBack: () => void;
   onShowOnMap?: (asset: Asset) => void;
   onViewHistoricalPlayback?: (asset: Asset) => void;
+  onAssetUpdate?: (updates: Partial<Asset>) => void;
 }
 
 // Helper function to map alert category to AlertType
@@ -112,7 +113,7 @@ function mapAlertCategoryToType(category: string): string {
   return mapping[category] || "compliance";
 }
 
-export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayback }: AssetDetailsProps) {
+export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayback, onAssetUpdate }: AssetDetailsProps) {
   // Component state
   const navigation = useNavigation();
   const [currentAsset, setCurrentAsset] = useState<Asset>(asset);
@@ -205,9 +206,34 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
 
   // Handler for after check-in/out completes in embedded view
   const handleCheckInOutComplete = (updates: Partial<Asset>) => {
-    // Update the current asset with the new status and other updates
-    const updatedAsset = { ...currentAsset, ...updates };
-    setCurrentAsset(updatedAsset);
+    console.log("🔄 handleCheckInOutComplete called with updates:", updates);
+    console.log("🔄 Current asset status before update:", currentAsset.status);
+    
+    // Refresh the asset from the mock data layer to get the latest state
+    const refreshedAsset = getAssetById(currentAsset.id);
+    console.log("🔄 Refreshed asset from mock data:", refreshedAsset);
+    
+    if (refreshedAsset) {
+      console.log("✅ Updating asset state with refreshed data, new status:", refreshedAsset.status);
+      setCurrentAsset(refreshedAsset);
+      // Also update the edit form to reflect the new status
+      setEditForm(prev => ({
+        ...prev,
+        status: refreshedAsset.status,
+        assignedTo: refreshedAsset.assignedTo || "",
+      }));
+    } else {
+      console.log("⚠️ Asset not found in mock data, using fallback update");
+      // Fallback: update local state if asset not found in mock data
+      const updatedAsset = { ...currentAsset, ...updates };
+      console.log("✅ Updating asset state with fallback data, new status:", updatedAsset.status);
+      setCurrentAsset(updatedAsset);
+      setEditForm(prev => ({
+        ...prev,
+        status: updatedAsset.status,
+        assignedTo: updatedAsset.assignedTo || "",
+      }));
+    }
   };
 
   // Adapt the asset to the format expected by this component's UI
@@ -421,7 +447,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                   const canCheckOut = currentAsset.status === "active" || 
                     currentAsset.status === "inactive" || 
                     currentAsset.status === "maintenance";
-                  console.log("Asset status:", currentAsset.status, "Can check out:", canCheckOut);
+                  console.log("🔴 Check Out button logic - Asset status:", currentAsset.status, "Can check out:", canCheckOut);
                   return canCheckOut;
                 })() && (
                   <Button 
@@ -435,7 +461,13 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                         currentStatus: currentAsset.status,
                         mode: "check-out",
                         assetContext: currentAsset,
-                        onComplete: handleCheckInOutComplete,
+                        onComplete: (updates: Partial<Asset>) => {
+                          handleCheckInOutComplete(updates);
+                          // Also notify parent component to update selectedAsset
+                          if (onAssetUpdate) {
+                            onAssetUpdate(updates);
+                          }
+                        },
                       });
                     }}
                   >
@@ -446,7 +478,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                 {/* Conditionally show Check In button for checked-out assets */}
                 {(() => {
                   const canCheckIn = currentAsset.status === "checked-out";
-                  console.log("Asset status:", currentAsset.status, "Can check in:", canCheckIn);
+                  console.log("🟢 Check In button logic - Asset status:", currentAsset.status, "Can check in:", canCheckIn);
                   return canCheckIn;
                 })() && (
                   <Button 
@@ -460,7 +492,13 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                         currentStatus: currentAsset.status,
                         mode: "check-in",
                         assetContext: currentAsset,
-                        onComplete: handleCheckInOutComplete,
+                        onComplete: (updates: Partial<Asset>) => {
+                          handleCheckInOutComplete(updates);
+                          // Also notify parent component to update selectedAsset
+                          if (onAssetUpdate) {
+                            onAssetUpdate(updates);
+                          }
+                        },
                       });
                     }}
                   >
@@ -877,7 +915,13 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                             currentStatus: currentAsset.status,
                             mode: "check-out",
                             assetContext: currentAsset,
-                            onComplete: handleCheckInOutComplete,
+                            onComplete: (updates: Partial<Asset>) => {
+                              handleCheckInOutComplete(updates);
+                              // Also notify parent component to update selectedAsset
+                              if (onAssetUpdate) {
+                                onAssetUpdate(updates);
+                              }
+                            },
                           });
                         }}
                       >
@@ -898,7 +942,13 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                             currentStatus: currentAsset.status,
                             mode: "check-in",
                             assetContext: currentAsset,
-                            onComplete: handleCheckInOutComplete,
+                            onComplete: (updates: Partial<Asset>) => {
+                              handleCheckInOutComplete(updates);
+                              // Also notify parent component to update selectedAsset
+                              if (onAssetUpdate) {
+                                onAssetUpdate(updates);
+                              }
+                            },
                           });
                         }}
                       >
