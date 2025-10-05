@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { PageHeader } from "./common";
+import { useFormSubmit } from "../hooks/useFormSubmit";
 import { ArrowLeft, Briefcase } from "lucide-react";
 import { toast } from "sonner";
 import type { CreateJobInput, JobPriority } from "../types/job";
@@ -36,18 +37,55 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
   const [materialsBudget, setMaterialsBudget] = useState("");
   const [otherBudget, setOtherBudget] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const { handleSubmit, isSubmitting } = useFormSubmit(
+    async (formData: any) => {
+      const jobInput: CreateJobInput = {
+        name: formData.name,
+        description: formData.description,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        priority: formData.priority,
+        projectManager: formData.projectManager || undefined,
+        clientId: formData.clientId || undefined,
+        siteId: formData.siteId || undefined,
+        groundStationGeofenceId: formData.groundStationGeofenceId || undefined,
+        notes: formData.notes || undefined,
+        tags: formData.tags.length > 0 ? formData.tags : undefined,
+        budget: {
+          total: formData.finalTotalBudget,
+          labor: parseFloat(formData.laborBudget || "0"),
+          equipment: parseFloat(formData.equipmentBudget || "0"),
+          materials: parseFloat(formData.materialsBudget || "0"),
+          other: parseFloat(formData.otherBudget || "0"),
+        },
+      };
+
+      return await onCreateJob(jobInput);
+    },
+    {
+      onSuccess: () => onBack(),
+      successMessage: "Job created successfully!",
+      errorMessage: "Failed to create job",
+      validate: (formData) => {
+        if (!formData.name || !formData.startDate || !formData.endDate) {
+          return "Please fill in all required fields";
+        }
+
+        if (new Date(formData.endDate) <= new Date(formData.startDate)) {
+          return "End date must be after start date";
+        }
+
+        if (formData.finalTotalBudget <= 0) {
+          return "Please enter a valid budget amount";
+        }
+
+        return null;
+      },
+    }
+  );
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!name || !startDate || !endDate) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-
-    if (new Date(endDate) <= new Date(startDate)) {
-      toast.error("End date must be after start date");
-      return;
-    }
 
     // Calculate total budget if individual fields are filled
     const calculatedTotal = 
@@ -58,45 +96,27 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
 
     const finalTotalBudget = totalBudget ? parseFloat(totalBudget) : calculatedTotal;
 
-    if (finalTotalBudget <= 0) {
-      toast.error("Please enter a valid budget amount");
-      return;
-    }
-
-    const jobInput: CreateJobInput = {
+    const formData = {
       name,
       description,
       startDate,
       endDate,
       priority,
-      projectManager: projectManager || undefined,
-      clientId: clientId || undefined,
-      siteId: siteId || undefined,
-      groundStationGeofenceId: groundStationGeofenceId || undefined,
-      notes: notes || undefined,
-      tags: tags.length > 0 ? tags : undefined,
-      budget: {
-        total: finalTotalBudget,
-        labor: parseFloat(laborBudget || "0"),
-        equipment: parseFloat(equipmentBudget || "0"),
-        materials: parseFloat(materialsBudget || "0"),
-        other: parseFloat(otherBudget || "0"),
-      },
+      projectManager,
+      clientId,
+      siteId,
+      groundStationGeofenceId,
+      notes,
+      tags,
+      laborBudget,
+      equipmentBudget,
+      materialsBudget,
+      otherBudget,
+      totalBudget,
+      finalTotalBudget,
     };
 
-    try {
-      const result = await onCreateJob(jobInput);
-      
-      if (result.success) {
-        toast.success("Job created successfully!");
-        onBack();
-      } else {
-        toast.error("Failed to create job");
-      }
-    } catch (error) {
-      console.error("Error creating job:", error);
-      toast.error("An error occurred while creating the job");
-    }
+    await handleSubmit(formData);
   };
 
   return (
@@ -114,7 +134,7 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
 
       <div className="flex-1 overflow-auto p-6">
         <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={onSubmit} className="space-y-6">
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center gap-2 mb-6">
@@ -182,8 +202,8 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
               <Button type="button" variant="outline" onClick={onBack}>
                 Cancel
               </Button>
-              <Button type="submit">
-                Create Job
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Creating..." : "Create Job"}
               </Button>
             </div>
           </form>

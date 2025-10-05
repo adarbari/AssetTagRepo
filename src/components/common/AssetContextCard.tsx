@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card";
 import { StatusBadge } from "./StatusBadge";
 
 interface AssetContextCardProps {
@@ -35,6 +35,11 @@ export function AssetContextCard({
   variant = "default",
   className,
 }: AssetContextCardProps) {
+  // Early return if required props are missing
+  if (!assetId || !assetName) {
+    return null;
+  }
+
   const displayName = assetContext?.name || assetName;
   const displayId = assetContext?.id || assetId;
 
@@ -88,6 +93,7 @@ export function AssetContextCard({
     <Card className={className}>
       <CardHeader>
         <CardTitle>{title || "Asset Information"}</CardTitle>
+        {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent>
         <div className="p-4 bg-muted rounded-lg">

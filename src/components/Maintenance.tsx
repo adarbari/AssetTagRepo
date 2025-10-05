@@ -55,6 +55,7 @@ import {
   type PredictiveAlert,
 } from "../services/maintenanceService";
 import { LoadingState } from "./common/LoadingState";
+import { AuditLogList, type AuditLogEntry } from "./common";
 
 // Data will be loaded from service
 
@@ -677,79 +678,20 @@ export function Maintenance({ onAssetClick }: MaintenanceProps) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {auditLogs.map((log) => (
-                  <div
-                    key={log.id}
-                    className="p-4 border rounded-lg space-y-3 hover:bg-muted/30 transition-colors"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge 
-                            variant="outline"
-                            className={
-                              log.action === "Task Completed" 
-                                ? "bg-green-100 text-green-700 border-green-200"
-                                : log.action === "Task Cancelled"
-                                ? "bg-red-100 text-red-700 border-red-200"
-                                : log.action === "Priority Escalated"
-                                ? "bg-orange-100 text-orange-700 border-orange-200"
-                                : "bg-blue-100 text-blue-700 border-blue-200"
-                            }
-                          >
-                            {log.action}
-                          </Badge>
-                          <span className="text-sm text-muted-foreground">
-                            {log.taskId}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Package className="h-4 w-4 text-muted-foreground" />
-                          <h4>{log.assetName}</h4>
-                        </div>
-                      </div>
-                      <div className="text-right text-sm">
-                        <div className="flex items-center gap-1 text-muted-foreground mb-1">
-                          <User className="h-3 w-3" />
-                          <span>{log.user}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-muted-foreground">
-                          <Clock className="h-3 w-3" />
-                          <span>{log.timestamp}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {log.changes.length > 0 && (
-                      <div className="space-y-2 pl-4 border-l-2 border-muted">
-                        <p className="text-sm text-muted-foreground">Changes:</p>
-                        {log.changes.map((change, index) => (
-                          <div key={index} className="text-sm">
-                            <span className="text-muted-foreground">{change.field}: </span>
-                            {change.from !== "-" && (
-                              <>
-                                <span className="line-through text-muted-foreground">
-                                  {change.from}
-                                </span>
-                                <span className="mx-2">→</span>
-                              </>
-                            )}
-                            <span>{change.to}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {log.notes && (
-                      <div className="flex items-start gap-2 text-sm bg-muted/50 p-2 rounded">
-                        <FileText className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                        <span className="text-muted-foreground">{log.notes}</span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <AuditLogList
+                entries={auditLogs.map((log) => ({
+                  id: log.id,
+                  timestamp: log.timestamp,
+                  action: log.action,
+                  changedBy: log.user,
+                  changes: log.changes,
+                  notes: log.notes,
+                }))}
+                variant="inline"
+                showEmptyState={true}
+                emptyStateTitle="No Audit Log Entries"
+                emptyStateDescription="No maintenance activities have been recorded yet."
+              />
             </CardContent>
           </Card>
         </TabsContent>

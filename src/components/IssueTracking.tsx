@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
+import { SeverityBadge, StatusBadge } from "./common";
 import {
   Select,
   SelectContent,
@@ -61,38 +62,6 @@ interface IssueTrackingProps {
   onDeleteIssue: (issueId: string) => Promise<{ success: boolean; error?: any }>;
 }
 
-const getStatusBadge = (status: IssueStatus) => {
-  const variants: Record<IssueStatus, { variant: string; className: string }> = {
-    open: { variant: "default", className: "bg-red-100 text-red-700 border-red-300" },
-    acknowledged: { variant: "default", className: "bg-yellow-100 text-yellow-700 border-yellow-300" },
-    "in-progress": { variant: "default", className: "bg-blue-100 text-blue-700 border-blue-300" },
-    resolved: { variant: "default", className: "bg-green-100 text-green-700 border-green-300" },
-    closed: { variant: "outline", className: "" },
-    cancelled: { variant: "outline", className: "" },
-  };
-
-  const config = variants[status];
-  return (
-    <Badge className={config.className}>
-      {status === "in-progress" ? "In Progress" : status.charAt(0).toUpperCase() + status.slice(1)}
-    </Badge>
-  );
-};
-
-const getSeverityBadge = (severity: string) => {
-  switch (severity) {
-    case "critical":
-      return <Badge variant="destructive">Critical</Badge>;
-    case "high":
-      return <Badge className="bg-orange-100 text-orange-700 border-orange-300">High</Badge>;
-    case "medium":
-      return <Badge className="bg-yellow-100 text-yellow-700 border-yellow-300">Medium</Badge>;
-    case "low":
-      return <Badge variant="outline">Low</Badge>;
-    default:
-      return <Badge variant="outline">{severity}</Badge>;
-  }
-};
 
 export function IssueTracking({
   issues,
@@ -319,8 +288,8 @@ export function IssueTracking({
                                   {issue.type.replace("-", " ")}
                                 </Badge>
                               </TableCell>
-                              <TableCell>{getSeverityBadge(issue.severity)}</TableCell>
-                              <TableCell>{getStatusBadge(issue.status)}</TableCell>
+                              <TableCell><SeverityBadge severity={issue.severity} /></TableCell>
+                              <TableCell><StatusBadge status={issue.status} /></TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-1 text-sm">
                                   <Clock className="h-3 w-3 text-muted-foreground" />

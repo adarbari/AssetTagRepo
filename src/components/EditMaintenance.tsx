@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Save, Calendar, User, Package, AlertTriangle, History as HistoryIcon } from "lucide-react";
+import { ArrowLeft, Save, Calendar, User, Package, AlertTriangle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { PageHeader } from "./common/PageHeader";
 import { LoadingState } from "./common/LoadingState";
 import { ErrorState } from "./common/ErrorState";
+import { AuditLogList, type AuditLogEntry } from "./common";
 import {
   fetchMaintenanceTaskById,
   updateMaintenanceTask,
@@ -505,45 +506,19 @@ export function EditMaintenance({
 
       {/* Audit Log */}
       {showAuditLog && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <HistoryIcon className="h-4 w-4" />
-              Audit Log
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {task.auditLog.map((entry, index) => (
-                <div key={index} className="border-l-2 border-blue-500 pl-4 pb-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <p className="font-medium">{entry.action}</p>
-                      <p className="text-sm text-muted-foreground">
-                        by {entry.user} • {new Date(entry.timestamp).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                  {entry.changes.length > 0 && (
-                    <div className="space-y-1 mb-2">
-                      {entry.changes.map((change, changeIndex) => (
-                        <div key={changeIndex} className="text-sm">
-                          <span className="text-muted-foreground">{change.field}:</span>{" "}
-                          <span className="line-through text-red-600">{change.from}</span>
-                          {" → "}
-                          <span className="text-green-600">{change.to}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {entry.notes && (
-                    <p className="text-sm text-muted-foreground italic">{entry.notes}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <AuditLogList
+          entries={task.auditLog.map((entry, index) => ({
+            id: `audit-${index}`,
+            timestamp: entry.timestamp,
+            action: entry.action,
+            changedBy: entry.user,
+            changes: entry.changes,
+            notes: entry.notes,
+          }))}
+          title="Audit Log"
+          description="Track all changes made to this maintenance task"
+          variant="card"
+        />
       )}
     </div>
   );

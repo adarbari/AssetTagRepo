@@ -47,7 +47,7 @@ describe('EditIssue Component - Basic Tests', () => {
       const user = userEvent.setup()
       render(<EditIssue {...mockProps} />)
 
-      await waitFor(() => {
+      await waitFor(async () => {
         const backButton = screen.getByRole('button', { name: /back/i })
         await user.click(backButton)
         expect(mockProps.onBack).toHaveBeenCalledTimes(1)
@@ -78,7 +78,7 @@ describe('EditIssue Component - Basic Tests', () => {
       render(<EditIssue {...mockProps} />)
 
       await waitFor(() => {
-        expect(screen.getByLabelText(/title/i)).toBeInTheDocument()
+        expect(screen.getByLabelText(/description/i)).toBeInTheDocument()
       })
     })
 
@@ -87,9 +87,9 @@ describe('EditIssue Component - Basic Tests', () => {
       render(<EditIssue {...mockProps} />)
 
       await waitFor(() => {
-        const titleInput = screen.getByLabelText(/title/i)
-        user.type(titleInput, 'Updated Issue')
-        expect(titleInput).toHaveValue('Updated Issue')
+        const descriptionInput = screen.getByLabelText(/description/i)
+        user.type(descriptionInput, 'Updated Issue')
+        expect(descriptionInput).toHaveValue('Updated Issue')
       })
     })
   })
@@ -122,8 +122,8 @@ describe('EditIssue Component - Basic Tests', () => {
       render(<EditIssue {...mockProps} />)
 
       await waitFor(() => {
-        const titleInput = screen.getByLabelText(/title/i)
-        user.type(titleInput, 'Updated Issue')
+        const descriptionInput = screen.getByLabelText(/description/i)
+        user.type(descriptionInput, 'Updated Issue')
 
         const saveButton = screen.getByRole('button', { name: /save/i })
         user.click(saveButton)
@@ -147,7 +147,7 @@ describe('EditIssue Component - Basic Tests', () => {
       render(<EditIssue {...mockProps} />)
 
       await waitFor(() => {
-        expect(screen.getByLabelText(/title/i)).toBeInTheDocument()
+        expect(screen.getByLabelText(/description/i)).toBeInTheDocument()
       })
     })
   })

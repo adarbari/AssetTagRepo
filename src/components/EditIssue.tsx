@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { AlertTriangle, History, User, Calendar } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
-import { PageHeader, LoadingState } from "./common";
+import { PageHeader, LoadingState, AuditLogList, type AuditLogEntry } from "./common";
 import { getIssueById } from "../data/mockIssueData";
 import { IssueForm, IssueFormData } from "./IssueForm";
 import type { Issue, UpdateIssueInput } from "../types/issue";
@@ -15,15 +14,6 @@ interface EditIssueProps {
   onUpdateIssue: (issueId: string, input: UpdateIssueInput) => Promise<{ success: boolean; issue?: Issue; error?: any }>;
 }
 
-interface AuditLogEntry {
-  id: string;
-  timestamp: string;
-  action: string;
-  field: string;
-  oldValue: string;
-  newValue: string;
-  changedBy: string;
-}
 
 export function EditIssue({
   issueId,
@@ -224,46 +214,12 @@ export function EditIssue({
         />
 
         {/* Audit Log */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <History className="h-5 w-5" />
-              Audit Log
-            </CardTitle>
-            <CardDescription>Track all changes made to this issue</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {auditLog.map((entry) => (
-                <div key={entry.id} className="flex gap-3 p-3 border rounded-lg">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 text-primary" />
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-sm">{entry.changedBy}</span>
-                      <Badge variant="outline" className="text-xs">
-                        {entry.action}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-1">
-                      {entry.field === "multiple" 
-                        ? "Updated multiple fields"
-                        : `Updated ${entry.field} from "${entry.oldValue}" to "${entry.newValue}"`
-                      }
-                    </p>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Calendar className="h-3 w-3" />
-                      {new Date(entry.timestamp).toLocaleString()}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <AuditLogList
+          entries={auditLog}
+          title="Audit Log"
+          description="Track all changes made to this issue"
+          variant="card"
+        />
       </div>
     </div>
   );

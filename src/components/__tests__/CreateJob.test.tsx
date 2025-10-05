@@ -35,7 +35,7 @@ describe('CreateJob Component - Basic Tests', () => {
       const user = userEvent.setup()
       render(<CreateJob {...mockProps} />)
 
-      const backButton = screen.getByRole('button', { name: /back/i })
+      const backButton = screen.getByRole('button') // First button is the back button
       await user.click(backButton)
       expect(mockProps.onBack).toHaveBeenCalledTimes(1)
     })
@@ -59,14 +59,14 @@ describe('CreateJob Component - Basic Tests', () => {
     it('should render job title input', () => {
       render(<CreateJob {...mockProps} />)
 
-      expect(screen.getByLabelText(/title/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/job title/i)).toBeInTheDocument()
     })
 
     it('should handle title input typing', async () => {
       const user = userEvent.setup()
       render(<CreateJob {...mockProps} />)
 
-      const titleInput = screen.getByLabelText(/title/i)
+      const titleInput = screen.getByLabelText(/job title/i)
       await user.type(titleInput, 'Test Job')
       expect(titleInput).toHaveValue('Test Job')
     })
@@ -95,7 +95,7 @@ describe('CreateJob Component - Basic Tests', () => {
       const user = userEvent.setup()
       render(<CreateJob {...mockProps} />)
 
-      const titleInput = screen.getByLabelText(/title/i)
+      const titleInput = screen.getByLabelText(/job title/i)
       await user.type(titleInput, 'Test Job')
 
       const submitButton = screen.getByRole('button', { name: /create job/i })
@@ -116,7 +116,7 @@ describe('CreateJob Component - Basic Tests', () => {
     it('should have proper labels for inputs', () => {
       render(<CreateJob {...mockProps} />)
 
-      expect(screen.getByLabelText(/title/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/job title/i)).toBeInTheDocument()
     })
   })
 

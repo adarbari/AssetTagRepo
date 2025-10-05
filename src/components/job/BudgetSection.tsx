@@ -5,6 +5,7 @@
  * Used in both CreateJob and EditJob components
  */
 
+import React from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DollarSign } from "lucide-react";

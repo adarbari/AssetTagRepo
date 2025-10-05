@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { EmptyState, StatsCard, Section, StatusBadge, InfoRow } from "./common";
+import { EmptyState, StatsCard, Section, StatusBadge, InfoRow, FilterPanel, TableActionMenu, type FilterConfig, type TableAction } from "./common";
 import { ExportDialog } from "./ExportDialog";
 import { EditAssetDialog } from "./assets/EditAssetDialog";
 import {
@@ -32,28 +32,12 @@ import {
   TableRow,
 } from "./ui/table";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "./ui/popover";
-import {
   Search,
-  Filter,
   Download,
-  MoreVertical,
   MapPin,
   Battery,
   Clock,
   Plus,
-  X,
   Eye,
   Edit,
   Trash2,
@@ -150,6 +134,88 @@ export function AssetInventory({ onAssetClick, onNavigateToCreateAsset }: AssetI
 
   // Get unique sites for filter
   const sites = Array.from(new Set(assetsWithUtilization.map((a) => a.site)));
+
+  // Filter configuration for FilterPanel
+  const filterConfigs: FilterConfig[] = [
+    {
+      key: "site",
+      label: "Site",
+      options: [
+        { value: "all-sites", label: "All Sites" },
+        ...sites.map(site => ({ value: site, label: site }))
+      ],
+      currentValue: siteFilter,
+      onValueChange: setSiteFilter,
+      defaultOptionValue: "all-sites",
+    },
+    {
+      key: "assignment",
+      label: "Assignment",
+      options: [
+        { value: "all-assignment", label: "All Assignment" },
+        { value: "assigned", label: "Assigned" },
+        { value: "unassigned", label: "Unassigned" },
+      ],
+      currentValue: assignmentFilter,
+      onValueChange: setAssignmentFilter,
+      defaultOptionValue: "all-assignment",
+    },
+    {
+      key: "battery",
+      label: "Battery Level",
+      options: [
+        { value: "all-battery", label: "All Battery Levels" },
+        { value: "critical", label: "Critical (<20%)" },
+        { value: "low", label: "Low (20-60%)" },
+        { value: "good", label: "Good (>60%)" },
+      ],
+      currentValue: batteryFilter,
+      onValueChange: setBatteryFilter,
+      defaultOptionValue: "all-battery",
+    },
+  ];
+
+  // Table actions configuration
+  const createAssetActions = (asset: any): TableAction[] => [
+    {
+      label: "View Details",
+      onClick: () => onAssetClick?.(asset),
+      icon: Eye,
+    },
+    {
+      label: "Show on Map",
+      onClick: () => navigation.handleShowOnMap(asset),
+      icon: MapPin,
+    },
+    {
+      label: "View History",
+      onClick: () => navigation.handleViewHistoricalPlayback(asset),
+      icon: Clock,
+    },
+    {
+      label: "Check Out",
+      onClick: () => navigation.navigateToCheckInOut({
+        assetId: asset.id,
+        assetName: asset.name,
+        currentStatus: asset.status,
+        mode: "check-out",
+        assetContext: asset,
+      }),
+      icon: Download,
+      separatorBefore: true,
+    },
+    {
+      label: "Edit Asset",
+      onClick: () => handleEditAsset({ id: asset.id, name: asset.name }),
+      icon: Edit,
+    },
+    {
+      label: "Delete Asset",
+      onClick: () => handleDeleteAsset({ id: asset.id, name: asset.name }),
+      icon: Trash2,
+      isDestructive: true,
+    },
+  ];
 
   // Count active filters
   const activeFiltersCount = [
@@ -305,143 +371,17 @@ export function AssetInventory({ onAssetClick, onNavigateToCreateAsset }: AssetI
                 <SelectItem value="offline">Offline</SelectItem>
               </SelectContent>
             </Select>
-            <Popover open={showFilters} onOpenChange={setShowFilters}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
-                  <Filter className="h-4 w-4" />
-                  {activeFiltersCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
-                      {activeFiltersCount}
-                    </span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80" align="end">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Advanced Filters</h4>
-                    {activeFiltersCount > 0 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={clearAllFilters}
-                        className="h-auto p-1 text-xs"
-                      >
-                        Clear All
-                      </Button>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm">Site</label>
-                    <Select value={siteFilter} onValueChange={setSiteFilter}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all-sites">All Sites</SelectItem>
-                        {sites.map((site) => (
-                          <SelectItem key={site} value={site}>
-                            {site}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm">Assignment</label>
-                    <Select value={assignmentFilter} onValueChange={setAssignmentFilter}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all-assignment">All</SelectItem>
-                        <SelectItem value="assigned">Assigned</SelectItem>
-                        <SelectItem value="unassigned">Unassigned</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm">Battery Level</label>
-                    <Select value={batteryFilter} onValueChange={setBatteryFilter}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all-battery">All Levels</SelectItem>
-                        <SelectItem value="critical">Critical (&lt;20%)</SelectItem>
-                        <SelectItem value="low">Low (20-60%)</SelectItem>
-                        <SelectItem value="good">Good (&gt;60%)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+            <FilterPanel
+              filters={filterConfigs}
+              activeFiltersCount={activeFiltersCount}
+              onClearAllFilters={clearAllFilters}
+              showFilters={showFilters}
+              onShowFiltersChange={setShowFilters}
+              searchTerm={searchTerm}
+              onClearSearch={() => setSearchTerm("")}
+            />
           </div>
 
-          {/* Active Filter Tags */}
-          {(activeFiltersCount > 0 || searchTerm) && (
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-muted-foreground">Active filters:</span>
-              {searchTerm && (
-                <Badge variant="secondary" className="gap-1">
-                  Search: {searchTerm}
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => setSearchTerm("")}
-                  />
-                </Badge>
-              )}
-              {typeFilter !== "all-types" && (
-                <Badge variant="secondary" className="gap-1">
-                  Type: {typeFilter}
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => setTypeFilter("all-types")}
-                  />
-                </Badge>
-              )}
-              {statusFilter !== "all-status" && (
-                <Badge variant="secondary" className="gap-1">
-                  Status: {statusFilter}
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => setStatusFilter("all-status")}
-                  />
-                </Badge>
-              )}
-              {siteFilter !== "all-sites" && (
-                <Badge variant="secondary" className="gap-1">
-                  Site: {siteFilter}
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => setSiteFilter("all-sites")}
-                  />
-                </Badge>
-              )}
-              {assignmentFilter !== "all-assignment" && (
-                <Badge variant="secondary" className="gap-1">
-                  Assignment: {assignmentFilter}
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => setAssignmentFilter("all-assignment")}
-                  />
-                </Badge>
-              )}
-              {batteryFilter !== "all-battery" && (
-                <Badge variant="secondary" className="gap-1">
-                  Battery: {batteryFilter}
-                  <X
-                    className="h-3 w-3 cursor-pointer"
-                    onClick={() => setBatteryFilter("all-battery")}
-                  />
-                </Badge>
-              )}
-            </div>
-          )}
         </div>
       </Card>
 
@@ -535,51 +475,10 @@ export function AssetInventory({ onAssetClick, onNavigateToCreateAsset }: AssetI
                     </div>
                   </TableCell>
                   <TableCell onClick={(e) => e.stopPropagation()}>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => onAssetClick?.(asset)}>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigation.handleShowOnMap(asset)}>
-                          <MapPin className="h-4 w-4 mr-2" />
-                          Show on Map
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigation.handleViewHistoricalPlayback(asset)}>
-                          <Clock className="h-4 w-4 mr-2" />
-                          View History
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigation.navigateToCheckInOut({
-                          assetId: asset.id,
-                          assetName: asset.name,
-                          currentStatus: asset.status,
-                          mode: "check-out",
-                          assetContext: asset,
-                        })}>
-                          <Download className="h-4 w-4 mr-2" />
-                          Check Out
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => handleEditAsset({ id: asset.id, name: asset.name })}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit Asset
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          className="text-destructive"
-                          onClick={() => handleDeleteAsset({ id: asset.id, name: asset.name })}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Delete Asset
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <TableActionMenu
+                      actions={createAssetActions(asset)}
+                      label="Asset Actions"
+                    />
                   </TableCell>
                 </TableRow>
               ))

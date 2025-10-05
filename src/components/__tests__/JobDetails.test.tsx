@@ -41,7 +41,7 @@ describe('JobDetails Component - Basic Tests', () => {
       const user = userEvent.setup()
       render(<JobDetails {...mockProps} />)
 
-      await waitFor(() => {
+      await waitFor(async () => {
         const backButton = screen.getByRole('button', { name: /back/i })
         await user.click(backButton)
         expect(mockProps.onBack).toHaveBeenCalledTimes(1)

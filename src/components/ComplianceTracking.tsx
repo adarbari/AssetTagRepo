@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
-import { LoadingState, EmptyState, StatsCard, PageHeader } from "./common";
+import { LoadingState, EmptyState, StatsCard, PageHeader, StatusBadge } from "./common";
 import { useAsyncDataAll } from "../hooks/useAsyncData";
 import {
   getComplianceRecords,
@@ -110,33 +110,6 @@ export function ComplianceTracking() {
     record.assetId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "valid":
-        return (
-          <Badge className="bg-green-100 text-green-700 border-green-200">
-            <CheckCircle className="h-3 w-3 mr-1" />
-            Valid
-          </Badge>
-        );
-      case "expiring_soon":
-        return (
-          <Badge className="bg-amber-100 text-amber-700 border-amber-200">
-            <Clock className="h-3 w-3 mr-1" />
-            Expiring Soon
-          </Badge>
-        );
-      case "expired":
-        return (
-          <Badge className="bg-red-100 text-red-700 border-red-200">
-            <AlertTriangle className="h-3 w-3 mr-1" />
-            Expired
-          </Badge>
-        );
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="p-8 space-y-6">
@@ -271,7 +244,7 @@ export function ComplianceTracking() {
                           </div>
                         </TableCell>
                         <TableCell>{record.certificationType}</TableCell>
-                        <TableCell>{getStatusBadge(record.status)}</TableCell>
+                        <TableCell><StatusBadge status={record.status} /></TableCell>
                         <TableCell>
                           {new Date(record.issueDate).toLocaleDateString()}
                         </TableCell>
