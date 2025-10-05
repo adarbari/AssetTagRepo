@@ -389,19 +389,13 @@ function AppContent() {
         );
       case "create-maintenance":
         console.log("🎯 Rendering create-maintenance view, data:", navigation.maintenanceCreationData);
-        return navigation.maintenanceCreationData ? (
+        return (
           <CreateMaintenance 
             onBack={navigation.handleBackFromCreateMaintenance}
-            preSelectedAsset={navigation.maintenanceCreationData.preSelectedAsset}
-            preSelectedAssetName={navigation.maintenanceCreationData.preSelectedAssetName}
-            assetContext={navigation.maintenanceCreationData.assetContext}
+            preSelectedAsset={navigation.maintenanceCreationData?.preSelectedAsset}
+            preSelectedAssetName={navigation.maintenanceCreationData?.preSelectedAssetName}
+            assetContext={navigation.maintenanceCreationData?.assetContext}
           />
-        ) : (
-          <div className="p-8">
-            <h2>Create Maintenance</h2>
-            <p>No maintenance creation data available</p>
-            <button onClick={() => navigation.handleViewChange("dashboard")}>Back to Dashboard</button>
-          </div>
         );
       case "report-issue":
         return navigation.issueData ? (
