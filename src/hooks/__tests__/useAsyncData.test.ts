@@ -50,6 +50,8 @@ describe('useAsyncData', () => {
     })
 
     it('should handle fetch errors', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      
       const mockError = new Error('Fetch failed')
       const mockFetcher = vi.fn().mockRejectedValue(mockError)
       
@@ -62,9 +64,13 @@ describe('useAsyncData', () => {
       expect(result.current.data).toBeNull()
       expect(result.current.error).toEqual(mockError)
       expect(mockFetcher).toHaveBeenCalledTimes(1)
+      
+      consoleSpy.mockRestore()
     })
 
     it('should handle non-Error exceptions', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      
       const mockFetcher = vi.fn().mockRejectedValue('String error')
       
       const { result } = renderHook(() => useAsyncData(mockFetcher))
@@ -76,6 +82,8 @@ describe('useAsyncData', () => {
       expect(result.current.data).toBeNull()
       expect(result.current.error).toBeInstanceOf(Error)
       expect(result.current.error?.message).toBe('String error')
+      
+      consoleSpy.mockRestore()
     })
   })
 
@@ -124,6 +132,8 @@ describe('useAsyncData', () => {
     })
 
     it('should handle errors during manual execution', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      
       const mockError = new Error('Manual fetch failed')
       const mockFetcher = vi.fn().mockRejectedValue(mockError)
       
@@ -140,6 +150,8 @@ describe('useAsyncData', () => {
       expect(result.current.data).toBeNull()
       expect(result.current.error).toEqual(mockError)
       expect(result.current.loading).toBe(false)
+      
+      consoleSpy.mockRestore()
     })
   })
 
@@ -219,6 +231,8 @@ describe('useAsyncData', () => {
     })
 
     it('should clear error on successful refetch', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      
       const mockError = new Error('Initial error')
       const mockData = { id: 1, name: 'Test Asset' }
       const mockFetcher = vi.fn()
@@ -239,6 +253,8 @@ describe('useAsyncData', () => {
       
       expect(result.current.data).toEqual(mockData)
       expect(result.current.error).toBeNull()
+      
+      consoleSpy.mockRestore()
     })
   })
 })

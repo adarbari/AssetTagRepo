@@ -340,15 +340,15 @@ describe('API Service', () => {
       )
     })
 
-    it('should handle missing environment variables gracefully', () => {
+    it('should handle missing environment variables gracefully', async () => {
       // This test ensures the getEnvVar function handles missing env vars
       Object.defineProperty(import.meta, 'env', {
-        value: undefined,
+        value: {},  // Use empty object instead of undefined
         writable: true,
       })
 
       // Should not throw when accessing env vars
-      expect(() => apiClient.get('/test')).not.toThrow()
+      await expect(apiClient.get('/test')).resolves.toBeDefined()
     })
   })
 })

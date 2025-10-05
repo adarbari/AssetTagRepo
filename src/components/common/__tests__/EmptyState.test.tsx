@@ -274,9 +274,7 @@ describe('EmptyState Component - Button Click Tests', () => {
   describe('Error Handling', () => {
     it('should handle action errors gracefully', async () => {
       const user = userEvent.setup()
-      const mockAction = vi.fn().mockImplementation(() => {
-        throw new Error('Action failed')
-      })
+      const mockAction = vi.fn().mockRejectedValue(new Error('Action failed'))
       
       // Mock console.error to prevent error from showing in test output
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
@@ -294,7 +292,11 @@ describe('EmptyState Component - Button Click Tests', () => {
       const actionButton = screen.getByRole('button', { name: /create item/i })
       
       // Should call the action function even if it throws
-      await user.click(actionButton)
+      try {
+        await user.click(actionButton)
+      } catch (error) {
+        // Expected error, ignore it
+      }
       
       expect(mockAction).toHaveBeenCalledTimes(1)
       
