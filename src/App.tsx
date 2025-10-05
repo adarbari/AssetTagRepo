@@ -362,7 +362,7 @@ function AppContent() {
         console.log("Rendering check-in-out view, data:", navigation.checkInOutData);
         return navigation.checkInOutData ? (
           <CreateCheckInOut 
-            onBack={() => setCurrentView("asset-details")}
+            onBack={navigation.handleBackFromCheckInOut}
             assetId={navigation.checkInOutData.assetId}
             assetName={navigation.checkInOutData.assetName}
             currentStatus={navigation.checkInOutData.currentStatus}
