@@ -190,7 +190,7 @@ describe('Sites Component', () => {
       await user.click(filterButton)
       
       // Filter by active status
-      const statusSelect = screen.getByRole('combobox', { name: /status/i })
+      const statusSelect = screen.getByRole('combobox')
       await user.click(statusSelect)
       await user.click(screen.getByText('Active'))
       
@@ -245,7 +245,7 @@ describe('Sites Component', () => {
       await user.click(filterButton)
       
       // Apply a filter
-      const statusSelect = screen.getByRole('combobox', { name: /status/i })
+      const statusSelect = screen.getByRole('combobox')
       await user.click(statusSelect)
       await user.click(screen.getByText('Active'))
       
@@ -261,7 +261,7 @@ describe('Sites Component', () => {
       const filterButton = screen.getByRole('button', { name: /filters/i })
       await user.click(filterButton)
       
-      const statusSelect = screen.getByRole('combobox', { name: /status/i })
+      const statusSelect = screen.getByRole('combobox')
       await user.click(statusSelect)
       await user.click(screen.getByText('Active'))
       
@@ -381,7 +381,7 @@ describe('Sites Component', () => {
       
       // Tab through interactive elements
       await user.tab()
-      expect(document.activeElement).toBe(screen.getByPlaceholderText(/search by site name/i))
+      expect(document.activeElement).toBe(screen.getByPlaceholderText(/search by site name, id, or location/i))
       
       await user.tab()
       expect(document.activeElement).toBe(screen.getByRole('button', { name: /filters/i }))
@@ -409,7 +409,7 @@ describe('Sites Component', () => {
       await user.click(filterButton)
       
       // Apply multiple filters
-      const statusSelect = screen.getByRole('combobox', { name: /status/i })
+      const statusSelect = screen.getByRole('combobox')
       await user.click(statusSelect)
       await user.click(screen.getByText('Active'))
       

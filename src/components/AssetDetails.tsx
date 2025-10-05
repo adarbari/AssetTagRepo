@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Separator } from "./ui/separator";
 import { ScrollArea } from "./ui/scroll-area";
 import { Slider } from "./ui/slider";
-import { Skeleton } from "./ui/skeleton";
 import { LoadingState, PageHeader, AlertCard } from "./common";
 import {
   Table,
@@ -377,38 +376,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
 
   // Show loading state while initial data is being fetched
   if (isLoading && !batteryHistory.length && !activityLog.length) {
-    return (
-      <div className="h-screen flex flex-col">
-        <div className="border-b bg-background px-8 py-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={onBack}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-12 w-12 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-6 w-48" />
-                <Skeleton className="h-4 w-32" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 overflow-auto p-8">
-          <div className="grid gap-6">
-            <div className="grid md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <Card key={i}>
-                  <CardContent className="pt-6">
-                    <Skeleton className="h-24 w-full" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <Skeleton className="h-96 w-full" />
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Loading asset details..." fullScreen />;
   }
 
   return (
