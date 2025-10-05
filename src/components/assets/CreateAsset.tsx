@@ -203,21 +203,19 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
       padding="md"
       header={
         <PageHeader
-        title="Add New Asset"
-        description="Register a new asset to the tracking system"
-        onBack={onBack}
-        actions={
-          <Button type="submit" form="create-asset-form">
-            <Package className="h-4 w-4 mr-2" />
-            Add Asset
-          </Button>
-        }
-      />
+          title="Add New Asset"
+          description="Register a new asset to the tracking system"
+          onBack={onBack}
+          actions={
+            <Button type="submit" form="create-asset-form">
+              <Package className="h-4 w-4 mr-2" />
+              Add Asset
+            </Button>
+          }
+        />
       }
     >
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-4xl mx-auto">
-          <form id="create-asset-form" onSubmit={handleSubmit} className="space-y-6">
+      <form id="create-asset-form" onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Information */}
             <Card>
               <CardContent className="pt-6 space-y-4">
@@ -506,9 +504,7 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
                 </div>
               </CardContent>
             </Card>
-          </form>
-        </div>
-      </div>
+      </form>
     </PageLayout>
   );
 }

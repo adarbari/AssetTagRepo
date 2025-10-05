@@ -253,7 +253,6 @@ export function CreateIssue({
               </Button>
             </div>
           </form>
-        </div>
     </PageLayout>
   );
 }

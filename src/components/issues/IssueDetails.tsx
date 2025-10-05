@@ -202,8 +202,8 @@ export function IssueDetails({
       header={
         <PageHeader 
           title={`${issue.id} - ${issue.title}`} 
-        onBack={onBack}
-        description={`Asset: ${issue.assetName} (${issue.assetId})`}
+          onBack={onBack}
+          description={`Asset: ${issue.assetName} (${issue.assetId})`}
         actions={
           <div className="flex items-center gap-2">
             {isEditing ? (
@@ -385,8 +385,6 @@ export function IssueDetails({
               formatDate={formatAuditDate}
             />
           </div>
-        </div>
-      </div>
     </PageLayout>
   );
 }

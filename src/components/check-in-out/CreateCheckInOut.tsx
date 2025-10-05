@@ -31,7 +31,7 @@ import {
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { updateAsset } from "../../data/mockData";
-import { PageHeader } from "../common";
+import { PageHeader, PageLayout } from "../common";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "../ui/breadcrumb";
 import type { Asset } from "../types";
 
@@ -124,9 +124,11 @@ export function CreateCheckInOut({
   };
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* Header with Breadcrumbs */}
-      <div className="border-b bg-background px-8 py-4">
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <div className="border-b bg-background px-8 py-4">
         <div className="flex items-center gap-4 mb-4">
           <Button variant="ghost" size="icon" onClick={onBack}>
             <ArrowLeft className="h-5 w-5" />
@@ -157,10 +159,8 @@ export function CreateCheckInOut({
           icon={mode === "check-out" ? LogOut : LogIn}
         />
       </div>
-
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-3xl mx-auto space-y-6">
+      }
+    >
           {/* Asset Info Card */}
           <Card>
             <CardHeader>
@@ -414,8 +414,6 @@ export function CreateCheckInOut({
               )}
             </Button>
           </div>
-        </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

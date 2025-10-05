@@ -615,7 +615,6 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
               </TabsContent>
             )}
           </Tabs>
-        </div>
     </PageLayout>
   );
 }

@@ -10,7 +10,7 @@ import {
 } from "../ui/select";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { PageHeader, LoadingState } from "../common";
+import { PageHeader, LoadingState, PageLayout } from "../common";
 import { Truck, Package, ArrowLeft, Plus, X, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -157,23 +157,23 @@ export function LoadAsset({ onBack, onAssetsLoaded, preselectedVehicleId }: Load
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <PageHeader
-        title="Load Assets"
-        description="Assign assets to a vehicle for transport or deployment"
-        onBack={onBack}
-        actions={
-          <Button type="submit" form="load-asset-form">
-            <Truck className="h-4 w-4 mr-2" />
-            Load Assets
-          </Button>
-        }
-      />
-
-      {/* Form Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-3xl mx-auto">
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader
+          title="Load Assets"
+          description="Assign assets to a vehicle for transport or deployment"
+          onBack={onBack}
+          actions={
+            <Button type="submit" form="load-asset-form">
+              <Truck className="h-4 w-4 mr-2" />
+              Load Assets
+            </Button>
+          }
+        />
+      }
+    >
           <form id="load-asset-form" onSubmit={handleSubmit} className="space-y-6">
             {/* Vehicle Selection */}
             <Card>
@@ -331,8 +331,6 @@ export function LoadAsset({ onBack, onAssetsLoaded, preselectedVehicleId }: Load
               </Card>
             )}
           </form>
-        </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

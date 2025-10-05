@@ -73,16 +73,16 @@ export function CreateMaintenance({
       padding="md"
       header={
         <PageHeader
-        title="Schedule Maintenance"
-        description="Create a new maintenance task for an asset"
-        onBack={onBack}
-        actions={
-          <Button type="submit" form="create-maintenance-form">
-            <Wrench className="h-4 w-4 mr-2" />
-            Schedule Task
-          </Button>
-        }
-      />
+          title="Schedule Maintenance"
+          description="Create a new maintenance task for an asset"
+          onBack={onBack}
+          actions={
+            <Button type="submit" form="create-maintenance-form">
+              <Wrench className="h-4 w-4 mr-2" />
+              Schedule Task
+            </Button>
+          }
+        />
       }
     >
           {/* Asset Context Card */}
@@ -237,7 +237,6 @@ export function CreateMaintenance({
               </div>
             </CardContent>
           </Card>
-        </div>
     </PageLayout>
   );
 }

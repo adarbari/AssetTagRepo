@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { Button } from "../ui/button";
 import { AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
-import { PageHeader, LoadingState, AuditLogList, type AuditLogEntry } from "../common";
+import { PageHeader, LoadingState, AuditLogList, PageLayout, type AuditLogEntry } from "../common";
 import { getIssueById } from "../../data/mockIssueData";
 import { IssueForm, IssueFormData } from "./IssueForm";
 import type { Issue, UpdateIssueInput } from "../../types/issue";
@@ -161,8 +161,13 @@ export function EditIssue({
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <PageHeader title="Edit Issue" onBack={onBack} />
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader title="Edit Issue" onBack={onBack} />
+      }
+    >
       
       {/* Issue Info Header */}
       <Card>
@@ -221,6 +226,6 @@ export function EditIssue({
           variant="card"
         />
       </div>
-    </div>
+    </PageLayout>
   );
 }

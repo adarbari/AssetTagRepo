@@ -1446,8 +1446,6 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
               </Card>
             </TabsContent>
           </Tabs>
-        </div>
-      </div>
 
       {/* Export Dialog */}
       <ExportDialog

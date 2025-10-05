@@ -21,38 +21,81 @@ This document captures the established design patterns and UI/UX guidelines used
 
 ## Page Layout Patterns
 
-### Full Page Detail/Edit Pages
+### Responsive Width Hierarchy by Content Type
 
-**Pattern**: All detail and edit pages follow a consistent full-page layout structure.
+**Pattern**: All pages now use a standardized width system based on content type for optimal UX.
 
 ```tsx
-// Standard structure for detail/edit pages
-<div className="h-full flex flex-col">
-  <PageHeader 
-    title="Page Title"
-    description="Optional description"
-    onBack={onBack}
-    actions={
-      <div className="flex items-center gap-2">
-        {/* Action buttons */}
-      </div>
-    }
-  />
-  
-  <div className="flex-1 overflow-auto p-6">
-    <div className="max-w-7xl mx-auto space-y-6">
-      {/* Page content */}
-    </div>
-  </div>
-</div>
+// Wide Pages (Tables/Lists) - max-w-[1600px]
+<PageLayout variant="wide" padding="lg">
+  {/* Content for data tables, lists, management pages */}
+</PageLayout>
+
+// Standard Pages (Detail Views) - max-w-7xl (1280px)
+<PageLayout variant="standard" padding="md">
+  {/* Content for detail views, dashboards, reports */}
+</PageLayout>
+
+// Narrow Pages (Forms) - max-w-4xl (896px)
+<PageLayout variant="narrow" padding="md">
+  {/* Content for forms, create/edit pages */}
+</PageLayout>
+
+// Full Width (Maps) - max-w-none
+<PageLayout variant="full" padding="sm">
+  {/* Content for maps, full-bleed interfaces */}
+</PageLayout>
 ```
 
-**Examples**: `IssueDetails`, `JobDetails`, `AssetDetails`, `EditJob`, `CreateJob`
+**Width Standards**:
+- **Wide (1600px)**: Data tables, lists, management pages
+- **Standard (1280px)**: Detail views, dashboards, reports  
+- **Narrow (896px)**: Forms, create/edit pages
+- **Full Width**: Maps, full-bleed interfaces
+
+**Examples**: 
+- Wide: `AssetInventory`, `JobManagement`, `IssueTracking`, `Sites`, `Maintenance`
+- Standard: `Dashboard`, `AssetDetails`, `JobDetails`, `IssueDetails`, `Reports`, `Settings`
+- Narrow: `CreateAsset`, `CreateJob`, `CreateIssue`, `EditJob`, `EditIssue`
+- Full Width: `AssetMap`, `HistoricalPlayback`
 
 **Key Principles**:
-- Use `h-full flex flex-col` for full-page layout
+- Use `PageLayout` component for consistent width management
+- Choose appropriate variant based on content type
 - PageHeader handles the header with back button and actions
-- Content area uses `flex-1 overflow-auto p-6` for proper scrolling
+- Content area uses proper padding and spacing
+
+### Layout Components
+
+**PageLayout Component**: Centralized layout management with width variants.
+
+```tsx
+interface PageLayoutProps {
+  children: React.ReactNode;
+  variant?: 'wide' | 'standard' | 'narrow' | 'full';
+  padding?: 'sm' | 'md' | 'lg';
+  header?: React.ReactNode;
+  className?: string;
+}
+```
+
+**PageContainer Component**: Smart wrapper that applies correct max-width based on variant.
+
+```tsx
+interface PageContainerProps {
+  children: React.ReactNode;
+  variant?: 'wide' | 'standard' | 'narrow' | 'full';
+  className?: string;
+}
+```
+
+**Benefits**:
+- **DRY (Don't Repeat Yourself)**: Width logic in one place
+- **Type-safe**: TypeScript ensures correct variant usage
+- **Consistent**: Impossible to use wrong widths
+- **Maintainable**: Change width standards in one place
+- **Self-documenting**: Variant names make intent clear
+- **Future-proof**: Easy to add new variants or adjust existing ones
 - Content is wrapped in `max-w-7xl mx-auto space-y-6` for consistent width and spacing
 
 ### List/Management Pages

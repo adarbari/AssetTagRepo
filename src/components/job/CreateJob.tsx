@@ -126,9 +126,9 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
       header={
         <PageHeader
           title="Create New Job"
-        subtitle="Set up a new project with budget allocation and team assignments"
-        onBack={onBack}
-      />
+          subtitle="Set up a new project with budget allocation and team assignments"
+          onBack={onBack}
+        />
       }
     >
           <form onSubmit={onSubmit} className="space-y-6">
@@ -204,7 +204,6 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
               </Button>
             </div>
           </form>
-        </div>
     </PageLayout>
   );
 }

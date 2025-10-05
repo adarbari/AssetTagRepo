@@ -25,7 +25,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { format } from "date-fns";
-import { LoadingState } from "../common";
+import { LoadingState, PageLayout } from "../common";
 import type { Asset } from "../types";
 import { mockAssets as allMockAssets } from "../../data/mockData";
 
@@ -329,7 +329,7 @@ export function HistoricalPlayback({ onBack, preselectedAsset }: HistoricalPlayb
   const asset = allMockAssets.find(a => a.id === selectedAsset);
 
   return (
-    <div className="p-6 space-y-6">
+    <PageLayout variant="full" padding="md">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -616,6 +616,6 @@ export function HistoricalPlayback({ onBack, preselectedAsset }: HistoricalPlayb
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageLayout>
   );
 }

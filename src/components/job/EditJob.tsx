@@ -289,20 +289,20 @@ export function EditJob({
       header={
         <PageHeader
           title={`Edit Job: ${job.jobNumber}`}
-        description="Update job details, budget, assets, and team assignments"
-        action={
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <Button onClick={handleSave}>
-              <Save className="h-4 w-4 mr-2" />
-              Save Changes
-            </Button>
-          </div>
-        }
-      />
+          description="Update job details, budget, assets, and team assignments"
+          actions={
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={onBack}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+              <Button onClick={handleSave}>
+                <Save className="h-4 w-4 mr-2" />
+                Save Changes
+              </Button>
+            </div>
+          }
+        />
       }
     >
           {/* Job Details */}
@@ -556,8 +556,6 @@ export function EditJob({
               )}
             </CardContent>
           </Card>
-        </div>
-      </div>
 
       {/* Add Asset Dialog */}
       <Dialog open={showAddAssetDialog} onOpenChange={setShowAddAssetDialog}>
@@ -665,8 +663,6 @@ export function EditJob({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-
-    </div>
+    </PageLayout>
   );
 }

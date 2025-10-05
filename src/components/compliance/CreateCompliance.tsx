@@ -103,16 +103,16 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
       padding="md"
       header={
         <PageHeader
-        title="Add Compliance Record"
-        description="Create a new certification or compliance record for an asset"
-        onBack={onBack}
-        actions={
-          <Button type="submit" form="create-compliance-form">
-            <Shield className="h-4 w-4 mr-2" />
-            Create Record
-          </Button>
-        }
-      />
+          title="Add Compliance Record"
+          description="Create a new certification or compliance record for an asset"
+          onBack={onBack}
+          actions={
+            <Button type="submit" form="create-compliance-form">
+              <Shield className="h-4 w-4 mr-2" />
+              Create Record
+            </Button>
+          }
+        />
       }
     >
           <Card>
@@ -293,7 +293,6 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
               </form>
             </CardContent>
           </Card>
-        </div>
     </PageLayout>
   );
 }

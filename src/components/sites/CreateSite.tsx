@@ -76,16 +76,16 @@ export function CreateSite({ onBack }: CreateSiteProps) {
       padding="md"
       header={
         <PageHeader
-        title="Create New Site"
-        description="Define a new physical site location with boundary configurations"
-        onBack={onBack}
-        actions={
-          <Button type="submit" form="create-site-form">
-            <Building2 className="h-4 w-4 mr-2" />
-            Create Site
-          </Button>
-        }
-      />
+          title="Create New Site"
+          description="Define a new physical site location with boundary configurations"
+          onBack={onBack}
+          actions={
+            <Button type="submit" form="create-site-form">
+              <Building2 className="h-4 w-4 mr-2" />
+              Create Site
+            </Button>
+          }
+        />
       }
     >
           <form id="create-site-form" onSubmit={handleSubmit} className="space-y-8">
@@ -316,7 +316,6 @@ export function CreateSite({ onBack }: CreateSiteProps) {
               </CardContent>
             </Card>
           </form>
-        </div>
     </PageLayout>
   );
 }

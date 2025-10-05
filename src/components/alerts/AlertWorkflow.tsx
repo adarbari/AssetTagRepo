@@ -23,6 +23,7 @@ import {
   MapPinned,
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageLayout } from "../common";
 import { acknowledgeAlert, resolveAlert, executeWorkflowAction } from "../../services/alertService";
 
 interface AlertWorkflowProps {
@@ -445,7 +446,7 @@ export function AlertWorkflow({
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
+    <PageLayout variant="narrow" padding="md">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" onClick={onBack}>
@@ -660,6 +661,6 @@ export function AlertWorkflow({
           {isProcessing ? "Processing..." : "Execute Action"}
         </Button>
       </div>
-    </div>
+    </PageLayout>
   );
 }

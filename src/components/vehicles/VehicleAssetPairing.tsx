@@ -409,15 +409,16 @@ export function VehicleAssetPairing({ onBack }: VehicleAssetPairingProps) {
       header={
         <PageHeader
           title="Vehicle-Asset Pairing"
-        description="Manage asset loading with automatic expiration mechanisms"
-        action={
-          <Button onClick={() => setShowAddAssetDialog(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Load Assets
-          </Button>
-        }
-      />
-
+          description="Manage asset loading with automatic expiration mechanisms"
+          action={
+            <Button onClick={() => setShowAddAssetDialog(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Load Assets
+            </Button>
+          }
+        />
+      }
+    >
       <div className="flex-1 overflow-auto p-6 space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

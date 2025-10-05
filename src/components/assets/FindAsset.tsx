@@ -24,6 +24,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { cn } from "../ui/utils";
+import { PageLayout } from "../common";
 import { toast } from "sonner";
 import type { Asset } from "../types";
 
@@ -129,7 +130,7 @@ export function FindAsset({ onShowOnMap }: FindAssetProps) {
   };
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="narrow" padding="lg">
       {/* Header */}
       <div>
         <h1>Find Asset</h1>
@@ -394,6 +395,6 @@ export function FindAsset({ onShowOnMap }: FindAssetProps) {
           </CardContent>
         </Card>
       )}
-    </div>
+    </PageLayout>
   );
 }

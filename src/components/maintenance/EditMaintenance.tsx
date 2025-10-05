@@ -14,7 +14,7 @@ import {
 } from "../ui/select";
 import { Badge } from "../ui/badge";
 import { toast } from "sonner";
-import { PageHeader, StatusBadge, PriorityBadge } from "../common";
+import { PageHeader, StatusBadge, PriorityBadge, PageLayout } from "../common";
 import { LoadingState } from "../common/LoadingState";
 import { ErrorState } from "../common/ErrorState";
 import { AuditLogList, type AuditLogEntry } from "../common";
@@ -210,29 +210,32 @@ export function EditMaintenance({
   }
 
   return (
-    <div className="p-8 space-y-6">
-      <PageHeader
-        title={`Edit Maintenance: ${task.id}`}
-        description={`${task.assetName} - ${task.assetId}`}
-        onBack={onBack}
-        actions={
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowAuditLog(!showAuditLog)}
-            >
-              <HistoryIcon className="h-4 w-4 mr-2" />
-              {showAuditLog ? "Hide" : "Show"} Audit Log
-            </Button>
-            <Button onClick={handleSave} disabled={saving}>
-              <Save className="h-4 w-4 mr-2" />
-              {saving ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        }
-      />
-
-      {/* Context indicator */}
+    <PageLayout 
+      variant="narrow" 
+      padding="lg"
+      header={
+        <PageHeader
+          title={`Edit Maintenance: ${task.id}`}
+          description={`${task.assetName} - ${task.assetId}`}
+          onBack={onBack}
+          actions={
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowAuditLog(!showAuditLog)}
+              >
+                <HistoryIcon className="h-4 w-4 mr-2" />
+                {showAuditLog ? "Hide" : "Show"} Audit Log
+              </Button>
+              <Button onClick={handleSave} disabled={saving}>
+                <Save className="h-4 w-4 mr-2" />
+                {saving ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          }
+        />
+      }
+    >
       {fromContext && (
         <Card className="border-blue-200 bg-blue-50">
           <CardContent className="pt-4">
@@ -485,6 +488,6 @@ export function EditMaintenance({
           variant="card"
         />
       )}
-    </div>
+    </PageLayout>
   );
 }

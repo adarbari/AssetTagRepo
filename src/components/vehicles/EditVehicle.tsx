@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Card, CardContent } from "../ui/card";
-import { PageHeader, LoadingState } from "../common";
+import { PageHeader, LoadingState, PageLayout } from "../common";
 import { Truck, ArrowLeft, Save } from "lucide-react";
 import { toast } from "sonner";
 import { vehicleTypes, drivers } from "../../data/dropdownOptions";
@@ -103,28 +103,28 @@ export function EditVehicle({ vehicleId, onBack, onVehicleUpdated }: EditVehicle
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <PageHeader
-        title="Edit Vehicle"
-        description="Update vehicle information and settings"
-        actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Cancel
-            </Button>
-            <Button type="submit" form="edit-vehicle-form">
-              <Save className="h-4 w-4 mr-2" />
-              Save Changes
-            </Button>
-          </div>
-        }
-      />
-
-      {/* Form Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-3xl mx-auto">
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader
+          title="Edit Vehicle"
+          description="Update vehicle information and settings"
+          actions={
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={onBack}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Cancel
+              </Button>
+              <Button type="submit" form="edit-vehicle-form">
+                <Save className="h-4 w-4 mr-2" />
+                Save Changes
+              </Button>
+            </div>
+          }
+        />
+      }
+    >
           <Card>
             <CardContent className="pt-6">
               <form id="edit-vehicle-form" onSubmit={handleSubmit} className="space-y-6">
@@ -243,6 +243,6 @@ export function EditVehicle({ vehicleId, onBack, onVehicleUpdated }: EditVehicle
           </Card>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
