@@ -158,8 +158,8 @@ export function IssueDetails({
           setIssue(result.issue);
         }
         
-        // Exit edit mode
-        setIsEditing(false);
+        // Navigate back to issue tracking
+        onBack();
       } else {
         toast.error("Failed to update issue");
       }
@@ -238,19 +238,36 @@ export function IssueDetails({
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="h-full flex flex-col">
       <PageHeader 
         title={`${issue.id} - ${issue.title}`} 
         onBack={onBack}
         description={`Asset: ${issue.assetName} (${issue.assetId})`}
+        actions={
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={onBack}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+            {!isEditing && (
+              <Button onClick={() => setIsEditing(true)}>
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Issue
+              </Button>
+            )}
+          </div>
+        }
       />
       
-      {/* Status Badges */}
-      <div className="flex gap-2">
-        {getStatusBadge(issue.status)}
-        {getSeverityBadge(issue.severity)}
-      </div>
-        <Tabs defaultValue="overview" className="space-y-6">
+      <div className="flex-1 overflow-auto p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Status Badges */}
+          <div className="flex gap-2">
+            {getStatusBadge(issue.status)}
+            {getSeverityBadge(issue.severity)}
+          </div>
+          
+          <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="edit">Edit</TabsTrigger>
@@ -372,56 +389,35 @@ export function IssueDetails({
 
           {/* Edit Tab */}
           <TabsContent value="edit">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-xl font-semibold">Edit Issue</h2>
-                <p className="text-muted-foreground">Update the issue information</p>
-              </div>
-              <Button onClick={() => setIsEditing(!isEditing)} variant="outline">
-                <Edit className="h-4 w-4 mr-2" />
-                {isEditing ? "Cancel Edit" : "Edit Issue"}
-              </Button>
-            </div>
-
-            {isEditing ? (
-              <IssueForm
-                mode="edit"
-                initialData={{
-                  type: issue.type,
-                  severity: issue.severity,
-                  status: issue.status,
-                  title: issue.title,
-                  description: issue.description,
-                  assignedTo: issue.assignedTo,
-                  notes: issue.notes,
-                  tags: issue.tags,
-                }}
-                assetId={issue.assetId}
-                assetName={issue.assetName}
-                onSubmit={handleFormSubmit}
-                onCancel={() => setIsEditing(false)}
-                isSubmitting={saving}
-                showAssetInfo={false}
-                showStatusField={true}
-                showAdvancedFields={true}
-              />
-            ) : (
-              <Card>
-                <CardContent className="p-6">
-                  <div className="text-center py-8">
-                    <Edit className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Ready to Edit</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Click "Edit Issue" to modify the issue information
-                    </p>
-                    <Button onClick={() => setIsEditing(true)}>
-                      <Edit className="h-4 w-4 mr-2" />
-                      Start Editing
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            <Card>
+              <CardHeader>
+                <CardTitle>Edit Issue</CardTitle>
+                <CardDescription>Update the issue information</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <IssueForm
+                  mode="edit"
+                  initialData={{
+                    type: issue.type,
+                    severity: issue.severity,
+                    status: issue.status,
+                    title: issue.title,
+                    description: issue.description,
+                    assignedTo: issue.assignedTo,
+                    notes: issue.notes,
+                    tags: issue.tags,
+                  }}
+                  assetId={issue.assetId}
+                  assetName={issue.assetName}
+                  onSubmit={handleFormSubmit}
+                  onCancel={onBack}
+                  isSubmitting={saving}
+                  showAssetInfo={false}
+                  showStatusField={true}
+                  showAdvancedFields={true}
+                />
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Audit Log Tab */}
@@ -468,6 +464,8 @@ export function IssueDetails({
             </Card>
           </TabsContent>
         </Tabs>
+        </div>
+      </div>
     </div>
   );
 }

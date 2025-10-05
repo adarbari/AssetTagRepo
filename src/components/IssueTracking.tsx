@@ -4,7 +4,7 @@
  * View and manage all reported asset issues
  */
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -31,14 +31,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { PageHeader, EmptyState, StatsCard } from "./common";
 import {
@@ -56,8 +48,10 @@ import {
   AlertCircle,
   Wrench,
   User,
+  Tag,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigation } from "../contexts/NavigationContext";
 import type { Issue, IssueStatus, UpdateIssueInput } from "../types/issue";
 
 interface IssueTrackingProps {
@@ -106,11 +100,10 @@ export function IssueTracking({
   onUpdateStatus,
   onDeleteIssue,
 }: IssueTrackingProps) {
+  const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedSeverity, setSelectedSeverity] = useState<string>("all");
-  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
 
   // Filter issues
@@ -133,8 +126,7 @@ export function IssueTracking({
   });
 
   const handleViewDetails = (issue: Issue) => {
-    setSelectedIssue(issue);
-    setIsDetailsOpen(true);
+    navigation.navigateToEditIssue(issue.id);
   };
 
   const handleUpdateStatus = async (issueId: string, newStatus: IssueStatus) => {
@@ -147,6 +139,10 @@ export function IssueTracking({
   };
 
   const handleEditIssue = (issue: Issue) => {
+    navigation.navigateToEditIssue(issue.id);
+  };
+
+  const handleRowClick = (issue: Issue) => {
     navigation.navigateToEditIssue(issue.id);
   };
 
@@ -185,26 +181,29 @@ export function IssueTracking({
               title="Open Issues"
               value={openIssuesCount.toString()}
               icon={AlertCircle}
-              trend={openIssuesCount > 5 ? "up" : "down"}
-              trendValue={`${openIssuesCount > 5 ? "↑" : "↓"} ${Math.abs(openIssuesCount - 5)}`}
+              trend={{
+                value: Math.abs(openIssuesCount - 5),
+                direction: openIssuesCount > 5 ? "up" : "down",
+                label: `${openIssuesCount > 5 ? "↑" : "↓"} ${Math.abs(openIssuesCount - 5)}`
+              }}
             />
             <StatsCard
               title="Critical"
               value={criticalIssuesCount.toString()}
               icon={AlertTriangle}
-              iconClassName="text-red-600"
+              variant="danger"
             />
             <StatsCard
               title="In Progress"
               value={inProgressCount.toString()}
               icon={Wrench}
-              iconClassName="text-blue-600"
+              variant="info"
             />
             <StatsCard
               title="Resolved (7d)"
               value={resolvedThisWeek.toString()}
               icon={CheckCircle2}
-              iconClassName="text-green-600"
+              variant="success"
             />
           </div>
 
@@ -297,7 +296,7 @@ export function IssueTracking({
                             <TableRow 
                               key={issue.id} 
                               className="cursor-pointer hover:bg-muted/50"
-                              onClick={() => handleEditIssue(issue)}
+                              onClick={() => handleRowClick(issue)}
                             >
                               <TableCell className="font-mono text-sm">{issue.id}</TableCell>
                               <TableCell>
@@ -388,125 +387,6 @@ export function IssueTracking({
           </Card>
         </div>
       </div>
-
-      {/* Issue Details Dialog */}
-      {selectedIssue && (
-        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-          <DialogContent className="max-w-2xl max-h-[80vh] overflow-auto">
-            <DialogHeader>
-              <div className="flex items-center justify-between">
-                <DialogTitle>Issue Details</DialogTitle>
-                <div className="flex items-center gap-2">
-                  {getSeverityBadge(selectedIssue.severity)}
-                  {getStatusBadge(selectedIssue.status)}
-                </div>
-              </div>
-              <DialogDescription>{selectedIssue.id}</DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-4">
-              <div>
-                <h4 className="mb-2">Title</h4>
-                <p className="text-muted-foreground">{selectedIssue.title}</p>
-              </div>
-
-              <div>
-                <h4 className="mb-2">Asset</h4>
-                <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
-                  <Package className="h-4 w-4" />
-                  <div>
-                    <p>{selectedIssue.assetName}</p>
-                    <p className="text-xs text-muted-foreground">{selectedIssue.assetId}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="mb-2">Description</h4>
-                <p className="text-sm text-muted-foreground">{selectedIssue.description}</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="mb-2">Type</h4>
-                  <Badge variant="outline" className="capitalize">
-                    {selectedIssue.type.replace("-", " ")}
-                  </Badge>
-                </div>
-                <div>
-                  <h4 className="mb-2">Reported By</h4>
-                  <p className="text-sm text-muted-foreground">{selectedIssue.reportedBy}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="mb-2">Reported Date</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(selectedIssue.reportedDate).toLocaleString()}
-                  </p>
-                </div>
-                {selectedIssue.assignedTo && (
-                  <div>
-                    <h4 className="mb-2">Assigned To</h4>
-                    <p className="text-sm text-muted-foreground">{selectedIssue.assignedTo}</p>
-                  </div>
-                )}
-              </div>
-
-              {selectedIssue.resolvedBy && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="mb-2">Resolved By</h4>
-                    <p className="text-sm text-muted-foreground">{selectedIssue.resolvedBy}</p>
-                  </div>
-                  <div>
-                    <h4 className="mb-2">Resolved Date</h4>
-                    <p className="text-sm text-muted-foreground">
-                      {selectedIssue.resolvedDate && new Date(selectedIssue.resolvedDate).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {selectedIssue.notes && (
-                <div>
-                  <h4 className="mb-2">Notes</h4>
-                  <p className="text-sm text-muted-foreground">{selectedIssue.notes}</p>
-                </div>
-              )}
-
-              {selectedIssue.tags && selectedIssue.tags.length > 0 && (
-                <div>
-                  <h4 className="mb-2">Tags</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {selectedIssue.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>
-                Close
-              </Button>
-              {selectedIssue.status !== "resolved" && selectedIssue.status !== "closed" && (
-                <Button onClick={() => {
-                  handleUpdateStatus(selectedIssue.id, "resolved");
-                  setIsDetailsOpen(false);
-                }}>
-                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                  Mark as Resolved
-                </Button>
-              )}
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 }
