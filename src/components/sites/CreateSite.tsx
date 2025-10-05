@@ -14,7 +14,7 @@ import { Separator } from "../ui/separator";
 import { Card, CardContent } from "../ui/card";
 import { PageHeader } from "../common";
 import { ArrowLeft, MapPin, Building2 } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 
 interface CreateSiteProps {
   onBack: () => void;

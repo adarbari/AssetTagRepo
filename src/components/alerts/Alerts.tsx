@@ -28,7 +28,7 @@ import {
 import { mockAlerts } from "../../data/mockData";
 import type { Alert, AlertType } from "../../types";
 import { AlertCard } from "../common";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 
 export interface AlertFilter {
   category?: string;

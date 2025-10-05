@@ -79,7 +79,7 @@ import {
   Shield,
   Edit,
 } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { format, formatDistanceToNow } from "date-fns";
 import { mockAssets, getAvailableGeofences } from "../data/mockData";
 import { expirationMechanisms } from "../data/dropdownOptions";

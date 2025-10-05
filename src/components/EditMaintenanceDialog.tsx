@@ -23,7 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { cn } from "./ui/utils";
 import { Calendar as CalendarIcon, Edit, History } from "lucide-react";
 import { format } from "date-fns";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 
 interface EditMaintenanceDialogProps {
   open: boolean;

@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Badge } from "./ui/badge";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { PageHeader } from "./common/PageHeader";
 import { LoadingState } from "./common/LoadingState";
 import { ErrorState } from "./common/ErrorState";

@@ -100,7 +100,7 @@ interface DisplayGeofence {
   complianceRate: number;
 }
 
-export function Geofences({ onCreateGeofence, onEditGeofence, onViewViolatingAssets }: GeofencesProps = {}) {
+export function Geofences({ onCreateGeofence, onEditGeofence, onViewViolatingAssets }: GeofencesProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedGeofence, setSelectedGeofence] = useState<string | null>(null);
@@ -159,12 +159,12 @@ export function Geofences({ onCreateGeofence, onEditGeofence, onViewViolatingAss
         setGeofences(prev => prev.filter(g => g.id !== selectedGeofence));
         
         // Show success notification
-        import("sonner@2.0.3").then(({ toast }) => {
+        import("sonner").then(({ toast }) => {
           toast.success("Geofence deleted successfully");
         });
       } else {
         // Show error notification
-        import("sonner@2.0.3").then(({ toast }) => {
+        import("sonner").then(({ toast }) => {
           toast.error("Failed to delete geofence");
         });
       }
@@ -528,7 +528,7 @@ export function Geofences({ onCreateGeofence, onEditGeofence, onViewViolatingAss
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => console.log("View on map:", geofence.id)}>
+                        <DropdownMenuItem onClick={() => navigation.handleShowOnMap({ id: geofence.id, name: geofence.name } as any)}>
                           <Map className="h-4 w-4 mr-2" />
                           View on Map
                         </DropdownMenuItem>
@@ -536,11 +536,11 @@ export function Geofences({ onCreateGeofence, onEditGeofence, onViewViolatingAss
                           <Edit className="h-4 w-4 mr-2" />
                           Edit Geofence
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log("Configure alerts:", geofence.id)}>
+                        <DropdownMenuItem onClick={() => navigation.navigateToAlertConfiguration()}>
                           <Settings className="h-4 w-4 mr-2" />
                           Configure Alerts
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log("View history:", geofence.id)}>
+                        <DropdownMenuItem onClick={() => toast.info("View history functionality coming soon!")}>
                           <History className="h-4 w-4 mr-2" />
                           View History
                         </DropdownMenuItem>

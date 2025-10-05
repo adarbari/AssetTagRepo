@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { EmptyState, StatsCard, Section, StatusBadge, InfoRow } from "./common";
 import { ExportDialog } from "./ExportDialog";
-import { EditAssetDialog } from "./EditAssetDialog";
+import { EditAssetDialog } from "./assets/EditAssetDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -61,12 +61,13 @@ import {
 import { mockAssets } from "../data/mockData";
 import type { Asset } from "../types";
 import { useNavigation } from "../contexts/NavigationContext";
+import { toast } from "sonner";
 
 interface AssetInventoryProps {
   onAssetClick?: (asset: Asset) => void;
 }
 
-export function AssetInventory({ onAssetClick }: AssetInventoryProps = {}) {
+export function AssetInventory({ onAssetClick }: AssetInventoryProps) {
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all-types");
@@ -190,10 +191,19 @@ export function AssetInventory({ onAssetClick }: AssetInventoryProps = {}) {
     setDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
-    console.log("Deleting asset:", selectedAsset?.id);
-    setDeleteDialogOpen(false);
-    setSelectedAsset(null);
+  const confirmDelete = async () => {
+    if (selectedAsset) {
+      try {
+        // In a real app, this would call an API to delete the asset
+        toast.success(`Asset "${selectedAsset.name}" deleted successfully`);
+        setDeleteDialogOpen(false);
+        setSelectedAsset(null);
+        // Refresh the inventory list
+        window.location.reload();
+      } catch (error) {
+        toast.error("Failed to delete asset");
+      }
+    }
   };
 
   const handleAssetAdded = (asset: Asset) => {
@@ -533,15 +543,21 @@ export function AssetInventory({ onAssetClick }: AssetInventoryProps = {}) {
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log("Show on map:", asset.id)}>
+                        <DropdownMenuItem onClick={() => navigation.handleShowOnMap(asset)}>
                           <MapPin className="h-4 w-4 mr-2" />
                           Show on Map
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onAssetClick?.(asset)}>
+                        <DropdownMenuItem onClick={() => navigation.handleViewHistoricalPlayback(asset)}>
                           <Clock className="h-4 w-4 mr-2" />
                           View History
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log("Check out:", asset.id)}>
+                        <DropdownMenuItem onClick={() => navigation.navigateToCheckInOut({
+                          assetId: asset.id,
+                          assetName: asset.name,
+                          currentStatus: asset.status,
+                          mode: "check-out",
+                          assetContext: asset,
+                        })}>
                           <Download className="h-4 w-4 mr-2" />
                           Check Out
                         </DropdownMenuItem>

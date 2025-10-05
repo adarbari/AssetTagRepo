@@ -29,7 +29,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { format } from "date-fns";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { PageHeader } from "./common";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "./ui/breadcrumb";
 import type { Asset } from "../types";

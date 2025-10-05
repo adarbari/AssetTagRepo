@@ -41,7 +41,7 @@ import {
   User,
 } from "lucide-react";
 import { TaskAuditLogDialog } from "./TaskAuditLogDialog";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { useNavigation } from "../contexts/NavigationContext";
 import {
   fetchMaintenanceTasks,

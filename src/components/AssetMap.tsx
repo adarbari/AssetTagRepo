@@ -176,16 +176,16 @@ export function AssetMap({
     // Dynamically load Leaflet CSS
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    link.href = "https://unpkg.com/leaflet/dist/leaflet.css";
     document.head.appendChild(link);
 
     // Load Leaflet JS
     import("leaflet").then((L) => {
       // Fix for default marker icon issue with webpack/vite
       L.Icon.Default.mergeOptions({
-        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconRetinaUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet/dist/images/marker-shadow.png',
       });
 
       // Initialize map centered on San Francisco

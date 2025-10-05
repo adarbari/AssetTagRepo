@@ -19,7 +19,7 @@ import {
 } from "../ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Edit, Loader2 } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import type { Asset } from "../../types";
 import { useAssetMutations } from "../../hooks/useAssetDetails";
 import { assetTypes, assetStatuses, getOptionValue } from "../../data/dropdownOptions";

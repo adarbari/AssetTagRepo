@@ -17,7 +17,7 @@ import { PageHeader } from "./common";
 import { cn } from "./ui/utils";
 import { Calendar as CalendarIcon, Wrench, History, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { maintenanceTypes, maintenancePriorities, technicians } from "../data/dropdownOptions";
 import { getAllAssets } from "../data/mockData";
 import type { Asset } from "../types";

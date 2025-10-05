@@ -6,7 +6,7 @@ export const mockAssets: Asset[] = [
     id: "AT-42891",
     name: "Excavator CAT 320",
     type: "Heavy Equipment",
-    status: "active",
+    status: "checked-out",
     location: "Job Site Alpha",
     site: "Construction Site A",
     lastSeen: "2 min ago",
@@ -289,15 +289,20 @@ function populateSiteRelationships() {
   });
 
   // Populate personnel relationships (will be called after mockPersonnel is defined)
-  if (typeof mockPersonnel !== 'undefined') {
-    mockPersonnel.forEach(person => {
-      if (person.currentSite) {
-        const site = mockSites.find(s => s.id === person.currentSite);
-        if (site && !site.personnelIds.includes(person.id)) {
-          site.personnelIds.push(person.id);
+  try {
+    if (typeof mockPersonnel !== 'undefined' && mockPersonnel) {
+      mockPersonnel.forEach(person => {
+        if (person.currentSite) {
+          const site = mockSites.find(s => s.id === person.currentSite);
+          if (site && !site.personnelIds.includes(person.id)) {
+            site.personnelIds.push(person.id);
+          }
         }
-      }
-    });
+      });
+    }
+  } catch (error) {
+    // mockPersonnel not yet defined, will be populated later
+    console.log('Personnel relationships will be populated after mockPersonnel is defined');
   }
 
   // Update assets count
@@ -306,8 +311,7 @@ function populateSiteRelationships() {
   });
 }
 
-// Initial population of asset relationships
-populateSiteRelationships();
+// Initial population of asset relationships will be called after mockPersonnel is defined
 
 export const mockAlerts: Alert[] = [
   // Theft Alerts

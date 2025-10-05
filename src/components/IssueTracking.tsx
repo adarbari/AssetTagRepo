@@ -57,7 +57,7 @@ import {
   Wrench,
   User,
 } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import type { Issue, IssueStatus, UpdateIssueInput } from "../types/issue";
 
 interface IssueTrackingProps {
@@ -144,6 +144,11 @@ export function IssueTracking({
     } else {
       toast.error("Failed to update issue status");
     }
+  };
+
+  const handleEditIssue = (issue: Issue) => {
+    // For now, show a toast message. In a real app, this would open an edit dialog
+    toast.info(`Edit functionality for issue "${issue.title}" - coming soon!`);
   };
 
   const openIssuesCount = issues.filter(i => 
@@ -361,7 +366,7 @@ export function IssueTracking({
                                       </DropdownMenuItem>
                                     )}
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => toast.info("Edit functionality coming soon")}>
+                                    <DropdownMenuItem onClick={() => handleEditIssue(issue)}>
                                       <Edit className="h-4 w-4 mr-2" />
                                       Edit Issue
                                     </DropdownMenuItem>

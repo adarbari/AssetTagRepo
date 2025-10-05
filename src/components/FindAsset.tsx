@@ -24,7 +24,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { cn } from "./ui/utils";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import type { Asset } from "../types";
 
 // Mock nearby assets - using real asset IDs from mockData

@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 import type { ViewType } from "../App";
 import type { Asset, Site, Alert } from "../types";
-import type { AlertFilter } from "../components/Alerts";
+import type { AlertFilter } from "../components/alerts/Alerts";
 
 interface GeofenceCreationData {
   siteId?: string;
@@ -573,9 +573,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const navigateToCheckInOut = (data: CheckInOutData) => {
+    console.log("🚀 navigateToCheckInOut called with:", data);
     pushNavigationState();
     setCheckInOutData(data);
     setCurrentView("check-in-out");
+    console.log("✅ Navigation state updated to check-in-out");
   };
 
   const handleBackFromCheckInOut = () => {
@@ -687,10 +689,10 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useNavigation() {
+export const useNavigation = () => {
   const context = useContext(NavigationContext);
   if (context === undefined) {
     throw new Error("useNavigation must be used within a NavigationProvider");
   }
   return context;
-}
+};

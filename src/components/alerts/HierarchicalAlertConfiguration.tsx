@@ -44,7 +44,7 @@ import {
   WifiOff,
   Wrench,
 } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { AlertConfigFieldRenderer } from "./AlertConfigFieldRenderer";
 import { alertTypeConfigurations, getAllAlertTypes } from "../../data/alertConfigurations";
 import type { AlertConfigurationsStore, SavedAlertConfig, AlertConfigLevel, AlertRuleConfig } from "../../types/alertConfig";

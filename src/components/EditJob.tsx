@@ -58,7 +58,7 @@ import {
   Clock,
   X,
 } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import type { Job, UpdateJobInput, JobPriority, JobStatus } from "../types/job";
 import type { Asset } from "../types";

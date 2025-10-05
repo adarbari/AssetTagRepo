@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { PageHeader } from "../common";
 import { ArrowLeft, Briefcase } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import type { CreateJobInput, JobPriority } from "../../types/job";
 import { JobInformationSection } from "../job/JobInformationSection";
 import { BudgetSection } from "../job/BudgetSection";

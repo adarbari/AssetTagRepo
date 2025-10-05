@@ -788,7 +788,7 @@ export function SiteDetails({
                         }
                         
                         // Show success message
-                        import("sonner@2.0.3").then(({ toast }) => {
+                        import("sonner").then(({ toast }) => {
                           toast.success("Site boundary updated successfully");
                         });
                         

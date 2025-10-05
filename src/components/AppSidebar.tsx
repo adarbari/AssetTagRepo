@@ -53,7 +53,6 @@ export function AppSidebar({ currentView, onViewChange, onAlertTypeClick }: AppS
     { id: "dashboard" as ViewType, label: "Dashboard", icon: LayoutDashboard },
     { id: "map" as ViewType, label: "Live Map", icon: Map },
     { id: "inventory" as ViewType, label: "Asset Inventory", icon: Package },
-    { id: "sites" as ViewType, label: "Sites", icon: Building2 },
   ];
 
   // Calculate alert statistics
@@ -82,11 +81,9 @@ export function AppSidebar({ currentView, onViewChange, onAlertTypeClick }: AppS
   ];
 
   const operationsItems = [
-    { id: "job-costing" as ViewType, label: "Jobs", icon: Package },
+    { id: "jobs" as ViewType, label: "Jobs", icon: Package },
     { id: "maintenance" as ViewType, label: "Maintenance", icon: Wrench },
-    { id: "issue-tracking" as ViewType, label: "Issues", icon: AlertTriangle },
-    { id: "vehicle-pairing" as ViewType, label: "Vehicle Pairing", icon: Truck },
-    { id: "find-asset" as ViewType, label: "Find Asset", icon: Target },
+    { id: "issues" as ViewType, label: "Issues", icon: AlertTriangle },
   ];
 
   const monitoringItems = [

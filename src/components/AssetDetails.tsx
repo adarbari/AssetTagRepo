@@ -21,7 +21,7 @@ import { ExportDialog } from "./ExportDialog";
 import { mockAssets } from "../data/mockData";
 import QRCode from "qrcode";
 import { EditMaintenanceDialog } from "./EditMaintenanceDialog";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { useNavigation } from "../contexts/NavigationContext";
 import {
   Select,
@@ -417,13 +417,18 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
             {!isEditMode && (
               <>
                 {/* Conditionally show Check Out button for assets that can be checked out */}
-                {(currentAsset.status === "active" || 
-                  currentAsset.status === "inactive" || 
-                  currentAsset.status === "maintenance") && (
+                {(() => {
+                  const canCheckOut = currentAsset.status === "active" || 
+                    currentAsset.status === "inactive" || 
+                    currentAsset.status === "maintenance";
+                  console.log("Asset status:", currentAsset.status, "Can check out:", canCheckOut);
+                  return canCheckOut;
+                })() && (
                   <Button 
                     variant="default" 
                     size="sm" 
                     onClick={() => {
+                      console.log("🔴 Check Out button clicked!");
                       navigation.navigateToCheckInOut({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,
@@ -439,11 +444,16 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                   </Button>
                 )}
                 {/* Conditionally show Check In button for checked-out assets */}
-                {currentAsset.status === "checked-out" && (
+                {(() => {
+                  const canCheckIn = currentAsset.status === "checked-out";
+                  console.log("Asset status:", currentAsset.status, "Can check in:", canCheckIn);
+                  return canCheckIn;
+                })() && (
                   <Button 
                     variant="default" 
                     size="sm" 
                     onClick={() => {
+                      console.log("🟢 Check In button clicked!");
                       navigation.navigateToCheckInOut({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,
@@ -860,6 +870,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                         variant="outline" 
                         className="w-full justify-start"
                         onClick={() => {
+                          console.log("🔴 Quick Actions Check Out button clicked!");
                           navigation.navigateToCheckInOut({
                             assetId: currentAsset.id,
                             assetName: currentAsset.name,
@@ -880,6 +891,7 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                         variant="outline" 
                         className="w-full justify-start"
                         onClick={() => {
+                          console.log("🟢 Quick Actions Check In button clicked!");
                           navigation.navigateToCheckInOut({
                             assetId: currentAsset.id,
                             assetName: currentAsset.name,

@@ -49,7 +49,7 @@ import {
   Package,
   FileText,
 } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import type { Job, CreateJobInput, UpdateJobInput, JobAlert, JobStatus, JobPriority } from "../types/job";
 import { useNavigation } from "../contexts/NavigationContext";
 

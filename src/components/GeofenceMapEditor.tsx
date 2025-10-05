@@ -38,7 +38,7 @@ export function GeofenceMapEditor({
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    link.href = "https://unpkg.com/leaflet/dist/leaflet.css";
     if (!document.querySelector(`link[href="${link.href}"]`)) {
       document.head.appendChild(link);
     }
