@@ -585,7 +585,6 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
               <TabsTrigger value="history">Track History</TabsTrigger>
               <TabsTrigger value="activity">Activity Log</TabsTrigger>
               <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-              <TabsTrigger value="schedule-management">Schedule Management</TabsTrigger>
               <TabsTrigger value="alerts">Alerts</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
             </TabsList>
@@ -1279,7 +1278,19 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
               {/* Completed Maintenance */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Maintenance History</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Maintenance History</CardTitle>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => {
+                        navigation.setCurrentView("maintenance");
+                      }}
+                    >
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Schedule Management
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -1315,199 +1326,6 @@ export function AssetDetails({ asset, onBack, onShowOnMap, onViewHistoricalPlayb
                         </div>
                       </div>
                     ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Schedule Management Tab */}
-            <TabsContent value="schedule-management" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Maintenance Schedule</CardTitle>
-                    <Button 
-                      size="sm" 
-                      onClick={() => {
-                        navigation.navigateToCreateMaintenance({
-                          preSelectedAsset: currentAsset.id,
-                          preSelectedAssetName: currentAsset.name,
-                          assetContext: currentAsset,
-                        });
-                      }}
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Schedule New Task
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {/* Upcoming Scheduled Tasks */}
-                    <div>
-                      <h4 className="text-lg font-medium mb-4">Upcoming Scheduled Tasks</h4>
-                      <div className="space-y-3">
-                        {upcomingMaintenance.length > 0 ? (
-                          upcomingMaintenance.map((maintenance) => (
-                            <div key={maintenance.id} className="border rounded-lg p-4 bg-blue-50">
-                              <div className="flex items-start justify-between mb-2">
-                                <div>
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <h5 className="font-medium">{maintenance.description}</h5>
-                                    <Badge 
-                                      variant="outline" 
-                                      className={
-                                        maintenance.priority === "High"
-                                          ? "bg-red-50 text-red-700 border-red-200"
-                                          : maintenance.priority === "Medium"
-                                          ? "bg-yellow-50 text-yellow-700 border-yellow-200"
-                                          : "bg-green-50 text-green-700 border-green-200"
-                                      }
-                                    >
-                                      {maintenance.priority}
-                                    </Badge>
-                                  </div>
-                                  <p className="text-sm text-muted-foreground">Due: {maintenance.date}</p>
-                                </div>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => {
-                                    setSelectedMaintenance({
-                                      id: maintenance.id,
-                                      description: maintenance.description,
-                                      type: maintenance.type,
-                                      task: maintenance.description,
-                                      dueDate: maintenance.date,
-                                      priority: maintenance.priority,
-                                      status: maintenance.status,
-                                      assignedTo: maintenance.assignedTo,
-                                    });
-                                    setIsEditMaintenanceOpen(true);
-                                  }}
-                                >
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Edit
-                                </Button>
-                              </div>
-                              <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                  <span className="text-muted-foreground">Type:</span>
-                                  <p>{maintenance.type}</p>
-                                </div>
-                                <div>
-                                  <span className="text-muted-foreground">Assigned To:</span>
-                                  <p>{maintenance.assignedTo}</p>
-                                </div>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="text-center py-8 text-muted-foreground">
-                            <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                            <p>No upcoming maintenance tasks scheduled</p>
-                            <Button 
-                              className="mt-4" 
-                              onClick={() => {
-                                navigation.navigateToCreateMaintenance({
-                                  preSelectedAsset: currentAsset.id,
-                                  preSelectedAssetName: currentAsset.name,
-                                  assetContext: currentAsset,
-                                });
-                              }}
-                            >
-                              <Calendar className="h-4 w-4 mr-2" />
-                              Schedule First Task
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Maintenance Schedule Overview */}
-                    <div>
-                      <h4 className="text-lg font-medium mb-4">Schedule Overview</h4>
-                      <div className="grid gap-4 md:grid-cols-3">
-                        <Card>
-                          <CardContent className="pt-6">
-                            <div className="flex items-center gap-2 mb-2">
-                              <AlertTriangle className="h-4 w-4 text-red-600" />
-                              <span className="text-sm font-medium">Overdue</span>
-                            </div>
-                            <div className="text-2xl font-bold">
-                              {upcomingMaintenance.filter(m => new Date(m.date) < new Date()).length}
-                            </div>
-                          </CardContent>
-                        </Card>
-                        <Card>
-                          <CardContent className="pt-6">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Clock className="h-4 w-4 text-blue-600" />
-                              <span className="text-sm font-medium">This Week</span>
-                            </div>
-                            <div className="text-2xl font-bold">
-                              {upcomingMaintenance.filter(m => {
-                                const taskDate = new Date(m.date);
-                                const now = new Date();
-                                const weekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-                                return taskDate >= now && taskDate <= weekFromNow;
-                              }).length}
-                            </div>
-                          </CardContent>
-                        </Card>
-                        <Card>
-                          <CardContent className="pt-6">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Calendar className="h-4 w-4 text-green-600" />
-                              <span className="text-sm font-medium">This Month</span>
-                            </div>
-                            <div className="text-2xl font-bold">
-                              {upcomingMaintenance.filter(m => {
-                                const taskDate = new Date(m.date);
-                                const now = new Date();
-                                const monthFromNow = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
-                                return taskDate >= now && taskDate <= monthFromNow;
-                              }).length}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </div>
-
-                    {/* Quick Actions */}
-                    <div>
-                      <h4 className="text-lg font-medium mb-4">Quick Actions</h4>
-                      <div className="grid gap-3 md:grid-cols-2">
-                        <Button 
-                          variant="outline" 
-                          className="justify-start"
-                          onClick={() => {
-                            navigation.navigateToCreateMaintenance({
-                              preSelectedAsset: currentAsset.id,
-                              preSelectedAssetName: currentAsset.name,
-                              assetContext: currentAsset,
-                            });
-                          }}
-                        >
-                          <Wrench className="h-4 w-4 mr-2" />
-                          Schedule Preventive Maintenance
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          className="justify-start"
-                          onClick={() => {
-                            navigation.navigateToCreateMaintenance({
-                              preSelectedAsset: currentAsset.id,
-                              preSelectedAssetName: currentAsset.name,
-                              assetContext: currentAsset,
-                            });
-                          }}
-                        >
-                          <AlertTriangle className="h-4 w-4 mr-2" />
-                          Schedule Emergency Repair
-                        </Button>
-                      </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
