@@ -74,6 +74,8 @@
             "test:ui": "vitest --ui",
             "test:run": "vitest run",
             "test:coverage": "vitest run --coverage",
+            "test:coverage:open": "vitest run --coverage && open coverage/index.html",
+            "test:coverage:ci": "vitest run --coverage --reporter=verbose --reporter=json --outputFile=coverage/coverage-summary.json",
             "test:buttons": "tsx src/test/run-button-tests.ts",
             "test:all": "tsx src/test/run-all-tests.ts",
             "test:sites": "vitest run src/components/__tests__/Sites.test.tsx src/components/__tests__/SiteDetails.test.tsx src/components/__tests__/CreateSite.test.tsx",
@@ -81,7 +83,9 @@
             "test:dashboard": "vitest run src/components/__tests__/Dashboard.test.tsx",
             "test:maintenance": "vitest run src/components/__tests__/Maintenance.test.tsx",
             "test:vehicle-pairing": "vitest run src/components/__tests__/VehicleAssetPairing.test.tsx",
+            "test:integration": "vitest run src/test/integration/__tests__/",
             "test:watch": "vitest --watch",
-            "test:watch:ui": "vitest --watch --ui"
+            "test:watch:ui": "vitest --watch --ui",
+            "test:new": "vitest run src/components/__tests__/Reports.test.tsx src/utils/__tests__/errorHandler.test.ts src/services/__tests__/api.test.ts src/hooks/__tests__/useAsyncData.test.ts src/test/integration/__tests__/userFlow.test.tsx"
       }
 }

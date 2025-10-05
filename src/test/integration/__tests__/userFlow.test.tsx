@@ -1,8 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { Reports } from '../Reports'
-import * as mockReportsData from '../../data/mockReportsData'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { Reports } from '../../components/Reports'
 import { useAsyncDataAll } from '../../hooks/useAsyncData'
 
 // Mock the useAsyncDataAll hook
@@ -11,7 +10,7 @@ vi.mock('../../hooks/useAsyncData', () => ({
 }))
 
 // Mock the GenerateReportDialog component
-vi.mock('../GenerateReportDialog', () => ({
+vi.mock('../../components/GenerateReportDialog', () => ({
   GenerateReportDialog: ({ open, onOpenChange, reportType }: any) => (
     <div data-testid="generate-report-dialog" data-open={open} data-report-type={reportType}>
       <button onClick={() => onOpenChange(false)}>Close Dialog</button>
@@ -112,7 +111,6 @@ vi.mock('lucide-react', () => ({
   Image: () => <div data-testid="image-icon" />,
   ImageOff: () => <div data-testid="image-off-icon" />,
   File: () => <div data-testid="file-icon" />,
-  FileText: () => <div data-testid="file-text-icon" />,
   FileImage: () => <div data-testid="file-image-icon" />,
   FileVideo: () => <div data-testid="file-video-icon" />,
   FileAudio: () => <div data-testid="file-audio-icon" />,
@@ -177,7 +175,7 @@ Object.defineProperty(window, 'location', {
 // Mock console.log
 const mockConsoleLog = vi.spyOn(console, 'log').mockImplementation(() => {})
 
-describe('Reports Component', () => {
+describe('User Flow Integration Tests', () => {
   const mockData = {
     utilization: [
       { month: 'Jan', utilization: 85, idle: 10, maintenance: 5 },
@@ -203,185 +201,55 @@ describe('Reports Component', () => {
     mockReload.mockClear()
   })
 
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
-  describe('Loading State', () => {
-    it('should show loading state when data is being fetched', () => {
+  describe('Complete Reports User Flow', () => {
+    it('should complete the full reports workflow from loading to report generation', async () => {
+      const user = userEvent.setup()
+      
+      // Start with loading state
       ;(useAsyncDataAll as any).mockReturnValue({
         data: null,
         loading: true,
         error: null,
       })
 
-      render(<Reports />)
+      const { rerender } = render(<Reports />)
       
+      // Verify loading state
       expect(screen.getByText('Loading reports...')).toBeInTheDocument()
-    })
-  })
-
-  describe('Error State', () => {
-    it('should show error state when data fetching fails', () => {
-      const errorMessage = 'Failed to fetch reports'
-      ;(useAsyncDataAll as any).mockReturnValue({
-        data: null,
-        loading: false,
-        error: new Error(errorMessage),
-      })
-
-      render(<Reports />)
       
-      expect(screen.getByText('Failed to load reports')).toBeInTheDocument()
-      expect(screen.getByText(errorMessage)).toBeInTheDocument()
-      expect(screen.getByText('Try Again')).toBeInTheDocument()
-    })
-
-    it('should reload page when Try Again is clicked', async () => {
-      const user = userEvent.setup()
-      ;(useAsyncDataAll as any).mockReturnValue({
-        data: null,
-        loading: false,
-        error: new Error('Test error'),
-      })
-
-      render(<Reports />)
-      
-      const tryAgainButton = screen.getByText('Try Again')
-      await user.click(tryAgainButton)
-      
-      expect(mockReload).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('Success State', () => {
-    beforeEach(() => {
+      // Simulate data loading completion
       ;(useAsyncDataAll as any).mockReturnValue({
         data: mockData,
         loading: false,
         error: null,
       })
-    })
 
-    it('should render the reports page with all sections', () => {
-      render(<Reports />)
+      rerender(<Reports />)
       
-      // Check page header
-      expect(screen.getByText('Reports & Analytics')).toBeInTheDocument()
-      expect(screen.getByText('Insights and performance metrics')).toBeInTheDocument()
+      // Wait for data to load
+      await waitFor(() => {
+        expect(screen.getByText('Reports & Analytics')).toBeInTheDocument()
+      })
       
-      // Check time range selector
-      expect(screen.getByDisplayValue('Last 6 months')).toBeInTheDocument()
-      
-      // Check export button
-      expect(screen.getByText('Export Report')).toBeInTheDocument()
-      
-      // Check ROI summary cards
+      // Verify all sections are rendered
       expect(screen.getByText('Total ROI')).toBeInTheDocument()
       expect(screen.getByText('Theft Prevention')).toBeInTheDocument()
       expect(screen.getByText('Labor Savings')).toBeInTheDocument()
       expect(screen.getByText('Insurance Reduction')).toBeInTheDocument()
       
-      // Check chart sections
-      expect(screen.getByText('Asset Utilization Trend')).toBeInTheDocument()
-      expect(screen.getByText('Cost Savings Breakdown')).toBeInTheDocument()
-      
-      // Check top assets section
-      expect(screen.getByText('Top Performing Assets (by Utilization)')).toBeInTheDocument()
-      
-      // Check report templates section
-      expect(screen.getByText('Report Templates')).toBeInTheDocument()
-    })
-
-    it('should display correct ROI calculations', () => {
-      render(<Reports />)
-      
-      // Total ROI should be calculated from cost savings data
-      // (10000 + 5000 + 2000 + 3000) + (12000 + 6000 + 2500 + 3500) = 45000
-      expect(screen.getByText('45K')).toBeInTheDocument() // 45000 / 1000 = 45K
-      
-      // Theft prevention total: 10000 + 12000 = 22000
-      expect(screen.getByText('22K')).toBeInTheDocument()
-      
-      // Labor savings total: 5000 + 6000 = 11000
-      expect(screen.getByText('11.0K')).toBeInTheDocument()
-      
-      // Insurance savings total: 2000 + 2500 = 4500
-      expect(screen.getByText('4.5K')).toBeInTheDocument()
-    })
-
-    it('should render charts with correct data', () => {
-      render(<Reports />)
-      
-      // Check that charts are rendered
+      // Verify charts are rendered
       expect(screen.getByTestId('bar-chart')).toBeInTheDocument()
       expect(screen.getByTestId('line-chart')).toBeInTheDocument()
       
-      // Check bar chart components
-      expect(screen.getByTestId('bar-utilization')).toBeInTheDocument()
-      expect(screen.getByTestId('bar-idle')).toBeInTheDocument()
-      expect(screen.getByTestId('bar-maintenance')).toBeInTheDocument()
-      
-      // Check line chart components
-      expect(screen.getByTestId('line-theftPrevention')).toBeInTheDocument()
-      expect(screen.getByTestId('line-laborSaved')).toBeInTheDocument()
-      expect(screen.getByTestId('line-insurance')).toBeInTheDocument()
-      expect(screen.getByTestId('line-maintenanceSavings')).toBeInTheDocument()
-    })
-
-    it('should display top performing assets correctly', () => {
-      render(<Reports />)
-      
-      // Check asset names
+      // Verify top assets are displayed
       expect(screen.getByText('Asset 1')).toBeInTheDocument()
       expect(screen.getByText('Asset 2')).toBeInTheDocument()
       
-      // Check asset types
-      expect(screen.getByText('Equipment')).toBeInTheDocument()
-      expect(screen.getByText('Vehicle')).toBeInTheDocument()
-      
-      // Check utilization percentages
-      expect(screen.getByText('95%')).toBeInTheDocument()
-      expect(screen.getByText('88%')).toBeInTheDocument()
-      
-      // Check hours
-      expect(screen.getByText('200h')).toBeInTheDocument()
-      expect(screen.getByText('180h')).toBeInTheDocument()
-      
-      // Check revenue
-      expect(screen.getByText('$50K')).toBeInTheDocument()
-      expect(screen.getByText('$45K')).toBeInTheDocument()
-    })
-
-    it('should display report templates correctly', () => {
-      render(<Reports />)
-      
-      // Check template names
+      // Verify report templates are displayed
       expect(screen.getByText('Monthly Report')).toBeInTheDocument()
       expect(screen.getByText('Quarterly Report')).toBeInTheDocument()
       
-      // Check template descriptions
-      expect(screen.getByText('Monthly asset report')).toBeInTheDocument()
-      expect(screen.getByText('Quarterly summary')).toBeInTheDocument()
-      
-      // Check last generated dates
-      expect(screen.getByText('Last: 1/1/2024')).toBeInTheDocument()
-    })
-  })
-
-  describe('User Interactions', () => {
-    beforeEach(() => {
-      ;(useAsyncDataAll as any).mockReturnValue({
-        data: mockData,
-        loading: false,
-        error: null,
-      })
-    })
-
-    it('should change time range when selector is used', async () => {
-      const user = userEvent.setup()
-      render(<Reports />)
-      
+      // Test time range change
       const timeRangeSelect = screen.getByDisplayValue('Last 6 months')
       await user.click(timeRangeSelect)
       
@@ -389,50 +257,59 @@ describe('Reports Component', () => {
       await user.click(option)
       
       expect(screen.getByDisplayValue('Last 12 months')).toBeInTheDocument()
-    })
-
-    it('should open report dialog when template is clicked', async () => {
-      const user = userEvent.setup()
-      render(<Reports />)
       
+      // Test report generation
       const monthlyReportButton = screen.getByText('Monthly Report')
       await user.click(monthlyReportButton)
       
       const dialog = screen.getByTestId('generate-report-dialog')
       expect(dialog).toHaveAttribute('data-open', 'true')
       expect(dialog).toHaveAttribute('data-report-type', 'monthly')
-    })
-
-    it('should close report dialog when close button is clicked', async () => {
-      const user = userEvent.setup()
-      render(<Reports />)
       
-      // Open dialog first
-      const monthlyReportButton = screen.getByText('Monthly Report')
-      await user.click(monthlyReportButton)
-      
-      // Close dialog
-      const closeButton = screen.getByText('Close Dialog')
-      await user.click(closeButton)
-      
-      const dialog = screen.getByTestId('generate-report-dialog')
-      expect(dialog).toHaveAttribute('data-open', 'false')
-    })
-
-    it('should log export action when export button is clicked', async () => {
-      const user = userEvent.setup()
-      render(<Reports />)
-      
+      // Test export functionality
       const exportButton = screen.getByText('Export Report')
       await user.click(exportButton)
       
-      expect(mockConsoleLog).toHaveBeenCalledWith('Exporting comprehensive report for:', '6')
+      expect(mockConsoleLog).toHaveBeenCalledWith('Exporting comprehensive report for:', '12')
+      
+      // Test dialog closure
+      const closeButton = screen.getByText('Close Dialog')
+      await user.click(closeButton)
+      
+      expect(dialog).toHaveAttribute('data-open', 'false')
     })
-  })
 
-  describe('Empty States', () => {
-    it('should show empty state when no top assets are available', () => {
-      const emptyData = { ...mockData, topAssets: [] }
+    it('should handle error recovery flow', async () => {
+      const user = userEvent.setup()
+      
+      // Start with error state
+      ;(useAsyncDataAll as any).mockReturnValue({
+        data: null,
+        loading: false,
+        error: new Error('Network error'),
+      })
+
+      render(<Reports />)
+      
+      // Verify error state
+      expect(screen.getByText('Failed to load reports')).toBeInTheDocument()
+      expect(screen.getByText('Network error')).toBeInTheDocument()
+      
+      // Test error recovery
+      const tryAgainButton = screen.getByText('Try Again')
+      await user.click(tryAgainButton)
+      
+      expect(mockReload).toHaveBeenCalledTimes(1)
+    })
+
+    it('should handle empty data states gracefully', async () => {
+      const emptyData = {
+        utilization: [],
+        costSavings: [],
+        topAssets: [],
+        templates: [],
+      }
+      
       ;(useAsyncDataAll as any).mockReturnValue({
         data: emptyData,
         loading: false,
@@ -441,29 +318,23 @@ describe('Reports Component', () => {
 
       render(<Reports />)
       
+      // Verify empty states are handled
       expect(screen.getByText('No asset data available')).toBeInTheDocument()
-      expect(screen.getByText('Asset utilization data will appear here')).toBeInTheDocument()
+      expect(screen.getByText('No report templates')).toBeInTheDocument()
     })
+  })
 
-    it('should show empty state when no report templates are available', () => {
-      const emptyData = { ...mockData, templates: [] }
+  describe('Data Flow Integration', () => {
+    it('should properly integrate data fetching with component rendering', () => {
       ;(useAsyncDataAll as any).mockReturnValue({
-        data: emptyData,
+        data: mockData,
         loading: false,
         error: null,
       })
 
       render(<Reports />)
       
-      expect(screen.getByText('No report templates')).toBeInTheDocument()
-      expect(screen.getByText('Report templates will appear here')).toBeInTheDocument()
-    })
-  })
-
-  describe('Data Dependencies', () => {
-    it('should call useAsyncDataAll with correct parameters', () => {
-      render(<Reports />)
-      
+      // Verify useAsyncDataAll was called with correct parameters
       expect(useAsyncDataAll).toHaveBeenCalledWith(
         {
           utilization: expect.any(Function),
@@ -471,13 +342,26 @@ describe('Reports Component', () => {
           topAssets: expect.any(Function),
           templates: expect.any(Function),
         },
-        { deps: [6] } // Default timeRange is "6"
+        { deps: [6] }
       )
+      
+      // Verify data is properly displayed
+      expect(screen.getByText('45K')).toBeInTheDocument() // Total ROI
+      expect(screen.getByText('22K')).toBeInTheDocument() // Theft Prevention
+      expect(screen.getByText('11.0K')).toBeInTheDocument() // Labor Savings
+      expect(screen.getByText('4.5K')).toBeInTheDocument() // Insurance Reduction
     })
 
-    it('should update dependencies when time range changes', async () => {
+    it('should handle dependency changes correctly', async () => {
       const user = userEvent.setup()
-      render(<Reports />)
+      
+      ;(useAsyncDataAll as any).mockReturnValue({
+        data: mockData,
+        loading: false,
+        error: null,
+      })
+
+      const { rerender } = render(<Reports />)
       
       // Change time range
       const timeRangeSelect = screen.getByDisplayValue('Last 6 months')
@@ -486,7 +370,7 @@ describe('Reports Component', () => {
       const option = screen.getByText('Last 3 months')
       await user.click(option)
       
-      // The hook should be called again with new dependencies
+      // Verify dependency change triggers new data fetch
       expect(useAsyncDataAll).toHaveBeenCalledWith(
         expect.any(Object),
         { deps: [3] }
@@ -494,37 +378,31 @@ describe('Reports Component', () => {
     })
   })
 
-  describe('Accessibility', () => {
-    beforeEach(() => {
+  describe('Accessibility Integration', () => {
+    it('should maintain accessibility throughout user interactions', async () => {
+      const user = userEvent.setup()
+      
       ;(useAsyncDataAll as any).mockReturnValue({
         data: mockData,
         loading: false,
         error: null,
       })
-    })
 
-    it('should have proper ARIA labels and roles', () => {
       render(<Reports />)
       
-      // Check that buttons are accessible
-      const exportButton = screen.getByRole('button', { name: /export report/i })
-      expect(exportButton).toBeInTheDocument()
-      
-      // Check that select is accessible
-      const timeRangeSelect = screen.getByRole('combobox')
-      expect(timeRangeSelect).toBeInTheDocument()
-    })
-
-    it('should support keyboard navigation', async () => {
-      const user = userEvent.setup()
-      render(<Reports />)
-      
-      // Tab to export button and press Enter
+      // Test keyboard navigation
       await user.tab()
       await user.tab()
       await user.keyboard('{Enter}')
       
       expect(mockConsoleLog).toHaveBeenCalledWith('Exporting comprehensive report for:', '6')
+      
+      // Test ARIA labels and roles
+      const exportButton = screen.getByRole('button', { name: /export report/i })
+      expect(exportButton).toBeInTheDocument()
+      
+      const timeRangeSelect = screen.getByRole('combobox')
+      expect(timeRangeSelect).toBeInTheDocument()
     })
   })
 })
