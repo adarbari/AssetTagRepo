@@ -1,3 +1,5 @@
+import React from "react";
+
 /**
  * Generic Error State Component
  * 

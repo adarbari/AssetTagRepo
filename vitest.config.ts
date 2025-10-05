@@ -10,7 +10,7 @@ export default defineConfig({
     css: true,
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'clover'],
+      reporter: ['text', 'json', 'html', 'clover', 'json-summary'],
       exclude: [
         'node_modules/**',
         'build/**',

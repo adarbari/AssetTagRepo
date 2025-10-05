@@ -112,7 +112,6 @@ vi.mock('lucide-react', () => ({
   Image: () => <div data-testid="image-icon" />,
   ImageOff: () => <div data-testid="image-off-icon" />,
   File: () => <div data-testid="file-icon" />,
-  FileText: () => <div data-testid="file-text-icon" />,
   FileImage: () => <div data-testid="file-image-icon" />,
   FileVideo: () => <div data-testid="file-video-icon" />,
   FileAudio: () => <div data-testid="file-audio-icon" />,

@@ -1,3 +1,5 @@
+import React from "react";
+
 /**
  * Reusable Capacity Bar Component
  * 

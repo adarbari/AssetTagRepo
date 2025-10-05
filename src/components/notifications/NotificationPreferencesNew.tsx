@@ -1,3 +1,5 @@
+import React from "react";
+
 /**
  * Notification Preferences - Hierarchical Configuration
  * 
