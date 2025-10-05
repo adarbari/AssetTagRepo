@@ -22,6 +22,7 @@ import { Maintenance } from "./components/Maintenance";
 import { IssueTracking } from "./components/IssueTracking";
 import { mockIssues, updateIssue, updateIssueStatus, deleteIssue } from "./data/mockIssueData";
 import { ComplianceTracking } from "./components/ComplianceTracking";
+import { CreateCompliance } from "./components/CreateCompliance";
 import { Geofences } from "./components/Geofences";
 import { Reports } from "./components/Reports";
 import { Settings } from "./components/Settings";
@@ -37,6 +38,7 @@ import { SiteDetails } from "./components/SiteDetails";
 import { CreateSite } from "./components/sites/CreateSite";
 import { CreateGeofence } from "./components/CreateGeofence";
 import { VehicleAssetPairing } from "./components/VehicleAssetPairing";
+import { AlertFilter } from "./components/alerts/Alerts";
 import type { Asset } from "./types";
 
 export type ViewType = 
@@ -129,8 +131,16 @@ function AppContent() {
     setSelectedAsset(null);
   };
 
-  const handleNavigateToAlerts = (filter?: any) => {
-    navigation.handleViewChange("alerts");
+  const handleNavigateToAlerts = (filter?: AlertFilter) => {
+    if (filter) {
+      navigation.navigateToAlerts(filter);
+    } else {
+      navigation.handleViewChange("alerts");
+    }
+  };
+
+  const handleAlertTypeClick = (alertType: string) => {
+    navigation.handleAlertTypeClick(alertType);
   };
 
   const renderCurrentView = () => {
@@ -324,6 +334,12 @@ function AppContent() {
         );
       case "compliance":
         return <ComplianceTracking />;
+      case "create-compliance":
+        return (
+          <CreateCompliance 
+            onBack={navigation.handleBackFromCreateCompliance}
+          />
+        );
       case "geofences":
         return (
           <Geofences 
@@ -342,7 +358,7 @@ function AppContent() {
         return (
           <Alerts 
             ref={alertsRef}
-            initialFilter={undefined}
+            initialFilter={navigation.alertFilter}
             onTakeAction={(alert) => {
               // Navigate to alert workflow
               navigation.navigateToAlertWorkflow(alert);
@@ -617,7 +633,7 @@ function AppContent() {
         <AppSidebar 
           currentView={currentView}
           onViewChange={handleViewChange}
-          onAlertTypeClick={handleNavigateToAlerts}
+          onAlertTypeClick={handleAlertTypeClick}
         />
         <main className="flex-1 overflow-auto">
           {renderCurrentView()}

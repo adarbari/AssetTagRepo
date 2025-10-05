@@ -296,6 +296,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
       category: alertType,
       status: "active",
     });
+    handleViewChange("alerts");
   };
 
   const navigateToAssetDetails = (asset: Asset) => {
