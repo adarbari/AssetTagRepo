@@ -9,6 +9,7 @@ import { AssetDetails } from "./components/AssetDetails";
 import { CreateAsset } from "./components/assets/CreateAsset";
 import { CreateCheckInOut } from "./components/CreateCheckInOut";
 import { CreateMaintenance } from "./components/CreateMaintenance";
+import { EditMaintenance } from "./components/EditMaintenance";
 import { CreateIssue } from "./components/CreateIssue";
 import { JobManagement } from "./components/JobManagement";
 import { JobDetails } from "./components/JobDetails";
@@ -396,6 +397,24 @@ function AppContent() {
             preSelectedAssetName={navigation.maintenanceCreationData?.preSelectedAssetName}
             assetContext={navigation.maintenanceCreationData?.assetContext}
           />
+        );
+      case "edit-maintenance":
+        console.log("🎯 Rendering edit-maintenance view, data:", navigation.maintenanceEditData);
+        return navigation.maintenanceEditData ? (
+          <EditMaintenance 
+            maintenanceId={navigation.maintenanceEditData.maintenanceId}
+            onBack={navigation.handleBackFromEditMaintenance}
+            fromContext={navigation.maintenanceEditData.fromContext}
+            sourceAssetContext={navigation.maintenanceEditData.sourceAssetContext}
+          />
+        ) : (
+          <div className="p-8">
+            <h2>Edit Maintenance</h2>
+            <p>No maintenance edit data available</p>
+            <Button onClick={() => navigation.handleViewChange("maintenance")}>
+              Back to Maintenance
+            </Button>
+          </div>
         );
       case "report-issue":
         return navigation.issueData ? (
