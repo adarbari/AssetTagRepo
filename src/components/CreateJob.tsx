@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
-import { PageHeader } from "../common";
+import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/card";
+import { PageHeader } from "./common";
 import { ArrowLeft, Briefcase } from "lucide-react";
 import { toast } from "sonner";
-import type { CreateJobInput, JobPriority } from "../../types/job";
-import { JobInformationSection } from "../job/JobInformationSection";
-import { BudgetSection } from "../job/BudgetSection";
-import { NotesSection } from "../job/NotesSection";
-import { TagsSection } from "../job/TagsSection";
+import type { CreateJobInput, JobPriority } from "../types/job";
+import { JobInformationSection } from "./job/JobInformationSection";
+import { BudgetSection } from "./job/BudgetSection";
+import { NotesSection } from "./job/NotesSection";
+import { TagsSection } from "./job/TagsSection";
 
 interface CreateJobProps {
   onBack: () => void;
@@ -49,18 +49,25 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
       return;
     }
 
-    const createInput: CreateJobInput = {
+    // Calculate total budget if individual fields are filled
+    const calculatedTotal = 
+      parseFloat(laborBudget || "0") +
+      parseFloat(equipmentBudget || "0") +
+      parseFloat(materialsBudget || "0") +
+      parseFloat(otherBudget || "0");
+
+    const finalTotalBudget = totalBudget ? parseFloat(totalBudget) : calculatedTotal;
+
+    if (finalTotalBudget <= 0) {
+      toast.error("Please enter a valid budget amount");
+      return;
+    }
+
+    const jobInput: CreateJobInput = {
       name,
       description,
       startDate,
       endDate,
-      budget: {
-        total: parseFloat(totalBudget) || 0,
-        labor: parseFloat(laborBudget) || 0,
-        equipment: parseFloat(equipmentBudget) || 0,
-        materials: parseFloat(materialsBudget) || 0,
-        other: parseFloat(otherBudget) || 0,
-      },
       priority,
       projectManager: projectManager || undefined,
       clientId: clientId || undefined,
@@ -68,49 +75,53 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
       groundStationGeofenceId: groundStationGeofenceId || undefined,
       notes: notes || undefined,
       tags: tags.length > 0 ? tags : undefined,
+      budget: {
+        total: finalTotalBudget,
+        labor: parseFloat(laborBudget || "0"),
+        equipment: parseFloat(equipmentBudget || "0"),
+        materials: parseFloat(materialsBudget || "0"),
+        other: parseFloat(otherBudget || "0"),
+      },
     };
 
-    const result = await onCreateJob(createInput);
-
-    if (result.success) {
-      toast.success("Job created successfully", {
-        description: `${name} has been added to your jobs`,
-      });
-      onBack();
-    } else {
-      toast.error("Failed to create job", {
-        description: "Please try again",
-      });
+    try {
+      const result = await onCreateJob(jobInput);
+      
+      if (result.success) {
+        toast.success("Job created successfully!");
+        onBack();
+      } else {
+        toast.error("Failed to create job");
+      }
+    } catch (error) {
+      console.error("Error creating job:", error);
+      toast.error("An error occurred while creating the job");
     }
   };
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
       <PageHeader
         title="Create New Job"
-        description="Set up a new job with budget tracking and asset assignments"
+        subtitle="Set up a new project with budget allocation and team assignments"
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Cancel
-            </Button>
-            <Button type="submit" form="create-job-form">
-              <Briefcase className="h-4 w-4 mr-2" />
-              Create Job
-            </Button>
-          </div>
+          <Button variant="outline" onClick={onBack}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
         }
       />
 
-      {/* Form Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <form id="create-job-form" onSubmit={handleSubmit}>
-          <div className="max-w-4xl mx-auto space-y-6">
-            {/* Basic Information */}
+      <div className="flex-1 overflow-auto p-6">
+        <div className="max-w-4xl mx-auto">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <Briefcase className="h-5 w-5" />
+                  <h2 className="text-lg font-semibold">Job Information</h2>
+                </div>
+                
                 <JobInformationSection
                   name={name}
                   onNameChange={setName}
@@ -131,9 +142,8 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
               </CardContent>
             </Card>
 
-            {/* Budget Information */}
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="p-6">
                 <BudgetSection
                   totalBudget={totalBudget}
                   onTotalBudgetChange={setTotalBudget}
@@ -149,9 +159,8 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
               </CardContent>
             </Card>
 
-            {/* Additional Notes */}
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="p-6">
                 <NotesSection
                   notes={notes}
                   onNotesChange={setNotes}
@@ -159,9 +168,8 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
               </CardContent>
             </Card>
 
-            {/* Tags */}
             <Card>
-              <CardContent className="pt-6">
+              <CardContent className="p-6">
                 <TagsSection
                   tags={tags}
                   onTagsChange={setTags}
@@ -170,25 +178,16 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
               </CardContent>
             </Card>
 
-            {/* Info Card */}
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="pt-6">
-                <div className="flex items-start gap-2">
-                  <Briefcase className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm text-blue-900">
-                    <p className="mb-1">After creating the job, you can:</p>
-                    <ul className="list-disc list-inside space-y-1 ml-2">
-                      <li>Assign assets and vehicles to this job</li>
-                      <li>Configure job-specific alert rules</li>
-                      <li>Track actual costs against budget</li>
-                      <li>Generate cost reports and analysis</li>
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </form>
+            <div className="flex justify-end gap-3">
+              <Button type="button" variant="outline" onClick={onBack}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                Create Job
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

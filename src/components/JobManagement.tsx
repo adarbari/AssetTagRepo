@@ -70,6 +70,8 @@ interface JobManagementProps {
   ) => Promise<any>;
   onRemoveAssetFromJob: (jobId: string, assetId: string) => Promise<any>;
   jobAlerts: JobAlert[];
+  onNavigateToCreateJob?: () => void;
+  onNavigateToJobDetails?: (job: Job) => void;
 }
 
 export function JobManagement({
@@ -77,6 +79,8 @@ export function JobManagement({
   onCreateJob,
   onDeleteJob,
   jobAlerts,
+  onNavigateToCreateJob,
+  onNavigateToJobDetails,
 }: JobManagementProps) {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
@@ -146,7 +150,7 @@ export function JobManagement({
             Plan projects, allocate resources, track costs, and manage job lifecycles
           </p>
         </div>
-        <Button onClick={() => navigation.navigateToCreateJob({ onCreateJob })}>
+        <Button onClick={() => onNavigateToCreateJob ? onNavigateToCreateJob() : navigation.navigateToCreateJob({ onCreateJob })}>
           <Plus className="h-4 w-4 mr-2" />
           Create Job
         </Button>
@@ -282,7 +286,7 @@ export function JobManagement({
                 filteredJobs.map((job) => (
                   <TableRow key={job.id} className="cursor-pointer hover:bg-muted/50"
                     onClick={() => {
-                      navigation.navigateToJobDetails({ job });
+                      onNavigateToJobDetails ? onNavigateToJobDetails(job) : navigation.navigateToJobDetails({ job });
                     }}>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -349,7 +353,7 @@ export function JobManagement({
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={(e) => {
                             e.stopPropagation();
-                            navigation.navigateToJobDetails({ job });
+                            onNavigateToJobDetails ? onNavigateToJobDetails(job) : navigation.navigateToJobDetails({ job });
                           }}>
                             <Edit className="h-4 w-4 mr-2" />
                             View Details

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AppSidebar } from "./components/AppSidebar";
 import { SidebarProvider } from "./components/ui/sidebar";
+import { Button } from "./components/ui/button";
 import { Dashboard } from "./components/Dashboard";
 import { AssetInventory } from "./components/AssetInventory";
 import { AssetMap } from "./components/AssetMap";
@@ -11,6 +12,9 @@ import { CreateMaintenance } from "./components/CreateMaintenance";
 import { CreateIssue } from "./components/CreateIssue";
 import { JobManagement } from "./components/JobManagement";
 import { JobDetails } from "./components/JobDetails";
+import { CreateJob } from "./components/CreateJob";
+import { EditJob } from "./components/EditJob";
+import { useJobManagement } from "./hooks/useJobManagement";
 import { Maintenance } from "./components/Maintenance";
 import { IssueTracking } from "./components/IssueTracking";
 import { ComplianceTracking } from "./components/ComplianceTracking";
@@ -62,6 +66,10 @@ function AppContent() {
   const [currentView, setCurrentView] = useState<ViewType>("dashboard");
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [highlightedAsset, setHighlightedAsset] = useState<string | null>(null);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
+  
+  // Job management hook
+  const jobManagement = useJobManagement();
   const navigation = useNavigation();
 
   const handleViewChange = (view: ViewType) => {
@@ -115,6 +123,7 @@ function AppContent() {
         return (
           <AssetInventory 
             onAssetClick={handleAssetClick}
+            onNavigateToCreateAsset={() => setCurrentView("create-asset")}
           />
         );
       case "map":
@@ -139,22 +148,62 @@ function AppContent() {
       case "jobs":
         return (
           <JobManagement 
-            jobs={{}}
-            onCreateJob={async () => ({ success: true })}
-            onUpdateJob={async () => ({ success: true })}
-            onDeleteJob={async () => ({ success: true })}
-            onAddAssetToJob={async () => ({})}
-            onRemoveAssetFromJob={async () => ({})}
-            jobAlerts={[]}
+            jobs={jobManagement.jobs}
+            onCreateJob={jobManagement.createJob}
+            onUpdateJob={jobManagement.updateJob}
+            onDeleteJob={jobManagement.deleteJob}
+            onAddAssetToJob={jobManagement.addAssetToJob}
+            onRemoveAssetFromJob={jobManagement.removeAssetFromJob}
+            jobAlerts={jobManagement.jobAlerts}
+            onNavigateToCreateJob={() => setCurrentView("create-job")}
+            onNavigateToJobDetails={(job) => {
+              setSelectedJob(job);
+              setCurrentView("job-details");
+            }}
           />
         );
-      case "job-details":
+      case "create-job":
         return (
-          <JobDetails 
-            job={null as any}
+          <CreateJob 
             onBack={() => setCurrentView("jobs")}
-            onEdit={() => {}}
+            onCreateJob={jobManagement.createJob}
           />
+        );
+      case "edit-job":
+        return selectedJob ? (
+          <EditJob 
+            jobId={selectedJob.id}
+            job={selectedJob}
+            onBack={() => setCurrentView("job-details")}
+            onUpdateJob={jobManagement.updateJob}
+            onAddAssetToJob={jobManagement.addAssetToJob}
+            onRemoveAssetFromJob={jobManagement.removeAssetFromJob}
+          />
+        ) : (
+          <div className="p-6">
+            <p>No job selected for editing</p>
+            <Button onClick={() => setCurrentView("jobs")}>
+              Back to Jobs
+            </Button>
+          </div>
+        );
+      case "job-details":
+        return selectedJob ? (
+          <JobDetails 
+            job={selectedJob}
+            onBack={() => setCurrentView("jobs")}
+            onEdit={(job) => {
+              setSelectedJob(job);
+              setCurrentView("edit-job");
+            }}
+          />
+        ) : (
+          <div className="p-6">
+            <p>No job selected</p>
+            <Button onClick={() => setCurrentView("jobs")}>
+              Back to Jobs
+            </Button>
+          </div>
         );
       case "maintenance":
         return (

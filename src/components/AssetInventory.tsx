@@ -65,9 +65,10 @@ import { toast } from "sonner";
 
 interface AssetInventoryProps {
   onAssetClick?: (asset: Asset) => void;
+  onNavigateToCreateAsset?: () => void;
 }
 
-export function AssetInventory({ onAssetClick }: AssetInventoryProps) {
+export function AssetInventory({ onAssetClick, onNavigateToCreateAsset }: AssetInventoryProps) {
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all-types");
@@ -212,9 +213,13 @@ export function AssetInventory({ onAssetClick }: AssetInventoryProps) {
   };
 
   const handleAddAsset = () => {
-    navigation.navigateToCreateAsset({
-      onAssetCreated: handleAssetAdded,
-    });
+    if (onNavigateToCreateAsset) {
+      onNavigateToCreateAsset();
+    } else {
+      navigation.navigateToCreateAsset({
+        onAssetCreated: handleAssetAdded,
+      });
+    }
   };
 
   return (
