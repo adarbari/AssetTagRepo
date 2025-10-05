@@ -26,32 +26,32 @@ This document captures the established design patterns and UI/UX guidelines used
 **Pattern**: All pages now use a standardized width system based on content type for optimal UX.
 
 ```tsx
-// Wide Pages (Tables/Lists) - max-w-[1600px]
+// Wide Pages (Tables/Lists) - max-w-[1400px] - Modern standard for data-heavy interfaces
 <PageLayout variant="wide" padding="lg">
   {/* Content for data tables, lists, management pages */}
 </PageLayout>
 
-// Standard Pages (Detail Views) - max-w-7xl (1280px)
+// Standard Pages (Detail Views) - max-w-[1200px] - Optimal readability
 <PageLayout variant="standard" padding="md">
   {/* Content for detail views, dashboards, reports */}
 </PageLayout>
 
-// Narrow Pages (Forms) - max-w-4xl (896px)
+// Narrow Pages (Forms) - max-w-[800px] - Focused content, prevents eye strain
 <PageLayout variant="narrow" padding="md">
   {/* Content for forms, create/edit pages */}
 </PageLayout>
 
-// Full Width (Maps) - max-w-none
+// Full Width (Maps) - max-w-none - Unlimited width for spatial content
 <PageLayout variant="full" padding="sm">
   {/* Content for maps, full-bleed interfaces */}
 </PageLayout>
 ```
 
-**Width Standards**:
-- **Wide (1600px)**: Data tables, lists, management pages
-- **Standard (1280px)**: Detail views, dashboards, reports  
-- **Narrow (896px)**: Forms, create/edit pages
-- **Full Width**: Maps, full-bleed interfaces
+**Width Standards** (Updated 2024 - Based on Modern Best Practices):
+- **Wide (1400px)**: Data tables, lists, management pages (optimal for data-heavy interfaces)
+- **Standard (1200px)**: Detail views, dashboards, reports (optimal readability)
+- **Narrow (800px)**: Forms, create/edit pages (focused content, prevents eye strain)
+- **Full Width**: Maps, full-bleed interfaces (unlimited width for spatial content)
 
 **Examples**: 
 - Wide: `AssetInventory`, `JobManagement`, `IssueTracking`, `Sites`, `Maintenance`
@@ -96,7 +96,9 @@ interface PageContainerProps {
 - **Maintainable**: Change width standards in one place
 - **Self-documenting**: Variant names make intent clear
 - **Future-proof**: Easy to add new variants or adjust existing ones
-- Content is wrapped in `max-w-7xl mx-auto space-y-6` for consistent width and spacing
+- **Responsive**: Mobile-first design with adaptive padding
+- **Industry Standard**: Based on 2024 best practices from top websites
+- Content is wrapped in responsive containers with `mx-auto space-y-6` for consistent width and spacing
 
 ### List/Management Pages
 

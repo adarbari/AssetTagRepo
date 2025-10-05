@@ -17,9 +17,9 @@ export function PageLayout({
   className = ''
 }: PageLayoutProps) {
   const paddingClasses = {
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
+    sm: 'p-4 md:p-6',     // Responsive: 16px mobile, 24px desktop
+    md: 'p-4 md:p-6 lg:p-8', // Responsive: 16px mobile, 24px tablet, 32px desktop
+    lg: 'p-6 md:p-8 lg:p-10', // Responsive: 24px mobile, 32px tablet, 40px desktop
   };
 
   if (header) {

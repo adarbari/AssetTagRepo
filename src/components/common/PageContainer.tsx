@@ -12,10 +12,10 @@ export function PageContainer({
   className = '' 
 }: PageContainerProps) {
   const maxWidths = {
-    wide: 'max-w-[1600px]',      // Tables/Lists
-    standard: 'max-w-7xl',        // Detail views
-    narrow: 'max-w-4xl',          // Forms
-    full: 'max-w-none',           // Maps, full-bleed
+    wide: 'max-w-[1400px]',      // Data tables, management pages (modern standard)
+    standard: 'max-w-[1200px]',  // Detail views, dashboards (optimal readability)
+    narrow: 'max-w-[800px]',     // Forms, create/edit pages (focused content)
+    full: 'max-w-none',          // Maps, full-bleed interfaces
   };
   
   return (
