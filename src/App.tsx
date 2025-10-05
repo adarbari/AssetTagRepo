@@ -380,7 +380,7 @@ function AppContent() {
       case "create-maintenance":
         return navigation.maintenanceCreationData ? (
           <CreateMaintenance 
-            onBack={() => setCurrentView("asset-details")}
+            onBack={navigation.handleBackFromCreateMaintenance}
             preSelectedAsset={navigation.maintenanceCreationData.preSelectedAsset}
             preSelectedAssetName={navigation.maintenanceCreationData.preSelectedAssetName}
             assetContext={navigation.maintenanceCreationData.assetContext}
