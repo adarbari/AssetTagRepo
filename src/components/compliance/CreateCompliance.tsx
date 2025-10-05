@@ -13,7 +13,7 @@ import {
 import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Card, CardContent } from "../ui/card";
-import { PageHeader } from "../common";
+import { PageHeader, PageLayout } from "../common";
 import { cn } from "../ui/utils";
 import { Calendar as CalendarIcon, Shield, ArrowLeft, FileText } from "lucide-react";
 import { format } from "date-fns";
@@ -98,9 +98,11 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <PageHeader
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader
         title="Add Compliance Record"
         description="Create a new certification or compliance record for an asset"
         onBack={onBack}
@@ -111,10 +113,8 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
           </Button>
         }
       />
-
-      {/* Form Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-4xl mx-auto">
+      }
+    >
           <Card>
             <CardContent className="pt-6">
               <form id="create-compliance-form" onSubmit={handleSubmit} className="space-y-6">
@@ -294,7 +294,6 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
             </CardContent>
           </Card>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -15,6 +15,7 @@ import { Separator } from "../ui/separator";
 import { ArrowLeft, Circle, Pentagon, Save, MapPin, Shield } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { GeofenceMapEditor } from "./GeofenceMapEditor";
+import { PageLayout } from "../common";
 
 interface CreateGeofenceProps {
   onBack: () => void;
@@ -190,7 +191,7 @@ export function CreateGeofence({ onBack, onGeofenceCreated, onGeofenceUpdated, e
   };
 
   return (
-    <div className="p-8 space-y-6">
+    <PageLayout variant="narrow" padding="lg">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -449,6 +450,6 @@ export function CreateGeofence({ onBack, onGeofenceCreated, onGeofenceUpdated, e
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </PageLayout>
   );
 }

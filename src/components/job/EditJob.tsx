@@ -21,7 +21,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
-import { PageHeader } from "../common";
+import { PageHeader, PageLayout } from "../common";
 import {
   Select,
   SelectContent,
@@ -283,9 +283,12 @@ export function EditJob({
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <PageHeader
-        title={`Edit Job: ${job.jobNumber}`}
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader
+          title={`Edit Job: ${job.jobNumber}`}
         description="Update job details, budget, assets, and team assignments"
         action={
           <div className="flex gap-2">
@@ -300,9 +303,8 @@ export function EditJob({
           </div>
         }
       />
-
-      <div className="flex-1 overflow-auto p-6">
-        <div className="max-w-6xl mx-auto space-y-6">
+      }
+    >
           {/* Job Details */}
           <Card>
             <CardHeader>

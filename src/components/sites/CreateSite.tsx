@@ -12,7 +12,7 @@ import {
 } from "../ui/select";
 import { Separator } from "../ui/separator";
 import { Card, CardContent } from "../ui/card";
-import { PageHeader } from "../common";
+import { PageHeader, PageLayout } from "../common";
 import { ArrowLeft, MapPin, Building2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -71,9 +71,11 @@ export function CreateSite({ onBack }: CreateSiteProps) {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <PageHeader
+    <PageLayout 
+      variant="narrow" 
+      padding="md"
+      header={
+        <PageHeader
         title="Create New Site"
         description="Define a new physical site location with boundary configurations"
         onBack={onBack}
@@ -84,10 +86,8 @@ export function CreateSite({ onBack }: CreateSiteProps) {
           </Button>
         }
       />
-
-      {/* Form Content */}
-      <div className="flex-1 overflow-auto p-8">
-        <div className="max-w-4xl mx-auto">
+      }
+    >
           <form id="create-site-form" onSubmit={handleSubmit} className="space-y-8">
             {/* Basic Information */}
             <Card>
@@ -317,7 +317,6 @@ export function CreateSite({ onBack }: CreateSiteProps) {
             </Card>
           </form>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }
