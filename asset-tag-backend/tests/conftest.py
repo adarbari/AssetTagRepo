@@ -237,6 +237,7 @@ def sample_geofence_data():
         "center_latitude": 40.7128,
         "center_longitude": -74.0060,
         "radius": 100,
+        "coordinates": [[40.7128, -74.0060]],  # Array of [lat, lng] pairs
         "site_id": "550e8400-e29b-41d4-a716-446655440001",
         "geofence_classification": "authorized",
     }
