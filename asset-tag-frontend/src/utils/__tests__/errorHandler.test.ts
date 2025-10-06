@@ -44,7 +44,7 @@ describe('Error Handler Utilities', () => {
       ];
 
       cssErrors.forEach(errorMessage => {
-// console.error(errorMessage);
+// // // // // // console.error(errorMessage);
         expect(consoleSpy).not.toHaveBeenCalledWith(errorMessage);
       });
 
@@ -58,7 +58,7 @@ describe('Error Handler Utilities', () => {
       suppressCSSSecurityErrors();
 
       const regularError = 'This is a regular error';
-// console.error(regularError);
+// // // // // // console.error(regularError);
 
       expect(consoleSpy).toHaveBeenCalledWith(regularError);
       consoleSpy.mockRestore();
@@ -71,13 +71,13 @@ describe('Error Handler Utilities', () => {
       suppressCSSSecurityErrors();
 
       // CSS security error with multiple args
-// console.error('CSSStyleSheet error', { details: 'test' });
+// // // // // // console.error('CSSStyleSheet error', { details: 'test' });
       expect(consoleSpy).not.toHaveBeenCalledWith('CSSStyleSheet error', {
         details: 'test',
       });
 
       // Regular error with multiple args
-// console.error('Regular error', { details: 'test' });
+// // // // // // console.error('Regular error', { details: 'test' });
       expect(consoleSpy).toHaveBeenCalledWith('Regular error', {
         details: 'test',
       });
@@ -91,9 +91,9 @@ describe('Error Handler Utilities', () => {
         .mockImplementation(() => {});
       suppressCSSSecurityErrors();
 
-// console.error(undefined);
-// console.error(null);
-// console.error('');
+// // // // // // console.error(undefined);
+// // // // // // console.error(null);
+// // // // // // console.error('');
 
       // Should not throw and should allow these through
       expect(consoleSpy).toHaveBeenCalledWith(undefined);
@@ -349,7 +349,7 @@ describe('Error Handler Utilities', () => {
       ];
 
       leafletErrors.forEach(errorMessage => {
-// console.error(errorMessage);
+// // // // // // console.error(errorMessage);
         // Should not appear in console.error calls
         expect(consoleSpy).not.toHaveBeenCalledWith(errorMessage);
       });

@@ -1,31 +1,32 @@
-import { Label } from '../ui/label';
-import { Input } from '../ui/input';
-import { Switch } from '../ui/switch';
+import React from &apos;react&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Switch } from &apos;../ui/switch&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Badge } from '../ui/badge';
-import { InfoIcon } from 'lucide-react';
+} from &apos;../ui/select&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { InfoIcon } from &apos;lucide-react&apos;;
 
-interface AlertConfigFieldRendererProps {
-  field: AlertConfigField;
+interface anyRendererProps {
+  field: any;
   value: any;
   onChange: (value: any) => void;
   error?: string;
-  allValues?: Record<string, any>; // For dependency checking
+  allValues?: Record<string, unknown>; // For dependency checking
 }
 
-export function AlertConfigFieldRenderer({
+export function anyRenderer({
   field,
   value,
   onChange,
   error,
   allValues = {},
-}: AlertConfigFieldRendererProps) {
+}: anyRendererProps) {
   // Check if field should be shown based on dependencies
   if (field.dependsOn) {
     const dependentValue = allValues[field.dependsOn.field];
@@ -38,13 +39,13 @@ export function AlertConfigFieldRenderer({
 
   const renderField = () => {
     switch (field.type) {
-      case 'toggle':
+      case &apos;toggle&apos;:
         return (
-          <div className='flex items-center justify-between'>
-            <div className='flex-1'>
+          <div className=&apos;flex items-center justify-between&apos;>
+            <div className=&apos;flex-1&apos;>
               <Label htmlFor={field.key}>{field.label}</Label>
               {field.description && (
-                <p className='text-sm text-muted-foreground mt-1'>
+                <p className=&apos;text-sm text-muted-foreground mt-1&apos;>
                   {field.description}
                 </p>
               )}
@@ -57,95 +58,95 @@ export function AlertConfigFieldRenderer({
           </div>
         );
 
-      case 'number':
-      case 'duration':
-      case 'percentage':
-      case 'threshold':
+      case &apos;number&apos;:
+      case &apos;duration&apos;:
+      case &apos;percentage&apos;:
+      case &apos;threshold&apos;:
         return (
-          <div className='space-y-2'>
+          <div className=&apos;space-y-2&apos;>
             <Label htmlFor={field.key}>
               {field.label}
               {field.required && (
-                <span className='text-destructive ml-1'>*</span>
+                <span className=&apos;text-destructive ml-1&apos;>*</span>
               )}
             </Label>
             {field.description && (
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 {field.description}
               </p>
             )}
-            <div className='flex items-center gap-2'>
+            <div className=&apos;flex items-center gap-2&apos;>
               <Input
                 id={field.key}
-                type='number'
+                type=&apos;number&apos;
                 value={currentValue}
                 onChange={e => onChange(parseFloat(e.target.value))}
                 min={field.min}
                 max={field.max}
                 step={field.step || 1}
                 placeholder={field.placeholder}
-                className={error ? 'border-destructive' : ''}
+                className={error ? &apos;border-destructive&apos; : &apos;&apos;}
               />
               {field.unit && (
-                <Badge variant='outline' className='shrink-0'>
+                <Badge variant=&apos;outline&apos; className=&apos;shrink-0&apos;>
                   {field.unit}
                 </Badge>
               )}
             </div>
             {field.min !== undefined && field.max !== undefined && (
-              <p className='text-xs text-muted-foreground'>
+              <p className=&apos;text-xs text-muted-foreground&apos;>
                 Range: {field.min} - {field.max} {field.unit}
               </p>
             )}
           </div>
         );
 
-      case 'text':
+      case &apos;text&apos;:
         return (
-          <div className='space-y-2'>
+          <div className=&apos;space-y-2&apos;>
             <Label htmlFor={field.key}>
               {field.label}
               {field.required && (
-                <span className='text-destructive ml-1'>*</span>
+                <span className=&apos;text-destructive ml-1&apos;>*</span>
               )}
             </Label>
             {field.description && (
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 {field.description}
               </p>
             )}
             <Input
               id={field.key}
-              type='text'
+              type=&apos;text&apos;
               value={currentValue}
               onChange={e => onChange(e.target.value)}
               placeholder={field.placeholder}
-              className={error ? 'border-destructive' : ''}
+              className={error ? &apos;border-destructive&apos; : &apos;&apos;}
             />
           </div>
         );
 
-      case 'select':
+      case &apos;select&apos;:
         return (
-          <div className='space-y-2'>
+          <div className=&apos;space-y-2&apos;>
             <Label htmlFor={field.key}>
               {field.label}
               {field.required && (
-                <span className='text-destructive ml-1'>*</span>
+                <span className=&apos;text-destructive ml-1&apos;>*</span>
               )}
             </Label>
             {field.description && (
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 {field.description}
               </p>
             )}
             <Select value={currentValue} onValueChange={onChange}>
               <SelectTrigger
                 id={field.key}
-                className={error ? 'border-destructive' : ''}
+                className={error ? &apos;border-destructive&apos; : &apos;&apos;}
               >
                 <SelectValue
-                  placeholder={field.placeholder || 'Select an option'}
+                  placeholder={field.placeholder || &apos;Select an option&apos;}
                 />
               </SelectTrigger>
               <SelectContent>
@@ -159,49 +160,49 @@ export function AlertConfigFieldRenderer({
           </div>
         );
 
-      case 'multiselect': {
+      case &apos;multiselect&apos;: {
         const selectedValues = Array.isArray(currentValue)
           ? currentValue
           : [currentValue];
-        const hasAll = selectedValues.includes('all');
+        const hasAll = selectedValues.includes(&apos;all&apos;);
 
         return (
-          <div className='space-y-2'>
+          <div className=&apos;space-y-2&apos;>
             <Label>
               {field.label}
               {field.required && (
-                <span className='text-destructive ml-1'>*</span>
+                <span className=&apos;text-destructive ml-1&apos;>*</span>
               )}
             </Label>
             {field.description && (
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 {field.description}
               </p>
             )}
-            <div className='flex flex-wrap gap-2'>
+            <div className=&apos;flex flex-wrap gap-2&apos;>
               {field.options?.map(option => {
                 const isSelected = hasAll
-                  ? option.value === 'all'
+                  ? option.value === &apos;all&apos;
                   : selectedValues.includes(option.value);
 
                 return (
                   <Badge
                     key={option.value}
-                    variant={isSelected ? 'default' : 'outline'}
-                    className='cursor-pointer'
+                    variant={isSelected ? &apos;default&apos; : &apos;outline&apos;}
+                    className=&apos;cursor-pointer&apos;
                     onClick={() => {
-                      if (option.value === 'all') {
-                        onChange(['all']);
+                      if (option.value === &apos;all&apos;) {
+                        onChange([&apos;all&apos;]);
                       } else {
                         let newValues = [
-                          ...selectedValues.filter(v => v !== 'all'),
+                          ...selectedValues.filter(v => v !== &apos;all&apos;),
                         ];
                         if (isSelected) {
                           newValues = newValues.filter(v => v !== option.value);
                         } else {
                           newValues.push(option.value);
                         }
-                        onChange(newValues.length === 0 ? ['all'] : newValues);
+                        onChange(newValues.length === 0 ? [&apos;all&apos;] : newValues);
                       }
                     }}
                   >
@@ -216,10 +217,10 @@ export function AlertConfigFieldRenderer({
 
       default:
         return (
-          <div className='space-y-2'>
+          <div className=&apos;space-y-2&apos;>
             <Label htmlFor={field.key}>{field.label}</Label>
-            <p className='text-sm text-muted-foreground'>
-              Field type '{field.type}' not yet implemented
+            <p className=&apos;text-sm text-muted-foreground&apos;>
+              Field type &apos;{field.type}&apos; not yet implemented
             </p>
           </div>
         );
@@ -227,17 +228,17 @@ export function AlertConfigFieldRenderer({
   };
 
   return (
-    <div className='space-y-2'>
-      <div className='flex items-start gap-2'>
-        <div className='flex-1'>
+    <div className=&apos;space-y-2&apos;>
+      <div className=&apos;flex items-start gap-2&apos;>
+        <div className=&apos;flex-1&apos;>
           {renderField()}
           {field.helpText && (
-            <div className='flex items-center gap-1 mt-2'>
-              <InfoIcon className='h-3 w-3 text-muted-foreground' />
-              <p className='text-xs text-muted-foreground'>{field.helpText}</p>
+            <div className=&apos;flex items-center gap-1 mt-2&apos;>
+              <InfoIcon className=&apos;h-3 w-3 text-muted-foreground&apos; />
+              <p className=&apos;text-xs text-muted-foreground&apos;>{field.helpText}</p>
             </div>
           )}
-          {error && <p className='text-sm text-destructive mt-1'>{error}</p>}
+          {error && <p className=&apos;text-sm text-destructive mt-1&apos;>{error}</p>}
         </div>
       </div>
     </div>

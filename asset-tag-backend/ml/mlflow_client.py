@@ -4,7 +4,7 @@ MLflow client for model tracking and management
 
 import logging
 import os
-import pickle
+# # import pickle
 import tempfile
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class MLflowClient:
     """MLflow client for model lifecycle management"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.tracking_uri = settings.mlflow_tracking_uri
         mlflow.set_tracking_uri(self.tracking_uri)
         self.experiments = {
@@ -33,7 +33,7 @@ class MLflowClient:
         }
         self._setup_experiments()
 
-    def _setup_experiments(self):
+    def _setup_experiments(self) -> None:
         """Setup MLflow experiments"""
         try:
             for exp_name, exp_id in self.experiments.items():
@@ -63,7 +63,7 @@ class MLflowClient:
             logger.error(f"Error starting run for experiment {experiment_name}: {e}")
             raise
 
-    def log_model(self, model, model_name: str, model_type: str = "sklearn"):
+    def log_model(self, model, model_name: str, model_type: str = "sklearn") -> None:
         """Log model to MLflow"""
         try:
             if model_type == "sklearn":
@@ -85,7 +85,7 @@ class MLflowClient:
             logger.error(f"Error logging model {model_name}: {e}")
             raise
 
-    def log_metrics(self, metrics: Dict[str, float]):
+    def log_metrics(self, metrics: Dict[str, float]) -> None:
         """Log metrics to current run"""
         try:
             for key, value in metrics.items():
@@ -94,7 +94,7 @@ class MLflowClient:
         except Exception as e:
             logger.error(f"Error logging metrics: {e}")
 
-    def log_params(self, params: Dict[str, Any]):
+    def log_params(self, params: Dict[str, Any]) -> None:
         """Log parameters to current run"""
         try:
             for key, value in params.items():
@@ -103,7 +103,7 @@ class MLflowClient:
         except Exception as e:
             logger.error(f"Error logging parameters: {e}")
 
-    def log_artifacts(self, artifacts_dir: str, artifact_path: Optional[str] = None):
+    def log_artifacts(self, artifacts_dir: str, artifact_path: Optional[str] = None) -> None:
         """Log artifacts to current run"""
         try:
             mlflow.log_artifacts(artifacts_dir, artifact_path)
@@ -111,7 +111,7 @@ class MLflowClient:
         except Exception as e:
             logger.error(f"Error logging artifacts: {e}")
 
-    def load_model(self, model_uri: str, model_type: str = "sklearn"):
+    def load_model(self, model_uri: str, model_type: str = "sklearn") -> None:
         """Load model from MLflow"""
         try:
             if model_type == "sklearn":
@@ -194,7 +194,7 @@ class MLflowClient:
             logger.error(f"Error getting model versions for {model_name}: {e}")
             return []
 
-    def promote_model(self, model_name: str, version: str, stage: str = "Production"):
+    def promote_model(self, model_name: str, version: str, stage: str = "Production") -> None:
         """Promote model to a specific stage"""
         try:
             client = mlflow.tracking.MlflowClient()
@@ -207,7 +207,7 @@ class MLflowClient:
             logger.error(f"Error promoting model {model_name}: {e}")
             raise
 
-    def delete_model(self, model_name: str, version: Optional[str] = None):
+    def delete_model(self, model_name: str, version: Optional[str] = None) -> None:
         """Delete a model or model version"""
         try:
             client = mlflow.tracking.MlflowClient()
@@ -272,16 +272,16 @@ def get_mlflow_client() -> MLflowClient:
 class MLflowRun:
     """Context manager for MLflow runs"""
 
-    def __init__(self, experiment_name: str, run_name: Optional[str] = None):
+    def __init__(self, experiment_name: str, run_name: Optional[str] = None) -> None:
         self.experiment_name = experiment_name
         self.run_name = run_name
         self.run = None
 
-    def __enter__(self):
+    def __enter__(self) -> None:
         self.run = mlflow_client.start_run(self.experiment_name, self.run_name)
         return self.run
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         if self.run:
             mlflow.end_run()
 
@@ -309,7 +309,7 @@ def log_location_prediction_model(
         return run.info.run_id
 
 
-def load_production_model(model_name: str, model_type: str = "sklearn"):
+def load_production_model(model_name: str, model_type: str = "sklearn") -> None:
     """Load production model from MLflow"""
     model_uri = mlflow_client.get_latest_model("anomaly_detection", model_name)
     if model_uri:

@@ -16,10 +16,10 @@ logger = logging.getLogger(__name__)
 class TimescaleDBManager:
     """TimescaleDB management utilities"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.db = None
 
-    async def _get_db(self):
+    async def _get_db(self) -> None:
         """Get database session"""
         if not self.db:
             self.db = await get_db()

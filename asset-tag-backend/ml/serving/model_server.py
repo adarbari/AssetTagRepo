@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class ModelServer:
     """ML Model serving server for predictions"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.location_predictor = LocationPredictor()
         self.maintenance_predictor = MaintenancePredictor()
         self.models_loaded = False
@@ -30,7 +30,7 @@ class ModelServer:
         # Ensure model directory exists
         os.makedirs(self.model_path, exist_ok=True)
 
-    async def initialize_models(self):
+    async def initialize_models(self) -> None:
         """Initialize and load models"""
         try:
             # Try to load existing models

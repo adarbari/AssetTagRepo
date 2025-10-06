@@ -16,7 +16,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Convert time-series tables to hypertables"""
 
     # Convert observations table to hypertable
@@ -115,7 +115,7 @@ def upgrade():
     )
 
 
-def downgrade():
+def downgrade() -> None:
     """Remove hypertables and revert to regular tables"""
 
     # Remove retention policies

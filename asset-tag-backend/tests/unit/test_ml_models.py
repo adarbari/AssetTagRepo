@@ -15,7 +15,7 @@ from ml.models.maintenance_predictor import MaintenancePredictor
 class TestLocationPredictor:
     """Test LocationPredictor functionality"""
 
-    def test_model_initialization(self):
+    def test_model_initialization(self) -> None:
         """Test model initialization"""
         predictor = LocationPredictor()
 
@@ -25,7 +25,7 @@ class TestLocationPredictor:
         assert len(predictor.feature_columns) > 0
         assert len(predictor.target_columns) > 0
 
-    def test_prepare_features(self):
+    def test_prepare_features(self) -> None:
         """Test feature preparation"""
         predictor = LocationPredictor()
 
@@ -63,7 +63,7 @@ class TestLocationPredictor:
         assert len(features) == 2
         assert all(col in features.columns for col in predictor.feature_columns)
 
-    def test_train_model(self):
+    def test_train_model(self) -> None:
         """Test model training"""
         predictor = LocationPredictor()
 
@@ -93,7 +93,7 @@ class TestLocationPredictor:
         assert "training_samples" in metrics
         assert metrics["training_samples"] == 50
 
-    def test_predict_locations(self):
+    def test_predict_locations(self) -> None:
         """Test location prediction"""
         predictor = LocationPredictor()
 
@@ -132,7 +132,7 @@ class TestLocationPredictor:
             assert 0 <= pred["confidence"] <= 1
             assert 1 <= pred["step"] <= 3
 
-    def test_predict_without_training(self):
+    def test_predict_without_training(self) -> None:
         """Test prediction without training"""
         predictor = LocationPredictor()
 
@@ -141,7 +141,7 @@ class TestLocationPredictor:
         with pytest.raises(ValueError, match="Model not trained"):
             predictor.predict(features)
 
-    def test_save_load_model(self, tmp_path):
+    def test_save_load_model(self, tmp_path) -> None:
         """Test model saving and loading"""
         predictor = LocationPredictor()
 
@@ -179,7 +179,7 @@ class TestLocationPredictor:
 class TestMaintenancePredictor:
     """Test MaintenancePredictor functionality"""
 
-    def test_model_initialization(self):
+    def test_model_initialization(self) -> None:
         """Test model initialization"""
         predictor = MaintenancePredictor()
 
@@ -190,7 +190,7 @@ class TestMaintenancePredictor:
         assert len(predictor.feature_columns) > 0
         assert len(predictor.maintenance_types) > 0
 
-    def test_prepare_features(self):
+    def test_prepare_features(self) -> None:
         """Test feature preparation"""
         predictor = MaintenancePredictor()
 
@@ -228,7 +228,7 @@ class TestMaintenancePredictor:
         assert features.iloc[0]["utilization_hours"] == 15.5  # 8.0 + 7.5
         assert features.iloc[0]["total_distance"] == 195.0  # 100.0 + 95.0
 
-    def test_train_model(self):
+    def test_train_model(self) -> None:
         """Test model training"""
         predictor = MaintenancePredictor()
 
@@ -272,7 +272,7 @@ class TestMaintenancePredictor:
         assert metrics["training_samples"] == 30
         assert 0 <= metrics["accuracy"] <= 1
 
-    def test_predict_maintenance(self):
+    def test_predict_maintenance(self) -> None:
         """Test maintenance prediction"""
         predictor = MaintenancePredictor()
 
@@ -338,7 +338,7 @@ class TestMaintenancePredictor:
         assert 0 <= prediction["confidence"] <= 1
         assert prediction["urgency"] in ["low", "medium", "high"]
 
-    def test_predict_without_training(self):
+    def test_predict_without_training(self) -> None:
         """Test prediction without training"""
         predictor = MaintenancePredictor()
 
@@ -348,7 +348,7 @@ class TestMaintenancePredictor:
         with pytest.raises(ValueError, match="Model not trained"):
             predictor.predict(asset_data, historical_data)
 
-    def test_urgency_determination(self):
+    def test_urgency_determination(self) -> None:
         """Test urgency determination logic"""
         predictor = MaintenancePredictor()
 
@@ -391,7 +391,7 @@ class TestMaintenancePredictor:
         urgency = predictor._determine_urgency(features_low)
         assert urgency == "low"
 
-    def test_save_load_model(self, tmp_path):
+    def test_save_load_model(self, tmp_path) -> None:
         """Test model saving and loading"""
         predictor = MaintenancePredictor()
 

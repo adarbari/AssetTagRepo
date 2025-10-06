@@ -17,7 +17,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Create all database tables"""
 
     # Create organizations table
@@ -504,7 +504,7 @@ def upgrade():
     )
 
 
-def downgrade():
+def downgrade() -> None:
     """Drop all database tables"""
 
     # Drop tables in reverse order to handle foreign key constraints

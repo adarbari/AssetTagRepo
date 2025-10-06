@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class ElasticsearchManager:
     """Elasticsearch client manager"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = None
         self.indices = {
             "assets": "assets_index",
@@ -65,7 +65,7 @@ class ElasticsearchManager:
             logger.error(f"Error creating Elasticsearch indices: {e}")
             return False
 
-    async def _create_assets_index(self, client: AsyncElasticsearch):
+    async def _create_assets_index(self, client: AsyncElasticsearch) -> None:
         """Create assets index with mapping"""
         index_name = self.indices["assets"]
 
@@ -126,7 +126,7 @@ class ElasticsearchManager:
             if "resource_already_exists_exception" not in str(e):
                 logger.error(f"Error creating assets index: {e}")
 
-    async def _create_sites_index(self, client: AsyncElasticsearch):
+    async def _create_sites_index(self, client: AsyncElasticsearch) -> None:
         """Create sites index with mapping"""
         index_name = self.indices["sites"]
 
@@ -168,7 +168,7 @@ class ElasticsearchManager:
             if "resource_already_exists_exception" not in str(e):
                 logger.error(f"Error creating sites index: {e}")
 
-    async def _create_gateways_index(self, client: AsyncElasticsearch):
+    async def _create_gateways_index(self, client: AsyncElasticsearch) -> None:
         """Create gateways index with mapping"""
         index_name = self.indices["gateways"]
 
@@ -209,7 +209,7 @@ class ElasticsearchManager:
             if "resource_already_exists_exception" not in str(e):
                 logger.error(f"Error creating gateways index: {e}")
 
-    async def _create_alerts_index(self, client: AsyncElasticsearch):
+    async def _create_alerts_index(self, client: AsyncElasticsearch) -> None:
         """Create alerts index with mapping"""
         index_name = self.indices["alerts"]
 
@@ -252,7 +252,7 @@ class ElasticsearchManager:
             if "resource_already_exists_exception" not in str(e):
                 logger.error(f"Error creating alerts index: {e}")
 
-    async def _create_audit_logs_index(self, client: AsyncElasticsearch):
+    async def _create_audit_logs_index(self, client: AsyncElasticsearch) -> None:
         """Create audit logs index with mapping"""
         index_name = self.indices["audit_logs"]
 
@@ -409,7 +409,7 @@ class ElasticsearchManager:
             logger.error(f"Error checking Elasticsearch health: {e}")
             return {"status": "red", "error": str(e)}
 
-    async def close(self):
+    async def close(self) -> None:
         """Close Elasticsearch client"""
         if self.client:
             await self.client.close()
@@ -425,6 +425,6 @@ async def get_elasticsearch_manager() -> ElasticsearchManager:
     return elasticsearch_manager
 
 
-async def close_elasticsearch():
+async def close_elasticsearch() -> None:
     """Close Elasticsearch connections"""
     await elasticsearch_manager.close()

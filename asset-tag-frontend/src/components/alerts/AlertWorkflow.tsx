@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Textarea } from '../ui/textarea';
-import { Label } from '../ui/label';
+import React, { useState } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Textarea } from &apos;../ui/textarea&apos;;
+import { Label } from &apos;../ui/label&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
-import { Alert, AlertType } from '../../types';
+} from &apos;../ui/select&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Alert, AlertType } from &apos;../../types&apos;;
 import {
   Shield,
   Battery,
@@ -27,14 +27,14 @@ import {
   ArrowLeft,
   Clock,
   MapPinned,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { PageLayout } from '../common';
+} from &apos;lucide-react&apos;;
+import { toast } from &apos;sonner&apos;;
+import { PageLayout } from &apos;../common&apos;;
 import {
   acknowledgeAlert,
   resolveAlert,
   executeWorkflowAction,
-} from '../../services/alertService';
+} from &apos;../../services/alertService&apos;;
 
 interface AlertWorkflowProps {
   alert: Alert;
@@ -60,264 +60,264 @@ const alertTypeConfig: Record<
 > = {
   theft: {
     icon: Shield,
-    color: 'text-red-600',
-    bgColor: 'bg-red-50 border-red-200',
+    color: &apos;text-red-600&apos;,
+    bgColor: &apos;bg-red-50 border-red-200&apos;,
     workflows: [
       {
-        label: 'Notify Security Team',
-        description: 'Alert security personnel and initiate theft protocol',
-        value: 'notify-security',
+        label: &apos;Notify Security Team&apos;,
+        description: &apos;Alert security personnel and initiate theft protocol&apos;,
+        value: &apos;notify-security&apos;,
       },
       {
-        label: 'Contact Law Enforcement',
-        description: 'File police report and provide tracking information',
-        value: 'contact-police',
+        label: &apos;Contact Law Enforcement&apos;,
+        description: &apos;File police report and provide tracking information&apos;,
+        value: &apos;contact-police&apos;,
       },
       {
-        label: 'Lock Asset Remotely',
-        description: 'Disable asset if remote lock feature is available',
-        value: 'lock-asset',
+        label: &apos;Lock Asset Remotely&apos;,
+        description: &apos;Disable asset if remote lock feature is available&apos;,
+        value: &apos;lock-asset&apos;,
       },
       {
-        label: 'Contact Last User',
-        description: 'Verify with last authorized user',
-        value: 'contact-user',
+        label: &apos;Contact Last User&apos;,
+        description: &apos;Verify with last authorized user&apos;,
+        value: &apos;contact-user&apos;,
         requiresInput: true,
-        inputLabel: 'User to contact',
-        inputType: 'select',
+        inputLabel: &apos;User to contact&apos;,
+        inputType: &apos;select&apos;,
       },
       {
-        label: 'Mark as Stolen',
-        description: 'Update asset status and notify all stakeholders',
-        value: 'mark-stolen',
+        label: &apos;Mark as Stolen&apos;,
+        description: &apos;Update asset status and notify all stakeholders&apos;,
+        value: &apos;mark-stolen&apos;,
       },
     ],
   },
   battery: {
     icon: Battery,
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-50 border-orange-200',
+    color: &apos;text-orange-600&apos;,
+    bgColor: &apos;bg-orange-50 border-orange-200&apos;,
     workflows: [
       {
-        label: 'Schedule Battery Replacement',
-        description: 'Create work order for battery replacement',
-        value: 'schedule-replacement',
+        label: &apos;Schedule Battery Replacement&apos;,
+        description: &apos;Create work order for battery replacement&apos;,
+        value: &apos;schedule-replacement&apos;,
         requiresInput: true,
-        inputLabel: 'Scheduled date',
-        inputType: 'date',
+        inputLabel: &apos;Scheduled date&apos;,
+        inputType: &apos;date&apos;,
       },
       {
-        label: 'Send Reminder to Technician',
-        description: 'Notify assigned technician about battery issue',
-        value: 'notify-technician',
+        label: &apos;Send Reminder to Technician&apos;,
+        description: &apos;Notify assigned technician about battery issue&apos;,
+        value: &apos;notify-technician&apos;,
         requiresInput: true,
-        inputLabel: 'Technician name',
-        inputType: 'select',
+        inputLabel: &apos;Technician name&apos;,
+        inputType: &apos;select&apos;,
       },
       {
-        label: 'Order Replacement Battery',
-        description: 'Initiate battery procurement process',
-        value: 'order-battery',
+        label: &apos;Order Replacement Battery&apos;,
+        description: &apos;Initiate battery procurement process&apos;,
+        value: &apos;order-battery&apos;,
       },
       {
-        label: 'Temporary Deactivation',
-        description: 'Take asset offline until battery is replaced',
-        value: 'deactivate-asset',
+        label: &apos;Temporary Deactivation&apos;,
+        description: &apos;Take asset offline until battery is replaced&apos;,
+        value: &apos;deactivate-asset&apos;,
       },
     ],
   },
   compliance: {
     icon: AlertTriangle,
-    color: 'text-yellow-600',
-    bgColor: 'bg-yellow-50 border-yellow-200',
+    color: &apos;text-yellow-600&apos;,
+    bgColor: &apos;bg-yellow-50 border-yellow-200&apos;,
     workflows: [
       {
-        label: 'Return to Authorized Zone',
-        description: 'Notify operator to return asset to compliant location',
-        value: 'return-to-zone',
+        label: &apos;Return to Authorized Zone&apos;,
+        description: &apos;Notify operator to return asset to compliant location&apos;,
+        value: &apos;return-to-zone&apos;,
       },
       {
-        label: 'Update Compliance Requirements',
-        description: 'Adjust geofence or certification requirements',
-        value: 'update-requirements',
+        label: &apos;Update Compliance Requirements&apos;,
+        description: &apos;Adjust geofence or certification requirements&apos;,
+        value: &apos;update-requirements&apos;,
       },
       {
-        label: 'Schedule Recertification',
-        description: 'Book certification inspection',
-        value: 'schedule-certification',
+        label: &apos;Schedule Recertification&apos;,
+        description: &apos;Book certification inspection&apos;,
+        value: &apos;schedule-certification&apos;,
         requiresInput: true,
-        inputLabel: 'Inspection date',
-        inputType: 'date',
+        inputLabel: &apos;Inspection date&apos;,
+        inputType: &apos;date&apos;,
       },
       {
-        label: 'Document Exception',
-        description: 'Create compliance exception with approval',
-        value: 'document-exception',
+        label: &apos;Document Exception&apos;,
+        description: &apos;Create compliance exception with approval&apos;,
+        value: &apos;document-exception&apos;,
         requiresInput: true,
-        inputLabel: 'Exception reason',
-        inputType: 'text',
+        inputLabel: &apos;Exception reason&apos;,
+        inputType: &apos;text&apos;,
       },
       {
-        label: 'Restrict Asset Use',
-        description: 'Prevent further use until compliant',
-        value: 'restrict-use',
+        label: &apos;Restrict Asset Use&apos;,
+        description: &apos;Prevent further use until compliant&apos;,
+        value: &apos;restrict-use&apos;,
       },
     ],
   },
   underutilized: {
     icon: TrendingDown,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50 border-blue-200',
+    color: &apos;text-blue-600&apos;,
+    bgColor: &apos;bg-blue-50 border-blue-200&apos;,
     workflows: [
       {
-        label: 'Relocate to Active Site',
-        description: 'Move asset to location with higher demand',
-        value: 'relocate-asset',
+        label: &apos;Relocate to Active Site&apos;,
+        description: &apos;Move asset to location with higher demand&apos;,
+        value: &apos;relocate-asset&apos;,
         requiresInput: true,
-        inputLabel: 'Target site',
-        inputType: 'select',
+        inputLabel: &apos;Target site&apos;,
+        inputType: &apos;select&apos;,
       },
       {
-        label: 'List for Internal Rental',
-        description: 'Make available for other departments',
-        value: 'list-rental',
+        label: &apos;List for Internal Rental&apos;,
+        description: &apos;Make available for other departments&apos;,
+        value: &apos;list-rental&apos;,
       },
       {
-        label: 'Schedule for Disposition',
-        description: 'Initiate asset sale or disposal process',
-        value: 'schedule-disposal',
+        label: &apos;Schedule for Disposition&apos;,
+        description: &apos;Initiate asset sale or disposal process&apos;,
+        value: &apos;schedule-disposal&apos;,
       },
       {
-        label: 'Analyze Usage Pattern',
-        description: 'Generate detailed utilization report',
-        value: 'analyze-usage',
+        label: &apos;Analyze Usage Pattern&apos;,
+        description: &apos;Generate detailed utilization report&apos;,
+        value: &apos;analyze-usage&apos;,
       },
       {
-        label: 'Reassign to Project',
-        description: 'Allocate to specific project or job',
-        value: 'reassign-project',
+        label: &apos;Reassign to Project&apos;,
+        description: &apos;Allocate to specific project or job&apos;,
+        value: &apos;reassign-project&apos;,
         requiresInput: true,
-        inputLabel: 'Project name',
-        inputType: 'text',
+        inputLabel: &apos;Project name&apos;,
+        inputType: &apos;text&apos;,
       },
     ],
   },
   offline: {
     icon: WifiOff,
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-50 border-gray-200',
+    color: &apos;text-gray-600&apos;,
+    bgColor: &apos;bg-gray-50 border-gray-200&apos;,
     workflows: [
       {
-        label: 'Dispatch Technician',
-        description: 'Send technician to physically locate and inspect',
-        value: 'dispatch-tech',
+        label: &apos;Dispatch Technician&apos;,
+        description: &apos;Send technician to physically locate and inspect&apos;,
+        value: &apos;dispatch-tech&apos;,
         requiresInput: true,
-        inputLabel: 'Technician name',
-        inputType: 'select',
+        inputLabel: &apos;Technician name&apos;,
+        inputType: &apos;select&apos;,
       },
       {
-        label: 'Replace Tracker',
-        description: 'Schedule tracker hardware replacement',
-        value: 'replace-tracker',
+        label: &apos;Replace Tracker&apos;,
+        description: &apos;Schedule tracker hardware replacement&apos;,
+        value: &apos;replace-tracker&apos;,
       },
       {
-        label: 'Check Last Known Location',
-        description: 'Investigate asset at last GPS coordinates',
-        value: 'check-location',
+        label: &apos;Check Last Known Location&apos;,
+        description: &apos;Investigate asset at last GPS coordinates&apos;,
+        value: &apos;check-location&apos;,
       },
       {
-        label: 'Contact Asset Operator',
-        description: 'Reach out to last known operator',
-        value: 'contact-operator',
+        label: &apos;Contact Asset Operator&apos;,
+        description: &apos;Reach out to last known operator&apos;,
+        value: &apos;contact-operator&apos;,
         requiresInput: true,
-        inputLabel: 'Contact method',
-        inputType: 'select',
+        inputLabel: &apos;Contact method&apos;,
+        inputType: &apos;select&apos;,
       },
       {
-        label: 'Mark for Physical Audit',
-        description: 'Flag for next inventory audit',
-        value: 'flag-audit',
+        label: &apos;Mark for Physical Audit&apos;,
+        description: &apos;Flag for next inventory audit&apos;,
+        value: &apos;flag-audit&apos;,
       },
     ],
   },
-  'unauthorized-zone': {
+  &apos;unauthorized-zone&apos;: {
     icon: MapPin,
-    color: 'text-red-600',
-    bgColor: 'bg-red-50 border-red-200',
+    color: &apos;text-red-600&apos;,
+    bgColor: &apos;bg-red-50 border-red-200&apos;,
     workflows: [
       {
-        label: 'Immediate Exit Required',
-        description: 'Contact operator to exit restricted zone immediately',
-        value: 'exit-zone',
+        label: &apos;Immediate Exit Required&apos;,
+        description: &apos;Contact operator to exit restricted zone immediately&apos;,
+        value: &apos;exit-zone&apos;,
       },
       {
-        label: 'Request Authorization',
-        description: 'Submit request for zone access approval',
-        value: 'request-auth',
+        label: &apos;Request Authorization&apos;,
+        description: &apos;Submit request for zone access approval&apos;,
+        value: &apos;request-auth&apos;,
         requiresInput: true,
-        inputLabel: 'Justification',
-        inputType: 'text',
+        inputLabel: &apos;Justification&apos;,
+        inputType: &apos;text&apos;,
       },
       {
-        label: 'Log Security Incident',
-        description: 'Create formal security incident report',
-        value: 'log-incident',
+        label: &apos;Log Security Incident&apos;,
+        description: &apos;Create formal security incident report&apos;,
+        value: &apos;log-incident&apos;,
       },
       {
-        label: 'Notify Zone Manager',
-        description: 'Alert restricted area manager',
-        value: 'notify-manager',
+        label: &apos;Notify Zone Manager&apos;,
+        description: &apos;Alert restricted area manager&apos;,
+        value: &apos;notify-manager&apos;,
       },
       {
-        label: 'Suspend Asset Access',
-        description: 'Revoke access permissions temporarily',
-        value: 'suspend-access',
+        label: &apos;Suspend Asset Access&apos;,
+        description: &apos;Revoke access permissions temporarily&apos;,
+        value: &apos;suspend-access&apos;,
       },
     ],
   },
-  'predictive-maintenance': {
+  &apos;predictive-maintenance&apos;: {
     icon: Wrench,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50 border-purple-200',
+    color: &apos;text-purple-600&apos;,
+    bgColor: &apos;bg-purple-50 border-purple-200&apos;,
     workflows: [
       {
-        label: 'Schedule Immediate Inspection',
-        description: 'Book urgent maintenance inspection',
-        value: 'urgent-inspection',
+        label: &apos;Schedule Immediate Inspection&apos;,
+        description: &apos;Book urgent maintenance inspection&apos;,
+        value: &apos;urgent-inspection&apos;,
         requiresInput: true,
-        inputLabel: 'Inspection date/time',
-        inputType: 'datetime',
+        inputLabel: &apos;Inspection date/time&apos;,
+        inputType: &apos;datetime&apos;,
       },
       {
-        label: 'Order Replacement Parts',
-        description: 'Procure parts based on predicted failure',
-        value: 'order-parts',
+        label: &apos;Order Replacement Parts&apos;,
+        description: &apos;Procure parts based on predicted failure&apos;,
+        value: &apos;order-parts&apos;,
         requiresInput: true,
-        inputLabel: 'Parts needed',
-        inputType: 'text',
+        inputLabel: &apos;Parts needed&apos;,
+        inputType: &apos;text&apos;,
       },
       {
-        label: 'Stop Operations',
-        description: 'Immediately cease asset usage to prevent damage',
-        value: 'stop-ops',
+        label: &apos;Stop Operations&apos;,
+        description: &apos;Immediately cease asset usage to prevent damage&apos;,
+        value: &apos;stop-ops&apos;,
       },
       {
-        label: 'Create Maintenance Ticket',
-        description: 'Generate work order for preventive maintenance',
-        value: 'create-ticket',
+        label: &apos;Create Maintenance Ticket&apos;,
+        description: &apos;Generate work order for preventive maintenance&apos;,
+        value: &apos;create-ticket&apos;,
       },
       {
-        label: 'Notify Asset Owner',
-        description: 'Alert asset owner/department of predicted issue',
-        value: 'notify-owner',
+        label: &apos;Notify Asset Owner&apos;,
+        description: &apos;Alert asset owner/department of predicted issue&apos;,
+        value: &apos;notify-owner&apos;,
       },
       {
-        label: 'Arrange Backup Asset',
-        description: 'Deploy replacement while maintenance performed',
-        value: 'deploy-backup',
+        label: &apos;Arrange Backup Asset&apos;,
+        description: &apos;Deploy replacement while maintenance performed&apos;,
+        value: &apos;deploy-backup&apos;,
         requiresInput: true,
-        inputLabel: 'Backup asset ID',
-        inputType: 'text',
+        inputLabel: &apos;Backup asset ID&apos;,
+        inputType: &apos;text&apos;,
       },
     ],
   },
@@ -328,9 +328,9 @@ export function AlertWorkflow({
   onBack,
   onActionComplete,
 }: AlertWorkflowProps) {
-  const [selectedWorkflow, setSelectedWorkflow] = useState<string>('');
-  const [workflowInput, setWorkflowInput] = useState<string>('');
-  const [notes, setNotes] = useState<string>('');
+  const [selectedWorkflow, setSelectedWorkflow] = useState<string>(&apos;&apos;);
+  const [workflowInput, setWorkflowInput] = useState<string>(&apos;&apos;);
+  const [notes, setNotes] = useState<string>(&apos;&apos;);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const config = alertTypeConfig[alert.type];
@@ -338,30 +338,30 @@ export function AlertWorkflow({
   // Fallback if alert type is not configured
   if (!config) {
     return (
-      <div className='h-screen flex flex-col'>
-        <div className='border-b bg-background px-8 py-4'>
-          <div className='flex items-center gap-4'>
-            <Button variant='ghost' size='icon' onClick={onBack}>
-              <ArrowLeft className='h-5 w-5' />
+      <div className=&apos;h-screen flex flex-col&apos;>
+        <div className=&apos;border-b bg-background px-8 py-4&apos;>
+          <div className=&apos;flex items-center gap-4&apos;>
+            <Button variant=&apos;ghost&apos; size=&apos;icon&apos; onClick={onBack}>
+              <ArrowLeft className=&apos;h-5 w-5&apos; />
             </Button>
             <div>
               <h1>Alert Workflow</h1>
-              <p className='text-muted-foreground'>Alert Type: {alert.type}</p>
+              <p className=&apos;text-muted-foreground&apos;>Alert Type: {alert.type}</p>
             </div>
           </div>
         </div>
-        <div className='flex-1 overflow-auto p-8'>
-          <Card className='border-destructive'>
-            <CardContent className='pt-6'>
-              <div className='flex items-center gap-3 text-destructive'>
-                <AlertTriangle className='h-5 w-5' />
+        <div className=&apos;flex-1 overflow-auto p-8&apos;>
+          <Card className=&apos;border-destructive&apos;>
+            <CardContent className=&apos;pt-6&apos;>
+              <div className=&apos;flex items-center gap-3 text-destructive&apos;>
+                <AlertTriangle className=&apos;h-5 w-5&apos; />
                 <div>
                   <h3>Configuration Error</h3>
-                  <p className='text-sm mt-1'>
-                    No workflow configuration found for alert type:{' '}
-                    <span className='font-mono'>{alert.type}</span>
+                  <p className=&apos;text-sm mt-1&apos;>
+                    No workflow configuration found for alert type:{&apos; &apos;}
+                    <span className=&apos;font-mono&apos;>{alert.type}</span>
                   </p>
-                  <p className='text-sm text-muted-foreground mt-2'>
+                  <p className=&apos;text-sm text-muted-foreground mt-2&apos;>
                     Please contact your system administrator to add workflow
                     actions for this alert type.
                   </p>
@@ -381,7 +381,7 @@ export function AlertWorkflow({
 
   const handleExecuteWorkflow = async () => {
     if (!selectedWorkflow) {
-      toast.error('Please select an action');
+      toast.error(&apos;Please select an action&apos;);
       return;
     }
 
@@ -401,15 +401,15 @@ export function AlertWorkflow({
         notes
       );
 
-      toast.success('Action executed successfully', {
+      toast.success(&apos;Action executed successfully&apos;, {
         description: selectedWorkflowConfig?.label,
       });
 
       setIsProcessing(false);
       onActionComplete?.();
     } catch (error) {
-// console.error('Failed to execute workflow action:', error);
-      toast.error('Failed to execute action. Please try again.');
+// // // // // // console.error(&apos;Failed to execute workflow action:&apos;, error);
+      toast.error(&apos;Failed to execute action. Please try again.&apos;);
       setIsProcessing(false);
     }
   };
@@ -421,12 +421,12 @@ export function AlertWorkflow({
       // Acknowledge alert using alert service
       await acknowledgeAlert(alert.id, notes);
 
-      toast.success('Alert acknowledged');
+      toast.success(&apos;Alert acknowledged&apos;);
       setIsProcessing(false);
       onActionComplete?.();
     } catch (error) {
-// console.error('Failed to acknowledge alert:', error);
-      toast.error('Failed to acknowledge alert. Please try again.');
+// // // // // // console.error(&apos;Failed to acknowledge alert:&apos;, error);
+      toast.error(&apos;Failed to acknowledge alert. Please try again.&apos;);
       setIsProcessing(false);
     }
   };
@@ -438,12 +438,12 @@ export function AlertWorkflow({
       // Resolve alert using alert service
       await resolveAlert(alert.id, notes);
 
-      toast.success('Alert resolved');
+      toast.success(&apos;Alert resolved&apos;);
       setIsProcessing(false);
       onActionComplete?.();
     } catch (error) {
-// console.error('Failed to resolve alert:', error);
-      toast.error('Failed to resolve alert. Please try again.');
+// // // // // // console.error(&apos;Failed to resolve alert:&apos;, error);
+      toast.error(&apos;Failed to resolve alert. Please try again.&apos;);
       setIsProcessing(false);
     }
   };
@@ -456,60 +456,60 @@ export function AlertWorkflow({
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMins < 1) return 'Just now';
+    if (diffMins < 1) return &apos;Just now&apos;;
     if (diffMins < 60) return `${diffMins} min ago`;
     if (diffHours < 24)
-      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+      return `${diffHours} hour${diffHours > 1 ? &apos;s&apos; : &apos;&apos;} ago`;
+    return `${diffDays} day${diffDays > 1 ? &apos;s&apos; : &apos;&apos;} ago`;
   };
 
   return (
-    <PageLayout variant='narrow' padding='md'>
+    <PageLayout variant=&apos;narrow&apos; padding=&apos;md&apos;>
       {/* Header */}
-      <div className='flex items-center gap-4'>
-        <Button variant='outline' size='icon' onClick={onBack}>
-          <ArrowLeft className='h-4 w-4' />
+      <div className=&apos;flex items-center gap-4&apos;>
+        <Button variant=&apos;outline&apos; size=&apos;icon&apos; onClick={onBack}>
+          <ArrowLeft className=&apos;h-4 w-4&apos; />
         </Button>
-        <div className='flex-1'>
+        <div className=&apos;flex-1&apos;>
           <h1>Alert Workflow</h1>
-          <p className='text-muted-foreground'>Take action on this alert</p>
+          <p className=&apos;text-muted-foreground&apos;>Take action on this alert</p>
         </div>
       </div>
 
       {/* Alert Overview */}
       <Card className={`border-2 ${config.bgColor}`}>
         <CardHeader>
-          <div className='flex items-start gap-4'>
+          <div className=&apos;flex items-start gap-4&apos;>
             <div className={`p-3 rounded-lg bg-background ${config.color}`}>
-              <Icon className='h-6 w-6' />
+              <Icon className=&apos;h-6 w-6&apos; />
             </div>
-            <div className='flex-1'>
-              <div className='flex items-start justify-between gap-4 mb-2'>
+            <div className=&apos;flex-1&apos;>
+              <div className=&apos;flex items-start justify-between gap-4 mb-2&apos;>
                 <div>
                   <CardTitle>{alert.asset}</CardTitle>
-                  <p className='text-muted-foreground mt-1'>{alert.message}</p>
+                  <p className=&apos;text-muted-foreground mt-1&apos;>{alert.message}</p>
                 </div>
-                <div className='flex gap-2'>
+                <div className=&apos;flex gap-2&apos;>
                   <Badge
                     variant={
-                      alert.severity === 'critical' ? 'destructive' : 'outline'
+                      alert.severity === &apos;critical&apos; ? &apos;destructive&apos; : &apos;outline&apos;
                     }
                   >
                     {alert.severity}
                   </Badge>
-                  <Badge variant='outline'>{alert.status}</Badge>
+                  <Badge variant=&apos;outline&apos;>{alert.status}</Badge>
                 </div>
               </div>
-              <div className='flex items-center gap-4 text-sm text-muted-foreground'>
-                <div className='flex items-center gap-1'>
-                  <Clock className='h-3 w-3' />
+              <div className=&apos;flex items-center gap-4 text-sm text-muted-foreground&apos;>
+                <div className=&apos;flex items-center gap-1&apos;>
+                  <Clock className=&apos;h-3 w-3&apos; />
                   {getTimeAgo(alert.timestamp)}
                 </div>
                 {alert.location && (
                   <>
                     <span>•</span>
-                    <div className='flex items-center gap-1'>
-                      <MapPinned className='h-3 w-3' />
+                    <div className=&apos;flex items-center gap-1&apos;>
+                      <MapPinned className=&apos;h-3 w-3&apos; />
                       {alert.location}
                     </div>
                   </>
@@ -528,11 +528,11 @@ export function AlertWorkflow({
           <CardHeader>
             <CardTitle>Alert Context</CardTitle>
           </CardHeader>
-          <CardContent className='space-y-4'>
+          <CardContent className=&apos;space-y-4&apos;>
             {alert.reason && (
               <div>
                 <Label>Reason</Label>
-                <p className='text-sm text-muted-foreground mt-1'>
+                <p className=&apos;text-sm text-muted-foreground mt-1&apos;>
                   {alert.reason}
                 </p>
               </div>
@@ -540,11 +540,11 @@ export function AlertWorkflow({
 
             {alert.suggestedAction && (
               <div className={`p-4 rounded-lg border-2 ${config.bgColor}`}>
-                <div className='flex items-start gap-2'>
+                <div className=&apos;flex items-start gap-2&apos;>
                   <Bell className={`h-5 w-5 ${config.color} mt-0.5`} />
-                  <div className='flex-1'>
+                  <div className=&apos;flex-1&apos;>
                     <Label>Suggested Action</Label>
-                    <p className='text-sm text-muted-foreground mt-1'>
+                    <p className=&apos;text-sm text-muted-foreground mt-1&apos;>
                       {alert.suggestedAction}
                     </p>
                   </div>
@@ -555,22 +555,22 @@ export function AlertWorkflow({
             {alert.metadata && Object.keys(alert.metadata).length > 0 && (
               <div>
                 <Label>Additional Information</Label>
-                <div className='mt-2 grid grid-cols-2 gap-3'>
+                <div className=&apos;mt-2 grid grid-cols-2 gap-3&apos;>
                   {Object.entries(alert.metadata).map(([key, value]) => {
                     // Skip complex objects and arrays
-                    if (typeof value === 'object' && !Array.isArray(value))
+                    if (typeof value === &apos;object&apos; && !Array.isArray(value))
                       return null;
 
                     return (
-                      <div key={key} className='text-sm'>
-                        <div className='text-muted-foreground'>
+                      <div key={key} className=&apos;text-sm&apos;>
+                        <div className=&apos;text-muted-foreground&apos;>
                           {key
-                            .replace(/([A-Z])/g, ' $1')
+                            .replace(/([A-Z])/g, &apos; $1&apos;)
                             .replace(/^./, str => str.toUpperCase())}
                         </div>
                         <div>
                           {Array.isArray(value)
-                            ? value.join(', ')
+                            ? value.join(&apos;, &apos;)
                             : String(value)}
                         </div>
                       </div>
@@ -588,22 +588,22 @@ export function AlertWorkflow({
         <CardHeader>
           <CardTitle>Select Action</CardTitle>
         </CardHeader>
-        <CardContent className='space-y-4'>
-          <div className='space-y-2'>
+        <CardContent className=&apos;space-y-4&apos;>
+          <div className=&apos;space-y-2&apos;>
             <Label>Available Actions</Label>
             <Select
               value={selectedWorkflow}
               onValueChange={setSelectedWorkflow}
             >
               <SelectTrigger>
-                <SelectValue placeholder='Choose workflow action...' />
+                <SelectValue placeholder=&apos;Choose workflow action...&apos; />
               </SelectTrigger>
               <SelectContent>
                 {config.workflows.map(workflow => (
                   <SelectItem key={workflow.value} value={workflow.value}>
-                    <div className='py-1'>
+                    <div className=&apos;py-1&apos;>
                       <div>{workflow.label}</div>
-                      <div className='text-xs text-muted-foreground'>
+                      <div className=&apos;text-xs text-muted-foreground&apos;>
                         {workflow.description}
                       </div>
                     </div>
@@ -615,34 +615,34 @@ export function AlertWorkflow({
 
           {/* Workflow Input */}
           {selectedWorkflowConfig?.requiresInput && (
-            <div className='space-y-2'>
+            <div className=&apos;space-y-2&apos;>
               <Label>{selectedWorkflowConfig.inputLabel}</Label>
-              {selectedWorkflowConfig.inputType === 'date' ? (
+              {selectedWorkflowConfig.inputType === &apos;date&apos; ? (
                 <Input
-                  type='date'
+                  type=&apos;date&apos;
                   value={workflowInput}
                   onChange={e => setWorkflowInput(e.target.value)}
                 />
-              ) : selectedWorkflowConfig.inputType === 'datetime' ? (
+              ) : selectedWorkflowConfig.inputType === &apos;datetime&apos; ? (
                 <Input
-                  type='datetime-local'
+                  type=&apos;datetime-local&apos;
                   value={workflowInput}
                   onChange={e => setWorkflowInput(e.target.value)}
                 />
-              ) : selectedWorkflowConfig.inputType === 'select' ? (
+              ) : selectedWorkflowConfig.inputType === &apos;select&apos; ? (
                 <Select value={workflowInput} onValueChange={setWorkflowInput}>
                   <SelectTrigger>
-                    <SelectValue placeholder='Select...' />
+                    <SelectValue placeholder=&apos;Select...&apos; />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='tech-1'>Mike Johnson</SelectItem>
-                    <SelectItem value='tech-2'>Sarah Williams</SelectItem>
-                    <SelectItem value='tech-3'>David Chen</SelectItem>
-                    <SelectItem value='site-1'>Main Warehouse</SelectItem>
-                    <SelectItem value='site-2'>Construction Site A</SelectItem>
-                    <SelectItem value='contact-phone'>Phone Call</SelectItem>
-                    <SelectItem value='contact-email'>Email</SelectItem>
-                    <SelectItem value='contact-sms'>SMS</SelectItem>
+                    <SelectItem value=&apos;tech-1&apos;>Mike Johnson</SelectItem>
+                    <SelectItem value=&apos;tech-2&apos;>Sarah Williams</SelectItem>
+                    <SelectItem value=&apos;tech-3&apos;>David Chen</SelectItem>
+                    <SelectItem value=&apos;site-1&apos;>Main Warehouse</SelectItem>
+                    <SelectItem value=&apos;site-2&apos;>Construction Site A</SelectItem>
+                    <SelectItem value=&apos;contact-phone&apos;>Phone Call</SelectItem>
+                    <SelectItem value=&apos;contact-email&apos;>Email</SelectItem>
+                    <SelectItem value=&apos;contact-sms&apos;>SMS</SelectItem>
                   </SelectContent>
                 </Select>
               ) : (
@@ -656,10 +656,10 @@ export function AlertWorkflow({
           )}
 
           {/* Additional Notes */}
-          <div className='space-y-2'>
+          <div className=&apos;space-y-2&apos;>
             <Label>Additional Notes (Optional)</Label>
             <Textarea
-              placeholder='Add any additional notes or context...'
+              placeholder=&apos;Add any additional notes or context...&apos;
               value={notes}
               onChange={e => setNotes(e.target.value)}
               rows={4}
@@ -669,34 +669,34 @@ export function AlertWorkflow({
       </Card>
 
       {/* Action Buttons */}
-      <div className='flex items-center justify-between gap-3'>
-        <div className='flex gap-2'>
-          {alert.status === 'active' && (
+      <div className=&apos;flex items-center justify-between gap-3&apos;>
+        <div className=&apos;flex gap-2&apos;>
+          {alert.status === &apos;active&apos; && (
             <Button
-              variant='outline'
+              variant=&apos;outline&apos;
               onClick={handleAcknowledge}
               disabled={isProcessing}
             >
-              <CheckCircle2 className='h-4 w-4 mr-2' />
+              <CheckCircle2 className=&apos;h-4 w-4 mr-2&apos; />
               Acknowledge
             </Button>
           )}
           <Button
-            variant='outline'
+            variant=&apos;outline&apos;
             onClick={handleResolve}
             disabled={isProcessing}
-            className='text-green-600 hover:text-green-700'
+            className=&apos;text-green-600 hover:text-green-700&apos;
           >
-            <XCircle className='h-4 w-4 mr-2' />
+            <XCircle className=&apos;h-4 w-4 mr-2&apos; />
             Mark Resolved
           </Button>
         </div>
         <Button
           onClick={handleExecuteWorkflow}
           disabled={!selectedWorkflow || isProcessing}
-          size='lg'
+          size=&apos;lg&apos;
         >
-          {isProcessing ? 'Processing...' : 'Execute Action'}
+          {isProcessing ? &apos;Processing...&apos; : &apos;Execute Action&apos;}
         </Button>
       </div>
     </PageLayout>

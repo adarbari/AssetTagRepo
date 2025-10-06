@@ -6,7 +6,8 @@ import logging
 import os
 
 from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
+                                    create_async_engine)
 from sqlalchemy.orm import declarative_base
 
 from config.settings import settings
@@ -61,7 +62,7 @@ async def get_db() -> AsyncSession:
                 await session.close()
 
 
-async def init_db():
+async def init_db() -> None:
     """Initialize database tables"""
     # Use test engine if in test environment
     if IS_TEST_ENV:
@@ -78,7 +79,7 @@ async def init_db():
             logger.info("Database tables created successfully")
 
 
-async def close_db():
+async def close_db() -> None:
     """Close database connections"""
     if IS_TEST_ENV:
         from config.test_database import close_test_db

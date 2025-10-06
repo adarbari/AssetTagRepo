@@ -14,7 +14,7 @@ from modules.locations.models import EstimatedLocation
 
 
 @pytest.fixture
-def mock_cache():
+def mock_cache() -> None:
     """Mock cache manager for LocationEstimator"""
     return Mock()
 
@@ -23,7 +23,7 @@ class TestLocationModel:
     """Test EstimatedLocation model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_location(self, db_session):
+    async def test_create_location(self, db_session) -> None:
         """Test creating a location estimate"""
         location = EstimatedLocation(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
@@ -52,7 +52,7 @@ class TestLocationModel:
         assert len(location.gateway_ids) == 2
 
     @pytest.mark.asyncio
-    async def test_location_with_distance(self, db_session):
+    async def test_location_with_distance(self, db_session) -> None:
         """Test location with distance calculation"""
         location = EstimatedLocation(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
@@ -78,7 +78,7 @@ class TestLocationModel:
 class TestLocationEstimator:
     """Test LocationEstimator functionality"""
 
-    def test_rssi_to_distance_conversion(self, mock_cache):
+    def test_rssi_to_distance_conversion(self, mock_cache) -> None:
         """Test RSSI to distance conversion"""
         estimator = LocationEstimator(mock_cache)
 
@@ -93,7 +93,7 @@ class TestLocationEstimator:
         assert all(d > 0 for d in distances)
 
     @pytest.mark.skip(reason="Trilateration method not implemented as public method")
-    def test_trilateration_calculation(self, mock_cache):
+    def test_trilateration_calculation(self, mock_cache) -> None:
         """Test trilateration calculation"""
         estimator = LocationEstimator(mock_cache)
 
@@ -116,7 +116,7 @@ class TestLocationEstimator:
         assert -74.01 <= result["longitude"] <= -74.0
 
     @pytest.mark.skip(reason="Trilateration method not implemented as public method")
-    def test_insufficient_gateways(self, mock_cache):
+    def test_insufficient_gateways(self, mock_cache) -> None:
         """Test trilateration with insufficient gateways"""
         estimator = LocationEstimator(mock_cache)
 
@@ -132,7 +132,7 @@ class TestLocationEstimator:
         assert result is None or result["confidence"] < 0.5
 
     @pytest.mark.skip(reason="Trilateration method not implemented as public method")
-    def test_invalid_gateway_data(self, mock_cache):
+    def test_invalid_gateway_data(self, mock_cache) -> None:
         """Test trilateration with invalid gateway data"""
         estimator = LocationEstimator(mock_cache)
 
@@ -156,7 +156,7 @@ class TestLocationEstimator:
     @pytest.mark.skip(
         reason="Distance calculation method not implemented as public method"
     )
-    def test_distance_calculation(self, mock_cache):
+    def test_distance_calculation(self, mock_cache) -> None:
         """Test distance calculation between two points"""
         estimator = LocationEstimator(mock_cache)
 
@@ -172,7 +172,7 @@ class TestLocationEstimator:
     @pytest.mark.skip(
         reason="Confidence calculation method not implemented as public method"
     )
-    def test_confidence_calculation(self, mock_cache):
+    def test_confidence_calculation(self, mock_cache) -> None:
         """Test confidence calculation based on gateway data"""
         estimator = LocationEstimator(mock_cache)
 

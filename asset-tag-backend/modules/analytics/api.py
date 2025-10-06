@@ -7,11 +7,8 @@ from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from modules.analytics.aggregators import (
-    CostAnalyzer,
-    HeatmapAnalyzer,
-    UtilizationAnalyzer,
-)
+from modules.analytics.aggregators import (CostAnalyzer, HeatmapAnalyzer,
+                                           UtilizationAnalyzer)
 
 router = APIRouter()
 
@@ -491,7 +488,7 @@ async def train_maintenance_model(
 
 
 @router.get("/analytics/ml/status")
-async def get_ml_model_status():
+async def get_ml_model_status() -> None:
     """Get status of ML models"""
     try:
         from ml.serving.model_server import model_server

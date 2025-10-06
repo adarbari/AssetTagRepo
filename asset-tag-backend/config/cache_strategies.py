@@ -88,7 +88,7 @@ class CacheCategory(Enum):
 class CacheKeyManager:
     """Manages cache keys and strategies"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.strategies = {
             "asset_location": CacheKey(
                 pattern="asset:location:{asset_id}",
@@ -213,30 +213,30 @@ class CacheKeyManager:
 class CacheMetrics:
     """Cache performance metrics"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.hits = 0
         self.misses = 0
         self.sets = 0
         self.deletes = 0
         self.errors = 0
 
-    def record_hit(self):
+    def record_hit(self) -> None:
         """Record a cache hit"""
         self.hits += 1
 
-    def record_miss(self):
+    def record_miss(self) -> None:
         """Record a cache miss"""
         self.misses += 1
 
-    def record_set(self):
+    def record_set(self) -> None:
         """Record a cache set operation"""
         self.sets += 1
 
-    def record_delete(self):
+    def record_delete(self) -> None:
         """Record a cache delete operation"""
         self.deletes += 1
 
-    def record_error(self):
+    def record_error(self) -> None:
         """Record a cache error"""
         self.errors += 1
 
@@ -285,7 +285,7 @@ def generate_search_results_key(query: str, filters: Dict[str, Any]) -> str:
     import hashlib
 
     query_data = {"query": query, "filters": filters}
-    query_hash = hashlib.md5(
+    query_hash = hashlib.sha256(
         json.dumps(query_data, sort_keys=True).encode()
     ).hexdigest()
     return cache_key_manager.get_key("search_results", query_hash=query_hash)
@@ -308,7 +308,7 @@ class CacheInvalidation:
     """Cache invalidation utilities"""
 
     @staticmethod
-    async def invalidate_asset_cache(redis_client, asset_id: str):
+    async def invalidate_asset_cache(redis_client, asset_id: str) -> None:
         """Invalidate all cache entries for an asset"""
         patterns = [
             "asset:location:{asset_id}",
@@ -324,7 +324,7 @@ class CacheInvalidation:
             logger.debug(f"Invalidated cache key: {key}")
 
     @staticmethod
-    async def invalidate_geofence_cache(redis_client, geofence_id: str):
+    async def invalidate_geofence_cache(redis_client, geofence_id: str) -> None:
         """Invalidate all cache entries for a geofence"""
         patterns = ["geofence:boundary:{geofence_id}", "geofence:rules:{geofence_id}"]
 
@@ -334,7 +334,7 @@ class CacheInvalidation:
             logger.debug(f"Invalidated cache key: {key}")
 
     @staticmethod
-    async def invalidate_organization_cache(redis_client, organization_id: str):
+    async def invalidate_organization_cache(redis_client, organization_id: str) -> None:
         """Invalidate organization-wide cache entries"""
         patterns = [
             "alert:config:{organization_id}",
@@ -347,7 +347,7 @@ class CacheInvalidation:
             logger.debug(f"Invalidated cache key: {key}")
 
     @staticmethod
-    async def invalidate_search_cache(redis_client):
+    async def invalidate_search_cache(redis_client) -> None:
         """Invalidate all search result caches"""
         keys = await redis_client.keys("search:results:*")
         if keys:

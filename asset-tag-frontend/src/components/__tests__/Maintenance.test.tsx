@@ -1,86 +1,86 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Maintenance } from '../maintenance/Maintenance';
-import { render } from '../../test/test-utils';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
+import { screen, waitFor } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { Maintenance } from &apos;../maintenance/Maintenance&apos;;
+import { render } from &apos;../../test/test-utils&apos;;
 
 // Mock the maintenance service
-vi.mock('../../services/maintenanceService', () => ({
+vi.mock(&apos;../../services/maintenanceService&apos;, () => ({
   fetchMaintenanceTasks: vi.fn().mockResolvedValue([
     {
-      id: 'MT-001',
-      assetId: 'AT-001',
-      assetName: 'Excavator CAT 320',
-      type: 'scheduled',
-      priority: 'high',
-      status: 'pending',
-      dueDate: '2024-01-15T10:00:00Z',
-      description: 'Regular maintenance check',
-      assignedTo: 'John Smith',
+      id: &apos;MT-001&apos;,
+      assetId: &apos;AT-001&apos;,
+      assetName: &apos;Excavator CAT 320&apos;,
+      type: &apos;scheduled&apos;,
+      priority: &apos;high&apos;,
+      status: &apos;pending&apos;,
+      dueDate: &apos;2024-01-15T10:00:00Z&apos;,
+      description: &apos;Regular maintenance check&apos;,
+      assignedTo: &apos;John Smith&apos;,
       estimatedDuration: 120,
       actualDuration: null,
-      notes: '',
+      notes: &apos;&apos;,
       auditLog: [
         {
-          timestamp: '2024-01-01T10:00:00Z',
-          user: 'John Smith',
-          action: 'created',
+          timestamp: &apos;2024-01-01T10:00:00Z&apos;,
+          user: &apos;John Smith&apos;,
+          action: &apos;created&apos;,
           changes: [],
-          notes: 'Maintenance task created',
+          notes: &apos;Maintenance task created&apos;,
         },
       ],
     },
     {
-      id: 'MT-002',
-      assetId: 'AT-002',
-      assetName: 'Delivery Truck F-350',
-      type: 'emergency',
-      priority: 'critical',
-      status: 'in-progress',
-      dueDate: '2024-01-10T14:00:00Z',
-      description: 'Engine repair',
-      assignedTo: 'Jane Doe',
+      id: &apos;MT-002&apos;,
+      assetId: &apos;AT-002&apos;,
+      assetName: &apos;Delivery Truck F-350&apos;,
+      type: &apos;emergency&apos;,
+      priority: &apos;critical&apos;,
+      status: &apos;in-progress&apos;,
+      dueDate: &apos;2024-01-10T14:00:00Z&apos;,
+      description: &apos;Engine repair&apos;,
+      assignedTo: &apos;Jane Doe&apos;,
       estimatedDuration: 240,
       actualDuration: 180,
-      notes: 'Engine oil leak detected',
+      notes: &apos;Engine oil leak detected&apos;,
       auditLog: [
         {
-          timestamp: '2024-01-01T10:00:00Z',
-          user: 'Jane Doe',
-          action: 'started',
-          changes: [{ field: 'status', from: 'pending', to: 'in-progress' }],
-          notes: 'Started engine repair',
+          timestamp: &apos;2024-01-01T10:00:00Z&apos;,
+          user: &apos;Jane Doe&apos;,
+          action: &apos;started&apos;,
+          changes: [{ field: &apos;status&apos;, from: &apos;pending&apos;, to: &apos;in-progress&apos; }],
+          notes: &apos;Started engine repair&apos;,
         },
       ],
     },
   ]),
   fetchMaintenanceHistory: vi.fn().mockResolvedValue([
     {
-      id: 'MH-001',
-      assetId: 'AT-003',
-      assetName: 'Tool Container #5',
-      type: 'preventive',
-      completedDate: '2024-01-01T16:00:00Z',
+      id: &apos;MH-001&apos;,
+      assetId: &apos;AT-003&apos;,
+      assetName: &apos;Tool Container #5&apos;,
+      type: &apos;preventive&apos;,
+      completedDate: &apos;2024-01-01T16:00:00Z&apos;,
       duration: 90,
-      technician: 'Bob Johnson',
-      description: 'Monthly inspection',
-      notes: 'All systems functioning normally',
+      technician: &apos;Bob Johnson&apos;,
+      description: &apos;Monthly inspection&apos;,
+      notes: &apos;All systems functioning normally&apos;,
     },
   ]),
   fetchPredictiveAlerts: vi.fn().mockResolvedValue([
     {
-      id: 'PA-001',
-      assetId: 'AT-001',
-      assetName: 'Excavator CAT 320',
-      alertType: 'battery_degradation',
-      severity: 'medium',
-      predictedDate: '2024-01-20T10:00:00Z',
+      id: &apos;PA-001&apos;,
+      assetId: &apos;AT-001&apos;,
+      assetName: &apos;Excavator CAT 320&apos;,
+      alertType: &apos;battery_degradation&apos;,
+      severity: &apos;medium&apos;,
+      predictedDate: &apos;2024-01-20T10:00:00Z&apos;,
       confidence: 85,
-      description: 'Battery performance declining',
+      description: &apos;Battery performance declining&apos;,
       recommendations: [
-        'Schedule battery replacement',
-        'Monitor usage patterns',
+        &apos;Schedule battery replacement&apos;,
+        &apos;Monitor usage patterns&apos;,
       ],
     },
   ]),
@@ -95,7 +95,7 @@ vi.mock('../../services/maintenanceService', () => ({
 }));
 
 // Mock the navigation context
-vi.mock('../../contexts/NavigationContext', () => ({
+vi.mock(&apos;../../contexts/NavigationContext&apos;, () => ({
   useNavigation: () => ({
     navigateToCreateMaintenance: vi.fn(),
     navigateToEditMaintenance: vi.fn(),
@@ -103,7 +103,7 @@ vi.mock('../../contexts/NavigationContext', () => ({
   }),
 }));
 
-describe('Maintenance Component', () => {
+describe(&apos;Maintenance Component&apos;, () => {
   const defaultProps = {
     onAssetClick: vi.fn(),
   };
@@ -112,432 +112,432 @@ describe('Maintenance Component', () => {
     vi.clearAllMocks();
   });
 
-  describe('Rendering and Basic Functionality', () => {
-    it('should render the maintenance page with header', async () => {
+  describe(&apos;Rendering and Basic Functionality&apos;, () => {
+    it(&apos;should render the maintenance page with header&apos;, async () => {
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Maintenance Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Maintenance Management&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should show loading state initially', () => {
+    it(&apos;should show loading state initially&apos;, () => {
       render(<Maintenance {...defaultProps} />);
 
       expect(
-        screen.getByText('Loading maintenance data...')
+        screen.getByText(&apos;Loading maintenance data...&apos;)
       ).toBeInTheDocument();
     });
 
-    it('should render tabs navigation', async () => {
+    it(&apos;should render tabs navigation&apos;, async () => {
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Tasks')).toBeInTheDocument();
-        expect(screen.getByText('History')).toBeInTheDocument();
-        expect(screen.getByText('Predictive Alerts')).toBeInTheDocument();
-        expect(screen.getByText('Analytics')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Tasks&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;History&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Predictive Alerts&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Analytics&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should render stats cards', async () => {
+    it(&apos;should render stats cards&apos;, async () => {
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Overdue')).toBeInTheDocument();
-        expect(screen.getByText('5')).toBeInTheDocument();
-        expect(screen.getByText('In Progress')).toBeInTheDocument();
-        expect(screen.getByText('8')).toBeInTheDocument();
-        expect(screen.getByText('Scheduled')).toBeInTheDocument();
-        expect(screen.getByText('12')).toBeInTheDocument();
-        expect(screen.getByText('Predictive Alerts')).toBeInTheDocument();
-        expect(screen.getByText('3')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Overdue&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;5&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;In Progress&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;8&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Scheduled&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;12&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Predictive Alerts&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;3&apos;)).toBeInTheDocument();
       });
     });
   });
 
-  describe('Tasks Tab', () => {
-    it('should render maintenance tasks table', async () => {
+  describe(&apos;Tasks Tab&apos;, () => {
+    it(&apos;should render maintenance tasks table&apos;, async () => {
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Maintenance Tasks')).toBeInTheDocument();
-        expect(screen.getByText('Asset')).toBeInTheDocument();
-        expect(screen.getByText('Type')).toBeInTheDocument();
-        expect(screen.getByText('Priority')).toBeInTheDocument();
-        expect(screen.getByText('Status')).toBeInTheDocument();
-        expect(screen.getByText('Due Date')).toBeInTheDocument();
-        expect(screen.getByText('Assigned To')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Maintenance Tasks&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Asset&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Type&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Priority&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Due Date&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Assigned To&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should display task data in table', async () => {
+    it(&apos;should display task data in table&apos;, async () => {
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
-        expect(screen.getByText('Delivery Truck F-350')).toBeInTheDocument();
-        expect(screen.getByText('Scheduled')).toBeInTheDocument();
-        expect(screen.getByText('Emergency')).toBeInTheDocument();
-        expect(screen.getByText('High')).toBeInTheDocument();
-        expect(screen.getByText('Critical')).toBeInTheDocument();
-        expect(screen.getByText('Pending')).toBeInTheDocument();
-        expect(screen.getByText('In Progress')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Delivery Truck F-350&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Scheduled&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Emergency&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;High&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Critical&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Pending&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;In Progress&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should render search and filter controls', async () => {
+    it(&apos;should render search and filter controls&apos;, async () => {
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
         expect(
           screen.getByPlaceholderText(/search tasks/i)
         ).toBeInTheDocument();
-        expect(screen.getByText('All Types')).toBeInTheDocument();
-        expect(screen.getByText('All Priorities')).toBeInTheDocument();
-        expect(screen.getByText('All Statuses')).toBeInTheDocument();
+        expect(screen.getByText(&apos;All Types&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;All Priorities&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;All Statuses&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should filter tasks by search term', async () => {
+    it(&apos;should filter tasks by search term&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       });
 
       const searchInput = screen.getByPlaceholderText(/search tasks/i);
-      await user.type(searchInput, 'Excavator');
+      await user.type(searchInput, &apos;Excavator&apos;);
 
-      expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       expect(
-        screen.queryByText('Delivery Truck F-350')
+        screen.queryByText(&apos;Delivery Truck F-350&apos;)
       ).not.toBeInTheDocument();
     });
 
-    it('should filter tasks by type', async () => {
+    it(&apos;should filter tasks by type&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('All Types')).toBeInTheDocument();
+        expect(screen.getByText(&apos;All Types&apos;)).toBeInTheDocument();
       });
 
-      const typeSelect = screen.getByText('All Types');
+      const typeSelect = screen.getByText(&apos;All Types&apos;);
       await user.click(typeSelect);
-      await user.click(screen.getByText('Scheduled'));
+      await user.click(screen.getByText(&apos;Scheduled&apos;));
 
-      expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       expect(
-        screen.queryByText('Delivery Truck F-350')
+        screen.queryByText(&apos;Delivery Truck F-350&apos;)
       ).not.toBeInTheDocument();
     });
 
-    it('should filter tasks by priority', async () => {
+    it(&apos;should filter tasks by priority&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('All Priorities')).toBeInTheDocument();
+        expect(screen.getByText(&apos;All Priorities&apos;)).toBeInTheDocument();
       });
 
-      const prioritySelect = screen.getByText('All Priorities');
+      const prioritySelect = screen.getByText(&apos;All Priorities&apos;);
       await user.click(prioritySelect);
-      await user.click(screen.getByText('High'));
+      await user.click(screen.getByText(&apos;High&apos;));
 
-      expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       expect(
-        screen.queryByText('Delivery Truck F-350')
+        screen.queryByText(&apos;Delivery Truck F-350&apos;)
       ).not.toBeInTheDocument();
     });
 
-    it('should filter tasks by status', async () => {
+    it(&apos;should filter tasks by status&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('All Statuses')).toBeInTheDocument();
+        expect(screen.getByText(&apos;All Statuses&apos;)).toBeInTheDocument();
       });
 
-      const statusSelect = screen.getByText('All Statuses');
+      const statusSelect = screen.getByText(&apos;All Statuses&apos;);
       await user.click(statusSelect);
-      await user.click(screen.getByText('In Progress'));
+      await user.click(screen.getByText(&apos;In Progress&apos;));
 
-      expect(screen.getByText('Delivery Truck F-350')).toBeInTheDocument();
-      expect(screen.queryByText('Excavator CAT 320')).not.toBeInTheDocument();
+      expect(screen.getByText(&apos;Delivery Truck F-350&apos;)).toBeInTheDocument();
+      expect(screen.queryByText(&apos;Excavator CAT 320&apos;)).not.toBeInTheDocument();
     });
   });
 
-  describe('History Tab', () => {
-    it('should render maintenance history table', async () => {
+  describe(&apos;History Tab&apos;, () => {
+    it(&apos;should render maintenance history table&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('History')).toBeInTheDocument();
+        expect(screen.getByText(&apos;History&apos;)).toBeInTheDocument();
       });
 
-      const historyTab = screen.getByText('History');
+      const historyTab = screen.getByText(&apos;History&apos;);
       await user.click(historyTab);
 
-      expect(screen.getByText('Maintenance History')).toBeInTheDocument();
-      expect(screen.getByText('Asset')).toBeInTheDocument();
-      expect(screen.getByText('Type')).toBeInTheDocument();
-      expect(screen.getByText('Completed Date')).toBeInTheDocument();
-      expect(screen.getByText('Duration')).toBeInTheDocument();
-      expect(screen.getByText('Technician')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Maintenance History&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Asset&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Type&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Completed Date&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Duration&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Technician&apos;)).toBeInTheDocument();
     });
 
-    it('should display history data in table', async () => {
+    it(&apos;should display history data in table&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('History')).toBeInTheDocument();
+        expect(screen.getByText(&apos;History&apos;)).toBeInTheDocument();
       });
 
-      const historyTab = screen.getByText('History');
+      const historyTab = screen.getByText(&apos;History&apos;);
       await user.click(historyTab);
 
-      expect(screen.getByText('Tool Container #5')).toBeInTheDocument();
-      expect(screen.getByText('Preventive')).toBeInTheDocument();
-      expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Tool Container #5&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Preventive&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Bob Johnson&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Predictive Alerts Tab', () => {
-    it('should render predictive alerts table', async () => {
+  describe(&apos;Predictive Alerts Tab&apos;, () => {
+    it(&apos;should render predictive alerts table&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Predictive Alerts')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Predictive Alerts&apos;)).toBeInTheDocument();
       });
 
-      const alertsTab = screen.getByText('Predictive Alerts');
+      const alertsTab = screen.getByText(&apos;Predictive Alerts&apos;);
       await user.click(alertsTab);
 
       expect(
-        screen.getByText('Predictive Maintenance Alerts')
+        screen.getByText(&apos;Predictive Maintenance Alerts&apos;)
       ).toBeInTheDocument();
-      expect(screen.getByText('Asset')).toBeInTheDocument();
-      expect(screen.getByText('Alert Type')).toBeInTheDocument();
-      expect(screen.getByText('Severity')).toBeInTheDocument();
-      expect(screen.getByText('Predicted Date')).toBeInTheDocument();
-      expect(screen.getByText('Confidence')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Asset&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Alert Type&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Severity&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Predicted Date&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Confidence&apos;)).toBeInTheDocument();
     });
 
-    it('should display predictive alert data', async () => {
+    it(&apos;should display predictive alert data&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Predictive Alerts')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Predictive Alerts&apos;)).toBeInTheDocument();
       });
 
-      const alertsTab = screen.getByText('Predictive Alerts');
+      const alertsTab = screen.getByText(&apos;Predictive Alerts&apos;);
       await user.click(alertsTab);
 
-      expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
-      expect(screen.getByText('Battery Degradation')).toBeInTheDocument();
-      expect(screen.getByText('Medium')).toBeInTheDocument();
-      expect(screen.getByText('85%')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Battery Degradation&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Medium&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;85%&apos;)).toBeInTheDocument();
     });
 
-    it('should allow dismissing predictive alerts', async () => {
+    it(&apos;should allow dismissing predictive alerts&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Predictive Alerts')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Predictive Alerts&apos;)).toBeInTheDocument();
       });
 
-      const alertsTab = screen.getByText('Predictive Alerts');
+      const alertsTab = screen.getByText(&apos;Predictive Alerts&apos;);
       await user.click(alertsTab);
 
-      const dismissButton = screen.getByRole('button', { name: /dismiss/i });
+      const dismissButton = screen.getByRole(&apos;button&apos;, { name: /dismiss/i });
       await user.click(dismissButton);
 
       // Should call dismiss function
       const { dismissPredictiveAlert } = await import(
-        '../../services/maintenanceService'
+        &apos;../../services/maintenanceService&apos;
       );
       expect(dismissPredictiveAlert).toHaveBeenCalled();
     });
   });
 
-  describe('Analytics Tab', () => {
-    it('should render analytics charts', async () => {
+  describe(&apos;Analytics Tab&apos;, () => {
+    it(&apos;should render analytics charts&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Analytics')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Analytics&apos;)).toBeInTheDocument();
       });
 
-      const analyticsTab = screen.getByText('Analytics');
+      const analyticsTab = screen.getByText(&apos;Analytics&apos;);
       await user.click(analyticsTab);
 
-      expect(screen.getByText('Maintenance Analytics')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Maintenance Analytics&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Task Actions', () => {
-    it('should allow starting a task', async () => {
+  describe(&apos;Task Actions&apos;, () => {
+    it(&apos;should allow starting a task&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       });
 
-      const startButton = screen.getByRole('button', { name: /start/i });
+      const startButton = screen.getByRole(&apos;button&apos;, { name: /start/i });
       await user.click(startButton);
 
       // Should call update function
       const { updateMaintenanceTask } = await import(
-        '../../services/maintenanceService'
+        &apos;../../services/maintenanceService&apos;
       );
       expect(updateMaintenanceTask).toHaveBeenCalled();
     });
 
-    it('should allow completing a task', async () => {
+    it(&apos;should allow completing a task&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Delivery Truck F-350')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Delivery Truck F-350&apos;)).toBeInTheDocument();
       });
 
-      const completeButton = screen.getByRole('button', { name: /complete/i });
+      const completeButton = screen.getByRole(&apos;button&apos;, { name: /complete/i });
       await user.click(completeButton);
 
       // Should call update function
       const { updateMaintenanceTask } = await import(
-        '../../services/maintenanceService'
+        &apos;../../services/maintenanceService&apos;
       );
       expect(updateMaintenanceTask).toHaveBeenCalled();
     });
 
-    it('should allow editing a task', async () => {
+    it(&apos;should allow editing a task&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       });
 
-      const editButton = screen.getByRole('button', { name: /edit/i });
+      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit/i });
       await user.click(editButton);
 
       // Should navigate to edit page
       const { useNavigation } = await import(
-        '../../contexts/NavigationContext'
+        &apos;../../contexts/NavigationContext&apos;
       );
       const navigation = useNavigation();
       expect(navigation.navigateToEditMaintenance).toHaveBeenCalled();
     });
   });
 
-  describe('Create New Task', () => {
-    it('should render create task button', async () => {
+  describe(&apos;Create New Task&apos;, () => {
+    it(&apos;should render create task button&apos;, async () => {
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /create task/i })
+          screen.getByRole(&apos;button&apos;, { name: /create task/i })
         ).toBeInTheDocument();
       });
     });
 
-    it('should navigate to create task page when button is clicked', async () => {
+    it(&apos;should navigate to create task page when button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /create task/i })
+          screen.getByRole(&apos;button&apos;, { name: /create task/i })
         ).toBeInTheDocument();
       });
 
-      const createButton = screen.getByRole('button', { name: /create task/i });
+      const createButton = screen.getByRole(&apos;button&apos;, { name: /create task/i });
       await user.click(createButton);
 
       // Should navigate to create page
       const { useNavigation } = await import(
-        '../../contexts/NavigationContext'
+        &apos;../../contexts/NavigationContext&apos;
       );
       const navigation = useNavigation();
       expect(navigation.navigateToCreateMaintenance).toHaveBeenCalled();
     });
   });
 
-  describe('Audit Log', () => {
-    it('should render audit log dialog when requested', async () => {
+  describe(&apos;Audit Log&apos;, () => {
+    it(&apos;should render audit log dialog when requested&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       });
 
-      const auditButton = screen.getByRole('button', { name: /audit log/i });
+      const auditButton = screen.getByRole(&apos;button&apos;, { name: /audit log/i });
       await user.click(auditButton);
 
-      expect(screen.getByText('Task Audit Log')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Task Audit Log&apos;)).toBeInTheDocument();
     });
 
-    it('should display audit log entries', async () => {
+    it(&apos;should display audit log entries&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       });
 
-      const auditButton = screen.getByRole('button', { name: /audit log/i });
+      const auditButton = screen.getByRole(&apos;button&apos;, { name: /audit log/i });
       await user.click(auditButton);
 
-      expect(screen.getByText('John Smith')).toBeInTheDocument();
-      expect(screen.getByText('created')).toBeInTheDocument();
-      expect(screen.getByText('Maintenance task created')).toBeInTheDocument();
+      expect(screen.getByText(&apos;John Smith&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;created&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Maintenance task created&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle data loading errors gracefully', async () => {
+  describe(&apos;Error Handling&apos;, () => {
+    it(&apos;should handle data loading errors gracefully&apos;, async () => {
       const { fetchMaintenanceTasks } = await import(
-        '../../services/maintenanceService'
+        &apos;../../services/maintenanceService&apos;
       );
       vi.mocked(fetchMaintenanceTasks).mockRejectedValueOnce(
-        new Error('Failed to load')
+        new Error(&apos;Failed to load&apos;)
       );
 
       render(<Maintenance {...defaultProps} />);
 
       // Should still render the component
       await waitFor(() => {
-        expect(screen.getByText('Maintenance Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Maintenance Management&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should handle task update errors', async () => {
+    it(&apos;should handle task update errors&apos;, async () => {
       const user = userEvent.setup();
       const { updateMaintenanceTask } = await import(
-        '../../services/maintenanceService'
+        &apos;../../services/maintenanceService&apos;
       );
       vi.mocked(updateMaintenanceTask).mockRejectedValueOnce(
-        new Error('Update failed')
+        new Error(&apos;Update failed&apos;)
       );
 
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Excavator CAT 320')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Excavator CAT 320&apos;)).toBeInTheDocument();
       });
 
-      const startButton = screen.getByRole('button', { name: /start/i });
+      const startButton = screen.getByRole(&apos;button&apos;, { name: /start/i });
       await user.click(startButton);
 
       // Should handle error gracefully
@@ -545,29 +545,29 @@ describe('Maintenance Component', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper ARIA labels and roles', async () => {
+  describe(&apos;Accessibility&apos;, () => {
+    it(&apos;should have proper ARIA labels and roles&apos;, async () => {
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Maintenance Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Maintenance Management&apos;)).toBeInTheDocument();
       });
 
       // Check tab navigation
-      const tabs = screen.getAllByRole('tab');
+      const tabs = screen.getAllByRole(&apos;tab&apos;);
       expect(tabs.length).toBe(4);
 
       // Check table headers
-      const tableHeaders = screen.getAllByRole('columnheader');
+      const tableHeaders = screen.getAllByRole(&apos;columnheader&apos;);
       expect(tableHeaders.length).toBeGreaterThan(0);
     });
 
-    it('should maintain keyboard navigation', async () => {
+    it(&apos;should maintain keyboard navigation&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Maintenance Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Maintenance Management&apos;)).toBeInTheDocument();
       });
 
       // Tab through elements
@@ -576,21 +576,21 @@ describe('Maintenance Component', () => {
     });
   });
 
-  describe('Data Refresh', () => {
-    it('should refresh data when refresh button is clicked', async () => {
+  describe(&apos;Data Refresh&apos;, () => {
+    it(&apos;should refresh data when refresh button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<Maintenance {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Maintenance Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Maintenance Management&apos;)).toBeInTheDocument();
       });
 
-      const refreshButton = screen.getByRole('button', { name: /refresh/i });
+      const refreshButton = screen.getByRole(&apos;button&apos;, { name: /refresh/i });
       await user.click(refreshButton);
 
       // Should reload data
       const { fetchMaintenanceTasks } = await import(
-        '../../services/maintenanceService'
+        &apos;../../services/maintenanceService&apos;
       );
       expect(fetchMaintenanceTasks).toHaveBeenCalledTimes(2); // Initial load + refresh
     });

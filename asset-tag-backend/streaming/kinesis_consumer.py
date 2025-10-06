@@ -20,12 +20,12 @@ logger = logging.getLogger(__name__)
 class ObservationConsumer:
     """Consumer for Bluetooth observations from Kinesis/Redpanda"""
 
-    def __init__(self, streaming_manager: StreamingManager):
+    def __init__(self, streaming_manager: StreamingManager) -> None:
         self.streaming_manager = streaming_manager
         self.stream_name = settings.kinesis_stream_name
         self.is_running = False
 
-    async def start(self):
+    async def start(self) -> None:
         """Start consuming observations"""
         self.is_running = True
         logger.info(f"Starting observation consumer for stream: {self.stream_name}")
@@ -43,12 +43,12 @@ class ObservationConsumer:
             logger.error(f"Error in observation consumer: {e}")
             raise
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop consuming observations"""
         self.is_running = False
         logger.info("Stopping observation consumer")
 
-    async def _process_message(self, message: Dict[str, Any]):
+    async def _process_message(self, message: Dict[str, Any]) -> None:
         """Process a single observation message"""
         try:
             # Parse the message
@@ -132,7 +132,7 @@ class ObservationConsumer:
             logger.error(f"Error validating observation: {e}")
             return False
 
-    async def _handle_observation(self, observation: Dict[str, Any]):
+    async def _handle_observation(self, observation: Dict[str, Any]) -> None:
         """Handle a valid observation"""
         try:
             # Import here to avoid circular imports
@@ -148,12 +148,12 @@ class ObservationConsumer:
 class MockObservationProducer:
     """Mock producer for testing - generates fake observations"""
 
-    def __init__(self, streaming_manager: StreamingManager):
+    def __init__(self, streaming_manager: StreamingManager) -> None:
         self.streaming_manager = streaming_manager
         self.stream_name = settings.kinesis_stream_name
         self.is_running = False
 
-    async def start(self):
+    async def start(self) -> None:
         """Start producing mock observations"""
         self.is_running = True
         logger.info("Starting mock observation producer")
@@ -207,13 +207,13 @@ class MockObservationProducer:
                 logger.error(f"Error producing mock observation: {e}")
                 await asyncio.sleep(1)
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop producing mock observations"""
         self.is_running = False
         logger.info("Stopping mock observation producer")
 
 
-async def start_observation_consumer():
+async def start_observation_consumer() -> None:
     """Start the observation consumer"""
     from config.streaming import streaming
 
@@ -221,7 +221,7 @@ async def start_observation_consumer():
     await consumer.start()
 
 
-async def start_mock_producer():
+async def start_mock_producer() -> None:
     """Start the mock producer for testing"""
     from config.streaming import streaming
 
@@ -231,7 +231,7 @@ async def start_mock_producer():
 
 if __name__ == "__main__":
     # For testing
-    async def main():
+    async def main() -> None:
         if settings.environment == "local":
             # Start mock producer for local testing
             await start_mock_producer()

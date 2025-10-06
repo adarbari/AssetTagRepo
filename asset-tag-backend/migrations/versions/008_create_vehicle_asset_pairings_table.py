@@ -17,7 +17,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Create vehicle_asset_pairings table"""
 
     # Create vehicle_asset_pairings table
@@ -63,7 +63,7 @@ def upgrade():
     op.create_index("idx_vehicle_asset_status", "vehicle_asset_pairings", ["status"])
 
 
-def downgrade():
+def downgrade() -> None:
     """Drop vehicle_asset_pairings table"""
 
     # Drop indexes

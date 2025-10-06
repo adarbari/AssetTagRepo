@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class LocationPredictor:
     """ML model for predicting asset locations"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.model = None
         self.scaler = StandardScaler()
         self.is_trained = False
@@ -178,7 +178,7 @@ class LocationPredictor:
             logger.error(f"Error predicting locations: {e}")
             raise
 
-    def save_model(self, filepath: str):
+    def save_model(self, filepath: str) -> None:
         """Save the trained model"""
         try:
             if not self.is_trained:
@@ -200,7 +200,7 @@ class LocationPredictor:
             logger.error(f"Error saving model: {e}")
             raise
 
-    def load_model(self, filepath: str):
+    def load_model(self, filepath: str) -> None:
         """Load a trained model"""
         try:
             model_data = joblib.load(filepath)

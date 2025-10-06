@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import type { Geofence } from '../../types';
+import React from &apos;react&apos;;
+import { useState, useRef, useEffect } from &apos;react&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import type { Geofence } from &apos;../../types&apos;;
 
 interface GeofenceMapEditorProps {
   coordinates: {
@@ -40,9 +41,9 @@ export function GeofenceMapEditor({
 
   // Load Leaflet CSS
   useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/leaflet/dist/leaflet.css';
+    const link = document.createElement(&apos;link&apos;);
+    link.rel = &apos;stylesheet&apos;;
+    link.href = &apos;https://unpkg.com/leaflet/dist/leaflet.css&apos;;
     if (!document.querySelector(`link[href=&quot;${link.href}&quot;]`)) {
       document.head.appendChild(link);
     }
@@ -62,7 +63,7 @@ export function GeofenceMapEditor({
         return;
       }
 
-      import('leaflet')
+      import(&apos;leaflet&apos;)
         .then(L => {
           if (!mapRef.current) {
             setMapLoading(false);
@@ -83,15 +84,15 @@ export function GeofenceMapEditor({
           const map = L.map(mapRef.current).setView([lat, lng], 14);
           mapInstanceRef.current = map;
 
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
+          L.tileLayer(&apos;https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&apos;, {
+            attribution: &apos;© OpenStreetMap contributors&apos;,
             maxZoom: 19,
           }).addTo(map);
 
           // Add site boundary circle
           boundaryCircleRef.current = L.circle([lat, lng], {
-            color: '#3b82f6',
-            fillColor: '#3b82f6',
+            color: &apos;#3b82f6&apos;,
+            fillColor: &apos;#3b82f6&apos;,
             fillOpacity: 0.2,
             radius: coordinates.radius * 0.3048, // Convert feet to meters
           }).addTo(map);
@@ -109,11 +110,11 @@ export function GeofenceMapEditor({
             geofenceCircleRef.current = L.circle(
               siteGeofence.center || [lat, lng],
               {
-                color: '#10b981',
-                fillColor: '#10b981',
+                color: &apos;#10b981&apos;,
+                fillColor: &apos;#10b981&apos;,
                 fillOpacity: 0.15,
                 radius: siteGeofence.radius * 0.3048, // Convert feet to meters
-                dashArray: '5, 5',
+                dashArray: &apos;5, 5&apos;,
                 weight: 2,
               }
             ).addTo(map);
@@ -124,8 +125,8 @@ export function GeofenceMapEditor({
               <div style=&quot;font-size: 11px; color: #666;&quot;>Radius: ${siteGeofence.radius} ft</div>
               <div style=&quot;font-size: 11px; color: #666;&quot;>Tolerance: ±${siteGeofence.tolerance} ft</div>
               <div style=&quot;font-size: 11px; color: #666; margin-top: 4px;&quot;>
-                ${siteGeofence.alertOnEntry ? '✓ Entry alerts' : '✗ Entry alerts'}<br/>
-                ${siteGeofence.alertOnExit ? '✓ Exit alerts' : '✗ Exit alerts'}
+                ${siteGeofence.alertOnEntry ? &apos;✓ Entry alerts&apos; : &apos;✗ Entry alerts&apos;}<br/>
+                ${siteGeofence.alertOnExit ? &apos;✓ Exit alerts&apos; : &apos;✗ Exit alerts&apos;}
               </div>
             </div>
           `);
@@ -140,14 +141,14 @@ export function GeofenceMapEditor({
             border-radius: 50%;
             border: 3px solid white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            cursor: ${isEditing ? 'move' : 'default'};
+            cursor: ${isEditing ? &apos;move&apos; : &apos;default&apos;};
           &quot;></div>
         `;
 
           centerMarkerRef.current = L.marker([lat, lng], {
             icon: L.divIcon({
               html: markerHtml,
-              className: 'custom-marker',
+              className: &apos;custom-marker&apos;,
               iconSize: [20, 20],
               iconAnchor: [10, 10],
             }),
@@ -156,7 +157,7 @@ export function GeofenceMapEditor({
 
           // Handle marker drag when in edit mode
           if (isEditing) {
-            centerMarkerRef.current.on('dragend', (e: any) => {
+            centerMarkerRef.current.on(&apos;dragend&apos;, (e: any) => {
               const position = e.target.getLatLng();
               onCoordinatesChange({
                 lat: Number(position.lat.toFixed(6)),
@@ -166,7 +167,7 @@ export function GeofenceMapEditor({
             });
 
             // Allow clicking on map to set new center
-            map.on('click', (e: any) => {
+            map.on(&apos;click&apos;, (e: any) => {
               onCoordinatesChange({
                 lat: Number(e.latlng.lat.toFixed(6)),
                 lng: Number(e.latlng.lng.toFixed(6)),
@@ -198,7 +199,7 @@ export function GeofenceMapEditor({
   useEffect(() => {
     if (!mapInstanceRef.current || !mapLoaded) return;
 
-    import('leaflet').then(_L => {
+    import(&apos;leaflet&apos;).then(_L => {
       const lat = coordinates.lat;
       const lng = coordinates.lng;
 
@@ -239,7 +240,7 @@ export function GeofenceMapEditor({
   useEffect(() => {
     if (!mapInstanceRef.current || !mapLoaded) return;
 
-    import('leaflet').then(_L => {
+    import(&apos;leaflet&apos;).then(_L => {
       // Remove existing geofence circle
       if (geofenceCircleRef.current) {
         geofenceCircleRef.current.remove();
@@ -254,11 +255,11 @@ export function GeofenceMapEditor({
         geofenceCircleRef.current = L.circle(
           siteGeofence.center || [lat, lng],
           {
-            color: '#10b981',
-            fillColor: '#10b981',
+            color: &apos;#10b981&apos;,
+            fillColor: &apos;#10b981&apos;,
             fillOpacity: 0.15,
             radius: siteGeofence.radius * 0.3048, // Convert feet to meters
-            dashArray: '5, 5',
+            dashArray: &apos;5, 5&apos;,
             weight: 2,
           }
         ).addTo(mapInstanceRef.current);
@@ -269,8 +270,8 @@ export function GeofenceMapEditor({
             <div style=&quot;font-size: 11px; color: #666;&quot;>Radius: ${siteGeofence.radius} ft</div>
             <div style=&quot;font-size: 11px; color: #666;&quot;>Tolerance: ±${siteGeofence.tolerance} ft</div>
             <div style=&quot;font-size: 11px; color: #666; margin-top: 4px;&quot;>
-              ${siteGeofence.alertOnEntry ? '✓ Entry alerts' : '✗ Entry alerts'}<br/>
-              ${siteGeofence.alertOnExit ? '✓ Exit alerts' : '✗ Exit alerts'}
+              ${siteGeofence.alertOnEntry ? &apos;✓ Entry alerts&apos; : &apos;✗ Entry alerts&apos;}<br/>
+              ${siteGeofence.alertOnExit ? &apos;✓ Exit alerts&apos; : &apos;✗ Exit alerts&apos;}
             </div>
           </div>
         `);
@@ -281,8 +282,8 @@ export function GeofenceMapEditor({
   return (
     <>
       {isEditing && (
-        <div className='p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg'>
-          <p className='text-sm'>
+        <div className=&apos;p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg&apos;>
+          <p className=&apos;text-sm&apos;>
             <strong>Edit Mode:</strong> Click anywhere on the map to set a new
             center point, or drag the center marker. Adjust the radius and
             tolerance using the controls below.
@@ -290,19 +291,19 @@ export function GeofenceMapEditor({
         </div>
       )}
 
-      <div className='grid gap-4 md:grid-cols-3'>
+      <div className=&apos;grid gap-4 md:grid-cols-3&apos;>
         <div>
-          <p className='text-sm text-muted-foreground'>Coordinates</p>
+          <p className=&apos;text-sm text-muted-foreground&apos;>Coordinates</p>
           {isEditing ? (
-            <div className='space-y-2 mt-1'>
+            <div className=&apos;space-y-2 mt-1&apos;>
               <div>
-                <Label htmlFor='lat' className='text-xs'>
+                <Label htmlFor=&apos;lat&apos; className=&apos;text-xs&apos;>
                   Latitude
                 </Label>
                 <Input
-                  id='lat'
-                  type='number'
-                  step='0.000001'
+                  id=&apos;lat&apos;
+                  type=&apos;number&apos;
+                  step=&apos;0.000001&apos;
                   value={coordinates.lat}
                   onChange={e =>
                     onCoordinatesChange({
@@ -311,17 +312,17 @@ export function GeofenceMapEditor({
                       radius: coordinates.radius,
                     })
                   }
-                  className='h-8 text-sm'
+                  className=&apos;h-8 text-sm&apos;
                 />
               </div>
               <div>
-                <Label htmlFor='lng' className='text-xs'>
+                <Label htmlFor=&apos;lng&apos; className=&apos;text-xs&apos;>
                   Longitude
                 </Label>
                 <Input
-                  id='lng'
-                  type='number'
-                  step='0.000001'
+                  id=&apos;lng&apos;
+                  type=&apos;number&apos;
+                  step=&apos;0.000001&apos;
                   value={coordinates.lng}
                   onChange={e =>
                     onCoordinatesChange({
@@ -330,7 +331,7 @@ export function GeofenceMapEditor({
                       radius: coordinates.radius,
                     })
                   }
-                  className='h-8 text-sm'
+                  className=&apos;h-8 text-sm&apos;
                 />
               </div>
             </div>
@@ -341,11 +342,11 @@ export function GeofenceMapEditor({
           )}
         </div>
         <div>
-          <p className='text-sm text-muted-foreground'>Radius (feet)</p>
+          <p className=&apos;text-sm text-muted-foreground&apos;>Radius (feet)</p>
           {isEditing ? (
-            <div className='space-y-2 mt-1'>
+            <div className=&apos;space-y-2 mt-1&apos;>
               <Input
-                type='number'
+                type=&apos;number&apos;
                 value={coordinates.radius}
                 onChange={e =>
                   onCoordinatesChange({
@@ -354,13 +355,13 @@ export function GeofenceMapEditor({
                     radius: parseInt(e.target.value) || 0,
                   })
                 }
-                className='h-8'
+                className=&apos;h-8&apos;
               />
               <input
-                type='range'
-                min='50'
-                max='2000'
-                step='10'
+                type=&apos;range&apos;
+                min=&apos;50&apos;
+                max=&apos;2000&apos;
+                step=&apos;10&apos;
                 value={coordinates.radius}
                 onChange={e =>
                   onCoordinatesChange({
@@ -369,7 +370,7 @@ export function GeofenceMapEditor({
                     radius: parseInt(e.target.value),
                   })
                 }
-                className='w-full'
+                className=&apos;w-full&apos;
               />
             </div>
           ) : (
@@ -377,23 +378,23 @@ export function GeofenceMapEditor({
           )}
         </div>
         <div>
-          <p className='text-sm text-muted-foreground'>Tolerance (feet)</p>
+          <p className=&apos;text-sm text-muted-foreground&apos;>Tolerance (feet)</p>
           {isEditing ? (
-            <div className='space-y-2 mt-1'>
+            <div className=&apos;space-y-2 mt-1&apos;>
               <Input
-                type='number'
+                type=&apos;number&apos;
                 value={tolerance}
                 onChange={e => onToleranceChange(parseInt(e.target.value) || 0)}
-                className='h-8'
+                className=&apos;h-8&apos;
               />
               <input
-                type='range'
-                min='10'
-                max='200'
-                step='5'
+                type=&apos;range&apos;
+                min=&apos;10&apos;
+                max=&apos;200&apos;
+                step=&apos;5&apos;
                 value={tolerance}
                 onChange={e => onToleranceChange(parseInt(e.target.value))}
-                className='w-full'
+                className=&apos;w-full&apos;
               />
             </div>
           ) : (
@@ -402,27 +403,27 @@ export function GeofenceMapEditor({
         </div>
       </div>
 
-      <div className='space-y-2'>
+      <div className=&apos;space-y-2&apos;>
         <div
           ref={mapRef}
-          className='w-full h-96 rounded-lg overflow-hidden bg-muted relative'
+          className=&apos;w-full h-96 rounded-lg overflow-hidden bg-muted relative&apos;
         >
           {mapLoading && (
-            <div className='absolute inset-0 flex items-center justify-center bg-muted z-10'>
-              <div className='text-muted-foreground'>Loading map...</div>
+            <div className=&apos;absolute inset-0 flex items-center justify-center bg-muted z-10&apos;>
+              <div className=&apos;text-muted-foreground&apos;>Loading map...</div>
             </div>
           )}
         </div>
 
         {/* Map Legend */}
-        <div className='flex items-center gap-6 text-xs text-muted-foreground bg-muted/50 p-2 rounded'>
-          <div className='flex items-center gap-2'>
-            <div className='w-4 h-4 rounded-full bg-blue-500/20 border-2 border-blue-500'></div>
+        <div className=&apos;flex items-center gap-6 text-xs text-muted-foreground bg-muted/50 p-2 rounded&apos;>
+          <div className=&apos;flex items-center gap-2&apos;>
+            <div className=&apos;w-4 h-4 rounded-full bg-blue-500/20 border-2 border-blue-500&apos;></div>
             <span>Site Boundary</span>
           </div>
           {siteGeofence && (
-            <div className='flex items-center gap-2'>
-              <div className='w-4 h-4 rounded-full bg-green-500/15 border-2 border-green-500 border-dashed'></div>
+            <div className=&apos;flex items-center gap-2&apos;>
+              <div className=&apos;w-4 h-4 rounded-full bg-green-500/15 border-2 border-green-500 border-dashed&apos;></div>
               <span>Geofence</span>
             </div>
           )}

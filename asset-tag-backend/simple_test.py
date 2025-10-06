@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 
-def test_file_structure():
+def test_file_structure() -> None:
     """Test that all required files exist"""
     print("🔍 Testing file structure...")
 
@@ -54,7 +54,7 @@ def test_file_structure():
         return True
 
 
-def test_schemas_only():
+def test_schemas_only() -> None:
     """Test Pydantic schemas without database dependencies"""
     print("\n🔍 Testing Pydantic schemas...")
 
@@ -86,7 +86,7 @@ def test_schemas_only():
         return False
 
 
-def test_api_structure():
+def test_api_structure() -> None:
     """Test API file structure without importing"""
     print("\n🔍 Testing API file structure...")
 
@@ -121,7 +121,7 @@ def test_api_structure():
         return True
 
 
-def test_requirements():
+def test_requirements() -> None:
     """Test that requirements.txt is properly formatted"""
     print("\n🔍 Testing requirements.txt...")
 
@@ -159,7 +159,7 @@ def test_requirements():
         return False
 
 
-def test_migrations():
+def test_migrations() -> None:
     """Test that migration files exist"""
     print("\n🔍 Testing migration files...")
 
@@ -185,7 +185,7 @@ def test_migrations():
         return True
 
 
-def test_docker_config():
+def test_docker_config() -> None:
     """Test Docker configuration files"""
     print("\n🔍 Testing Docker configuration...")
 
@@ -206,7 +206,7 @@ def test_docker_config():
         return True
 
 
-def main():
+def main() -> None:
     """Run all simple validation tests"""
     print("🚀 Asset Tag Backend - Simple Validation")
     print("=" * 50)

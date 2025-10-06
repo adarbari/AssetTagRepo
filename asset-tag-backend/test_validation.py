@@ -9,7 +9,7 @@ import traceback
 from pathlib import Path
 
 
-def test_imports():
+def test_imports() -> None:
     """Test that all modules can be imported"""
     print("🔍 Testing module imports...")
 
@@ -61,7 +61,7 @@ def test_imports():
         return False
 
 
-def test_api_routes():
+def test_api_routes() -> None:
     """Test that API routes are properly configured"""
     print("\n🔍 Testing API routes...")
 
@@ -121,7 +121,7 @@ def test_api_routes():
         return False
 
 
-def test_schemas():
+def test_schemas() -> None:
     """Test that Pydantic schemas are properly defined"""
     print("\n🔍 Testing Pydantic schemas...")
 
@@ -129,7 +129,8 @@ def test_schemas():
         # Test key schemas
         from modules.assets.schemas import AssetCreate, AssetResponse
         from modules.geofences.schemas import GeofenceCreate, GeofenceResponse
-        from modules.observations.schemas import ObservationCreate, ObservationResponse
+        from modules.observations.schemas import (ObservationCreate,
+                                                  ObservationResponse)
         from modules.sites.schemas import SiteCreate, SiteResponse
 
         print("✅ Core schemas imported successfully")
@@ -157,7 +158,7 @@ def test_schemas():
         return False
 
 
-def test_models():
+def test_models() -> None:
     """Test that SQLAlchemy models are properly defined"""
     print("\n🔍 Testing SQLAlchemy models...")
 
@@ -184,7 +185,7 @@ def test_models():
         return False
 
 
-def test_file_structure():
+def test_file_structure() -> None:
     """Test that all required files exist"""
     print("\n🔍 Testing file structure...")
 
@@ -230,7 +231,7 @@ def test_file_structure():
         return True
 
 
-def main():
+def main() -> None:
     """Run all validation tests"""
     print("🚀 Asset Tag Backend Validation")
     print("=" * 50)

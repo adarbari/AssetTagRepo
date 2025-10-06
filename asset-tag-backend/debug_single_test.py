@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tests.conftest import client, sample_alert_data
 
 
-def test_debug_alert_creation():
+def test_debug_alert_creation() -> None:
     """Debug test to see the actual error response"""
     client_fixture = client()
     sample_data = sample_alert_data()
@@ -30,7 +30,7 @@ def test_debug_alert_creation():
             print(f"Could not parse error response as JSON: {e}")
 
     # Don't assert anything, just print the response
-    assert True
+    # # assert True
 
 
 if __name__ == "__main__":

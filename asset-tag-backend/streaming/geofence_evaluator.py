@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 class GeofenceEvaluator:
     """Geofence evaluation service for detecting entry/exit events"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache = None
 
-    async def evaluate_location(self, asset_id: str, location: EstimatedLocation):
+    async def evaluate_location(self, asset_id: str, location: EstimatedLocation) -> None:
         """Evaluate location against all relevant geofences"""
         try:
             if not self.cache:
@@ -176,7 +176,7 @@ class GeofenceEvaluator:
         except Exception as e:
             logger.error(f"Error handling geofence exit: {e}")
 
-    async def _store_geofence_event(self, event_data: Dict[str, Any]):
+    async def _store_geofence_event(self, event_data: Dict[str, Any]) -> None:
         """Store geofence event in database"""
         try:
             # Import here to avoid circular imports

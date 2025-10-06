@@ -54,11 +54,11 @@ export interface AlertRuleConfig {
   autoEscalate: boolean;
   escalationTime?: number; // minutes
   escalationPolicy?: string; // ID of escalation policy
-  fields: Record<string, any>; // Dynamic field values based on AlertConfigField keys
+  fields: Record<string, unknown>; // Dynamic field values based on AlertConfigField keys
   suppressionRules?: {
     enabled: boolean;
     duration?: number; // minutes to suppress duplicate alerts
-    conditions?: Record<string, any>; // Additional suppression conditions
+    conditions?: Record<string, unknown>; // Additional suppression conditions
   };
 
   createdAt?: string;

@@ -54,7 +54,7 @@ class EstimatedLocation:
 class LocationEstimator:
     """Location estimation service using various algorithms"""
 
-    def __init__(self, cache: CacheManager):
+    def __init__(self, cache: CacheManager) -> None:
         self.cache = cache
         self.path_loss_exponent = settings.rssi_path_loss_exponent
         self.reference_distance = settings.rssi_reference_distance
@@ -383,7 +383,7 @@ class LocationEstimator:
 
         return bearing
 
-    async def _cache_location(self, asset_id: str, location: EstimatedLocation):
+    async def _cache_location(self, asset_id: str, location: EstimatedLocation) -> None:
         """Cache the estimated location"""
         cache_key = f"last_location:{asset_id}"
         cache_data = {

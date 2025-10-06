@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class ConnectionManager:
     """Manages WebSocket connections and message broadcasting"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Active connections by connection type
         self.active_connections: Dict[str, Set[WebSocket]] = {
             "locations": set(),
@@ -66,7 +66,7 @@ class ConnectionManager:
             websocket,
         )
 
-    def disconnect(self, websocket: WebSocket):
+    def disconnect(self, websocket: WebSocket) -> None:
         """Remove a WebSocket connection from all groups"""
         connection_type = None
 
@@ -100,7 +100,7 @@ class ConnectionManager:
             logger.error(f"Error sending personal message: {e}")
             self.disconnect(websocket)
 
-    async def broadcast_to_type(self, message: Dict[str, Any], connection_type: str):
+    async def broadcast_to_type(self, message: Dict[str, Any], connection_type: str) -> None:
         """Broadcast a message to all connections of a specific type"""
         if connection_type not in self.active_connections:
             return
@@ -124,7 +124,7 @@ class ConnectionManager:
         for websocket in disconnected:
             self.disconnect(websocket)
 
-    async def broadcast_to_all(self, message: Dict[str, Any]):
+    async def broadcast_to_all(self, message: Dict[str, Any]) -> None:
         """Broadcast a message to all active connections"""
         for connection_type in self.active_connections:
             await self.broadcast_to_type(message, connection_type)
@@ -190,7 +190,7 @@ class ConnectionManager:
 
         return stats
 
-    async def handle_client_message(self, websocket: WebSocket, message: str):
+    async def handle_client_message(self, websocket: WebSocket, message: str) -> None:
         """Handle incoming messages from clients"""
         try:
             data = json.loads(message)

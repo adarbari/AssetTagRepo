@@ -10,13 +10,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 class TestAssetsAPI:
     """Test cases for Assets API endpoints"""
 
-    def test_get_assets_empty(self, client: TestClient):
+    def test_get_assets_empty(self, client: TestClient) -> None:
         """Test getting assets when none exist"""
         response = client.get("/api/v1/assets")
         assert response.status_code == 200
         assert response.json() == []
 
-    def test_create_asset(self, client: TestClient, sample_asset_data: dict):
+    def test_create_asset(self, client: TestClient, sample_asset_data: dict) -> None:
         """Test creating a new asset"""
         response = client.post("/api/v1/assets", json=sample_asset_data)
         assert response.status_code == 201
@@ -27,7 +27,7 @@ class TestAssetsAPI:
         assert "id" in data
         assert "created_at" in data
 
-    def test_get_asset_by_id(self, client: TestClient, sample_asset_data: dict):
+    def test_get_asset_by_id(self, client: TestClient, sample_asset_data: dict) -> None:
         """Test getting a specific asset by ID"""
         # Create asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)
@@ -41,13 +41,13 @@ class TestAssetsAPI:
         assert data["id"] == asset_id
         assert data["name"] == sample_asset_data["name"]
 
-    def test_get_asset_not_found(self, client: TestClient):
+    def test_get_asset_not_found(self, client: TestClient) -> None:
         """Test getting a non-existent asset"""
         fake_id = "00000000-0000-0000-0000-000000000000"
         response = client.get(f"/api/v1/assets/{fake_id}")
         assert response.status_code == 404
 
-    def test_update_asset(self, client: TestClient, sample_asset_data: dict):
+    def test_update_asset(self, client: TestClient, sample_asset_data: dict) -> None:
         """Test updating an asset"""
         # Create asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)
@@ -62,7 +62,7 @@ class TestAssetsAPI:
         assert data["name"] == "Updated Asset Name"
         assert data["battery_level"] == 95
 
-    def test_delete_asset(self, client: TestClient, sample_asset_data: dict):
+    def test_delete_asset(self, client: TestClient, sample_asset_data: dict) -> None:
         """Test deleting an asset"""
         # Create asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)
@@ -77,7 +77,7 @@ class TestAssetsAPI:
         get_response = client.get(f"/api/v1/assets/{asset_id}")
         assert get_response.status_code == 404
 
-    def test_get_assets_with_filters(self, client: TestClient, sample_asset_data: dict):
+    def test_get_assets_with_filters(self, client: TestClient, sample_asset_data: dict) -> None:
         """Test getting assets with filters"""
         # Create multiple assets with different types
         asset_data_1 = sample_asset_data.copy()
@@ -116,7 +116,7 @@ class TestAssetsAPI:
         assert len(data) == 2
         assert all(asset["status"] == "active" for asset in data)
 
-    def test_get_assets_pagination(self, client: TestClient, sample_asset_data: dict):
+    def test_get_assets_pagination(self, client: TestClient, sample_asset_data: dict) -> None:
         """Test getting assets with pagination"""
         # Create multiple assets
         for i in range(5):
@@ -168,7 +168,7 @@ class TestAssetsAPI:
         data = response.json()
         assert isinstance(data, list)
 
-    def test_create_asset_validation_error(self, client: TestClient):
+    def test_create_asset_validation_error(self, client: TestClient) -> None:
         """Test creating asset with invalid data"""
         invalid_data = {
             "name": "",

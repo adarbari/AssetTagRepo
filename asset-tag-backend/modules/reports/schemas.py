@@ -55,7 +55,7 @@ class ReportGenerationRequest(BaseModel):
     format: ReportFormat = Field(default=ReportFormat.CSV, description="Output format")
 
     @validator("template_id")
-    def validate_template_id(cls, v):
+    def validate_template_id(cls, v) -> None:
         # This would be validated against available templates
         return v
 
@@ -134,7 +134,7 @@ class ExportRequest(BaseModel):
     fields: Optional[List[str]] = Field(None, description="Specific fields to export")
 
     @validator("format")
-    def validate_format(cls, v):
+    def validate_format(cls, v) -> None:
         allowed_formats = ["csv", "json", "excel"]
         if v not in allowed_formats:
             raise ValueError(f'Format must be one of: {", ".join(allowed_formats)}')

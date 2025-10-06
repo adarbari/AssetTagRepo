@@ -12,15 +12,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.compliance.models import Compliance, ComplianceCheck
-from modules.compliance.schemas import (
-    ComplianceCheckCreate,
-    ComplianceCheckResponse,
-    ComplianceCreate,
-    ComplianceResponse,
-    ComplianceStats,
-    ComplianceUpdate,
-    ComplianceWithChecks,
-)
+from modules.compliance.schemas import (ComplianceCheckCreate,
+                                        ComplianceCheckResponse,
+                                        ComplianceCreate, ComplianceResponse,
+                                        ComplianceStats, ComplianceUpdate,
+                                        ComplianceWithChecks)
 
 router = APIRouter()
 

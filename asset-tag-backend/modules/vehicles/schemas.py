@@ -40,7 +40,7 @@ class VehicleBase(BaseModel):
     )
 
     @validator("status")
-    def validate_status(cls, v):
+    def validate_status(cls, v) -> None:
         if v is not None:
             allowed_statuses = ["active", "inactive", "maintenance", "out_of_service"]
             if v not in allowed_statuses:
@@ -50,7 +50,7 @@ class VehicleBase(BaseModel):
         return v
 
     @validator("vehicle_type")
-    def validate_vehicle_type(cls, v):
+    def validate_vehicle_type(cls, v) -> None:
         allowed_types = [
             "truck",
             "van",
@@ -87,7 +87,7 @@ class VehicleUpdate(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
 
     @validator("status")
-    def validate_status(cls, v):
+    def validate_status(cls, v) -> None:
         if v is not None:
             allowed_statuses = ["active", "inactive", "maintenance", "out_of_service"]
             if v not in allowed_statuses:

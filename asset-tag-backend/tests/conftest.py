@@ -26,11 +26,9 @@ setup_uuid_compatibility()
 
 from config.database import Base, get_db
 from config.settings import settings
-
 # Import test database configuration from separate module
 from config.test_database import TestSessionLocal, test_engine
 from main import app
-
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
 
@@ -44,7 +42,7 @@ def event_loop() -> Generator:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def mock_external_services():
+def mock_external_services() -> None:
     """Mock all external services for testing"""
     import config.cache
     import config.elasticsearch
@@ -53,7 +51,7 @@ def mock_external_services():
     import streaming.stream_processor_coordinator
 
     # Mock all async startup/shutdown functions
-    async def mock_async_noop(*args, **kwargs):
+    async def mock_async_noop(*args, **kwargs) -> None:
         pass
 
     # Mock streaming services
@@ -62,7 +60,7 @@ def mock_external_services():
 
     # Mock Elasticsearch
     class MockESManager:
-        async def close(self):
+        async def close(self) -> None:
             pass
 
     config.elasticsearch.get_elasticsearch_manager = lambda: MockESManager()
@@ -97,11 +95,11 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 @pytest.fixture(scope="function")
-def client():
+def client() -> None:
     """Create a test client with database override."""
 
     # Clean up database before each test
-    async def cleanup_db():
+    async def cleanup_db() -> None:
         async with test_engine.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)
         async with test_engine.begin() as conn:
@@ -114,11 +112,12 @@ def client():
 
     # Override database dependency
     from config.test_database import get_test_db
+
     app.dependency_overrides[get_db] = get_test_db
 
     with TestClient(app) as tc:
         yield tc
-    
+
     # Clean up override
     app.dependency_overrides.clear()
 
@@ -130,7 +129,7 @@ def sync_client() -> TestClient:
 
 
 @pytest.fixture
-def sample_asset_data():
+def sample_asset_data() -> None:
     """Sample asset data for testing."""
     from datetime import datetime
 
@@ -148,7 +147,7 @@ def sample_asset_data():
 
 
 @pytest.fixture
-def sample_site_data():
+def sample_site_data() -> None:
     """Sample site data for testing."""
     return {
         "name": "Test Construction Site",
@@ -162,7 +161,7 @@ def sample_site_data():
 
 
 @pytest.fixture
-def sample_observation_data():
+def sample_observation_data() -> None:
     """Sample observation data for testing."""
     from datetime import datetime
 
@@ -178,7 +177,7 @@ def sample_observation_data():
 
 
 @pytest.fixture
-def sample_alert_data():
+def sample_alert_data() -> None:
     """Sample alert data for testing."""
     from datetime import datetime
 
@@ -194,7 +193,7 @@ def sample_alert_data():
 
 
 @pytest.fixture
-def sample_job_data():
+def sample_job_data() -> None:
     """Sample job data for testing."""
     from datetime import datetime
 
@@ -212,7 +211,7 @@ def sample_job_data():
 
 
 @pytest.fixture
-def sample_maintenance_data():
+def sample_maintenance_data() -> None:
     """Sample maintenance data for testing."""
     from datetime import datetime
 
@@ -228,7 +227,7 @@ def sample_maintenance_data():
 
 
 @pytest.fixture
-def sample_geofence_data():
+def sample_geofence_data() -> None:
     """Sample geofence data for testing."""
     return {
         "name": "Test Geofence",
@@ -244,7 +243,7 @@ def sample_geofence_data():
 
 
 @pytest.fixture
-def sample_checkin_data():
+def sample_checkin_data() -> None:
     """Sample checkin data for testing."""
     from datetime import datetime, timedelta
 
@@ -263,7 +262,7 @@ def sample_checkin_data():
 
 
 @pytest.fixture
-def sample_vehicle_data():
+def sample_vehicle_data() -> None:
     """Sample vehicle data for testing."""
     return {
         "name": "Test Vehicle",
@@ -279,7 +278,7 @@ def sample_vehicle_data():
 
 
 @pytest.fixture
-def sample_personnel_data():
+def sample_personnel_data() -> None:
     """Sample personnel data for testing."""
     return {
         "name": "Test Personnel",

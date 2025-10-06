@@ -5,9 +5,9 @@
  * Used for forms and actions that are accessed from detail pages
  */
 
-import React from 'react';
-import { ArrowLeft, LucideIcon } from 'lucide-react';
-import { Button } from '../ui/button';
+import React from &apos;react&apos;;
+import { ArrowLeft, LucideIcon } from &apos;lucide-react&apos;;
+import { Button } from &apos;../ui/button&apos;;
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,8 +15,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '../ui/breadcrumb';
-import { PageHeader } from './PageHeader';
+} from &apos;../ui/breadcrumb&apos;;
+import { PageHeader } from &apos;./PageHeader&apos;;
 
 interface PageHeaderWithBreadcrumbsProps {
   title: string;
@@ -24,7 +24,7 @@ interface PageHeaderWithBreadcrumbsProps {
   icon?: LucideIcon;
   badge?: {
     label: string;
-    variant?: 'default' | 'secondary' | 'outline' | 'destructive';
+    variant?: &apos;default&apos; | &apos;secondary&apos; | &apos;outline&apos; | &apos;destructive&apos;;
   };
   actions?: React.ReactNode;
   onBack: () => void;
@@ -43,15 +43,15 @@ export function PageHeaderWithBreadcrumbs({
   breadcrumbCurrent,
 }: PageHeaderWithBreadcrumbsProps) {
   return (
-    <div className='border-b bg-background px-8 py-4'>
-      <div className='flex items-center gap-4 mb-4'>
-        <Button variant='ghost' size='icon' onClick={onBack}>
-          <ArrowLeft className='h-5 w-5' />
+    <div className=&apos;border-b bg-background px-8 py-4&apos;>
+      <div className=&apos;flex items-center gap-4 mb-4&apos;>
+        <Button variant=&apos;ghost&apos; size=&apos;icon&apos; onClick={onBack}>
+          <ArrowLeft className=&apos;h-5 w-5&apos; />
         </Button>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink onClick={onBack} className='cursor-pointer'>
+              <BreadcrumbLink onClick={onBack} className=&apos;cursor-pointer&apos;>
                 {breadcrumbParent}
               </BreadcrumbLink>
             </BreadcrumbItem>

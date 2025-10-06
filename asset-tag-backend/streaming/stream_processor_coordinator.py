@@ -7,21 +7,15 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from streaming.processors.anomaly_processor import (
-    get_anomaly_processor,
-    start_anomaly_processor,
-    stop_anomaly_processor,
-)
-from streaming.processors.geofence_processor import (
-    get_geofence_processor,
-    start_geofence_processor,
-    stop_geofence_processor,
-)
-from streaming.processors.location_processor import (
-    get_location_processor,
-    start_location_processor,
-    stop_location_processor,
-)
+from streaming.processors.anomaly_processor import (get_anomaly_processor,
+                                                    start_anomaly_processor,
+                                                    stop_anomaly_processor)
+from streaming.processors.geofence_processor import (get_geofence_processor,
+                                                     start_geofence_processor,
+                                                     stop_geofence_processor)
+from streaming.processors.location_processor import (get_location_processor,
+                                                     start_location_processor,
+                                                     stop_location_processor)
 
 logger = logging.getLogger(__name__)
 
@@ -29,12 +23,12 @@ logger = logging.getLogger(__name__)
 class StreamProcessorCoordinator:
     """Coordinates all streaming processors"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.processors = {}
         self.running = False
         self.startup_tasks = []
 
-    async def start_all_processors(self):
+    async def start_all_processors(self) -> None:
         """Start all streaming processors"""
         if self.running:
             logger.warning("Stream processors already running")
@@ -68,7 +62,7 @@ class StreamProcessorCoordinator:
             await self.stop_all_processors()
             raise
 
-    async def stop_all_processors(self):
+    async def stop_all_processors(self) -> None:
         """Stop all streaming processors"""
         if not self.running:
             return
@@ -97,7 +91,7 @@ class StreamProcessorCoordinator:
         except Exception as e:
             logger.error(f"Error stopping stream processors: {e}")
 
-    async def process_observation(self, observation_data: Dict[str, Any]):
+    async def process_observation(self, observation_data: Dict[str, Any]) -> None:
         """Process observation through all relevant processors"""
         try:
             # Process through location processor
@@ -107,7 +101,7 @@ class StreamProcessorCoordinator:
         except Exception as e:
             logger.error(f"Error processing observation: {e}")
 
-    async def process_location_update(self, location_data: Dict[str, Any]):
+    async def process_location_update(self, location_data: Dict[str, Any]) -> None:
         """Process location update through downstream processors"""
         try:
             # Process through anomaly processor
@@ -259,11 +253,11 @@ async def get_stream_coordinator() -> StreamProcessorCoordinator:
     return stream_coordinator
 
 
-async def start_all_stream_processors():
+async def start_all_stream_processors() -> None:
     """Start all stream processors"""
     await stream_coordinator.start_all_processors()
 
 
-async def stop_all_stream_processors():
+async def stop_all_stream_processors() -> None:
     """Stop all stream processors"""
     await stream_coordinator.stop_all_processors()

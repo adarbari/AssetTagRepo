@@ -16,7 +16,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Create materialized views for analytics"""
 
     # Daily utilization rollup
@@ -183,7 +183,7 @@ def upgrade():
     )
 
 
-def downgrade():
+def downgrade() -> None:
     """Drop materialized views"""
 
     # Drop refresh function

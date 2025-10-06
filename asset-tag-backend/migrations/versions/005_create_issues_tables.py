@@ -17,7 +17,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Create issues, issue_comments, and issue_attachments tables"""
 
     # Create issues table
@@ -142,7 +142,7 @@ def upgrade():
     op.create_index("idx_issue_attachment_type", "issue_attachments", ["file_type"])
 
 
-def downgrade():
+def downgrade() -> None:
     """Drop issues, issue_comments, and issue_attachments tables"""
 
     # Drop indexes

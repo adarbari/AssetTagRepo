@@ -32,7 +32,7 @@ class IssueBase(BaseModel):
     )
 
     @validator("severity")
-    def validate_severity(cls, v):
+    def validate_severity(cls, v) -> None:
         allowed_severities = ["low", "medium", "high", "critical"]
         if v not in allowed_severities:
             raise ValueError(
@@ -41,7 +41,7 @@ class IssueBase(BaseModel):
         return v
 
     @validator("issue_type")
-    def validate_issue_type(cls, v):
+    def validate_issue_type(cls, v) -> None:
         allowed_types = [
             "mechanical",
             "electrical",
@@ -77,7 +77,7 @@ class IssueUpdate(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
 
     @validator("severity")
-    def validate_severity(cls, v):
+    def validate_severity(cls, v) -> None:
         if v is not None:
             allowed_severities = ["low", "medium", "high", "critical"]
             if v not in allowed_severities:
@@ -87,7 +87,7 @@ class IssueUpdate(BaseModel):
         return v
 
     @validator("status")
-    def validate_status(cls, v):
+    def validate_status(cls, v) -> None:
         if v is not None:
             allowed_statuses = [
                 "open",
@@ -111,7 +111,7 @@ class IssueStatusUpdate(BaseModel):
     notes: Optional[str] = Field(None, description="Status change notes")
 
     @validator("status")
-    def validate_status(cls, v):
+    def validate_status(cls, v) -> None:
         allowed_statuses = [
             "open",
             "acknowledged",

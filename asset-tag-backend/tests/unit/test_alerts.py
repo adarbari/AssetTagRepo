@@ -17,7 +17,7 @@ class TestAlertModel:
     """Test Alert model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_alert(self, db_session, sample_alert_data):
+    async def test_create_alert(self, db_session, sample_alert_data) -> None:
         """Test creating an alert"""
         from datetime import datetime
 
@@ -44,7 +44,7 @@ class TestAlertModel:
         assert alert.status == "active"  # Default status
 
     @pytest.mark.asyncio
-    async def test_alert_status_transitions(self, db_session, sample_alert_data):
+    async def test_alert_status_transitions(self, db_session, sample_alert_data) -> None:
         """Test alert status transitions"""
         from datetime import datetime
 
@@ -80,7 +80,7 @@ class TestAlertModel:
         assert alert.resolved_at is not None
 
     @pytest.mark.asyncio
-    async def test_alert_metadata(self, db_session, sample_alert_data):
+    async def test_alert_metadata(self, db_session, sample_alert_data) -> None:
         """Test alert metadata handling"""
         from datetime import datetime
 
@@ -108,7 +108,7 @@ class TestAlertModel:
 class TestAlertSchemas:
     """Test Alert Pydantic schemas"""
 
-    def test_alert_create_schema(self, sample_alert_data):
+    def test_alert_create_schema(self, sample_alert_data) -> None:
         """Test AlertCreate schema validation"""
         alert_create = AlertCreate(**sample_alert_data)
 
@@ -118,7 +118,7 @@ class TestAlertSchemas:
         assert alert_create.message == sample_alert_data["message"]
         assert alert_create.status == "active"  # Default status
 
-    def test_alert_create_validation(self):
+    def test_alert_create_validation(self) -> None:
         """Test AlertCreate validation rules"""
         # Test required fields
         with pytest.raises(ValueError):
@@ -136,7 +136,7 @@ class TestAlertSchemas:
         alert_create = AlertCreate(**valid_data)
         assert alert_create.alert_type == "battery_low"
 
-    def test_alert_update_schema(self):
+    def test_alert_update_schema(self) -> None:
         """Test AlertUpdate schema"""
         update_data = {"status": "acknowledged", "resolution_notes": "Issue resolved"}
 
@@ -144,7 +144,7 @@ class TestAlertSchemas:
         assert alert_update.status == "acknowledged"
         assert alert_update.resolution_notes == "Issue resolved"
 
-    def test_alert_severity_validation(self):
+    def test_alert_severity_validation(self) -> None:
         """Test alert severity validation"""
         valid_severities = ["low", "medium", "high", "critical"]
 
@@ -164,7 +164,7 @@ class TestAlertSchemas:
 class TestAlertRulesEngine:
     """Test AlertRulesEngine functionality"""
 
-    def test_engine_initialization(self):
+    def test_engine_initialization(self) -> None:
         """Test rules engine initialization"""
         engine = AlertRulesEngine()
 
@@ -175,7 +175,7 @@ class TestAlertRulesEngine:
         assert "unauthorized_zone" in engine.rules
 
     @pytest.mark.asyncio
-    async def test_battery_low_rule(self):
+    async def test_battery_low_rule(self) -> None:
         """Test battery low rule evaluation"""
         engine = AlertRulesEngine()
 
@@ -193,7 +193,7 @@ class TestAlertRulesEngine:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_battery_critical_rule(self):
+    async def test_battery_critical_rule(self) -> None:
         """Test battery critical rule evaluation"""
         engine = AlertRulesEngine()
 
@@ -210,7 +210,7 @@ class TestAlertRulesEngine:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_unauthorized_zone_rule(self):
+    async def test_unauthorized_zone_rule(self) -> None:
         """Test unauthorized zone rule evaluation"""
         engine = AlertRulesEngine()
 
@@ -232,7 +232,7 @@ class TestAlertRulesEngine:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_geofence_exit_rule(self):
+    async def test_geofence_exit_rule(self) -> None:
         """Test geofence exit rule evaluation"""
         engine = AlertRulesEngine()
 
@@ -254,7 +254,7 @@ class TestAlertRulesEngine:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_theft_detection_rule(self):
+    async def test_theft_detection_rule(self) -> None:
         """Test theft detection rule evaluation"""
         engine = AlertRulesEngine()
 
@@ -277,7 +277,7 @@ class TestAlertRulesEngine:
             result = await engine._check_theft_detection(rule, asset_data)
             assert result is False
 
-    def test_rule_management(self):
+    def test_rule_management(self) -> None:
         """Test rule management functionality"""
         engine = AlertRulesEngine()
 
@@ -304,7 +304,7 @@ class TestAlertRulesEngine:
         assert "test_rule" not in engine.rules
         assert engine.get_rule("test_rule") is None
 
-    def test_alert_message_generation(self):
+    def test_alert_message_generation(self) -> None:
         """Test alert message generation"""
         engine = AlertRulesEngine()
 
@@ -317,7 +317,7 @@ class TestAlertRulesEngine:
         assert "15%" in message
         assert "battery" in message.lower()
 
-    def test_suggested_action_generation(self):
+    def test_suggested_action_generation(self) -> None:
         """Test suggested action generation"""
         engine = AlertRulesEngine()
 

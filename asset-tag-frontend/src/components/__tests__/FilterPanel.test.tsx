@@ -1,31 +1,31 @@
-// import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { FilterPanel, type FilterConfig } from '../common/FilterPanel';
+// import React from &apos;react&apos;;
+import { render, screen } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
+import { FilterPanel, type FilterConfig } from &apos;../common/FilterPanel&apos;;
 
-describe('FilterPanel Component', () => {
+describe(&apos;FilterPanel Component&apos;, () => {
   const mockFilters: FilterConfig[] = [
     {
-      key: 'status',
-      label: 'Status',
+      key: &apos;status&apos;,
+      label: &apos;Status&apos;,
       options: [
-        { value: 'all', label: 'All Status' },
-        { value: 'active', label: 'Active' },
-        { value: 'inactive', label: 'Inactive' },
+        { value: &apos;all&apos;, label: &apos;All Status&apos; },
+        { value: &apos;active&apos;, label: &apos;Active&apos; },
+        { value: &apos;inactive&apos;, label: &apos;Inactive&apos; },
       ],
-      currentValue: 'all',
+      currentValue: &apos;all&apos;,
       onValueChange: vi.fn(),
     },
     {
-      key: 'type',
-      label: 'Type',
+      key: &apos;type&apos;,
+      label: &apos;Type&apos;,
       options: [
-        { value: 'all', label: 'All Types' },
-        { value: 'equipment', label: 'Equipment' },
-        { value: 'vehicle', label: 'Vehicle' },
+        { value: &apos;all&apos;, label: &apos;All Types&apos; },
+        { value: &apos;equipment&apos;, label: &apos;Equipment&apos; },
+        { value: &apos;vehicle&apos;, label: &apos;Vehicle&apos; },
       ],
-      currentValue: 'equipment',
+      currentValue: &apos;equipment&apos;,
       onValueChange: vi.fn(),
     },
   ];
@@ -42,61 +42,61 @@ describe('FilterPanel Component', () => {
     vi.clearAllMocks();
   });
 
-  describe('Basic Rendering', () => {
-    it('should render filter button', () => {
+  describe(&apos;Basic Rendering&apos;, () => {
+    it(&apos;should render filter button&apos;, () => {
       render(<FilterPanel {...defaultProps} />);
 
-      const filterButton = screen.getByRole('button');
+      const filterButton = screen.getByRole(&apos;button&apos;);
       expect(filterButton).toBeInTheDocument();
     });
 
-    it('should show active filters count badge', () => {
+    it(&apos;should show active filters count badge&apos;, () => {
       render(<FilterPanel {...defaultProps} activeFiltersCount={3} />);
 
-      const badge = screen.getByText('3');
+      const badge = screen.getByText(&apos;3&apos;);
       expect(badge).toBeInTheDocument();
-      expect(badge).toHaveClass('bg-primary', 'text-primary-foreground');
+      expect(badge).toHaveClass(&apos;bg-primary&apos;, &apos;text-primary-foreground&apos;);
     });
 
-    it('should not show badge when no active filters', () => {
+    it(&apos;should not show badge when no active filters&apos;, () => {
       render(<FilterPanel {...defaultProps} activeFiltersCount={0} />);
 
-      expect(screen.queryByText('0')).not.toBeInTheDocument();
+      expect(screen.queryByText(&apos;0&apos;)).not.toBeInTheDocument();
     });
   });
 
-  describe('Filter Popover', () => {
-    it('should open popover when filter button is clicked', async () => {
+  describe(&apos;Filter Popover&apos;, () => {
+    it(&apos;should open popover when filter button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<FilterPanel {...defaultProps} />);
 
-      const filterButton = screen.getByRole('button');
+      const filterButton = screen.getByRole(&apos;button&apos;);
       await user.click(filterButton);
 
       expect(defaultProps.onShowFiltersChange).toHaveBeenCalledWith(true);
     });
 
-    it('should render filter options when popover is open', () => {
+    it(&apos;should render filter options when popover is open&apos;, () => {
       render(<FilterPanel {...defaultProps} showFilters={true} />);
 
-      expect(screen.getByText('Advanced Filters')).toBeInTheDocument();
-      expect(screen.getByText('Status')).toBeInTheDocument();
-      expect(screen.getByText('Type')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Advanced Filters&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Type&apos;)).toBeInTheDocument();
     });
 
-    it('should render filter labels and select triggers', () => {
+    it(&apos;should render filter labels and select triggers&apos;, () => {
       render(<FilterPanel {...defaultProps} showFilters={true} />);
 
       // Check that filter labels are rendered
-      expect(screen.getByText('Status')).toBeInTheDocument();
-      expect(screen.getByText('Type')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Type&apos;)).toBeInTheDocument();
 
       // Check that select triggers are rendered with current values
-      expect(screen.getByText('All Status')).toBeInTheDocument();
-      expect(screen.getByText('Equipment')).toBeInTheDocument();
+      expect(screen.getByText(&apos;All Status&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Equipment&apos;)).toBeInTheDocument();
     });
 
-    it('should show clear all button when filters are active', () => {
+    it(&apos;should show clear all button when filters are active&apos;, () => {
       render(
         <FilterPanel
           {...defaultProps}
@@ -105,10 +105,10 @@ describe('FilterPanel Component', () => {
         />
       );
 
-      expect(screen.getByText('Clear All')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Clear All&apos;)).toBeInTheDocument();
     });
 
-    it('should not show clear all button when no filters are active', () => {
+    it(&apos;should not show clear all button when no filters are active&apos;, () => {
       render(
         <FilterPanel
           {...defaultProps}
@@ -117,23 +117,23 @@ describe('FilterPanel Component', () => {
         />
       );
 
-      expect(screen.queryByText('Clear All')).not.toBeInTheDocument();
+      expect(screen.queryByText(&apos;Clear All&apos;)).not.toBeInTheDocument();
     });
   });
 
-  describe('Filter Interactions', () => {
-    it('should render select components with proper accessibility', () => {
+  describe(&apos;Filter Interactions&apos;, () => {
+    it(&apos;should render select components with proper accessibility&apos;, () => {
       render(<FilterPanel {...defaultProps} showFilters={true} />);
 
       // Check that select components are rendered with proper roles
-      const statusSelect = screen.getByRole('combobox', { name: 'Status' });
-      const typeSelect = screen.getByRole('combobox', { name: 'Type' });
+      const statusSelect = screen.getByRole(&apos;combobox&apos;, { name: &apos;Status&apos; });
+      const typeSelect = screen.getByRole(&apos;combobox&apos;, { name: &apos;Type&apos; });
 
       expect(statusSelect).toBeInTheDocument();
       expect(typeSelect).toBeInTheDocument();
     });
 
-    it('should call onClearAllFilters when clear all button is clicked', async () => {
+    it(&apos;should call onClearAllFilters when clear all button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(
         <FilterPanel
@@ -143,50 +143,50 @@ describe('FilterPanel Component', () => {
         />
       );
 
-      const clearAllButton = screen.getByText('Clear All');
+      const clearAllButton = screen.getByText(&apos;Clear All&apos;);
       await user.click(clearAllButton);
 
       expect(defaultProps.onClearAllFilters).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('Active Filter Badges', () => {
-    it('should show active filter badges', () => {
+  describe(&apos;Active Filter Badges&apos;, () => {
+    it(&apos;should show active filter badges&apos;, () => {
       render(<FilterPanel {...defaultProps} activeFiltersCount={1} />);
 
-      expect(screen.getByText('Active filters:')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Active filters:&apos;)).toBeInTheDocument();
     });
 
-    it('should not show active filter badges when no filters are active', () => {
+    it(&apos;should not show active filter badges when no filters are active&apos;, () => {
       render(<FilterPanel {...defaultProps} activeFiltersCount={0} />);
 
-      expect(screen.queryByText('Active filters:')).not.toBeInTheDocument();
+      expect(screen.queryByText(&apos;Active filters:&apos;)).not.toBeInTheDocument();
     });
 
-    it('should show search term badge when provided', () => {
+    it(&apos;should show search term badge when provided&apos;, () => {
       render(
         <FilterPanel
           {...defaultProps}
           activeFiltersCount={1}
-          searchTerm='test search'
+          searchTerm=&apos;test search&apos;
           onClearSearch={vi.fn()}
         />
       );
 
-      expect(screen.getByText('Search: test search')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Search: test search&apos;)).toBeInTheDocument();
     });
 
-    it('should show individual filter badges for non-default values', () => {
+    it(&apos;should show individual filter badges for non-default values&apos;, () => {
       const filtersWithActiveValues: FilterConfig[] = [
         {
           ...mockFilters[0],
-          currentValue: 'active',
-          defaultOptionValue: 'all',
+          currentValue: &apos;active&apos;,
+          defaultOptionValue: &apos;all&apos;,
         },
         {
           ...mockFilters[1],
-          currentValue: 'equipment',
-          defaultOptionValue: 'all',
+          currentValue: &apos;equipment&apos;,
+          defaultOptionValue: &apos;all&apos;,
         },
       ];
 
@@ -198,16 +198,16 @@ describe('FilterPanel Component', () => {
         />
       );
 
-      expect(screen.getByText('Status: Active')).toBeInTheDocument();
-      expect(screen.getByText('Type: Equipment')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Status: Active&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Type: Equipment&apos;)).toBeInTheDocument();
     });
 
-    it('should not show badges for default values', () => {
+    it(&apos;should not show badges for default values&apos;, () => {
       const filtersWithDefaultValues: FilterConfig[] = [
         {
           ...mockFilters[0],
-          currentValue: 'all',
-          defaultOptionValue: 'all',
+          currentValue: &apos;all&apos;,
+          defaultOptionValue: &apos;all&apos;,
         },
       ];
 
@@ -219,12 +219,12 @@ describe('FilterPanel Component', () => {
         />
       );
 
-      expect(screen.queryByText('Status: All Status')).not.toBeInTheDocument();
+      expect(screen.queryByText(&apos;Status: All Status&apos;)).not.toBeInTheDocument();
     });
   });
 
-  describe('Badge Interactions', () => {
-    it('should call onClearSearch when search badge X is clicked', async () => {
+  describe(&apos;Badge Interactions&apos;, () => {
+    it(&apos;should call onClearSearch when search badge X is clicked&apos;, async () => {
       const user = userEvent.setup();
       const mockOnClearSearch = vi.fn();
 
@@ -232,13 +232,13 @@ describe('FilterPanel Component', () => {
         <FilterPanel
           {...defaultProps}
           activeFiltersCount={1}
-          searchTerm='test'
+          searchTerm=&apos;test&apos;
           onClearSearch={mockOnClearSearch}
         />
       );
 
-      const searchBadge = screen.getByText('Search: test');
-      const xButton = searchBadge.parentElement?.querySelector('svg');
+      const searchBadge = screen.getByText(&apos;Search: test&apos;);
+      const xButton = searchBadge.parentElement?.querySelector(&apos;svg&apos;);
       expect(xButton).toBeInTheDocument();
 
       if (xButton) {
@@ -247,13 +247,13 @@ describe('FilterPanel Component', () => {
       }
     });
 
-    it('should call onValueChange when filter badge X is clicked', async () => {
+    it(&apos;should call onValueChange when filter badge X is clicked&apos;, async () => {
       const user = userEvent.setup();
       const filtersWithActiveValues: FilterConfig[] = [
         {
           ...mockFilters[0],
-          currentValue: 'active',
-          defaultOptionValue: 'all',
+          currentValue: &apos;active&apos;,
+          defaultOptionValue: &apos;all&apos;,
         },
       ];
 
@@ -265,32 +265,32 @@ describe('FilterPanel Component', () => {
         />
       );
 
-      const statusBadge = screen.getByText('Status: Active');
-      const xButton = statusBadge.parentElement?.querySelector('svg');
+      const statusBadge = screen.getByText(&apos;Status: Active&apos;);
+      const xButton = statusBadge.parentElement?.querySelector(&apos;svg&apos;);
       expect(xButton).toBeInTheDocument();
 
       if (xButton) {
         await user.click(xButton);
         expect(filtersWithActiveValues[0].onValueChange).toHaveBeenCalledWith(
-          'all'
+          &apos;all&apos;
         );
       }
     });
   });
 
-  describe('Edge Cases', () => {
-    it('should handle empty filters array', () => {
+  describe(&apos;Edge Cases&apos;, () => {
+    it(&apos;should handle empty filters array&apos;, () => {
       render(<FilterPanel {...defaultProps} filters={[]} showFilters={true} />);
 
-      expect(screen.getByText('Advanced Filters')).toBeInTheDocument();
-      expect(screen.queryByText('Status')).not.toBeInTheDocument();
+      expect(screen.getByText(&apos;Advanced Filters&apos;)).toBeInTheDocument();
+      expect(screen.queryByText(&apos;Status&apos;)).not.toBeInTheDocument();
     });
 
-    it('should handle filters without defaultOptionValue', () => {
+    it(&apos;should handle filters without defaultOptionValue&apos;, () => {
       const filtersWithoutDefault: FilterConfig[] = [
         {
           ...mockFilters[0],
-          currentValue: 'active',
+          currentValue: &apos;active&apos;,
           // no defaultOptionValue
         },
       ];
@@ -303,19 +303,19 @@ describe('FilterPanel Component', () => {
         />
       );
 
-      expect(screen.getByText('Status: Active')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Status: Active&apos;)).toBeInTheDocument();
     });
 
-    it('should handle missing option labels gracefully', () => {
+    it(&apos;should handle missing option labels gracefully&apos;, () => {
       const filtersWithMissingLabels: FilterConfig[] = [
         {
           ...mockFilters[0],
           options: [
-            { value: 'active', label: 'Active' },
-            { value: 'unknown', label: undefined as string | undefined },
+            { value: &apos;active&apos;, label: &apos;Active&apos; },
+            { value: &apos;unknown&apos;, label: undefined as string | undefined },
           ],
-          currentValue: 'unknown',
-          defaultOptionValue: 'active',
+          currentValue: &apos;unknown&apos;,
+          defaultOptionValue: &apos;active&apos;,
         },
       ];
 
@@ -327,23 +327,23 @@ describe('FilterPanel Component', () => {
         />
       );
 
-      expect(screen.getByText('Status: unknown')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Status: unknown&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper button role', () => {
+  describe(&apos;Accessibility&apos;, () => {
+    it(&apos;should have proper button role&apos;, () => {
       render(<FilterPanel {...defaultProps} />);
 
-      const filterButton = screen.getByRole('button');
+      const filterButton = screen.getByRole(&apos;button&apos;);
       expect(filterButton).toBeInTheDocument();
     });
 
-    it('should have proper labels for filter selects', () => {
+    it(&apos;should have proper labels for filter selects&apos;, () => {
       render(<FilterPanel {...defaultProps} showFilters={true} />);
 
-      expect(screen.getByLabelText('Status')).toBeInTheDocument();
-      expect(screen.getByLabelText('Type')).toBeInTheDocument();
+      expect(screen.getByLabelText(&apos;Status&apos;)).toBeInTheDocument();
+      expect(screen.getByLabelText(&apos;Type&apos;)).toBeInTheDocument();
     });
   });
 });

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class AuditMiddleware(BaseHTTPMiddleware):
     """Middleware for automatic audit logging"""
 
-    def __init__(self, app, exclude_paths: Optional[List[str]] = None):
+    def __init__(self, app, exclude_paths: Optional[List[str]] = None) -> None:
         super().__init__(app)
         self.exclude_paths = exclude_paths or [
             "/health",
@@ -31,7 +31,7 @@ class AuditMiddleware(BaseHTTPMiddleware):
             "/metrics",
         ]
 
-    async def dispatch(self, request: Request, call_next):
+    async def dispatch(self, request: Request, call_next) -> None:
         """Process request and log audit information"""
         start_time = datetime.now()
 
@@ -189,7 +189,7 @@ class AuditMiddleware(BaseHTTPMiddleware):
         }
         return mapping.get(method, "unknown")
 
-    async def _store_audit_log(self, audit_data: Dict[str, Any]):
+    async def _store_audit_log(self, audit_data: Dict[str, Any]) -> None:
         """Store audit log in database"""
         try:
             # Get database session

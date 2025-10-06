@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+import React, { useState, useEffect, useMemo } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Input } from &apos;../ui/input&apos;;
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table';
+} from &apos;../ui/table&apos;;
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,8 +18,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+} from &apos;../ui/dropdown-menu&apos;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
 import {
   Search,
   Plus,
@@ -33,10 +33,10 @@ import {
   TrendingUp,
   Package,
   History,
-} from 'lucide-react';
-import { TaskAuditLogDialog } from '../TaskAuditLogDialog';
-import { toast } from 'sonner';
-import { useNavigation } from '../../contexts/NavigationContext';
+} from &apos;lucide-react&apos;;
+import { TaskAuditLogDialog } from &apos;../TaskAuditLogDialog&apos;;
+import { toast } from &apos;sonner&apos;;
+import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
 import {
   fetchMaintenanceTasks,
   fetchMaintenanceHistory,
@@ -47,9 +47,9 @@ import {
   type MaintenanceTask,
   type MaintenanceHistory as MaintenanceHistoryType,
   type PredictiveAlert,
-} from '../../services/maintenanceService';
-import { LoadingState, StatusBadge, PriorityBadge } from '../common';
-import { AuditLogList, PageLayout } from '../common';
+} from &apos;../../services/maintenanceService&apos;;
+import { LoadingState, StatusBadge, PriorityBadge } from &apos;../common&apos;;
+import { AuditLogList, PageLayout } from &apos;../common&apos;;
 
 // Data will be loaded from service
 
@@ -59,7 +59,7 @@ interface MaintenanceProps {
 
 export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
   const navigation = useNavigation();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(&apos;&apos;);
   const [loading, setLoading] = useState(true);
   const [isAuditLogDialogOpen, setIsAuditLogDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<MaintenanceTask | null>(
@@ -135,8 +135,8 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
       setPredictiveAlerts(alerts);
       setStats(statistics);
     } catch (error) {
-// console.error('Error loading maintenance data:', error);
-      toast.error('Failed to load maintenance data');
+// // // // // // console.error(&apos;Error loading maintenance data:&apos;, error);
+      toast.error(&apos;Failed to load maintenance data&apos;);
     } finally {
       setLoading(false);
     }
@@ -146,8 +146,8 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
     try {
       const updatedTask = await updateMaintenanceTask(
         taskId,
-        { status: 'completed' },
-        'Task marked as completed'
+        { status: &apos;completed&apos; },
+        &apos;Task marked as completed&apos;
       );
 
       if (updatedTask) {
@@ -155,7 +155,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
           prevTasks.map(t => (t.id === taskId ? updatedTask : t))
         );
 
-        toast.success('Task marked as completed', {
+        toast.success(&apos;Task marked as completed&apos;, {
           description: `${taskName} completed and logged to audit trail`,
         });
 
@@ -164,7 +164,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
         setStats(newStats);
       }
     } catch (error) {
-      toast.error('Failed to mark task as complete');
+      toast.error(&apos;Failed to mark task as complete&apos;);
     }
   };
 
@@ -172,8 +172,8 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
     try {
       const updatedTask = await updateMaintenanceTask(
         taskId,
-        { status: 'in-progress' },
-        'Work started on maintenance task'
+        { status: &apos;in-progress&apos; },
+        &apos;Work started on maintenance task&apos;
       );
 
       if (updatedTask) {
@@ -181,7 +181,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
           prevTasks.map(t => (t.id === taskId ? updatedTask : t))
         );
 
-        toast.success('Work started', {
+        toast.success(&apos;Work started&apos;, {
           description: `Status change logged to audit trail`,
         });
 
@@ -190,25 +190,25 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
         setStats(newStats);
       }
     } catch (error) {
-      toast.error('Failed to start work');
+      toast.error(&apos;Failed to start work&apos;);
     }
   };
 
   const handleEditTask = (task: MaintenanceTask) => {
     navigation.navigateToEditMaintenance({
       maintenanceId: task.id,
-      fromContext: 'maintenance-list',
+      fromContext: &apos;maintenance-list&apos;,
     });
   };
 
   const handleViewDetails = (task: MaintenanceTask) => {
     // Find the asset from mock data to pass full context
-    import('../../data/mockData').then(({ mockAssets }) => {
+    import(&apos;../../data/mockData&apos;).then(({ mockAssets }) => {
       const asset = mockAssets.find(a => a.id === task.assetId);
       if (asset) {
         navigation.navigateToAssetDetails(asset);
       } else {
-        toast.error('Asset not found');
+        toast.error(&apos;Asset not found&apos;);
       }
     });
   };
@@ -222,8 +222,8 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
     try {
       const updatedTask = await updateMaintenanceTask(
         taskId,
-        { status: 'cancelled' },
-        'Maintenance task cancelled by user'
+        { status: &apos;cancelled&apos; },
+        &apos;Maintenance task cancelled by user&apos;
       );
 
       if (updatedTask) {
@@ -231,7 +231,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
           prevTasks.map(t => (t.id === taskId ? updatedTask : t))
         );
 
-        toast.error('Task cancelled', {
+        toast.error(&apos;Task cancelled&apos;, {
           description: `Cancellation logged to audit trail`,
         });
 
@@ -240,13 +240,13 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
         setStats(newStats);
       }
     } catch (error) {
-      toast.error('Failed to cancel task');
+      toast.error(&apos;Failed to cancel task&apos;);
     }
   };
 
   const handleScheduleFromPredictive = (alert: PredictiveAlert) => {
     // Find the asset from mock data to pass full context
-    import('../../data/mockData').then(({ mockAssets }) => {
+    import(&apos;../../data/mockData&apos;).then(({ mockAssets }) => {
       const asset = mockAssets.find(a => a.id === alert.assetId);
       navigation.navigateToCreateMaintenance({
         preSelectedAsset: alert.assetId,
@@ -258,12 +258,12 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
 
   const handleViewAssetDetails = (assetId: string, _assetName: string) => {
     // Pass full asset context
-    import('../../data/mockData').then(({ mockAssets }) => {
+    import(&apos;../../data/mockData&apos;).then(({ mockAssets }) => {
       const asset = mockAssets.find(a => a.id === assetId);
       if (asset) {
         navigation.navigateToAssetDetails(asset);
       } else {
-        toast.error('Asset not found');
+        toast.error(&apos;Asset not found&apos;);
       }
     });
   };
@@ -272,7 +272,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
     try {
       const success = await dismissPredictiveAlert(
         alertId,
-        'User dismissed alert'
+        &apos;User dismissed alert&apos;
       );
 
       if (success) {
@@ -280,7 +280,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
           prevAlerts.filter(alert => alert.id !== alertId)
         );
 
-        toast.success('Alert dismissed', {
+        toast.success(&apos;Alert dismissed&apos;, {
           description: `Predictive alert for ${assetName} has been dismissed and logged to audit trail`,
         });
 
@@ -289,121 +289,121 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
         setStats(newStats);
       }
     } catch (error) {
-      toast.error('Failed to dismiss alert');
+      toast.error(&apos;Failed to dismiss alert&apos;);
     }
   };
 
   if (loading) {
-    return <LoadingState message='Loading maintenance data...' />;
+    return <LoadingState message=&apos;Loading maintenance data...&apos; />;
   }
 
   return (
-    <PageLayout variant='wide' padding='lg'>
+    <PageLayout variant=&apos;wide&apos; padding=&apos;lg&apos;>
       {/* Header */}
-      <div className='flex items-center justify-between'>
+      <div className=&apos;flex items-center justify-between&apos;>
         <div>
           <h1>Maintenance Management</h1>
-          <p className='text-muted-foreground'>
+          <p className=&apos;text-muted-foreground&apos;>
             Schedule, track, and optimize asset maintenance
           </p>
         </div>
         <Button onClick={() => navigation.navigateToCreateMaintenance()}>
-          <Plus className='h-4 w-4 mr-2' />
+          <Plus className=&apos;h-4 w-4 mr-2&apos; />
           Schedule Maintenance
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className='grid gap-4 md:grid-cols-4'>
+      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm flex items-center gap-2'>
-              <AlertTriangle className='h-4 w-4 text-red-600' />
+          <CardHeader className=&apos;pb-2&apos;>
+            <CardTitle className=&apos;text-sm flex items-center gap-2&apos;>
+              <AlertTriangle className=&apos;h-4 w-4 text-red-600&apos; />
               Overdue Tasks
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl'>{stats.overdue}</div>
-            <p className='text-xs text-muted-foreground'>
+            <div className=&apos;text-2xl&apos;>{stats.overdue}</div>
+            <p className=&apos;text-xs text-muted-foreground&apos;>
               Requires immediate attention
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm flex items-center gap-2'>
-              <Clock className='h-4 w-4 text-blue-600' />
+          <CardHeader className=&apos;pb-2&apos;>
+            <CardTitle className=&apos;text-sm flex items-center gap-2&apos;>
+              <Clock className=&apos;h-4 w-4 text-blue-600&apos; />
               In Progress
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl'>{stats.inProgress}</div>
-            <p className='text-xs text-muted-foreground'>
+            <div className=&apos;text-2xl&apos;>{stats.inProgress}</div>
+            <p className=&apos;text-xs text-muted-foreground&apos;>
               Currently being serviced
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm flex items-center gap-2'>
-              <Calendar className='h-4 w-4 text-green-600' />
+          <CardHeader className=&apos;pb-2&apos;>
+            <CardTitle className=&apos;text-sm flex items-center gap-2&apos;>
+              <Calendar className=&apos;h-4 w-4 text-green-600&apos; />
               Scheduled
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl'>{stats.scheduled}</div>
-            <p className='text-xs text-muted-foreground'>Next 30 days</p>
+            <div className=&apos;text-2xl&apos;>{stats.scheduled}</div>
+            <p className=&apos;text-xs text-muted-foreground&apos;>Next 30 days</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm flex items-center gap-2'>
-              <TrendingUp className='h-4 w-4 text-purple-600' />
+          <CardHeader className=&apos;pb-2&apos;>
+            <CardTitle className=&apos;text-sm flex items-center gap-2&apos;>
+              <TrendingUp className=&apos;h-4 w-4 text-purple-600&apos; />
               Predictive Alerts
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl'>{stats.predictiveAlerts}</div>
-            <p className='text-xs text-muted-foreground'>AI-detected issues</p>
+            <div className=&apos;text-2xl&apos;>{stats.predictiveAlerts}</div>
+            <p className=&apos;text-xs text-muted-foreground&apos;>AI-detected issues</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue='schedule' className='space-y-4'>
+      <Tabs defaultValue=&apos;schedule&apos; className=&apos;space-y-4&apos;>
         <TabsList>
-          <TabsTrigger value='schedule'>
-            <Calendar className='h-4 w-4 mr-2' />
+          <TabsTrigger value=&apos;schedule&apos;>
+            <Calendar className=&apos;h-4 w-4 mr-2&apos; />
             Maintenance Schedule
           </TabsTrigger>
-          <TabsTrigger value='history'>
-            <FileText className='h-4 w-4 mr-2' />
+          <TabsTrigger value=&apos;history&apos;>
+            <FileText className=&apos;h-4 w-4 mr-2&apos; />
             History
           </TabsTrigger>
-          <TabsTrigger value='predictive'>
-            <TrendingUp className='h-4 w-4 mr-2' />
+          <TabsTrigger value=&apos;predictive&apos;>
+            <TrendingUp className=&apos;h-4 w-4 mr-2&apos; />
             Predictive Alerts
           </TabsTrigger>
-          <TabsTrigger value='audit'>
-            <History className='h-4 w-4 mr-2' />
+          <TabsTrigger value=&apos;audit&apos;>
+            <History className=&apos;h-4 w-4 mr-2&apos; />
             Audit Log
           </TabsTrigger>
         </TabsList>
 
         {/* Schedule Tab */}
-        <TabsContent value='schedule' className='space-y-4'>
+        <TabsContent value=&apos;schedule&apos; className=&apos;space-y-4&apos;>
           <Card>
             <CardHeader>
-              <div className='flex items-center justify-between'>
+              <div className=&apos;flex items-center justify-between&apos;>
                 <CardTitle>Upcoming Maintenance</CardTitle>
-                <div className='relative w-64'>
-                  <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+                <div className=&apos;relative w-64&apos;>
+                  <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
                   <Input
-                    placeholder='Search tasks...'
-                    className='pl-9'
+                    placeholder=&apos;Search tasks...&apos;
+                    className=&apos;pl-9&apos;
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                   />
@@ -428,32 +428,32 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
                   {maintenanceTasks.map(task => (
                     <TableRow
                       key={task.id}
-                      className='cursor-pointer hover:bg-muted/50'
+                      className=&apos;cursor-pointer hover:bg-muted/50&apos;
                       onClick={() => handleEditTask(task)}
                     >
                       <TableCell>
                         <div>
-                          <div className='flex items-center gap-2'>
-                            <Package className='h-4 w-4 text-muted-foreground' />
+                          <div className=&apos;flex items-center gap-2&apos;>
+                            <Package className=&apos;h-4 w-4 text-muted-foreground&apos; />
                             <span>{task.assetName}</span>
                           </div>
-                          <p className='text-sm text-muted-foreground'>
+                          <p className=&apos;text-sm text-muted-foreground&apos;>
                             {task.assetId}
                           </p>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className='max-w-xs'>
-                          <p className='text-sm'>{task.task}</p>
+                        <div className=&apos;max-w-xs&apos;>
+                          <p className=&apos;text-sm&apos;>{task.task}</p>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant='outline'>{task.type}</Badge>
+                        <Badge variant=&apos;outline&apos;>{task.type}</Badge>
                       </TableCell>
                       <TableCell>
-                        <div className='flex items-center gap-2'>
-                          <Calendar className='h-4 w-4 text-muted-foreground' />
-                          <span className='text-sm'>{task.dueDate}</span>
+                        <div className=&apos;flex items-center gap-2&apos;>
+                          <Calendar className=&apos;h-4 w-4 text-muted-foreground&apos; />
+                          <span className=&apos;text-sm&apos;>{task.dueDate}</span>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -462,24 +462,24 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
                       <TableCell>
                         <StatusBadge status={task.status} />
                       </TableCell>
-                      <TableCell className='text-sm'>
+                      <TableCell className=&apos;text-sm&apos;>
                         {task.assignedTo}
                       </TableCell>
                       <TableCell onClick={e => e.stopPropagation()}>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant='ghost' size='sm'>
-                              <MoreVertical className='h-4 w-4' />
+                            <Button variant=&apos;ghost&apos; size=&apos;sm&apos;>
+                              <MoreVertical className=&apos;h-4 w-4&apos; />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align='end'>
+                          <DropdownMenuContent align=&apos;end&apos;>
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
                               onClick={() =>
                                 handleMarkComplete(task.id, task.task)
                               }
                             >
-                              <CheckCircle className='h-4 w-4 mr-2' />
+                              <CheckCircle className=&apos;h-4 w-4 mr-2&apos; />
                               Mark Complete
                             </DropdownMenuItem>
                             <DropdownMenuItem
@@ -487,30 +487,30 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
                                 handleStartWork(task.id, task.task)
                               }
                             >
-                              <Wrench className='h-4 w-4 mr-2' />
+                              <Wrench className=&apos;h-4 w-4 mr-2&apos; />
                               Start Work
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleEditTask(task)}
                             >
-                              <Calendar className='h-4 w-4 mr-2' />
+                              <Calendar className=&apos;h-4 w-4 mr-2&apos; />
                               Edit Task
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleViewDetails(task)}
                             >
-                              <FileText className='h-4 w-4 mr-2' />
+                              <FileText className=&apos;h-4 w-4 mr-2&apos; />
                               View Asset Details
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleViewAuditLog(task)}
                             >
-                              <History className='h-4 w-4 mr-2' />
+                              <History className=&apos;h-4 w-4 mr-2&apos; />
                               View Audit Log
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                              className='text-destructive'
+                              className=&apos;text-destructive&apos;
                               onClick={() =>
                                 handleCancelTask(task.id, task.task)
                               }
@@ -529,7 +529,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
         </TabsContent>
 
         {/* History Tab */}
-        <TabsContent value='history' className='space-y-4'>
+        <TabsContent value=&apos;history&apos; className=&apos;space-y-4&apos;>
           <Card>
             <CardHeader>
               <CardTitle>Maintenance History</CardTitle>
@@ -552,21 +552,21 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
                       <TableCell>
                         <div>
                           <div>{record.assetName}</div>
-                          <p className='text-sm text-muted-foreground'>
+                          <p className=&apos;text-sm text-muted-foreground&apos;>
                             {record.assetId}
                           </p>
                         </div>
                       </TableCell>
                       <TableCell>{record.task}</TableCell>
-                      <TableCell className='text-sm'>
+                      <TableCell className=&apos;text-sm&apos;>
                         {record.completedDate}
                       </TableCell>
-                      <TableCell className='text-sm'>
+                      <TableCell className=&apos;text-sm&apos;>
                         {record.technician}
                       </TableCell>
                       <TableCell>{record.cost}</TableCell>
                       <TableCell>
-                        <p className='text-sm text-muted-foreground max-w-xs'>
+                        <p className=&apos;text-sm text-muted-foreground max-w-xs&apos;>
                           {record.notes}
                         </p>
                       </TableCell>
@@ -579,88 +579,88 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
         </TabsContent>
 
         {/* Predictive Alerts Tab */}
-        <TabsContent value='predictive' className='space-y-4'>
+        <TabsContent value=&apos;predictive&apos; className=&apos;space-y-4&apos;>
           <Card>
             <CardHeader>
-              <div className='flex items-center justify-between'>
+              <div className=&apos;flex items-center justify-between&apos;>
                 <div>
                   <CardTitle>AI-Powered Predictive Maintenance</CardTitle>
-                  <p className='text-sm text-muted-foreground mt-1'>
+                  <p className=&apos;text-sm text-muted-foreground mt-1&apos;>
                     Proactive alerts based on usage patterns and asset health
                     analytics
                   </p>
                 </div>
                 <Badge
-                  variant='outline'
-                  className='bg-purple-100 text-purple-700 border-purple-200'
+                  variant=&apos;outline&apos;
+                  className=&apos;bg-purple-100 text-purple-700 border-purple-200&apos;
                 >
                   {predictiveAlerts.length} Alert
-                  {predictiveAlerts.length !== 1 ? 's' : ''}
+                  {predictiveAlerts.length !== 1 ? &apos;s&apos; : &apos;&apos;}
                 </Badge>
               </div>
             </CardHeader>
             <CardContent>
               {predictiveAlerts.length === 0 ? (
-                <div className='text-center py-12'>
-                  <CheckCircle className='h-12 w-12 text-green-600 mx-auto mb-4' />
-                  <h3 className='mb-2'>No Predictive Alerts</h3>
-                  <p className='text-muted-foreground'>
+                <div className=&apos;text-center py-12&apos;>
+                  <CheckCircle className=&apos;h-12 w-12 text-green-600 mx-auto mb-4&apos; />
+                  <h3 className=&apos;mb-2&apos;>No Predictive Alerts</h3>
+                  <p className=&apos;text-muted-foreground&apos;>
                     All predictive maintenance alerts have been addressed or
                     dismissed.
                   </p>
                 </div>
               ) : (
-                <div className='space-y-4'>
+                <div className=&apos;space-y-4&apos;>
                   {predictiveAlerts.map(alert => (
                     <div
                       key={alert.id}
-                      className='p-4 border rounded-lg space-y-3'
+                      className=&apos;p-4 border rounded-lg space-y-3&apos;
                     >
-                      <div className='flex items-start justify-between'>
-                        <div className='flex-1'>
-                          <div className='flex items-center gap-2'>
-                            <AlertTriangle className='h-5 w-5 text-orange-600' />
+                      <div className=&apos;flex items-start justify-between&apos;>
+                        <div className=&apos;flex-1&apos;>
+                          <div className=&apos;flex items-center gap-2&apos;>
+                            <AlertTriangle className=&apos;h-5 w-5 text-orange-600&apos; />
                             <h4>{alert.assetName}</h4>
-                            <Badge variant='outline'>{alert.assetId}</Badge>
+                            <Badge variant=&apos;outline&apos;>{alert.assetId}</Badge>
                           </div>
-                          <p className='text-muted-foreground mt-1'>
+                          <p className=&apos;text-muted-foreground mt-1&apos;>
                             {alert.prediction}
                           </p>
                         </div>
                         <Badge
-                          variant='outline'
-                          className='bg-orange-100 text-orange-700 border-orange-200'
+                          variant=&apos;outline&apos;
+                          className=&apos;bg-orange-100 text-orange-700 border-orange-200&apos;
                         >
                           {alert.confidence}% confidence
                         </Badge>
                       </div>
 
-                      <div className='grid md:grid-cols-2 gap-4 text-sm'>
+                      <div className=&apos;grid md:grid-cols-2 gap-4 text-sm&apos;>
                         <div>
-                          <span className='text-muted-foreground'>
-                            Based on:{' '}
+                          <span className=&apos;text-muted-foreground&apos;>
+                            Based on:{&apos; &apos;}
                           </span>
                           <span>{alert.basedOn}</span>
                         </div>
                         <div>
-                          <span className='text-muted-foreground'>
-                            Recommended:{' '}
+                          <span className=&apos;text-muted-foreground&apos;>
+                            Recommended:{&apos; &apos;}
                           </span>
                           <span>{alert.recommendedAction}</span>
                         </div>
                       </div>
 
-                      <div className='flex gap-2'>
+                      <div className=&apos;flex gap-2&apos;>
                         <Button
-                          size='sm'
+                          size=&apos;sm&apos;
                           onClick={() => handleScheduleFromPredictive(alert)}
                         >
-                          <Calendar className='h-4 w-4 mr-2' />
+                          <Calendar className=&apos;h-4 w-4 mr-2&apos; />
                           Schedule Maintenance
                         </Button>
                         <Button
-                          variant='outline'
-                          size='sm'
+                          variant=&apos;outline&apos;
+                          size=&apos;sm&apos;
                           onClick={() =>
                             handleViewAssetDetails(
                               alert.assetId,
@@ -671,8 +671,8 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
                           View Asset Details
                         </Button>
                         <Button
-                          variant='ghost'
-                          size='sm'
+                          variant=&apos;ghost&apos;
+                          size=&apos;sm&apos;
                           onClick={() =>
                             handleDismissAlert(alert.id, alert.assetName)
                           }
@@ -689,14 +689,14 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
         </TabsContent>
 
         {/* Audit Log Tab */}
-        <TabsContent value='audit' className='space-y-4'>
+        <TabsContent value=&apos;audit&apos; className=&apos;space-y-4&apos;>
           <Card>
             <CardHeader>
-              <div className='flex items-center justify-between'>
+              <div className=&apos;flex items-center justify-between&apos;>
                 <CardTitle>Maintenance Audit Log</CardTitle>
-                <div className='relative w-64'>
-                  <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
-                  <Input placeholder='Search audit logs...' className='pl-9' />
+                <div className=&apos;relative w-64&apos;>
+                  <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
+                  <Input placeholder=&apos;Search audit logs...&apos; className=&apos;pl-9&apos; />
                 </div>
               </div>
             </CardHeader>
@@ -710,10 +710,10 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
                   changes: log.changes,
                   notes: log.notes,
                 }))}
-                variant='inline'
+                variant=&apos;inline&apos;
                 showEmptyState={true}
-                emptyStateTitle='No Audit Log Entries'
-                emptyStateDescription='No maintenance activities have been recorded yet.'
+                emptyStateTitle=&apos;No Audit Log Entries&apos;
+                emptyStateDescription=&apos;No maintenance activities have been recorded yet.&apos;
               />
             </CardContent>
           </Card>

@@ -16,18 +16,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config.database import get_db
 from config.settings import settings
 from modules.shared.database.models import User
-from modules.users.schemas import (
-    LoginRequest,
-    LoginResponse,
-    TokenRefreshRequest,
-    TokenRefreshResponse,
-    UserCreate,
-    UserPasswordUpdate,
-    UserProfileUpdate,
-    UserResponse,
-    UserStats,
-    UserUpdate,
-)
+from modules.users.schemas import (LoginRequest, LoginResponse,
+                                   TokenRefreshRequest, TokenRefreshResponse,
+                                   UserCreate, UserPasswordUpdate,
+                                   UserProfileUpdate, UserResponse, UserStats,
+                                   UserUpdate)
 
 router = APIRouter()
 
@@ -48,7 +41,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> None:
     """Create a JWT access token"""
     to_encode = data.copy()
     if expires_delta:
@@ -367,7 +360,7 @@ async def login(login_data: LoginRequest, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/auth/logout")
-async def logout():
+async def logout() -> None:
     """Logout user (client should discard token)"""
     return {"message": "Successfully logged out"}
 

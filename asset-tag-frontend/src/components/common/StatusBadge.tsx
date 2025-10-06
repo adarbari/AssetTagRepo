@@ -1,14 +1,14 @@
-import React from 'react';
-import { Badge } from '../ui/badge';
+import React from &apos;react&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
 
 type StatusType =
-  | 'asset'
-  | 'site'
-  | 'job'
-  | 'vehicle'
-  | 'geofence'
-  | 'maintenance'
-  | 'issue';
+  | &apos;asset&apos;
+  | &apos;site&apos;
+  | &apos;job&apos;
+  | &apos;vehicle&apos;
+  | &apos;geofence&apos;
+  | &apos;maintenance&apos;
+  | &apos;issue&apos;;
 
 interface StatusBadgeProps {
   status: string;
@@ -18,34 +18,34 @@ interface StatusBadgeProps {
 
 const statusColors: Record<string, string> = {
   // Asset statuses
-  active: 'bg-green-100 text-green-700 border-green-200',
-  inactive: 'bg-gray-100 text-gray-700 border-gray-200',
-  maintenance: 'bg-orange-100 text-orange-700 border-orange-200',
-  'in-transit': 'bg-blue-100 text-blue-700 border-blue-200',
-  'checked-out': 'bg-purple-100 text-purple-700 border-purple-200',
-  offline: 'bg-red-100 text-red-700 border-red-200',
-  idle: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+  active: &apos;bg-green-100 text-green-700 border-green-200&apos;,
+  inactive: &apos;bg-gray-100 text-gray-700 border-gray-200&apos;,
+  maintenance: &apos;bg-orange-100 text-orange-700 border-orange-200&apos;,
+  &apos;in-transit&apos;: &apos;bg-blue-100 text-blue-700 border-blue-200&apos;,
+  &apos;checked-out&apos;: &apos;bg-purple-100 text-purple-700 border-purple-200&apos;,
+  offline: &apos;bg-red-100 text-red-700 border-red-200&apos;,
+  idle: &apos;bg-yellow-100 text-yellow-700 border-yellow-200&apos;,
 
   // Job statuses
-  planning: 'bg-blue-100 text-blue-700 border-blue-200',
-  'in-progress': 'bg-green-100 text-green-700 border-green-200',
-  'on-hold': 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  completed: 'bg-gray-100 text-gray-700 border-gray-200',
-  cancelled: 'bg-red-100 text-red-700 border-red-200',
+  planning: &apos;bg-blue-100 text-blue-700 border-blue-200&apos;,
+  &apos;in-progress&apos;: &apos;bg-green-100 text-green-700 border-green-200&apos;,
+  &apos;on-hold&apos;: &apos;bg-yellow-100 text-yellow-700 border-yellow-200&apos;,
+  completed: &apos;bg-gray-100 text-gray-700 border-gray-200&apos;,
+  cancelled: &apos;bg-red-100 text-red-700 border-red-200&apos;,
 
   // Maintenance statuses
-  pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  scheduled: 'bg-blue-100 text-blue-700 border-blue-200',
-  overdue: 'bg-red-100 text-red-700 border-red-200',
+  pending: &apos;bg-yellow-100 text-yellow-700 border-yellow-200&apos;,
+  scheduled: &apos;bg-blue-100 text-blue-700 border-blue-200&apos;,
+  overdue: &apos;bg-red-100 text-red-700 border-red-200&apos;,
 
   // Issue statuses
-  open: 'bg-red-100 text-red-700 border-red-200',
-  assigned: 'bg-blue-100 text-blue-700 border-blue-200',
-  resolved: 'bg-green-100 text-green-700 border-green-200',
-  closed: 'bg-gray-100 text-gray-700 border-gray-200',
+  open: &apos;bg-red-100 text-red-700 border-red-200&apos;,
+  assigned: &apos;bg-blue-100 text-blue-700 border-blue-200&apos;,
+  resolved: &apos;bg-green-100 text-green-700 border-green-200&apos;,
+  closed: &apos;bg-gray-100 text-gray-700 border-gray-200&apos;,
 
   // Generic/default
-  default: 'bg-gray-100 text-gray-700 border-gray-200',
+  default: &apos;bg-gray-100 text-gray-700 border-gray-200&apos;,
 };
 
 export function StatusBadge({
@@ -54,10 +54,10 @@ export function StatusBadge({
   className,
 }: StatusBadgeProps) {
   const statusLower = status.toLowerCase();
-  const colorClass = statusColors[statusLower] || statusColors['default'];
+  const colorClass = statusColors[statusLower] || statusColors[&apos;default&apos;];
 
   return (
-    <Badge variant='outline' className={`${colorClass} ${className || ''}`}>
+    <Badge variant=&apos;outline&apos; className={`${colorClass} ${className || &apos;&apos;}`}>
       {status}
     </Badge>
   );

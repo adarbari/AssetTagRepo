@@ -6,23 +6,13 @@ import json
 import logging
 from typing import Any, Dict, Optional
 
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    Query,
-    WebSocket,
-    WebSocketDisconnect,
-)
+from fastapi import (APIRouter, Depends, HTTPException, Query, WebSocket,
+                     WebSocketDisconnect)
 
 from modules.websocket.connection_manager import manager
-from modules.websocket.handlers import (
-    AlertHandler,
-    DashboardHandler,
-    GeofenceHandler,
-    LocationHandler,
-    SystemHandler,
-)
+from modules.websocket.handlers import (AlertHandler, DashboardHandler,
+                                        GeofenceHandler, LocationHandler,
+                                        SystemHandler)
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -174,7 +164,7 @@ async def websocket_dashboard(
 
 
 @router.get("/ws/stats")
-async def get_websocket_stats():
+async def get_websocket_stats() -> None:
     """Get WebSocket connection statistics"""
     return manager.get_connection_stats()
 

@@ -12,17 +12,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.observations.models import Observation, ObservationBatch
-from modules.observations.schemas import (
-    ObservationBatchCreate,
-    ObservationBatchResponse,
-    ObservationBatchUpdate,
-    ObservationBulkCreate,
-    ObservationBulkResponse,
-    ObservationCreate,
-    ObservationResponse,
-    ObservationStatsResponse,
-    ObservationUpdate,
-)
+from modules.observations.schemas import (ObservationBatchCreate,
+                                          ObservationBatchResponse,
+                                          ObservationBatchUpdate,
+                                          ObservationBulkCreate,
+                                          ObservationBulkResponse,
+                                          ObservationCreate,
+                                          ObservationResponse,
+                                          ObservationStatsResponse,
+                                          ObservationUpdate)
 
 router = APIRouter()
 
@@ -126,18 +124,20 @@ async def create_observation(
     try:
         # Parse timestamps
         # Handle ISO format with Z suffix
-        observed_at_str = observation_data.observed_at.replace('Z', '+00:00')
+        observed_at_str = observation_data.observed_at.replace("Z", "+00:00")
         observed_at = datetime.fromisoformat(observed_at_str)
-        
+
         if observation_data.received_at:
-            received_at_str = observation_data.received_at.replace('Z', '+00:00')
+            received_at_str = observation_data.received_at.replace("Z", "+00:00")
             received_at = datetime.fromisoformat(received_at_str)
         else:
             received_at = datetime.now()
 
         # Create new observation
         observation = Observation(
-            organization_id=uuid.UUID("00000000-0000-0000-0000-000000000000"),  # Default org for now
+            organization_id=uuid.UUID(
+                "00000000-0000-0000-0000-000000000000"
+            ),  # Default org for now
             asset_id=uuid.UUID(observation_data.asset_id),
             gateway_id=uuid.UUID(observation_data.gateway_id),
             rssi=observation_data.rssi,
@@ -218,7 +218,9 @@ async def create_observations_bulk(
 
             except Exception as e:
                 failed_count += 1
-                errors.append({"index": i, "error": str(e), "data": obs_data.model_dump()})
+                errors.append(
+                    {"index": i, "error": str(e), "data": obs_data.model_dump()}
+                )
 
         # Update batch status
         batch.end_time = datetime.now()

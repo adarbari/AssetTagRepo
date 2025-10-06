@@ -17,11 +17,11 @@ logger = logging.getLogger(__name__)
 class StorageManager:
     """Storage manager for S3/MinIO with local/production switching"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = self._create_client()
         self.bucket = settings.s3_bucket
 
-    def _create_client(self):
+    def _create_client(self) -> None:
         """Create S3 client (MinIO or AWS S3)"""
         config = Config(
             region_name=settings.aws_region,

@@ -16,7 +16,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Enable TimescaleDB extension"""
     # Enable TimescaleDB extension
     op.execute("CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;")
@@ -32,7 +32,7 @@ def upgrade():
     )
 
 
-def downgrade():
+def downgrade() -> None:
     """Disable TimescaleDB extension"""
     # Drop custom types
     op.execute("DROP TYPE IF EXISTS signal_quality CASCADE;")

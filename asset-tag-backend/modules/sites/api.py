@@ -12,16 +12,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.sites.models import Personnel, PersonnelActivity, Site
-from modules.sites.schemas import (
-    PersonnelActivityResponse,
-    PersonnelCreate,
-    PersonnelResponse,
-    PersonnelUpdate,
-    SiteCreate,
-    SiteResponse,
-    SiteUpdate,
-    SiteWithAssetsResponse,
-)
+from modules.sites.schemas import (PersonnelActivityResponse, PersonnelCreate,
+                                   PersonnelResponse, PersonnelUpdate,
+                                   SiteCreate, SiteResponse, SiteUpdate,
+                                   SiteWithAssetsResponse)
 
 router = APIRouter()
 
@@ -74,7 +68,9 @@ def _personnel_to_response(person: Personnel) -> PersonnelResponse:
     )
 
 
-def _personnel_activity_to_response(activity: PersonnelActivity) -> PersonnelActivityResponse:
+def _personnel_activity_to_response(
+    activity: PersonnelActivity,
+) -> PersonnelActivityResponse:
     """Convert PersonnelActivity model to PersonnelActivityResponse schema"""
     return PersonnelActivityResponse(
         id=str(activity.id),

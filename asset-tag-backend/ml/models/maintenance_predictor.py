@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class MaintenancePredictor:
     """ML model for predicting maintenance needs"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.model = None
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
@@ -254,7 +254,7 @@ class MaintenancePredictor:
 
         return analysis
 
-    def save_model(self, filepath: str):
+    def save_model(self, filepath: str) -> None:
         """Save the trained model"""
         try:
             if not self.is_trained:
@@ -276,7 +276,7 @@ class MaintenancePredictor:
             logger.error(f"Error saving maintenance model: {e}")
             raise
 
-    def load_model(self, filepath: str):
+    def load_model(self, filepath: str) -> None:
         """Load a trained model"""
         try:
             model_data = joblib.load(filepath)

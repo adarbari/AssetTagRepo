@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import React from &apos;react&apos;;
+import { useState } from &apos;react&apos;;
 import {
   Dialog,
   DialogContent,
@@ -6,21 +7,21 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../ui/dialog';
-import { Button } from '../ui/button';
-import { Label } from '../ui/label';
+} from &apos;../ui/dialog&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Label } from &apos;../ui/label&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Calendar } from '../ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Checkbox } from '../ui/checkbox';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Download, FileText } from 'lucide-react';
+} from &apos;../ui/select&apos;;
+import { Calendar } from &apos;../ui/calendar&apos;;
+import { Popover, PopoverContent, PopoverTrigger } from &apos;../ui/popover&apos;;
+import { Checkbox } from &apos;../ui/checkbox&apos;;
+import { format } from &apos;date-fns&apos;;
+import { Calendar as CalendarIcon, Download, FileText } from &apos;lucide-react&apos;;
 
 interface GenerateReportDialogProps {
   open: boolean;
@@ -33,24 +34,24 @@ export function GenerateReportDialog({
   onOpenChange,
   reportType,
 }: GenerateReportDialogProps) {
-  const [dateRange, setDateRange] = useState('30days');
+  const [dateRange, setDateRange] = useState(&apos;30days&apos;);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
-  const [format_type, setFormat] = useState('pdf');
+  const [format_type, setFormat] = useState(&apos;pdf&apos;);
   const [includeCharts, setIncludeCharts] = useState(true);
   const [includeDetails, setIncludeDetails] = useState(true);
 
   const reportTitles: { [key: string]: string } = {
-    inventory: 'Inventory Audit Report',
-    costing: 'Job Costing Report',
-    utilization: 'Utilization Report',
-    compliance: 'Compliance Report',
-    battery: 'Battery Health Report',
-    theft: 'Theft/Loss Report',
+    inventory: &apos;Inventory Audit Report&apos;,
+    costing: &apos;Job Costing Report&apos;,
+    utilization: &apos;Utilization Report&apos;,
+    compliance: &apos;Compliance Report&apos;,
+    battery: &apos;Battery Health Report&apos;,
+    theft: &apos;Theft/Loss Report&apos;,
   };
 
   const handleGenerate = () => {
-// console.log('Generating report:', {
+// // // // // // console.log(&apos;Generating report:&apos;, {
       type: reportType,
       dateRange,
       startDate,
@@ -64,54 +65,54 @@ export function GenerateReportDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-md'>
+      <DialogContent className=&apos;max-w-md&apos;>
         <DialogHeader>
-          <div className='flex items-center gap-3'>
-            <div className='p-2 rounded-lg bg-primary/10'>
-              <FileText className='h-5 w-5 text-primary' />
+          <div className=&apos;flex items-center gap-3&apos;>
+            <div className=&apos;p-2 rounded-lg bg-primary/10&apos;>
+              <FileText className=&apos;h-5 w-5 text-primary&apos; />
             </div>
             <div>
               <DialogTitle>
-                {reportTitles[reportType] || 'Generate Report'}
+                {reportTitles[reportType] || &apos;Generate Report&apos;}
               </DialogTitle>
               <DialogDescription>Configure report parameters</DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        <div className='space-y-4'>
+        <div className=&apos;space-y-4&apos;>
           {/* Date Range */}
-          <div className='space-y-2'>
+          <div className=&apos;space-y-2&apos;>
             <Label>Date Range</Label>
             <Select value={dateRange} onValueChange={setDateRange}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='7days'>Last 7 days</SelectItem>
-                <SelectItem value='30days'>Last 30 days</SelectItem>
-                <SelectItem value='90days'>Last 90 days</SelectItem>
-                <SelectItem value='12months'>Last 12 months</SelectItem>
-                <SelectItem value='custom'>Custom Range</SelectItem>
+                <SelectItem value=&apos;7days&apos;>Last 7 days</SelectItem>
+                <SelectItem value=&apos;30days&apos;>Last 30 days</SelectItem>
+                <SelectItem value=&apos;90days&apos;>Last 90 days</SelectItem>
+                <SelectItem value=&apos;12months&apos;>Last 12 months</SelectItem>
+                <SelectItem value=&apos;custom&apos;>Custom Range</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Custom Date Range */}
-          {dateRange === 'custom' && (
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='space-y-2'>
+          {dateRange === &apos;custom&apos; && (
+            <div className=&apos;grid grid-cols-2 gap-4&apos;>
+              <div className=&apos;space-y-2&apos;>
                 <Label>Start Date</Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant='outline' className='w-full justify-start'>
-                      <CalendarIcon className='h-4 w-4 mr-2' />
-                      {startDate ? format(startDate, 'PPP') : 'Pick date'}
+                    <Button variant=&apos;outline&apos; className=&apos;w-full justify-start&apos;>
+                      <CalendarIcon className=&apos;h-4 w-4 mr-2&apos; />
+                      {startDate ? format(startDate, &apos;PPP&apos;) : &apos;Pick date&apos;}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className='w-auto p-0'>
+                  <PopoverContent className=&apos;w-auto p-0&apos;>
                     <Calendar
-                      mode='single'
+                      mode=&apos;single&apos;
                       selected={startDate}
                       onSelect={setStartDate}
                       initialFocus
@@ -119,18 +120,18 @@ export function GenerateReportDialog({
                   </PopoverContent>
                 </Popover>
               </div>
-              <div className='space-y-2'>
+              <div className=&apos;space-y-2&apos;>
                 <Label>End Date</Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant='outline' className='w-full justify-start'>
-                      <CalendarIcon className='h-4 w-4 mr-2' />
-                      {endDate ? format(endDate, 'PPP') : 'Pick date'}
+                    <Button variant=&apos;outline&apos; className=&apos;w-full justify-start&apos;>
+                      <CalendarIcon className=&apos;h-4 w-4 mr-2&apos; />
+                      {endDate ? format(endDate, &apos;PPP&apos;) : &apos;Pick date&apos;}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className='w-auto p-0'>
+                  <PopoverContent className=&apos;w-auto p-0&apos;>
                     <Calendar
-                      mode='single'
+                      mode=&apos;single&apos;
                       selected={endDate}
                       onSelect={setEndDate}
                       initialFocus
@@ -142,50 +143,50 @@ export function GenerateReportDialog({
           )}
 
           {/* Format */}
-          <div className='space-y-2'>
+          <div className=&apos;space-y-2&apos;>
             <Label>Export Format</Label>
             <Select value={format_type} onValueChange={setFormat}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='pdf'>PDF Document</SelectItem>
-                <SelectItem value='excel'>Excel Spreadsheet</SelectItem>
-                <SelectItem value='csv'>CSV File</SelectItem>
+                <SelectItem value=&apos;pdf&apos;>PDF Document</SelectItem>
+                <SelectItem value=&apos;excel&apos;>Excel Spreadsheet</SelectItem>
+                <SelectItem value=&apos;csv&apos;>CSV File</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Options */}
-          <div className='space-y-3'>
+          <div className=&apos;space-y-3&apos;>
             <Label>Report Options</Label>
-            <div className='space-y-3'>
-              <div className='flex items-center space-x-2'>
+            <div className=&apos;space-y-3&apos;>
+              <div className=&apos;flex items-center space-x-2&apos;>
                 <Checkbox
-                  id='charts'
+                  id=&apos;charts&apos;
                   checked={includeCharts}
                   onCheckedChange={checked =>
                     setIncludeCharts(checked as boolean)
                   }
                 />
                 <label
-                  htmlFor='charts'
-                  className='text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                  htmlFor=&apos;charts&apos;
+                  className=&apos;text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70&apos;
                 >
                   Include charts and visualizations
                 </label>
               </div>
-              <div className='flex items-center space-x-2'>
+              <div className=&apos;flex items-center space-x-2&apos;>
                 <Checkbox
-                  id='details'
+                  id=&apos;details&apos;
                   checked={includeDetails}
                   onCheckedChange={checked =>
                     setIncludeDetails(checked as boolean)
                   }
                 />
                 <label
-                  htmlFor='details'
-                  className='text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                  htmlFor=&apos;details&apos;
+                  className=&apos;text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70&apos;
                 >
                   Include detailed asset listings
                 </label>
@@ -194,26 +195,26 @@ export function GenerateReportDialog({
           </div>
 
           {/* Preview Info */}
-          <div className='p-4 bg-muted rounded-lg'>
-            <p className='text-sm'>
-              Report will include data from{' '}
-              {dateRange === 'custom'
-                ? `${startDate ? format(startDate, 'PP') : '...'} to ${
-                    endDate ? format(endDate, 'PP') : '...'
+          <div className=&apos;p-4 bg-muted rounded-lg&apos;>
+            <p className=&apos;text-sm&apos;>
+              Report will include data from{&apos; &apos;}
+              {dateRange === &apos;custom&apos;
+                ? `${startDate ? format(startDate, &apos;PP&apos;) : &apos;...&apos;} to ${
+                    endDate ? format(endDate, &apos;PP&apos;) : &apos;...&apos;
                   }`
                 : dateRange
-                    .replace('days', ' days')
-                    .replace('months', ' months')}
+                    .replace(&apos;days&apos;, &apos; days&apos;)
+                    .replace(&apos;months&apos;, &apos; months&apos;)}
             </p>
           </div>
         </div>
 
         <DialogFooter>
-          <Button variant='outline' onClick={() => onOpenChange(false)}>
+          <Button variant=&apos;outline&apos; onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button onClick={handleGenerate}>
-            <Download className='h-4 w-4 mr-2' />
+            <Download className=&apos;h-4 w-4 mr-2&apos; />
             Generate Report
           </Button>
         </DialogFooter>

@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 
-def run_tests():
+def run_tests() -> None:
     """Run all tests with pytest"""
 
     # Get the project root directory
@@ -49,7 +49,7 @@ def run_tests():
         return e.returncode
 
 
-def run_unit_tests():
+def run_unit_tests() -> None:
     """Run only unit tests"""
 
     project_root = Path(__file__).parent.parent
@@ -80,7 +80,7 @@ def run_unit_tests():
         return e.returncode
 
 
-def run_integration_tests():
+def run_integration_tests() -> None:
     """Run only integration tests"""
 
     project_root = Path(__file__).parent.parent
@@ -111,7 +111,7 @@ def run_integration_tests():
         return e.returncode
 
 
-def run_specific_test(test_path):
+def run_specific_test(test_path) -> None:
     """Run a specific test file or test function"""
 
     project_root = Path(__file__).parent.parent
@@ -142,7 +142,7 @@ def run_specific_test(test_path):
         return e.returncode
 
 
-def main():
+def main() -> None:
     """Main function to handle command line arguments"""
 
     if len(sys.argv) > 1:

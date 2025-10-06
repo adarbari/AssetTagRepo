@@ -5,24 +5,24 @@
  * Used in both CreateJob and EditJob components
  */
 
-import React from 'react';
-import { Label } from '../ui/label';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
+import React from &apos;react&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Textarea } from &apos;../ui/textarea&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Calendar as CalendarIcon, Briefcase } from 'lucide-react';
-import type { JobPriority } from '../../types/job';
+} from &apos;../ui/select&apos;;
+import { Calendar as CalendarIcon, Briefcase } from &apos;lucide-react&apos;;
+import type { JobPriority } from &apos;../../types/job&apos;;
 import {
   jobPriorities,
   projectManagers,
   clients,
-} from '../../data/dropdownOptions';
+} from &apos;../../data/dropdownOptions&apos;;
 
 interface JobInformationSectionProps {
   name: string;
@@ -62,23 +62,23 @@ export function JobInformationSection({
   showClientField = false,
 }: JobInformationSectionProps) {
   return (
-    <div className='space-y-6'>
+    <div className=&apos;space-y-6&apos;>
       <div>
-        <h3 className='flex items-center gap-2 mb-4'>
-          <Briefcase className='h-5 w-5' />
+        <h3 className=&apos;flex items-center gap-2 mb-4&apos;>
+          <Briefcase className=&apos;h-5 w-5&apos; />
           Job Information
         </h3>
-        <p className='text-sm text-muted-foreground mb-6'>
+        <p className=&apos;text-sm text-muted-foreground mb-6&apos;>
           Enter the basic details for this job
         </p>
       </div>
 
-      <div className='grid gap-4 md:grid-cols-2'>
-        <div className='space-y-2'>
-          <Label htmlFor='job-name'>Job Name *</Label>
+      <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+        <div className=&apos;space-y-2&apos;>
+          <Label htmlFor=&apos;job-name&apos;>Job Name *</Label>
           <Input
-            id='job-name'
-            placeholder='e.g., Downtown Office Renovation'
+            id=&apos;job-name&apos;
+            placeholder=&apos;e.g., Downtown Office Renovation&apos;
             value={name}
             onChange={e => onNameChange(e.target.value)}
             required
@@ -86,69 +86,69 @@ export function JobInformationSection({
         </div>
 
         {jobNumber && (
-          <div className='space-y-2'>
-            <Label htmlFor='job-number'>Job Number</Label>
+          <div className=&apos;space-y-2&apos;>
+            <Label htmlFor=&apos;job-number&apos;>Job Number</Label>
             <Input
-              id='job-number'
+              id=&apos;job-number&apos;
               value={jobNumber}
               disabled
-              className='bg-muted'
+              className=&apos;bg-muted&apos;
             />
           </div>
         )}
       </div>
 
-      <div className='space-y-2'>
-        <Label htmlFor='description'>Description</Label>
+      <div className=&apos;space-y-2&apos;>
+        <Label htmlFor=&apos;description&apos;>Description</Label>
         <Textarea
-          id='description'
-          placeholder='Brief description of the job...'
+          id=&apos;description&apos;
+          placeholder=&apos;Brief description of the job...&apos;
           value={description}
           onChange={e => onDescriptionChange(e.target.value)}
           rows={3}
         />
       </div>
 
-      <div className='grid gap-4 md:grid-cols-2'>
-        <div className='space-y-2'>
-          <Label htmlFor='start-date'>Start Date *</Label>
-          <div className='relative'>
-            <CalendarIcon className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none' />
+      <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+        <div className=&apos;space-y-2&apos;>
+          <Label htmlFor=&apos;start-date&apos;>Start Date *</Label>
+          <div className=&apos;relative&apos;>
+            <CalendarIcon className=&apos;absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none&apos; />
             <Input
-              id='start-date'
-              type='date'
+              id=&apos;start-date&apos;
+              type=&apos;date&apos;
               value={startDate}
               onChange={e => onStartDateChange(e.target.value)}
-              className='pl-9'
+              className=&apos;pl-9&apos;
               required
             />
           </div>
         </div>
 
-        <div className='space-y-2'>
-          <Label htmlFor='end-date'>End Date *</Label>
-          <div className='relative'>
-            <CalendarIcon className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none' />
+        <div className=&apos;space-y-2&apos;>
+          <Label htmlFor=&apos;end-date&apos;>End Date *</Label>
+          <div className=&apos;relative&apos;>
+            <CalendarIcon className=&apos;absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none&apos; />
             <Input
-              id='end-date'
-              type='date'
+              id=&apos;end-date&apos;
+              type=&apos;date&apos;
               value={endDate}
               onChange={e => onEndDateChange(e.target.value)}
-              className='pl-9'
+              className=&apos;pl-9&apos;
               required
             />
           </div>
         </div>
       </div>
 
-      <div className='grid gap-4 md:grid-cols-2'>
-        <div className='space-y-2'>
-          <Label htmlFor='priority'>Priority</Label>
+      <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+        <div className=&apos;space-y-2&apos;>
+          <Label htmlFor=&apos;priority&apos;>Priority</Label>
           <Select
             value={priority}
             onValueChange={value => onPriorityChange(value as JobPriority)}
           >
-            <SelectTrigger id='priority'>
+            <SelectTrigger id=&apos;priority&apos;>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -161,11 +161,11 @@ export function JobInformationSection({
           </Select>
         </div>
 
-        <div className='space-y-2'>
-          <Label htmlFor='project-manager'>Project Manager</Label>
+        <div className=&apos;space-y-2&apos;>
+          <Label htmlFor=&apos;project-manager&apos;>Project Manager</Label>
           <Select value={projectManager} onValueChange={onProjectManagerChange}>
-            <SelectTrigger id='project-manager'>
-              <SelectValue placeholder='Select project manager (optional)' />
+            <SelectTrigger id=&apos;project-manager&apos;>
+              <SelectValue placeholder=&apos;Select project manager (optional)&apos; />
             </SelectTrigger>
             <SelectContent>
               {projectManagers.map(pm => (
@@ -179,11 +179,11 @@ export function JobInformationSection({
       </div>
 
       {showClientField && (
-        <div className='space-y-2'>
-          <Label htmlFor='client'>Client</Label>
+        <div className=&apos;space-y-2&apos;>
+          <Label htmlFor=&apos;client&apos;>Client</Label>
           <Select value={clientId} onValueChange={onClientIdChange}>
-            <SelectTrigger id='client'>
-              <SelectValue placeholder='Select client (optional)' />
+            <SelectTrigger id=&apos;client&apos;>
+              <SelectValue placeholder=&apos;Select client (optional)&apos; />
             </SelectTrigger>
             <SelectContent>
               {clients.map(c => (

@@ -18,13 +18,13 @@ logger = logging.getLogger(__name__)
 class StreamingManager:
     """Streaming manager for Kafka/Redpanda and Kinesis"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.producer = None
         self.consumer = None
         self.kinesis_client = None
         self._initialized = False
 
-    def _setup_kafka(self):
+    def _setup_kafka(self) -> None:
         """Setup Kafka/Redpanda producer and consumer"""
         self.producer = AIOKafkaProducer(
             bootstrap_servers=settings.redpanda_brokers,
@@ -41,11 +41,11 @@ class StreamingManager:
             auto_offset_reset="latest",
         )
 
-    def _setup_kinesis(self):
+    def _setup_kinesis(self) -> None:
         """Setup Kinesis client"""
         self.kinesis_client = boto3.client("kinesis", region_name=settings.aws_region)
 
-    async def start(self):
+    async def start(self) -> None:
         """Start streaming services"""
         if not self._initialized:
             if settings.use_local_streaming:
@@ -61,7 +61,7 @@ class StreamingManager:
         else:
             logger.info("Kinesis client ready")
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop streaming services"""
         if settings.use_local_streaming:
             if self.producer:
@@ -147,11 +147,11 @@ async def get_streaming() -> StreamingManager:
     return streaming
 
 
-async def start_streaming():
+async def start_streaming() -> None:
     """Start streaming services"""
     await streaming.start()
 
 
-async def stop_streaming():
+async def stop_streaming() -> None:
     """Stop streaming services"""
     await streaming.stop()

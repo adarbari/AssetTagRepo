@@ -36,7 +36,7 @@ app.add_middleware(
 
 # Request timing middleware
 @app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
+async def add_process_time_header(request: Request, call_next) -> None:
     """Add processing time to response headers"""
     start_time = time.time()
     response = await call_next(request)
@@ -47,7 +47,7 @@ async def add_process_time_header(request: Request, call_next):
 
 # Global exception handler
 @app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
+async def global_exception_handler(request: Request, exc: Exception) -> None:
     """Global exception handler"""
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(
@@ -57,14 +57,14 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Health check endpoint
 @app.get("/health")
-async def health_check():
+async def health_check() -> None:
     """Health check endpoint"""
     return {"status": "healthy", "environment": "local", "timestamp": time.time()}
 
 
 # Root endpoint
 @app.get("/")
-async def root():
+async def root() -> None:
     """Root endpoint"""
     return {
         "message": "Asset Tag Backend API",
@@ -76,7 +76,7 @@ async def root():
 
 # Simple API endpoints for testing
 @app.get("/api/v1/assets")
-async def get_assets():
+async def get_assets() -> None:
     """Get list of assets"""
     return {
         "assets": [
@@ -105,7 +105,7 @@ async def get_assets():
 
 
 @app.get("/api/v1/assets/{asset_id}")
-async def get_asset(asset_id: str):
+async def get_asset(asset_id: str) -> None:
     """Get asset by ID"""
     return {
         "id": asset_id,
@@ -120,7 +120,7 @@ async def get_asset(asset_id: str):
 
 
 @app.get("/api/v1/alerts")
-async def get_alerts():
+async def get_alerts() -> None:
     """Get list of alerts"""
     return {
         "alerts": [
@@ -138,7 +138,7 @@ async def get_alerts():
 
 
 @app.get("/api/v1/sites")
-async def get_sites():
+async def get_sites() -> None:
     """Get list of sites"""
     return {
         "sites": [
@@ -157,5 +157,5 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(
-        "main-simple:app", host="0.0.0.0", port=8000, reload=True, log_level="info"
+        "main-simple:app", host="127.0.0.1", port=8000, reload=True, log_level="info"
     )

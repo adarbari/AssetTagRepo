@@ -4,9 +4,9 @@
  * Provides consistent empty state UI across the application
  */
 
-import React from 'react';
-import { LucideIcon } from 'lucide-react';
-import { Button } from '../ui/button';
+import React from &apos;react&apos;;
+import { LucideIcon } from &apos;lucide-react&apos;;
+import { Button } from &apos;../ui/button&apos;;
 
 interface EmptyStateProps {
   icon?: LucideIcon;
@@ -26,19 +26,19 @@ export function EmptyState({
   action,
 }: EmptyStateProps) {
   return (
-    <div className='flex flex-col items-center justify-center p-12 text-center'>
+    <div className=&apos;flex flex-col items-center justify-center p-12 text-center&apos;>
       {Icon && (
-        <div className='mb-4 rounded-full bg-muted p-6'>
-          <Icon className='h-12 w-12 text-muted-foreground' />
+        <div className=&apos;mb-4 rounded-full bg-muted p-6&apos;>
+          <Icon className=&apos;h-12 w-12 text-muted-foreground&apos; />
         </div>
       )}
-      <h3 className='mb-2'>{title}</h3>
+      <h3 className=&apos;mb-2&apos;>{title}</h3>
       {description && (
-        <p className='text-muted-foreground mb-6 max-w-md'>{description}</p>
+        <p className=&apos;text-muted-foreground mb-6 max-w-md&apos;>{description}</p>
       )}
       {action && (
         <Button onClick={action.onClick}>
-          {action.icon && <action.icon className='h-4 w-4 mr-2' />}
+          {action.icon && <action.icon className=&apos;h-4 w-4 mr-2&apos; />}
           {action.label}
         </Button>
       )}

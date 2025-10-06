@@ -7,14 +7,8 @@ import uuid
 from datetime import datetime
 from typing import List, Optional
 
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    Query,
-    WebSocket,
-    WebSocketDisconnect,
-)
+from fastapi import (APIRouter, Depends, HTTPException, Query, WebSocket,
+                     WebSocketDisconnect)
 from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -113,18 +107,18 @@ router = APIRouter()
 
 # WebSocket connection manager for alerts
 class AlertConnectionManager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_connections: List[WebSocket] = []
 
-    async def connect(self, websocket: WebSocket):
+    async def connect(self, websocket: WebSocket) -> None:
         await websocket.accept()
         self.active_connections.append(websocket)
 
-    def disconnect(self, websocket: WebSocket):
+    def disconnect(self, websocket: WebSocket) -> None:
         if websocket in self.active_connections:
             self.active_connections.remove(websocket)
 
-    async def send_alert_update(self, alert_data: dict):
+    async def send_alert_update(self, alert_data: dict) -> None:
         for connection in self.active_connections:
             try:
                 await connection.send_text(json.dumps(alert_data))
@@ -602,7 +596,7 @@ async def resolve_alert(
 
 
 @router.websocket("/ws/alerts")
-async def websocket_alert_updates(websocket: WebSocket):
+async def websocket_alert_updates(websocket: WebSocket) -> None:
     """WebSocket for real-time alert updates"""
     await alert_manager.connect(websocket)
     try:

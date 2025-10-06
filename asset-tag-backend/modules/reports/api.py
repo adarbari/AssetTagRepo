@@ -15,16 +15,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.reports.generators import ReportGenerator
-from modules.reports.schemas import (
-    ExportRequest,
-    ExportResponse,
-    ReportGenerationRequest,
-    ReportGenerationResponse,
-    ReportStatus,
-    ReportTemplate,
-    ScheduledReportRequest,
-    ScheduledReportResponse,
-)
+from modules.reports.schemas import (ExportRequest, ExportResponse,
+                                     ReportGenerationRequest,
+                                     ReportGenerationResponse, ReportStatus,
+                                     ReportTemplate, ScheduledReportRequest,
+                                     ScheduledReportResponse)
 
 router = APIRouter()
 
@@ -109,13 +104,13 @@ report_statuses: Dict[str, ReportStatus] = {}
 
 
 @router.get("/reports/templates", response_model=List[ReportTemplate])
-async def get_report_templates():
+async def get_report_templates() -> None:
     """Get list of available report templates"""
     return list(report_templates.values())
 
 
 @router.get("/reports/templates/{template_id}", response_model=ReportTemplate)
-async def get_report_template(template_id: str):
+async def get_report_template(template_id: str) -> None:
     """Get a specific report template"""
     if template_id not in report_templates:
         raise HTTPException(status_code=404, detail="Report template not found")
@@ -174,7 +169,7 @@ async def generate_report(
 
 
 @router.get("/reports/{report_id}", response_model=ReportStatus)
-async def get_report_status(report_id: str):
+async def get_report_status(report_id: str) -> None:
     """Get report generation status"""
     if report_id not in report_statuses:
         raise HTTPException(status_code=404, detail="Report not found")
@@ -182,7 +177,7 @@ async def get_report_status(report_id: str):
 
 
 @router.get("/reports/{report_id}/download", response_class=StreamingResponse)
-async def download_report(report_id: str):
+async def download_report(report_id: str) -> None:
     """Download generated report"""
     if report_id not in report_statuses:
         raise HTTPException(status_code=404, detail="Report not found")
@@ -207,14 +202,14 @@ async def download_report(report_id: str):
 
 
 @router.get("/reports/scheduled", response_model=List[ScheduledReportResponse])
-async def get_scheduled_reports():
+async def get_scheduled_reports() -> None:
     """Get list of scheduled reports"""
     # TODO: Implement scheduled reports functionality
     return []
 
 
 @router.post("/reports/schedule", response_model=ScheduledReportResponse)
-async def schedule_report(request: ScheduledReportRequest):
+async def schedule_report(request: ScheduledReportRequest) -> None:
     """Schedule a recurring report"""
     # TODO: Implement scheduled reports functionality
     scheduled_id = str(uuid.uuid4())

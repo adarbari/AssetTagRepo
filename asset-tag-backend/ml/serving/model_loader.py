@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class ModelLoader:
     """Loads and manages ML models for serving"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.mlflow_client = get_mlflow_client()
         self.cache = None
         self.models = {}
@@ -27,7 +27,7 @@ class ModelLoader:
         self.last_refresh = {}
         self.refresh_interval = timedelta(hours=1)  # Refresh models every hour
 
-    async def _get_cache(self):
+    async def _get_cache(self) -> None:
         """Get cache manager"""
         if not self.cache:
             self.cache = await get_cache()
@@ -171,12 +171,12 @@ class ModelLoader:
 class ModelRefreshScheduler:
     """Background scheduler for model refresh"""
 
-    def __init__(self, model_loader: ModelLoader):
+    def __init__(self, model_loader: ModelLoader) -> None:
         self.model_loader = model_loader
         self.running = False
         self.refresh_task = None
 
-    async def start(self, refresh_interval: int = 3600):  # 1 hour default
+    async def start(self, refresh_interval: int = 3600) -> None:  # 1 hour default
         """Start the refresh scheduler"""
         if self.running:
             return
@@ -185,7 +185,7 @@ class ModelRefreshScheduler:
         self.refresh_task = asyncio.create_task(self._refresh_loop(refresh_interval))
         logger.info("Model refresh scheduler started")
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop the refresh scheduler"""
         self.running = False
         if self.refresh_task:
@@ -196,7 +196,7 @@ class ModelRefreshScheduler:
                 pass
         logger.info("Model refresh scheduler stopped")
 
-    async def _refresh_loop(self, refresh_interval: int):
+    async def _refresh_loop(self, refresh_interval: int) -> None:
         """Background refresh loop"""
         while self.running:
             try:
@@ -229,12 +229,12 @@ async def get_model_loader() -> ModelLoader:
     return model_loader
 
 
-async def start_model_refresh_scheduler():
+async def start_model_refresh_scheduler() -> None:
     """Start the model refresh scheduler"""
     await refresh_scheduler.start()
 
 
-async def stop_model_refresh_scheduler():
+async def stop_model_refresh_scheduler() -> None:
     """Stop the model refresh scheduler"""
     await refresh_scheduler.stop()
 
@@ -256,7 +256,7 @@ async def load_battery_degradation_model() -> Optional[Any]:
 
 
 # Model preloading for common models
-async def preload_common_models():
+async def preload_common_models() -> None:
     """Preload commonly used models"""
     common_models = ["anomaly_detector", "location_predictor", "battery_predictor"]
 

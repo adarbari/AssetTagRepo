@@ -35,7 +35,7 @@ export function useIssueManagement() {
 
         return { success: true, issue: newIssue };
       } catch (error) {
-// console.error('Error creating issue:', error);
+// // // // // // console.error('Error creating issue:', error);
         return { success: false, error };
       }
     },
@@ -65,7 +65,7 @@ export function useIssueManagement() {
 
         return { success: true, issue: updatedIssue };
       } catch (error) {
-// console.error('Error updating issue:', error);
+// // // // // // console.error('Error updating issue:', error);
         return { success: false, error };
       }
     },
@@ -87,7 +87,7 @@ export function useIssueManagement() {
 
         return await updateIssue(issueId, updateData);
       } catch (error) {
-// console.error('Error updating issue status:', error);
+// // // // // // console.error('Error updating issue status:', error);
         return { success: false, error };
       }
     },
@@ -104,7 +104,7 @@ export function useIssueManagement() {
 
         return { success: true };
       } catch (error) {
-// console.error('Error deleting issue:', error);
+// // // // // // console.error('Error deleting issue:', error);
         return { success: false, error };
       }
     },

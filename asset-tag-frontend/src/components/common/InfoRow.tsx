@@ -1,5 +1,5 @@
-import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import React from &apos;react&apos;;
+import { LucideIcon } from &apos;lucide-react&apos;;
 
 interface InfoRowProps {
   icon: LucideIcon;
@@ -15,9 +15,9 @@ export function InfoRow({
   className,
 }: InfoRowProps) {
   return (
-    <div className={`flex items-center gap-2 ${className || ''}`}>
+    <div className={`flex items-center gap-2 ${className || &apos;&apos;}`}>
       <Icon
-        className={`h-4 w-4 text-muted-foreground ${iconClassName || ''}`}
+        className={`h-4 w-4 text-muted-foreground ${iconClassName || &apos;&apos;}`}
       />
       {children}
     </div>

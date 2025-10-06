@@ -38,7 +38,7 @@ app.add_middleware(
 
 # Request timing middleware
 @app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
+async def add_process_time_header(request: Request, call_next) -> None:
     """Add processing time to response headers"""
     start_time = time.time()
     response = await call_next(request)
@@ -49,7 +49,7 @@ async def add_process_time_header(request: Request, call_next):
 
 # Global exception handler
 @app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
+async def global_exception_handler(request: Request, exc: Exception) -> None:
     """Global exception handler"""
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(
@@ -59,14 +59,14 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Health check endpoint
 @app.get("/health")
-async def health_check():
+async def health_check() -> None:
     """Health check endpoint"""
     return {"status": "healthy", "environment": "local", "timestamp": time.time()}
 
 
 # Root endpoint
 @app.get("/")
-async def root():
+async def root() -> None:
     """Root endpoint"""
     return {
         "message": "Asset Tag Backend API",
@@ -96,7 +96,6 @@ try:
     from modules.maintenance.api import router as maintenance_router
     from modules.observations.api import router as observations_router
     from modules.reports.api import router as reports_router
-
     # Advanced API routes
     from modules.search.api import router as search_router
     from modules.sites.api import router as sites_router
@@ -138,7 +137,7 @@ except Exception as e:
 
     # Add a simple endpoint to show the error
     @app.get("/api/error")
-    async def show_error():
+    async def show_error() -> None:
         return {"error": f"Failed to load API modules: {str(e)}"}
 
 
@@ -150,5 +149,5 @@ if __name__ == "__main__":
     print("📖 ReDoc: http://localhost:8000/redoc")
     print("🔗 OpenAPI JSON: http://localhost:8000/openapi.json")
     uvicorn.run(
-        "main-docs:app", host="0.0.0.0", port=8000, reload=True, log_level="info"
+        "main-docs:app", host="127.0.0.1", port=8000, reload=True, log_level="info"
     )

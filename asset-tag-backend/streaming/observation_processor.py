@@ -24,12 +24,12 @@ logger = logging.getLogger(__name__)
 class ObservationProcessor:
     """Process and store Bluetooth observations"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.location_estimator = None
         self.observation_buffer = defaultdict(list)  # asset_id -> observations
         self.buffer_lock = asyncio.Lock()
 
-    async def process_observation(self, observation_data: Dict[str, Any]):
+    async def process_observation(self, observation_data: Dict[str, Any]) -> None:
         """Process a single observation"""
         try:
             # Get database session
@@ -130,7 +130,7 @@ class ObservationProcessor:
         except Exception as e:
             logger.error(f"Error updating asset battery: {e}")
 
-    async def _add_to_buffer(self, observation_data: Dict[str, Any]):
+    async def _add_to_buffer(self, observation_data: Dict[str, Any]) -> None:
         """Add observation to buffer for location estimation"""
         async with self.buffer_lock:
             asset_id = observation_data["asset_tag_id"]
@@ -140,7 +140,7 @@ class ObservationProcessor:
             if len(self.observation_buffer[asset_id]) >= 3:
                 await self._process_location_estimation(asset_id)
 
-    async def _process_location_estimation(self, asset_id: str):
+    async def _process_location_estimation(self, asset_id: str) -> None:
         """Process location estimation for an asset"""
         try:
             async with self.buffer_lock:
@@ -191,7 +191,7 @@ class ObservationProcessor:
         except Exception as e:
             logger.error(f"Error processing location estimation: {e}")
 
-    async def _store_estimated_location(self, location):
+    async def _store_estimated_location(self, location) -> None:
         """Store estimated location in database"""
         try:
             async for db in get_db():
@@ -226,7 +226,7 @@ class ObservationProcessor:
         except Exception as e:
             logger.error(f"Error storing estimated location: {e}")
 
-    async def _trigger_geofence_evaluation(self, location):
+    async def _trigger_geofence_evaluation(self, location) -> None:
         """Trigger geofence evaluation for the location"""
         try:
             # Import here to avoid circular imports
@@ -240,7 +240,7 @@ class ObservationProcessor:
 
 
 # Background task to process buffered observations
-async def process_buffered_observations():
+async def process_buffered_observations() -> None:
     """Background task to process any remaining buffered observations"""
     processor = ObservationProcessor()
 

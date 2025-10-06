@@ -1,3 +1,4 @@
+import React from &apos;react&apos;;
 /**
  * Job Details Component
  *
@@ -9,14 +10,14 @@
  * - Active alerts
  */
 
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Separator } from '../ui/separator';
-import { Progress } from '../ui/progress';
-import { PageHeader, PageLayout, StatusBadge, PriorityBadge } from '../common';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { useState } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Separator } from &apos;../ui/separator&apos;;
+import { Progress } from &apos;../ui/progress&apos;;
+import { PageHeader, PageLayout, StatusBadge, PriorityBadge } from &apos;../common&apos;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
 import {
   Table,
   TableBody,
@@ -24,7 +25,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table';
+} from &apos;../ui/table&apos;;
 import {
   Edit,
   TrendingUp,
@@ -37,8 +38,8 @@ import {
   Clock,
   Users,
   MapPin,
-} from 'lucide-react';
-import type { Job } from '../../types/job';
+} from &apos;lucide-react&apos;;
+import type { Job } from &apos;../../types/job&apos;;
 
 interface JobDetailsProps {
   job: Job;
@@ -47,37 +48,37 @@ interface JobDetailsProps {
 }
 
 export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState(&apos;overview&apos;);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat(&apos;en-US&apos;, {
+      style: &apos;currency&apos;,
+      currency: &apos;USD&apos;,
     }).format(amount);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    return new Date(dateString).toLocaleDateString(&apos;en-US&apos;, {
+      month: &apos;short&apos;,
+      day: &apos;numeric&apos;,
+      year: &apos;numeric&apos;,
     });
   };
 
   const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(dateString).toLocaleString(&apos;en-US&apos;, {
+      month: &apos;short&apos;,
+      day: &apos;numeric&apos;,
+      year: &apos;numeric&apos;,
+      hour: &apos;2-digit&apos;,
+      minute: &apos;2-digit&apos;,
     });
   };
 
   return (
     <PageLayout
-      variant='standard'
-      padding='md'
+      variant=&apos;standard&apos;
+      padding=&apos;md&apos;
       header={
         <PageHeader
           title={job.name}
@@ -85,7 +86,7 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
           onBack={onBack}
           actions={
             <Button onClick={() => onEdit(job)}>
-              <Edit className='h-4 w-4 mr-2' />
+              <Edit className=&apos;h-4 w-4 mr-2&apos; />
               Edit Job
             </Button>
           }
@@ -93,15 +94,15 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
       }
     >
       {/* Status and Priority Badges */}
-      <div className='flex items-center gap-3'>
+      <div className=&apos;flex items-center gap-3&apos;>
         <StatusBadge status={job.status} />
         <PriorityBadge priority={job.priority} />
         {job.hasActiveAlerts && (
           <Badge
-            variant='outline'
-            className='bg-red-100 text-red-700 border-red-200'
+            variant=&apos;outline&apos;
+            className=&apos;bg-red-100 text-red-700 border-red-200&apos;
           >
-            <AlertTriangle className='h-3 w-3 mr-1' />
+            <AlertTriangle className=&apos;h-3 w-3 mr-1&apos; />
             Active Alerts
           </Badge>
         )}
@@ -110,17 +111,17 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value='overview'>Overview</TabsTrigger>
-          <TabsTrigger value='assets'>Assets ({job.assets.length})</TabsTrigger>
-          <TabsTrigger value='costs'>Costs & Budget</TabsTrigger>
-          <TabsTrigger value='timeline'>Timeline</TabsTrigger>
-          <TabsTrigger value='team'>Team</TabsTrigger>
+          <TabsTrigger value=&apos;overview&apos;>Overview</TabsTrigger>
+          <TabsTrigger value=&apos;assets&apos;>Assets ({job.assets.length})</TabsTrigger>
+          <TabsTrigger value=&apos;costs&apos;>Costs & Budget</TabsTrigger>
+          <TabsTrigger value=&apos;timeline&apos;>Timeline</TabsTrigger>
+          <TabsTrigger value=&apos;team&apos;>Team</TabsTrigger>
           {job.hasActiveAlerts && (
-            <TabsTrigger value='alerts'>
+            <TabsTrigger value=&apos;alerts&apos;>
               Alerts
               <Badge
-                variant='outline'
-                className='ml-2 bg-red-100 text-red-700 border-red-200'
+                variant=&apos;outline&apos;
+                className=&apos;ml-2 bg-red-100 text-red-700 border-red-200&apos;
               >
                 {job.missingAssets?.length || 0}
               </Badge>
@@ -129,53 +130,53 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value='overview' className='space-y-6'>
+        <TabsContent value=&apos;overview&apos; className=&apos;space-y-6&apos;>
           <Card>
             <CardHeader>
               <CardTitle>Job Information</CardTitle>
             </CardHeader>
-            <CardContent className='space-y-3'>
+            <CardContent className=&apos;space-y-3&apos;>
               <div>
-                <span className='text-sm text-muted-foreground'>
+                <span className=&apos;text-sm text-muted-foreground&apos;>
                   Description:
                 </span>
-                <p>{job.description || 'No description provided'}</p>
+                <p>{job.description || &apos;No description provided&apos;}</p>
               </div>
               <Separator />
-              <div className='grid grid-cols-2 gap-4'>
+              <div className=&apos;grid grid-cols-2 gap-4&apos;>
                 <div>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Start Date:
                   </span>
                   <p>{formatDate(job.startDate)}</p>
                 </div>
                 <div>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     End Date:
                   </span>
                   <p>{formatDate(job.endDate)}</p>
                 </div>
                 <div>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Priority:
                   </span>
-                  <p className='capitalize'>{job.priority}</p>
+                  <p className=&apos;capitalize&apos;>{job.priority}</p>
                 </div>
                 <div>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Project Manager:
                   </span>
-                  <p>{job.projectManager || 'Not assigned'}</p>
+                  <p>{job.projectManager || &apos;Not assigned&apos;}</p>
                 </div>
                 {job.siteName && (
                   <div>
-                    <span className='text-sm text-muted-foreground'>Site:</span>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>Site:</span>
                     <p>{job.siteName}</p>
                   </div>
                 )}
                 {job.clientName && (
                   <div>
-                    <span className='text-sm text-muted-foreground'>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>
                       Client:
                     </span>
                     <p>{job.clientName}</p>
@@ -186,10 +187,10 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
                 <>
                   <Separator />
                   <div>
-                    <span className='text-sm text-muted-foreground'>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>
                       Notes:
                     </span>
-                    <p className='mt-1'>{job.notes}</p>
+                    <p className=&apos;mt-1&apos;>{job.notes}</p>
                   </div>
                 </>
               )}
@@ -197,10 +198,10 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
                 <>
                   <Separator />
                   <div>
-                    <span className='text-sm text-muted-foreground'>Tags:</span>
-                    <div className='flex flex-wrap gap-2 mt-2'>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>Tags:</span>
+                    <div className=&apos;flex flex-wrap gap-2 mt-2&apos;>
                       {job.tags.map(tag => (
-                        <Badge key={tag} variant='outline'>
+                        <Badge key={tag} variant=&apos;outline&apos;>
                           {tag}
                         </Badge>
                       ))}
@@ -214,45 +215,45 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
           {job.vehicle && (
             <Card>
               <CardHeader>
-                <CardTitle className='flex items-center gap-2'>
-                  <Truck className='h-5 w-5' />
+                <CardTitle className=&apos;flex items-center gap-2&apos;>
+                  <Truck className=&apos;h-5 w-5&apos; />
                   Assigned Vehicle
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='space-y-2'>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-muted-foreground'>
+                <div className=&apos;space-y-2&apos;>
+                  <div className=&apos;flex items-center justify-between&apos;>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>
                       Vehicle:
                     </span>
                     <span>{job.vehicle.vehicleName}</span>
                   </div>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-muted-foreground'>
+                  <div className=&apos;flex items-center justify-between&apos;>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>
                       Driver:
                     </span>
-                    <span>{job.vehicle.driverName || 'Not assigned'}</span>
+                    <span>{job.vehicle.driverName || &apos;Not assigned&apos;}</span>
                   </div>
-                  <div className='flex items-center justify-between'>
-                    <span className='text-sm text-muted-foreground'>
+                  <div className=&apos;flex items-center justify-between&apos;>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>
                       Status:
                     </span>
                     <Badge
-                      variant='outline'
+                      variant=&apos;outline&apos;
                       className={
                         job.vehicle.isAtGroundStation
-                          ? 'bg-green-100 text-green-700 border-green-200'
-                          : 'bg-blue-100 text-blue-700 border-blue-200'
+                          ? &apos;bg-green-100 text-green-700 border-green-200&apos;
+                          : &apos;bg-blue-100 text-blue-700 border-blue-200&apos;
                       }
                     >
                       {job.vehicle.isAtGroundStation
-                        ? 'At Ground Station'
-                        : 'On Route'}
+                        ? &apos;At Ground Station&apos;
+                        : &apos;On Route&apos;}
                     </Badge>
                   </div>
                   {job.vehicle.departureTime && (
-                    <div className='flex items-center justify-between'>
-                      <span className='text-sm text-muted-foreground'>
+                    <div className=&apos;flex items-center justify-between&apos;>
+                      <span className=&apos;text-sm text-muted-foreground&apos;>
                         Departed:
                       </span>
                       <span>{formatDateTime(job.vehicle.departureTime)}</span>
@@ -266,20 +267,20 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
           {job.groundStationName && (
             <Card>
               <CardHeader>
-                <CardTitle className='flex items-center gap-2'>
-                  <MapPin className='h-5 w-5' />
+                <CardTitle className=&apos;flex items-center gap-2&apos;>
+                  <MapPin className=&apos;h-5 w-5&apos; />
                   Ground Station
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='space-y-2'>
+                <div className=&apos;space-y-2&apos;>
                   <div>
-                    <span className='text-sm text-muted-foreground'>Name:</span>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>Name:</span>
                     <p>{job.groundStationName}</p>
                   </div>
                   {job.groundStationLocation?.address && (
                     <div>
-                      <span className='text-sm text-muted-foreground'>
+                      <span className=&apos;text-sm text-muted-foreground&apos;>
                         Address:
                       </span>
                       <p>{job.groundStationLocation.address}</p>
@@ -292,17 +293,17 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
         </TabsContent>
 
         {/* Assets Tab */}
-        <TabsContent value='assets' className='space-y-6'>
+        <TabsContent value=&apos;assets&apos; className=&apos;space-y-6&apos;>
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Package className='h-5 w-5' />
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <Package className=&apos;h-5 w-5&apos; />
                 Assigned Assets
               </CardTitle>
             </CardHeader>
             <CardContent>
               {job.assets.length === 0 ? (
-                <p className='text-center text-muted-foreground py-8'>
+                <p className=&apos;text-center text-muted-foreground py-8&apos;>
                   No assets assigned to this job
                 </p>
               ) : (
@@ -314,64 +315,64 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
                       <TableHead>Status</TableHead>
                       <TableHead>Required</TableHead>
                       <TableHead>Assignment Period</TableHead>
-                      <TableHead className='text-right'>Cost</TableHead>
+                      <TableHead className=&apos;text-right&apos;>Cost</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {job.assets.map(asset => (
                       <TableRow key={asset.assetId}>
                         <TableCell>{asset.assetName}</TableCell>
-                        <TableCell className='capitalize'>
-                          {asset.assetType.replace(/-/g, ' ')}
+                        <TableCell className=&apos;capitalize&apos;>
+                          {asset.assetType.replace(/-/g, &apos; &apos;)}
                         </TableCell>
                         <TableCell>
                           {asset.loadedOnVehicle ? (
                             <Badge
-                              variant='outline'
-                              className='bg-green-100 text-green-700 border-green-200'
+                              variant=&apos;outline&apos;
+                              className=&apos;bg-green-100 text-green-700 border-green-200&apos;
                             >
-                              <CheckCircle2 className='h-3 w-3 mr-1' />
+                              <CheckCircle2 className=&apos;h-3 w-3 mr-1&apos; />
                               Loaded
                             </Badge>
                           ) : (
-                            <Badge variant='outline'>Not Loaded</Badge>
+                            <Badge variant=&apos;outline&apos;>Not Loaded</Badge>
                           )}
                         </TableCell>
                         <TableCell>
                           {asset.required ? (
                             <Badge
-                              variant='outline'
-                              className='bg-red-100 text-red-700 border-red-200'
+                              variant=&apos;outline&apos;
+                              className=&apos;bg-red-100 text-red-700 border-red-200&apos;
                             >
                               Required
                             </Badge>
                           ) : (
-                            <Badge variant='outline'>Optional</Badge>
+                            <Badge variant=&apos;outline&apos;>Optional</Badge>
                           )}
                         </TableCell>
                         <TableCell>
                           {asset.assignmentStartDate &&
                           asset.assignmentEndDate ? (
-                            <div className='flex items-center gap-1 text-sm'>
-                              <Clock className='h-3 w-3 text-muted-foreground' />
+                            <div className=&apos;flex items-center gap-1 text-sm&apos;>
+                              <Clock className=&apos;h-3 w-3 text-muted-foreground&apos; />
                               <span>
-                                {formatDate(asset.assignmentStartDate)} -{' '}
+                                {formatDate(asset.assignmentStartDate)} -{&apos; &apos;}
                                 {formatDate(asset.assignmentEndDate)}
                               </span>
                               {asset.useFullJobDuration && (
-                                <Badge variant='outline' className='ml-2'>
+                                <Badge variant=&apos;outline&apos; className=&apos;ml-2&apos;>
                                   Full job duration
                                 </Badge>
                               )}
                             </div>
                           ) : (
-                            <span className='text-sm text-muted-foreground'>
+                            <span className=&apos;text-sm text-muted-foreground&apos;>
                               Not set
                             </span>
                           )}
                         </TableCell>
-                        <TableCell className='text-right'>
-                          {asset.cost ? formatCurrency(asset.cost) : '-'}
+                        <TableCell className=&apos;text-right&apos;>
+                          {asset.cost ? formatCurrency(asset.cost) : &apos;-&apos;}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -383,35 +384,35 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
         </TabsContent>
 
         {/* Costs & Budget Tab */}
-        <TabsContent value='costs' className='space-y-6'>
-          <div className='grid grid-cols-2 gap-4'>
+        <TabsContent value=&apos;costs&apos; className=&apos;space-y-6&apos;>
+          <div className=&apos;grid grid-cols-2 gap-4&apos;>
             <Card>
               <CardHeader>
                 <CardTitle>Budget</CardTitle>
               </CardHeader>
-              <CardContent className='space-y-2'>
-                <div className='flex justify-between'>
-                  <span className='text-sm text-muted-foreground'>Labor:</span>
+              <CardContent className=&apos;space-y-2&apos;>
+                <div className=&apos;flex justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>Labor:</span>
                   <span>{formatCurrency(job.budget.labor)}</span>
                 </div>
-                <div className='flex justify-between'>
-                  <span className='text-sm text-muted-foreground'>
+                <div className=&apos;flex justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Equipment:
                   </span>
                   <span>{formatCurrency(job.budget.equipment)}</span>
                 </div>
-                <div className='flex justify-between'>
-                  <span className='text-sm text-muted-foreground'>
+                <div className=&apos;flex justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Materials:
                   </span>
                   <span>{formatCurrency(job.budget.materials)}</span>
                 </div>
-                <div className='flex justify-between'>
-                  <span className='text-sm text-muted-foreground'>Other:</span>
+                <div className=&apos;flex justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>Other:</span>
                   <span>{formatCurrency(job.budget.other)}</span>
                 </div>
                 <Separator />
-                <div className='flex justify-between'>
+                <div className=&apos;flex justify-between&apos;>
                   <span>Total Budget:</span>
                   <span>{formatCurrency(job.budget.total)}</span>
                 </div>
@@ -422,29 +423,29 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
               <CardHeader>
                 <CardTitle>Actual Costs</CardTitle>
               </CardHeader>
-              <CardContent className='space-y-2'>
-                <div className='flex justify-between'>
-                  <span className='text-sm text-muted-foreground'>Labor:</span>
+              <CardContent className=&apos;space-y-2&apos;>
+                <div className=&apos;flex justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>Labor:</span>
                   <span>{formatCurrency(job.actualCosts.labor)}</span>
                 </div>
-                <div className='flex justify-between'>
-                  <span className='text-sm text-muted-foreground'>
+                <div className=&apos;flex justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Equipment:
                   </span>
                   <span>{formatCurrency(job.actualCosts.equipment)}</span>
                 </div>
-                <div className='flex justify-between'>
-                  <span className='text-sm text-muted-foreground'>
+                <div className=&apos;flex justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Materials:
                   </span>
                   <span>{formatCurrency(job.actualCosts.materials)}</span>
                 </div>
-                <div className='flex justify-between'>
-                  <span className='text-sm text-muted-foreground'>Other:</span>
+                <div className=&apos;flex justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>Other:</span>
                   <span>{formatCurrency(job.actualCosts.other)}</span>
                 </div>
                 <Separator />
-                <div className='flex justify-between'>
+                <div className=&apos;flex justify-between&apos;>
                   <span>Total Actual:</span>
                   <span>{formatCurrency(job.actualCosts.total)}</span>
                 </div>
@@ -456,11 +457,11 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
             <CardHeader>
               <CardTitle>Budget vs Actual</CardTitle>
             </CardHeader>
-            <CardContent className='space-y-4'>
+            <CardContent className=&apos;space-y-4&apos;>
               <div>
-                <div className='flex items-center justify-between mb-2'>
-                  <span className='text-sm'>Budget Utilization</span>
-                  <span className='text-sm'>
+                <div className=&apos;flex items-center justify-between mb-2&apos;>
+                  <span className=&apos;text-sm&apos;>Budget Utilization</span>
+                  <span className=&apos;text-sm&apos;>
                     {((job.actualCosts.total / job.budget.total) * 100).toFixed(
                       1
                     )}
@@ -469,41 +470,41 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
                 </div>
                 <Progress
                   value={(job.actualCosts.total / job.budget.total) * 100}
-                  className='h-2'
+                  className=&apos;h-2&apos;
                 />
               </div>
 
               <Separator />
 
-              <div className='flex items-center justify-between p-4 rounded-lg bg-muted'>
+              <div className=&apos;flex items-center justify-between p-4 rounded-lg bg-muted&apos;>
                 <div>
-                  <div className='text-sm text-muted-foreground'>Variance</div>
-                  <div className='flex items-center gap-2 mt-1'>
+                  <div className=&apos;text-sm text-muted-foreground&apos;>Variance</div>
+                  <div className=&apos;flex items-center gap-2 mt-1&apos;>
                     {job.variancePercentage >= 0 ? (
-                      <TrendingUp className='h-5 w-5 text-green-600' />
+                      <TrendingUp className=&apos;h-5 w-5 text-green-600&apos; />
                     ) : (
-                      <TrendingDown className='h-5 w-5 text-red-600' />
+                      <TrendingDown className=&apos;h-5 w-5 text-red-600&apos; />
                     )}
                     <span
                       className={
                         job.variancePercentage >= 0
-                          ? 'text-green-600'
-                          : 'text-red-600'
+                          ? &apos;text-green-600&apos;
+                          : &apos;text-red-600&apos;
                       }
                     >
                       {formatCurrency(Math.abs(job.variance))}
                     </span>
                   </div>
                 </div>
-                <div className='text-right'>
-                  <div className='text-sm text-muted-foreground'>
+                <div className=&apos;text-right&apos;>
+                  <div className=&apos;text-sm text-muted-foreground&apos;>
                     Percentage
                   </div>
                   <div
                     className={
                       job.variancePercentage >= 0
-                        ? 'text-green-600'
-                        : 'text-red-600'
+                        ? &apos;text-green-600&apos;
+                        : &apos;text-red-600&apos;
                     }
                   >
                     {job.variancePercentage.toFixed(1)}%
@@ -512,12 +513,12 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
               </div>
 
               {job.variancePercentage < -10 && (
-                <div className='flex items-start gap-3 p-3 border border-red-200 bg-red-50 rounded-md'>
-                  <AlertTriangle className='h-5 w-5 text-red-600 mt-0.5' />
+                <div className=&apos;flex items-start gap-3 p-3 border border-red-200 bg-red-50 rounded-md&apos;>
+                  <AlertTriangle className=&apos;h-5 w-5 text-red-600 mt-0.5&apos; />
                   <div>
-                    <div className='text-sm text-red-900'>Budget Exceeded</div>
-                    <div className='text-sm text-red-700 mt-1'>
-                      This job is over budget by{' '}
+                    <div className=&apos;text-sm text-red-900&apos;>Budget Exceeded</div>
+                    <div className=&apos;text-sm text-red-700 mt-1&apos;>
+                      This job is over budget by{&apos; &apos;}
                       {Math.abs(job.variancePercentage).toFixed(1)}
                       %. Review costs and take corrective action.
                     </div>
@@ -529,37 +530,37 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
         </TabsContent>
 
         {/* Timeline Tab */}
-        <TabsContent value='timeline' className='space-y-6'>
+        <TabsContent value=&apos;timeline&apos; className=&apos;space-y-6&apos;>
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <CalendarIcon className='h-5 w-5' />
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <CalendarIcon className=&apos;h-5 w-5&apos; />
                 Project Timeline
               </CardTitle>
             </CardHeader>
-            <CardContent className='space-y-4'>
-              <div className='grid grid-cols-2 gap-4'>
+            <CardContent className=&apos;space-y-4&apos;>
+              <div className=&apos;grid grid-cols-2 gap-4&apos;>
                 <div>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Start Date:
                   </span>
                   <p>{formatDate(job.startDate)}</p>
                 </div>
                 <div>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     End Date:
                   </span>
                   <p>{formatDate(job.endDate)}</p>
                 </div>
                 <div>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Estimated Duration:
                   </span>
                   <p>{job.estimatedDuration} hours</p>
                 </div>
                 {job.actualDuration && (
                   <div>
-                    <span className='text-sm text-muted-foreground'>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>
                       Actual Duration:
                     </span>
                     <p>{job.actualDuration} hours</p>
@@ -571,7 +572,7 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
                 <>
                   <Separator />
                   <div>
-                    <span className='text-sm text-muted-foreground'>
+                    <span className=&apos;text-sm text-muted-foreground&apos;>
                       Completed At:
                     </span>
                     <p>{formatDateTime(job.completedAt)}</p>
@@ -581,28 +582,28 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
 
               <Separator />
 
-              <div className='space-y-2'>
-                <div className='flex items-center justify-between'>
-                  <span className='text-sm text-muted-foreground'>
+              <div className=&apos;space-y-2&apos;>
+                <div className=&apos;flex items-center justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Created:
                   </span>
-                  <span className='text-sm'>
+                  <span className=&apos;text-sm&apos;>
                     {formatDateTime(job.createdAt)}
                   </span>
                 </div>
-                <div className='flex items-center justify-between'>
-                  <span className='text-sm text-muted-foreground'>
+                <div className=&apos;flex items-center justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Last Updated:
                   </span>
-                  <span className='text-sm'>
+                  <span className=&apos;text-sm&apos;>
                     {formatDateTime(job.updatedAt)}
                   </span>
                 </div>
-                <div className='flex items-center justify-between'>
-                  <span className='text-sm text-muted-foreground'>
+                <div className=&apos;flex items-center justify-between&apos;>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Created By:
                   </span>
-                  <span className='text-sm'>{job.createdBy}</span>
+                  <span className=&apos;text-sm&apos;>{job.createdBy}</span>
                 </div>
               </div>
             </CardContent>
@@ -610,33 +611,33 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
         </TabsContent>
 
         {/* Team Tab */}
-        <TabsContent value='team' className='space-y-6'>
+        <TabsContent value=&apos;team&apos; className=&apos;space-y-6&apos;>
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Users className='h-5 w-5' />
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <Users className=&apos;h-5 w-5&apos; />
                 Team Members
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='space-y-3'>
+              <div className=&apos;space-y-3&apos;>
                 <div>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className=&apos;text-sm text-muted-foreground&apos;>
                     Project Manager:
                   </span>
-                  <p className='mt-1'>{job.projectManager || 'Not assigned'}</p>
+                  <p className=&apos;mt-1&apos;>{job.projectManager || &apos;Not assigned&apos;}</p>
                 </div>
 
                 {job.assignedTeam && job.assignedTeam.length > 0 && (
                   <>
                     <Separator />
                     <div>
-                      <span className='text-sm text-muted-foreground'>
+                      <span className=&apos;text-sm text-muted-foreground&apos;>
                         Assigned Team:
                       </span>
-                      <div className='flex flex-wrap gap-2 mt-2'>
+                      <div className=&apos;flex flex-wrap gap-2 mt-2&apos;>
                         {job.assignedTeam.map(member => (
-                          <Badge key={member} variant='outline'>
+                          <Badge key={member} variant=&apos;outline&apos;>
                             {member}
                           </Badge>
                         ))}
@@ -651,27 +652,27 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
 
         {/* Alerts Tab */}
         {job.hasActiveAlerts && (
-          <TabsContent value='alerts' className='space-y-6'>
+          <TabsContent value=&apos;alerts&apos; className=&apos;space-y-6&apos;>
             <Card>
               <CardHeader>
-                <CardTitle className='flex items-center gap-2'>
-                  <AlertTriangle className='h-5 w-5 text-red-600' />
+                <CardTitle className=&apos;flex items-center gap-2&apos;>
+                  <AlertTriangle className=&apos;h-5 w-5 text-red-600&apos; />
                   Active Alerts
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {job.missingAssets && job.missingAssets.length > 0 && (
-                  <div className='flex items-start gap-3 p-4 border border-red-200 bg-red-50 rounded-md'>
-                    <AlertTriangle className='h-5 w-5 text-red-600 mt-0.5' />
-                    <div className='flex-1'>
-                      <div className='text-sm text-red-900'>
+                  <div className=&apos;flex items-start gap-3 p-4 border border-red-200 bg-red-50 rounded-md&apos;>
+                    <AlertTriangle className=&apos;h-5 w-5 text-red-600 mt-0.5&apos; />
+                    <div className=&apos;flex-1&apos;>
+                      <div className=&apos;text-sm text-red-900&apos;>
                         Missing Required Assets
                       </div>
-                      <div className='text-sm text-red-700 mt-2'>
+                      <div className=&apos;text-sm text-red-700 mt-2&apos;>
                         The following required assets are not loaded on the
                         vehicle:
                       </div>
-                      <ul className='list-disc list-inside text-sm text-red-700 mt-2'>
+                      <ul className=&apos;list-disc list-inside text-sm text-red-700 mt-2&apos;>
                         {job.missingAssets.map(assetId => {
                           const asset = job.assets.find(
                             a => a.assetId === assetId

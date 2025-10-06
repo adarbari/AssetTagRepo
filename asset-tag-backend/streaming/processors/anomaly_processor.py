@@ -47,19 +47,19 @@ class AnomalyProcessor:
             self.feature_store = await get_feature_store()
         return self.feature_store
 
-    async def _get_cache(self):
+    async def _get_cache(self) -> None:
         """Get cache manager"""
         if not self.cache:
             self.cache = await get_cache()
         return self.cache
 
-    async def _get_db(self):
+    async def _get_db(self) -> None:
         """Get database session"""
         if not self.db:
             self.db = await get_db()
         return self.db
 
-    async def start(self):
+    async def start(self) -> None:
         """Start the anomaly processor"""
         if self.running:
             return
@@ -68,7 +68,7 @@ class AnomalyProcessor:
         self.processing_task = asyncio.create_task(self._processing_loop())
         logger.info("Anomaly processor started")
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop the anomaly processor"""
         self.running = False
         if self.processing_task:
@@ -79,7 +79,7 @@ class AnomalyProcessor:
                 pass
         logger.info("Anomaly processor stopped")
 
-    async def process_location_update(self, location_data: Dict[str, Any]):
+    async def process_location_update(self, location_data: Dict[str, Any]) -> None:
         """Process location update for anomaly detection"""
         try:
             asset_id = location_data.get("asset_id")
@@ -99,7 +99,7 @@ class AnomalyProcessor:
         except Exception as e:
             logger.error(f"Error processing location update for anomaly detection: {e}")
 
-    async def _processing_loop(self):
+    async def _processing_loop(self) -> None:
         """Main processing loop for periodic anomaly detection"""
         while self.running:
             try:
@@ -114,7 +114,7 @@ class AnomalyProcessor:
                 logger.error(f"Error in anomaly processing loop: {e}")
                 await asyncio.sleep(60)  # Wait before retrying
 
-    async def _periodic_anomaly_detection(self):
+    async def _periodic_anomaly_detection(self) -> None:
         """Periodic anomaly detection for all active assets"""
         try:
             # Get all active assets
@@ -261,7 +261,7 @@ class AnomalyProcessor:
         """Check if asset is in cooldown period"""
         return datetime.now() - self.asset_cooldowns[asset_id] < self.cooldown_duration
 
-    def _set_cooldown(self, asset_id: str):
+    def _set_cooldown(self, asset_id: str) -> None:
         """Set cooldown for asset"""
         self.asset_cooldowns[asset_id] = datetime.now()
 
@@ -308,7 +308,7 @@ class AnomalyProcessor:
             logger.error(f"Error in forced anomaly detection for asset {asset_id}: {e}")
             return {"error": str(e)}
 
-    async def update_anomaly_threshold(self, new_threshold: float):
+    async def update_anomaly_threshold(self, new_threshold: float) -> None:
         """Update anomaly detection threshold"""
         if 0.0 <= new_threshold <= 1.0:
             self.anomaly_threshold = new_threshold
@@ -328,11 +328,11 @@ async def get_anomaly_processor() -> AnomalyProcessor:
     return anomaly_processor
 
 
-async def start_anomaly_processor():
+async def start_anomaly_processor() -> None:
     """Start the anomaly processor"""
     await anomaly_processor.start()
 
 
-async def stop_anomaly_processor():
+async def stop_anomaly_processor() -> None:
     """Stop the anomaly processor"""
     await anomaly_processor.stop()

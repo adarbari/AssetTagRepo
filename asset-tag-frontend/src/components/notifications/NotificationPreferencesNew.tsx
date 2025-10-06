@@ -1,4 +1,4 @@
-import React from 'react';
+import React from &apos;react&apos;;
 
 /**
  * Notification Preferences - Hierarchical Configuration
@@ -9,29 +9,29 @@ import React from 'react';
  * - Asset Level (overrides for specific assets)
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from &apos;react&apos;;
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
-import { Button } from '../ui/button';
-import { Switch } from '../ui/switch';
-import { Label } from '../ui/label';
-import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
-import { Separator } from '../ui/separator';
-import { Alert, AlertDescription } from '../ui/alert';
+} from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Switch } from &apos;../ui/switch&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Separator } from &apos;../ui/separator&apos;;
+import { Alert, AlertDescription } from &apos;../ui/alert&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+} from &apos;../ui/select&apos;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
 import {
   Bell,
   Mail,
@@ -48,14 +48,14 @@ import {
   Info,
   Trash2,
   CheckCircle2,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { ConfigurationInspector, PageLayout } from '../common';
+} from &apos;lucide-react&apos;;
+import { toast } from &apos;sonner&apos;;
+import { ConfigurationInspector, PageLayout } from &apos;../common&apos;;
 import type {
   NotificationPreferences,
   NotificationLevel,
   NotificationChannelType,
-} from '../../types/notificationConfig';
+} from &apos;../../types/notificationConfig&apos;;
 
 interface NotificationPreferencesNewProps {
   onBack?: () => void;
@@ -80,7 +80,7 @@ interface NotificationPreferencesNewProps {
 
 export function NotificationPreferencesNew({
   onBack,
-  preselectedLevel = 'user',
+  preselectedLevel = &apos;user&apos;,
   preselectedEntityId,
   preselectedEntityName,
   notificationConfigs,
@@ -91,10 +91,10 @@ export function NotificationPreferencesNew({
   const [selectedLevel, setSelectedLevel] =
     useState<NotificationLevel>(preselectedLevel);
   const [selectedEntityId, setSelectedEntityId] = useState(
-    preselectedEntityId || 'current-user'
+    preselectedEntityId || &apos;current-user&apos;
   );
   const [selectedEntityName, setSelectedEntityName] = useState(
-    preselectedEntityName || 'Your Account'
+    preselectedEntityName || &apos;Your Account&apos;
   );
 
   const [preferences, setPreferences] =
@@ -122,9 +122,9 @@ export function NotificationPreferencesNew({
         entityId: selectedEntityId,
         channels: {
           email: {
-            enabled: selectedLevel === 'user' ? true : false,
-            addresses: selectedLevel === 'user' ? ['user@example.com'] : [],
-            verified: selectedLevel === 'user',
+            enabled: selectedLevel === &apos;user&apos; ? true : false,
+            addresses: selectedLevel === &apos;user&apos; ? [&apos;user@example.com&apos;] : [],
+            verified: selectedLevel === &apos;user&apos;,
           },
           sms: {
             enabled: false,
@@ -132,8 +132,8 @@ export function NotificationPreferencesNew({
             verified: false,
           },
           push: {
-            enabled: selectedLevel === 'user' ? true : false,
-            devices: selectedLevel === 'user' ? ['device-1'] : [],
+            enabled: selectedLevel === &apos;user&apos; ? true : false,
+            devices: selectedLevel === &apos;user&apos; ? [&apos;device-1&apos;] : [],
           },
           webhook: {
             enabled: false,
@@ -142,12 +142,12 @@ export function NotificationPreferencesNew({
         },
         filters: {
           types: [], // All types
-          severities: ['medium', 'high', 'critical'],
+          severities: [&apos;medium&apos;, &apos;high&apos;, &apos;critical&apos;],
         },
         quietHours: {
-          enabled: selectedLevel === 'user' ? true : false,
-          start: '22:00',
-          end: '08:00',
+          enabled: selectedLevel === &apos;user&apos; ? true : false,
+          start: &apos;22:00&apos;,
+          end: &apos;08:00&apos;,
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           excludeCritical: true,
         },
@@ -156,7 +156,7 @@ export function NotificationPreferencesNew({
           maxPerDay: 100,
           digestMode: false,
         },
-        isOverride: selectedLevel !== 'user',
+        isOverride: selectedLevel !== &apos;user&apos;,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -175,23 +175,23 @@ export function NotificationPreferencesNew({
       });
 
       if (result.success) {
-        toast.success('Preferences saved', {
-          description: `${selectedLevel === 'user' ? 'Your' : selectedEntityName} notification preferences have been updated`,
+        toast.success(&apos;Preferences saved&apos;, {
+          description: `${selectedLevel === &apos;user&apos; ? &apos;Your&apos; : selectedEntityName} notification preferences have been updated`,
         });
         setHasChanges(false);
       } else {
         throw new Error(result.error);
       }
     } catch (error) {
-      toast.error('Failed to save preferences', {
-        description: 'Please try again',
+      toast.error(&apos;Failed to save preferences&apos;, {
+        description: &apos;Please try again&apos;,
       });
     }
   };
 
   const handleDeleteOverride = async () => {
-    if (selectedLevel === 'user') {
-      toast.error('Cannot delete user-level preferences');
+    if (selectedLevel === &apos;user&apos;) {
+      toast.error(&apos;Cannot delete user-level preferences&apos;);
       return;
     }
 
@@ -199,19 +199,19 @@ export function NotificationPreferencesNew({
       const result = await onDeleteConfig(selectedLevel, selectedEntityId);
 
       if (result.success) {
-        toast.success('Override removed', {
+        toast.success(&apos;Override removed&apos;, {
           description: `${selectedEntityName} will now inherit preferences from parent level`,
         });
 
         // Switch back to user level
-        setSelectedLevel('user');
-        setSelectedEntityId('current-user');
-        setSelectedEntityName('Your Account');
+        setSelectedLevel(&apos;user&apos;);
+        setSelectedEntityId(&apos;current-user&apos;);
+        setSelectedEntityName(&apos;Your Account&apos;);
       } else {
         throw new Error(result.error);
       }
     } catch (error) {
-      toast.error('Failed to remove override');
+      toast.error(&apos;Failed to remove override&apos;);
     }
   };
 
@@ -236,11 +236,11 @@ export function NotificationPreferencesNew({
     setHasChanges(true);
   };
 
-  const updateChannelAddresses = (channel: 'email' | 'sms', value: string) => {
+  const updateChannelAddresses = (channel: &apos;email&apos; | &apos;sms&apos;, value: string) => {
     if (!preferences) return;
 
     const addresses = value
-      .split(',')
+      .split(&apos;,&apos;)
       .map(a => a.trim())
       .filter(Boolean);
 
@@ -250,34 +250,34 @@ export function NotificationPreferencesNew({
         ...preferences.channels,
         [channel]: {
           ...preferences.channels[channel],
-          [channel === 'email' ? 'addresses' : 'phoneNumbers']: addresses,
+          [channel === &apos;email&apos; ? &apos;addresses&apos; : &apos;phoneNumbers&apos;]: addresses,
           verified: false,
         },
       },
     });
     setHasChanges(true);
 
-    if (channel === 'email') setEmailVerified(false);
-    if (channel === 'sms') setSmsVerified(false);
+    if (channel === &apos;email&apos;) setEmailVerified(false);
+    if (channel === &apos;sms&apos;) setSmsVerified(false);
   };
 
   const handleTestNotification = (channel: NotificationChannelType) => {
-    toast.success('Test notification sent', {
+    toast.success(&apos;Test notification sent&apos;, {
       description: `A test notification has been sent via ${channel}`,
     });
   };
 
-  const handleVerifyChannel = (channel: 'email' | 'sms') => {
+  const handleVerifyChannel = (channel: &apos;email&apos; | &apos;sms&apos;) => {
     // In production, this would send a verification code
-    if (channel === 'email') setEmailVerified(true);
-    if (channel === 'sms') setSmsVerified(true);
+    if (channel === &apos;email&apos;) setEmailVerified(true);
+    if (channel === &apos;sms&apos;) setSmsVerified(true);
 
-    toast.success('Verification code sent', {
-      description: `Check your ${channel === 'email' ? 'email' : 'phone'} for the verification code`,
+    toast.success(&apos;Verification code sent&apos;, {
+      description: `Check your ${channel === &apos;email&apos; ? &apos;email&apos; : &apos;phone&apos;} for the verification code`,
     });
   };
 
-  const toggleSeverity = (severity: 'low' | 'medium' | 'high' | 'critical') => {
+  const toggleSeverity = (severity: &apos;low&apos; | &apos;medium&apos; | &apos;high&apos; | &apos;critical&apos;) => {
     if (!preferences) return;
 
     const severities = preferences.filters.severities;
@@ -296,39 +296,39 @@ export function NotificationPreferencesNew({
   };
 
   if (!preferences) {
-    return <div className='p-6'>Loading...</div>;
+    return <div className=&apos;p-6&apos;>Loading...</div>;
   }
 
   return (
-    <PageLayout variant='standard' padding='md'>
+    <PageLayout variant=&apos;standard&apos; padding=&apos;md&apos;>
       {/* Header */}
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-4'>
+      <div className=&apos;flex items-center justify-between&apos;>
+        <div className=&apos;flex items-center gap-4&apos;>
           {onBack && (
-            <Button variant='ghost' size='sm' onClick={onBack}>
-              <ChevronLeft className='h-4 w-4 mr-2' />
+            <Button variant=&apos;ghost&apos; size=&apos;sm&apos; onClick={onBack}>
+              <ChevronLeft className=&apos;h-4 w-4 mr-2&apos; />
               Back
             </Button>
           )}
           <div>
-            <h1 className='flex items-center gap-2'>
-              <Bell className='h-6 w-6' />
+            <h1 className=&apos;flex items-center gap-2&apos;>
+              <Bell className=&apos;h-6 w-6&apos; />
               Notification Preferences
             </h1>
-            <p className='text-muted-foreground'>
+            <p className=&apos;text-muted-foreground&apos;>
               Configure how you receive alert notifications
             </p>
           </div>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className=&apos;flex items-center gap-2&apos;>
           {hasChanges && (
-            <Badge variant='outline' className='gap-1'>
-              <Info className='h-3 w-3' />
+            <Badge variant=&apos;outline&apos; className=&apos;gap-1&apos;>
+              <Info className=&apos;h-3 w-3&apos; />
               Unsaved changes
             </Badge>
           )}
           <Button onClick={handleSave} disabled={!hasChanges}>
-            <Save className='h-4 w-4 mr-2' />
+            <Save className=&apos;h-4 w-4 mr-2&apos; />
             Save Preferences
           </Button>
         </div>
@@ -337,10 +337,10 @@ export function NotificationPreferencesNew({
       {/* Level Selector */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            {selectedLevel === 'user' && <User className='h-5 w-5' />}
-            {selectedLevel === 'site' && <Building2 className='h-5 w-5' />}
-            {selectedLevel === 'asset' && <Package className='h-5 w-5' />}
+          <CardTitle className=&apos;flex items-center gap-2&apos;>
+            {selectedLevel === &apos;user&apos; && <User className=&apos;h-5 w-5&apos; />}
+            {selectedLevel === &apos;site&apos; && <Building2 className=&apos;h-5 w-5&apos; />}
+            {selectedLevel === &apos;asset&apos; && <Package className=&apos;h-5 w-5&apos; />}
             Configuration Level
           </CardTitle>
           <CardDescription>
@@ -353,30 +353,30 @@ export function NotificationPreferencesNew({
             value={selectedLevel}
             onValueChange={v => {
               setSelectedLevel(v as NotificationLevel);
-              if (v === 'user') {
-                setSelectedEntityId('current-user');
-                setSelectedEntityName('Your Account');
+              if (v === &apos;user&apos;) {
+                setSelectedEntityId(&apos;current-user&apos;);
+                setSelectedEntityName(&apos;Your Account&apos;);
               }
             }}
           >
-            <TabsList className='grid grid-cols-3'>
-              <TabsTrigger value='user' className='gap-2'>
-                <User className='h-4 w-4' />
+            <TabsList className=&apos;grid grid-cols-3&apos;>
+              <TabsTrigger value=&apos;user&apos; className=&apos;gap-2&apos;>
+                <User className=&apos;h-4 w-4&apos; />
                 User Level
               </TabsTrigger>
-              <TabsTrigger value='site' className='gap-2'>
-                <Building2 className='h-4 w-4' />
+              <TabsTrigger value=&apos;site&apos; className=&apos;gap-2&apos;>
+                <Building2 className=&apos;h-4 w-4&apos; />
                 Site Level
               </TabsTrigger>
-              <TabsTrigger value='asset' className='gap-2'>
-                <Package className='h-4 w-4' />
+              <TabsTrigger value=&apos;asset&apos; className=&apos;gap-2&apos;>
+                <Package className=&apos;h-4 w-4&apos; />
                 Asset Level
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value='user' className='space-y-6'>
+            <TabsContent value=&apos;user&apos; className=&apos;space-y-6&apos;>
               <Alert>
-                <Info className='h-4 w-4' />
+                <Info className=&apos;h-4 w-4&apos; />
                 <AlertDescription>
                   These are your default notification preferences. They apply to
                   all sites and assets unless overridden.
@@ -384,16 +384,16 @@ export function NotificationPreferencesNew({
               </Alert>
             </TabsContent>
 
-            <TabsContent value='site' className='space-y-6'>
+            <TabsContent value=&apos;site&apos; className=&apos;space-y-6&apos;>
               <Alert>
-                <Info className='h-4 w-4' />
+                <Info className=&apos;h-4 w-4&apos; />
                 <AlertDescription>
                   Create site-specific notification preferences that override
                   your user-level settings for assets at this site.
                 </AlertDescription>
               </Alert>
 
-              <div className='space-y-2'>
+              <div className=&apos;space-y-2&apos;>
                 <Label>Select Site</Label>
                 <Select
                   value={selectedEntityId}
@@ -403,29 +403,29 @@ export function NotificationPreferencesNew({
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder='Choose a site...' />
+                    <SelectValue placeholder=&apos;Choose a site...&apos; />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='site-001'>
+                    <SelectItem value=&apos;site-001&apos;>
                       Construction Site A
                     </SelectItem>
-                    <SelectItem value='site-002'>Warehouse B</SelectItem>
-                    <SelectItem value='site-003'>Depot C</SelectItem>
+                    <SelectItem value=&apos;site-002&apos;>Warehouse B</SelectItem>
+                    <SelectItem value=&apos;site-003&apos;>Depot C</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </TabsContent>
 
-            <TabsContent value='asset' className='space-y-6'>
+            <TabsContent value=&apos;asset&apos; className=&apos;space-y-6&apos;>
               <Alert>
-                <Info className='h-4 w-4' />
+                <Info className=&apos;h-4 w-4&apos; />
                 <AlertDescription>
                   Create asset-specific notification preferences that override
                   both user and site-level settings for this specific asset.
                 </AlertDescription>
               </Alert>
 
-              <div className='space-y-2'>
+              <div className=&apos;space-y-2&apos;>
                 <Label>Select Asset</Label>
                 <Select
                   value={selectedEntityId}
@@ -435,32 +435,32 @@ export function NotificationPreferencesNew({
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder='Choose an asset...' />
+                    <SelectValue placeholder=&apos;Choose an asset...&apos; />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='asset-001'>Excavator EX-100</SelectItem>
-                    <SelectItem value='asset-002'>Bulldozer BD-200</SelectItem>
-                    <SelectItem value='asset-003'>Crane CR-300</SelectItem>
+                    <SelectItem value=&apos;asset-001&apos;>Excavator EX-100</SelectItem>
+                    <SelectItem value=&apos;asset-002&apos;>Bulldozer BD-200</SelectItem>
+                    <SelectItem value=&apos;asset-003&apos;>Crane CR-300</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </TabsContent>
           </Tabs>
 
-          {selectedLevel !== 'user' && preferences.isOverride && (
-            <div className='mt-4 flex items-center justify-between p-3 border border-orange-200 bg-orange-50 rounded-md'>
-              <div className='flex items-center gap-2'>
-                <Info className='h-4 w-4 text-orange-600' />
-                <span className='text-sm'>
+          {selectedLevel !== &apos;user&apos; && preferences.isOverride && (
+            <div className=&apos;mt-4 flex items-center justify-between p-3 border border-orange-200 bg-orange-50 rounded-md&apos;>
+              <div className=&apos;flex items-center gap-2&apos;>
+                <Info className=&apos;h-4 w-4 text-orange-600&apos; />
+                <span className=&apos;text-sm&apos;>
                   This {selectedLevel} has custom notification preferences
                 </span>
               </div>
               <Button
-                variant='destructive'
-                size='sm'
+                variant=&apos;destructive&apos;
+                size=&apos;sm&apos;
                 onClick={handleDeleteOverride}
               >
-                <Trash2 className='h-4 w-4 mr-2' />
+                <Trash2 className=&apos;h-4 w-4 mr-2&apos; />
                 Remove Override
               </Button>
             </div>
@@ -468,9 +468,9 @@ export function NotificationPreferencesNew({
         </CardContent>
       </Card>
 
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+      <div className=&apos;grid grid-cols-1 lg:grid-cols-3 gap-6&apos;>
         {/* Main Configuration */}
-        <div className='lg:col-span-2 space-y-6'>
+        <div className=&apos;lg:col-span-2 space-y-6&apos;>
           {/* Notification Channels */}
           <Card>
             <CardHeader>
@@ -479,56 +479,56 @@ export function NotificationPreferencesNew({
                 Choose how you want to receive notifications
               </CardDescription>
             </CardHeader>
-            <CardContent className='space-y-6'>
+            <CardContent className=&apos;space-y-6&apos;>
               {/* Email */}
-              <div className='space-y-3'>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-3'>
-                    <Mail className='h-5 w-5 text-muted-foreground' />
+              <div className=&apos;space-y-3&apos;>
+                <div className=&apos;flex items-center justify-between&apos;>
+                  <div className=&apos;flex items-center gap-3&apos;>
+                    <Mail className=&apos;h-5 w-5 text-muted-foreground&apos; />
                     <div>
                       <Label>Email Notifications</Label>
-                      <p className='text-xs text-muted-foreground'>
+                      <p className=&apos;text-xs text-muted-foreground&apos;>
                         Receive alerts via email
                       </p>
                     </div>
                   </div>
                   <Switch
                     checked={preferences.channels.email.enabled}
-                    onCheckedChange={() => toggleChannel('email')}
+                    onCheckedChange={() => toggleChannel(&apos;email&apos;)}
                   />
                 </div>
 
                 {preferences.channels.email.enabled && (
-                  <div className='ml-8 space-y-2'>
-                    <div className='flex gap-2'>
+                  <div className=&apos;ml-8 space-y-2&apos;>
+                    <div className=&apos;flex gap-2&apos;>
                       <Input
-                        type='email'
-                        placeholder='email@example.com, another@example.com'
+                        type=&apos;email&apos;
+                        placeholder=&apos;email@example.com, another@example.com&apos;
                         value={
-                          preferences.channels.email.addresses?.join(', ') || ''
+                          preferences.channels.email.addresses?.join(&apos;, &apos;) || &apos;&apos;
                         }
                         onChange={e =>
-                          updateChannelAddresses('email', e.target.value)
+                          updateChannelAddresses(&apos;email&apos;, e.target.value)
                         }
                       />
                       <Button
-                        variant='outline'
-                        size='sm'
-                        onClick={() => handleVerifyChannel('email')}
+                        variant=&apos;outline&apos;
+                        size=&apos;sm&apos;
+                        onClick={() => handleVerifyChannel(&apos;email&apos;)}
                         disabled={emailVerified}
                       >
                         {emailVerified ? (
-                          <CheckCircle2 className='h-4 w-4 mr-2 text-green-600' />
+                          <CheckCircle2 className=&apos;h-4 w-4 mr-2 text-green-600&apos; />
                         ) : null}
-                        {emailVerified ? 'Verified' : 'Verify'}
+                        {emailVerified ? &apos;Verified&apos; : &apos;Verify&apos;}
                       </Button>
                     </div>
                     <Button
-                      variant='ghost'
-                      size='sm'
-                      onClick={() => handleTestNotification('email')}
+                      variant=&apos;ghost&apos;
+                      size=&apos;sm&apos;
+                      onClick={() => handleTestNotification(&apos;email&apos;)}
                     >
-                      <TestTube className='h-4 w-4 mr-2' />
+                      <TestTube className=&apos;h-4 w-4 mr-2&apos; />
                       Send Test Email
                     </Button>
                   </div>
@@ -538,55 +538,55 @@ export function NotificationPreferencesNew({
               <Separator />
 
               {/* SMS */}
-              <div className='space-y-3'>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-3'>
-                    <MessageSquare className='h-5 w-5 text-muted-foreground' />
+              <div className=&apos;space-y-3&apos;>
+                <div className=&apos;flex items-center justify-between&apos;>
+                  <div className=&apos;flex items-center gap-3&apos;>
+                    <MessageSquare className=&apos;h-5 w-5 text-muted-foreground&apos; />
                     <div>
                       <Label>SMS Notifications</Label>
-                      <p className='text-xs text-muted-foreground'>
+                      <p className=&apos;text-xs text-muted-foreground&apos;>
                         Receive alerts via text message
                       </p>
                     </div>
                   </div>
                   <Switch
                     checked={preferences.channels.sms.enabled}
-                    onCheckedChange={() => toggleChannel('sms')}
+                    onCheckedChange={() => toggleChannel(&apos;sms&apos;)}
                   />
                 </div>
 
                 {preferences.channels.sms.enabled && (
-                  <div className='ml-8 space-y-2'>
-                    <div className='flex gap-2'>
+                  <div className=&apos;ml-8 space-y-2&apos;>
+                    <div className=&apos;flex gap-2&apos;>
                       <Input
-                        type='tel'
-                        placeholder='+1-555-123-4567'
+                        type=&apos;tel&apos;
+                        placeholder=&apos;+1-555-123-4567&apos;
                         value={
-                          preferences.channels.sms.phoneNumbers?.join(', ') ||
-                          ''
+                          preferences.channels.sms.phoneNumbers?.join(&apos;, &apos;) ||
+                          &apos;&apos;
                         }
                         onChange={e =>
-                          updateChannelAddresses('sms', e.target.value)
+                          updateChannelAddresses(&apos;sms&apos;, e.target.value)
                         }
                       />
                       <Button
-                        variant='outline'
-                        size='sm'
-                        onClick={() => handleVerifyChannel('sms')}
+                        variant=&apos;outline&apos;
+                        size=&apos;sm&apos;
+                        onClick={() => handleVerifyChannel(&apos;sms&apos;)}
                         disabled={smsVerified}
                       >
                         {smsVerified ? (
-                          <CheckCircle2 className='h-4 w-4 mr-2 text-green-600' />
+                          <CheckCircle2 className=&apos;h-4 w-4 mr-2 text-green-600&apos; />
                         ) : null}
-                        {smsVerified ? 'Verified' : 'Verify'}
+                        {smsVerified ? &apos;Verified&apos; : &apos;Verify&apos;}
                       </Button>
                     </div>
                     <Button
-                      variant='ghost'
-                      size='sm'
-                      onClick={() => handleTestNotification('sms')}
+                      variant=&apos;ghost&apos;
+                      size=&apos;sm&apos;
+                      onClick={() => handleTestNotification(&apos;sms&apos;)}
                     >
-                      <TestTube className='h-4 w-4 mr-2' />
+                      <TestTube className=&apos;h-4 w-4 mr-2&apos; />
                       Send Test SMS
                     </Button>
                   </div>
@@ -596,38 +596,38 @@ export function NotificationPreferencesNew({
               <Separator />
 
               {/* Push */}
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-3'>
-                  <Smartphone className='h-5 w-5 text-muted-foreground' />
+              <div className=&apos;flex items-center justify-between&apos;>
+                <div className=&apos;flex items-center gap-3&apos;>
+                  <Smartphone className=&apos;h-5 w-5 text-muted-foreground&apos; />
                   <div>
                     <Label>Push Notifications</Label>
-                    <p className='text-xs text-muted-foreground'>
+                    <p className=&apos;text-xs text-muted-foreground&apos;>
                       Receive alerts on your mobile device
                     </p>
                   </div>
                 </div>
                 <Switch
                   checked={preferences.channels.push.enabled}
-                  onCheckedChange={() => toggleChannel('push')}
+                  onCheckedChange={() => toggleChannel(&apos;push&apos;)}
                 />
               </div>
 
               <Separator />
 
               {/* Webhook */}
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-3'>
-                  <Webhook className='h-5 w-5 text-muted-foreground' />
+              <div className=&apos;flex items-center justify-between&apos;>
+                <div className=&apos;flex items-center gap-3&apos;>
+                  <Webhook className=&apos;h-5 w-5 text-muted-foreground&apos; />
                   <div>
                     <Label>Webhook Notifications</Label>
-                    <p className='text-xs text-muted-foreground'>
+                    <p className=&apos;text-xs text-muted-foreground&apos;>
                       Send alerts to external systems
                     </p>
                   </div>
                 </div>
                 <Switch
                   checked={preferences.channels.webhook.enabled}
-                  onCheckedChange={() => toggleChannel('webhook')}
+                  onCheckedChange={() => toggleChannel(&apos;webhook&apos;)}
                 />
               </div>
             </CardContent>
@@ -641,30 +641,30 @@ export function NotificationPreferencesNew({
                 Choose which alerts you want to receive
               </CardDescription>
             </CardHeader>
-            <CardContent className='space-y-4'>
-              <div className='space-y-2'>
+            <CardContent className=&apos;space-y-4&apos;>
+              <div className=&apos;space-y-2&apos;>
                 <Label>Minimum Severity</Label>
-                <div className='grid grid-cols-4 gap-2'>
-                  {(['low', 'medium', 'high', 'critical'] as const).map(
+                <div className=&apos;grid grid-cols-4 gap-2&apos;>
+                  {([&apos;low&apos;, &apos;medium&apos;, &apos;high&apos;, &apos;critical&apos;] as const).map(
                     severity => (
                       <Button
                         key={severity}
                         variant={
                           preferences.filters.severities.includes(severity)
-                            ? 'default'
-                            : 'outline'
+                            ? &apos;default&apos;
+                            : &apos;outline&apos;
                         }
-                        size='sm'
+                        size=&apos;sm&apos;
                         onClick={() => toggleSeverity(severity)}
-                        className='capitalize'
+                        className=&apos;capitalize&apos;
                       >
                         {severity}
                       </Button>
                     )
                   )}
                 </div>
-                <p className='text-xs text-muted-foreground'>
-                  You'll receive alerts with these severity levels
+                <p className=&apos;text-xs text-muted-foreground&apos;>
+                  You&apos;ll receive alerts with these severity levels
                 </p>
               </div>
             </CardContent>
@@ -673,16 +673,16 @@ export function NotificationPreferencesNew({
           {/* Quiet Hours */}
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Clock className='h-5 w-5' />
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <Clock className=&apos;h-5 w-5&apos; />
                 Quiet Hours
               </CardTitle>
               <CardDescription>
-                Set times when you don't want to receive notifications
+                Set times when you don&apos;t want to receive notifications
               </CardDescription>
             </CardHeader>
-            <CardContent className='space-y-4'>
-              <div className='flex items-center justify-between'>
+            <CardContent className=&apos;space-y-4&apos;>
+              <div className=&apos;flex items-center justify-between&apos;>
                 <Label>Enable Quiet Hours</Label>
                 <Switch
                   checked={preferences.quietHours.enabled}
@@ -696,11 +696,11 @@ export function NotificationPreferencesNew({
 
               {preferences.quietHours.enabled && (
                 <>
-                  <div className='grid grid-cols-2 gap-4'>
-                    <div className='space-y-2'>
+                  <div className=&apos;grid grid-cols-2 gap-4&apos;>
+                    <div className=&apos;space-y-2&apos;>
                       <Label>Start Time</Label>
                       <Input
-                        type='time'
+                        type=&apos;time&apos;
                         value={preferences.quietHours.start}
                         onChange={e =>
                           updatePreferences({
@@ -712,10 +712,10 @@ export function NotificationPreferencesNew({
                         }
                       />
                     </div>
-                    <div className='space-y-2'>
+                    <div className=&apos;space-y-2&apos;>
                       <Label>End Time</Label>
                       <Input
-                        type='time'
+                        type=&apos;time&apos;
                         value={preferences.quietHours.end}
                         onChange={e =>
                           updatePreferences({
@@ -729,10 +729,10 @@ export function NotificationPreferencesNew({
                     </div>
                   </div>
 
-                  <div className='flex items-center justify-between'>
+                  <div className=&apos;flex items-center justify-between&apos;>
                     <div>
                       <Label>Send Critical Alerts Anyway</Label>
-                      <p className='text-xs text-muted-foreground'>
+                      <p className=&apos;text-xs text-muted-foreground&apos;>
                         Receive critical alerts even during quiet hours
                       </p>
                     </div>
@@ -759,12 +759,12 @@ export function NotificationPreferencesNew({
               <CardTitle>Frequency Limits</CardTitle>
               <CardDescription>Prevent notification overload</CardDescription>
             </CardHeader>
-            <CardContent className='space-y-4'>
-              <div className='grid grid-cols-2 gap-4'>
-                <div className='space-y-2'>
+            <CardContent className=&apos;space-y-4&apos;>
+              <div className=&apos;grid grid-cols-2 gap-4&apos;>
+                <div className=&apos;space-y-2&apos;>
                   <Label>Max per Hour</Label>
                   <Input
-                    type='number'
+                    type=&apos;number&apos;
                     value={preferences.frequency.maxPerHour}
                     onChange={e =>
                       updatePreferences({
@@ -778,10 +778,10 @@ export function NotificationPreferencesNew({
                     max={100}
                   />
                 </div>
-                <div className='space-y-2'>
+                <div className=&apos;space-y-2&apos;>
                   <Label>Max per Day</Label>
                   <Input
-                    type='number'
+                    type=&apos;number&apos;
                     value={preferences.frequency.maxPerDay}
                     onChange={e =>
                       updatePreferences({
@@ -797,10 +797,10 @@ export function NotificationPreferencesNew({
                 </div>
               </div>
 
-              <div className='flex items-center justify-between'>
+              <div className=&apos;flex items-center justify-between&apos;>
                 <div>
                   <Label>Digest Mode</Label>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className=&apos;text-xs text-muted-foreground&apos;>
                     Bundle multiple alerts into periodic summaries
                   </p>
                 </div>
@@ -818,29 +818,29 @@ export function NotificationPreferencesNew({
         </div>
 
         {/* Sidebar - Configuration Inspector */}
-        <div className='space-y-6'>
+        <div className=&apos;space-y-6&apos;>
           <ConfigurationInspector
             entityType={
-              selectedLevel === 'user'
-                ? 'user'
-                : selectedLevel === 'site'
-                  ? 'site'
-                  : 'asset'
+              selectedLevel === &apos;user&apos;
+                ? &apos;user&apos;
+                : selectedLevel === &apos;site&apos;
+                  ? &apos;site&apos;
+                  : &apos;asset&apos;
             }
             entityId={selectedEntityId}
             entityName={selectedEntityName}
-            userId='current-user'
-            siteId={selectedLevel === 'site' ? selectedEntityId : undefined}
-            assetId={selectedLevel === 'asset' ? selectedEntityId : undefined}
-            variant='card'
+            userId=&apos;current-user&apos;
+            siteId={selectedLevel === &apos;site&apos; ? selectedEntityId : undefined}
+            assetId={selectedLevel === &apos;asset&apos; ? selectedEntityId : undefined}
+            variant=&apos;card&apos;
             notificationConfigs={notificationConfigs}
           />
 
-          <Card className='bg-blue-50 border-blue-200'>
+          <Card className=&apos;bg-blue-50 border-blue-200&apos;>
             <CardHeader>
-              <CardTitle className='text-base'>Configuration Tips</CardTitle>
+              <CardTitle className=&apos;text-base&apos;>Configuration Tips</CardTitle>
             </CardHeader>
-            <CardContent className='space-y-2 text-sm'>
+            <CardContent className=&apos;space-y-2 text-sm&apos;>
               <p>
                 <strong>User Level:</strong> Your default preferences for all
                 assets
@@ -853,10 +853,10 @@ export function NotificationPreferencesNew({
                 <strong>Asset Level:</strong> Override for a specific high-value
                 asset
               </p>
-              <Separator className='my-3' />
-              <p className='text-muted-foreground'>
-                More specific levels override less specific ones. Asset {'>'}{' '}
-                Site {'>'} User
+              <Separator className=&apos;my-3&apos; />
+              <p className=&apos;text-muted-foreground&apos;>
+                More specific levels override less specific ones. Asset {&apos;>&apos;}{&apos; &apos;}
+                Site {&apos;>&apos;} User
               </p>
             </CardContent>
           </Card>

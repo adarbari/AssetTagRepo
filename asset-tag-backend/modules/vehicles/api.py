@@ -12,15 +12,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.vehicles.models import Vehicle, VehicleAssetPairing
-from modules.vehicles.schemas import (
-    VehicleAssetPairingCreate,
-    VehicleAssetPairingResponse,
-    VehicleCreate,
-    VehicleResponse,
-    VehicleStats,
-    VehicleUpdate,
-    VehicleWithAssets,
-)
+from modules.vehicles.schemas import (VehicleAssetPairingCreate,
+                                      VehicleAssetPairingResponse,
+                                      VehicleCreate, VehicleResponse,
+                                      VehicleStats, VehicleUpdate,
+                                      VehicleWithAssets)
 
 router = APIRouter()
 
@@ -72,7 +68,9 @@ def _vehicle_with_assets_to_response(vehicle: Vehicle) -> VehicleWithAssets:
     )
 
 
-def _vehicle_asset_pairing_to_response(pairing: VehicleAssetPairing) -> VehicleAssetPairingResponse:
+def _vehicle_asset_pairing_to_response(
+    pairing: VehicleAssetPairing,
+) -> VehicleAssetPairingResponse:
     """Convert VehicleAssetPairing model to VehicleAssetPairingResponse schema"""
     return VehicleAssetPairingResponse(
         id=str(pairing.id),

@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class LocationProcessor:
     """Enhanced location estimation processor with buffering and parallelization"""
 
-    def __init__(self, buffer_size: int = 10, processing_interval: float = 1.0):
+    def __init__(self, buffer_size: int = 10, processing_interval: float = 1.0) -> None:
         self.buffer_size = buffer_size
         self.processing_interval = processing_interval
         self.observation_buffers = defaultdict(lambda: deque(maxlen=buffer_size))
@@ -34,19 +34,19 @@ class LocationProcessor:
         self.running = False
         self.processing_task = None
 
-    async def _get_cache(self):
+    async def _get_cache(self) -> None:
         """Get cache manager"""
         if not self.cache:
             self.cache = await get_cache()
         return self.cache
 
-    async def _get_db(self):
+    async def _get_db(self) -> None:
         """Get database session"""
         if not self.db:
             self.db = await get_db()
         return self.db
 
-    async def start(self):
+    async def start(self) -> None:
         """Start the location processor"""
         if self.running:
             return
@@ -55,7 +55,7 @@ class LocationProcessor:
         self.processing_task = asyncio.create_task(self._processing_loop())
         logger.info("Location processor started")
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop the location processor"""
         self.running = False
         if self.processing_task:
@@ -66,7 +66,7 @@ class LocationProcessor:
                 pass
         logger.info("Location processor stopped")
 
-    async def process_observation(self, observation_data: Dict[str, Any]):
+    async def process_observation(self, observation_data: Dict[str, Any]) -> None:
         """Process a single observation and add to buffer"""
         try:
             asset_id = observation_data.get("asset_tag_id")
@@ -85,7 +85,7 @@ class LocationProcessor:
         except Exception as e:
             logger.error(f"Error processing observation: {e}")
 
-    async def _processing_loop(self):
+    async def _processing_loop(self) -> None:
         """Main processing loop"""
         while self.running:
             try:
@@ -100,7 +100,7 @@ class LocationProcessor:
                 logger.error(f"Error in location processing loop: {e}")
                 await asyncio.sleep(5)  # Wait before retrying
 
-    async def _process_buffers(self):
+    async def _process_buffers(self) -> None:
         """Process all observation buffers"""
         try:
             async with self.processing_lock:
@@ -126,7 +126,7 @@ class LocationProcessor:
         except Exception as e:
             logger.error(f"Error processing buffers: {e}")
 
-    async def _process_asset_location(self, asset_id: str):
+    async def _process_asset_location(self, asset_id: str) -> None:
         """Process location estimation for a specific asset"""
         try:
             # Get observations from buffer
@@ -208,7 +208,7 @@ class LocationProcessor:
             logger.error(f"Error converting to gateway observations: {e}")
             return []
 
-    async def _store_estimated_location(self, location):
+    async def _store_estimated_location(self, location) -> None:
         """Store estimated location in database"""
         try:
             db = await self._get_db()
@@ -241,7 +241,7 @@ class LocationProcessor:
         except Exception as e:
             logger.error(f"Error storing estimated location: {e}")
 
-    async def _update_location_cache(self, asset_id: str, location):
+    async def _update_location_cache(self, asset_id: str, location) -> None:
         """Update location cache"""
         try:
             cache = await self._get_cache()
@@ -266,7 +266,7 @@ class LocationProcessor:
         except Exception as e:
             logger.error(f"Error updating location cache: {e}")
 
-    async def _trigger_downstream_processing(self, location):
+    async def _trigger_downstream_processing(self, location) -> None:
         """Trigger downstream processing (geofence evaluation, anomaly detection)"""
         try:
             # This would trigger other processors
@@ -317,11 +317,11 @@ async def get_location_processor() -> LocationProcessor:
     return location_processor
 
 
-async def start_location_processor():
+async def start_location_processor() -> None:
     """Start the location processor"""
     await location_processor.start()
 
 
-async def stop_location_processor():
+async def stop_location_processor() -> None:
     """Stop the location processor"""
     await location_processor.stop()

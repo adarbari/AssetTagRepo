@@ -15,10 +15,10 @@ logger = logging.getLogger(__name__)
 class AlertGenerator:
     """Alert generation service"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    async def create_alert(self, alert_data: Dict[str, Any]):
+    async def create_alert(self, alert_data: Dict[str, Any]) -> None:
         """Create a new alert"""
         try:
             async for db in get_db():
@@ -56,7 +56,7 @@ class AlertGenerator:
         except Exception as e:
             logger.error(f"Error creating alert: {e}")
 
-    async def acknowledge_alert(self, alert_id: str, user_id: str = None):
+    async def acknowledge_alert(self, alert_id: str, user_id: Optional[str] = None) -> None:
         """Acknowledge an alert"""
         try:
             async for db in get_db():
@@ -74,7 +74,7 @@ class AlertGenerator:
             logger.error(f"Error acknowledging alert {alert_id}: {e}")
 
     async def resolve_alert(
-        self, alert_id: str, user_id: str = None, notes: str = None
+        self, alert_id: str, user_id: Optional[str] = None, notes: Optional[str] = None
     ):
         """Resolve an alert"""
         try:

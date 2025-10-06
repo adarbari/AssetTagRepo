@@ -11,11 +11,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.checkin_checkout.models import CheckInOutRecord
-from modules.checkin_checkout.schemas import (
-    CheckInCreate,
-    CheckInOutResponse,
-    CheckOutCreate,
-)
+from modules.checkin_checkout.schemas import (CheckInCreate,
+                                              CheckInOutResponse,
+                                              CheckOutCreate)
 
 router = APIRouter()
 
@@ -28,9 +26,17 @@ def _checkin_out_to_response(record: CheckInOutRecord) -> CheckInOutResponse:
         asset_id=str(record.asset_id),
         personnel_id=str(record.personnel_id) if record.personnel_id else None,
         site_id=str(record.site_id) if record.site_id else None,
-        check_in_time=record.check_in_time.isoformat() if record.check_in_time else None,
-        check_out_time=record.check_out_time.isoformat() if record.check_out_time else None,
-        expected_check_out_time=record.expected_check_out_time.isoformat() if record.expected_check_out_time else None,
+        check_in_time=(
+            record.check_in_time.isoformat() if record.check_in_time else None
+        ),
+        check_out_time=(
+            record.check_out_time.isoformat() if record.check_out_time else None
+        ),
+        expected_check_out_time=(
+            record.expected_check_out_time.isoformat()
+            if record.expected_check_out_time
+            else None
+        ),
         status=record.status,
         notes=record.notes,
         location=record.location,

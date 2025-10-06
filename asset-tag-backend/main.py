@@ -16,15 +16,11 @@ from config.database import close_db, init_db
 from config.elasticsearch import close_elasticsearch
 from config.settings import settings
 from config.streaming import start_streaming, stop_streaming
-from ml.serving.model_loader import (
-    preload_common_models,
-    start_model_refresh_scheduler,
-    stop_model_refresh_scheduler,
-)
+from ml.serving.model_loader import (preload_common_models,
+                                     start_model_refresh_scheduler,
+                                     stop_model_refresh_scheduler)
 from streaming.stream_processor_coordinator import (
-    start_all_stream_processors,
-    stop_all_stream_processors,
-)
+    start_all_stream_processors, stop_all_stream_processors)
 
 # Configure logging
 logging.basicConfig(
@@ -35,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> None:
     """Application lifespan manager"""
     # Startup
     logger.info("Starting Asset Tag Backend...")
@@ -133,7 +129,7 @@ if settings.environment == "production":
 
 # Request timing middleware
 @app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
+async def add_process_time_header(request: Request, call_next) -> None:
     """Add processing time to response headers"""
     start_time = time.time()
     response = await call_next(request)
@@ -144,7 +140,7 @@ async def add_process_time_header(request: Request, call_next):
 
 # Global exception handler
 @app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
+async def global_exception_handler(request: Request, exc: Exception) -> None:
     """Global exception handler"""
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(
@@ -162,7 +158,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Health check endpoint
 @app.get("/health")
-async def health_check():
+async def health_check() -> None:
     """Health check endpoint"""
     return {
         "status": "healthy",
@@ -175,7 +171,6 @@ from ml.features.api import router as features_router
 from ml.serving.api import router as ml_serving_router
 from modules.alerts.api import router as alerts_router
 from modules.analytics.api import router as analytics_router
-
 # API v1 routes
 from modules.assets.api import router as assets_router
 from modules.audit.api import router as audit_router
@@ -189,7 +184,6 @@ from modules.locations.api import router as locations_router
 from modules.maintenance.api import router as maintenance_router
 from modules.observations.api import router as observations_router
 from modules.reports.api import router as reports_router
-
 # New API routes
 from modules.search.api import router as search_router
 from modules.sites.api import router as sites_router
@@ -233,7 +227,7 @@ app.include_router(streaming_router, prefix=settings.api_v1_prefix, tags=["strea
 
 # Root endpoint
 @app.get("/")
-async def root():
+async def root() -> None:
     """Root endpoint"""
     return {
         "message": "Asset Tag Backend API",
@@ -248,7 +242,7 @@ if __name__ == "__main__":
 
     uvicorn.run(
         "main:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=8000,
         reload=settings.environment == "local",
         log_level=settings.log_level.lower(),

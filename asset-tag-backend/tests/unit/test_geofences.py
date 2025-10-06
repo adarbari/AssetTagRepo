@@ -17,7 +17,7 @@ class TestGeofenceModel:
     """Test Geofence model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_geofence(self, db_session, sample_geofence_data):
+    async def test_create_geofence(self, db_session, sample_geofence_data) -> None:
         """Test creating a geofence"""
         geofence = Geofence(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
@@ -35,7 +35,7 @@ class TestGeofenceModel:
         assert geofence.coordinates == sample_geofence_data["coordinates"]
 
     @pytest.mark.asyncio
-    async def test_geofence_soft_delete(self, db_session, sample_geofence_data):
+    async def test_geofence_soft_delete(self, db_session, sample_geofence_data) -> None:
         """Test soft delete functionality"""
         geofence = Geofence(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
@@ -53,7 +53,7 @@ class TestGeofenceModel:
         assert geofence.deleted_at is not None
 
     @pytest.mark.asyncio
-    async def test_geofence_geometry_validation(self, db_session):
+    async def test_geofence_geometry_validation(self, db_session) -> None:
         """Test geofence geometry validation"""
         # Test with valid polygon geometry
         valid_geometry = {
@@ -87,7 +87,7 @@ class TestGeofenceModel:
 class TestGeofenceSchemas:
     """Test Geofence Pydantic schemas"""
 
-    def test_geofence_create_schema(self, sample_geofence_data):
+    def test_geofence_create_schema(self, sample_geofence_data) -> None:
         """Test GeofenceCreate schema validation"""
         geofence_create = GeofenceCreate(**sample_geofence_data)
 
@@ -96,7 +96,7 @@ class TestGeofenceSchemas:
         assert geofence_create.status == sample_geofence_data["status"]
         assert geofence_create.coordinates == sample_geofence_data["coordinates"]
 
-    def test_geofence_create_validation(self):
+    def test_geofence_create_validation(self) -> None:
         """Test GeofenceCreate validation rules"""
         # Test required fields
         with pytest.raises(ValueError):
@@ -118,7 +118,7 @@ class TestGeofenceSchemas:
         geofence_create = GeofenceCreate(**valid_data)
         assert geofence_create.name == "Test Geofence"
 
-    def test_geofence_update_schema(self):
+    def test_geofence_update_schema(self) -> None:
         """Test GeofenceUpdate schema"""
         update_data = {"name": "Updated Geofence Name", "status": "inactive"}
 
@@ -126,7 +126,7 @@ class TestGeofenceSchemas:
         assert geofence_update.name == "Updated Geofence Name"
         assert geofence_update.status == "inactive"
 
-    def test_geofence_type_validation(self):
+    def test_geofence_type_validation(self) -> None:
         """Test geofence type validation"""
         valid_types = ["circular", "polygon"]
 
@@ -150,12 +150,12 @@ class TestGeofenceSchemas:
 # class TestGeofenceEvaluator:
 #     """Test GeofenceEvaluator functionality - DISABLED: Module not implemented yet"""
 #
-#     def test_evaluator_initialization(self):
+#     def test_evaluator_initialization(self) -> None:
 #         """Test evaluator initialization"""
 #         evaluator = GeofenceEvaluator()
 #         assert evaluator is not None
 #
-#     def test_point_in_polygon(self):
+#     def test_point_in_polygon(self) -> None:
 #         """Test point-in-polygon detection"""
 #         evaluator = GeofenceEvaluator()
 #
@@ -177,7 +177,7 @@ class TestGeofenceSchemas:
 #         result = evaluator.point_in_polygon(point_boundary, polygon_coords)
 #         assert result is True  # Boundary points are considered inside
 #
-#     def test_evaluate_geofence_entry(self):
+#     def test_evaluate_geofence_entry(self) -> None:
 #         """Test geofence entry evaluation"""
 #         evaluator = GeofenceEvaluator()
 #
@@ -200,7 +200,7 @@ class TestGeofenceSchemas:
 #         assert result["geofence_id"] == "test-geofence-1"
 #         assert result["geofence_type"] == "authorized"
 #
-#     def test_evaluate_geofence_exit(self):
+#     def test_evaluate_geofence_exit(self) -> None:
 #         """Test geofence exit evaluation"""
 #         evaluator = GeofenceEvaluator()
 #
@@ -223,7 +223,7 @@ class TestGeofenceSchemas:
 #         assert result["geofence_id"] == "test-geofence-1"
 #         assert result["geofence_type"] == "authorized"
 #
-#     def test_no_geofence_event(self):
+#     def test_no_geofence_event(self) -> None:
 #         """Test when no geofence event occurs"""
 #         evaluator = GeofenceEvaluator()
 #
@@ -243,7 +243,7 @@ class TestGeofenceSchemas:
 #
 #         assert result is None  # No event should be generated
 #
-#     def test_multiple_geofences(self):
+#     def test_multiple_geofences(self) -> None:
 #         """Test evaluation with multiple geofences"""
 #         evaluator = GeofenceEvaluator()
 #
@@ -273,7 +273,7 @@ class TestGeofenceSchemas:
 #         assert any(event["event_type"] == "exit" and event["geofence_id"] == "geofence-1" for event in events)
 #         assert any(event["event_type"] == "entry" and event["geofence_id"] == "geofence-2" for event in events)
 #
-#     def test_invalid_geometry(self):
+#     def test_invalid_geometry(self) -> None:
 #         """Test handling of invalid geometry"""
 #         evaluator = GeofenceEvaluator()
 #
@@ -291,7 +291,7 @@ class TestGeofenceSchemas:
 #             # It's acceptable for invalid geometry to raise an exception
 #             pass
 #
-#     def test_edge_cases(self):
+#     def test_edge_cases(self) -> None:
 #         """Test edge cases for geofence evaluation"""
 #         evaluator = GeofenceEvaluator()
 #

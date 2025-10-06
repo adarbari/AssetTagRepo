@@ -8,7 +8,8 @@ from typing import Any, Dict, List, Optional, Union
 
 import redis.asyncio as redis
 
-from config.cache_strategies import CacheInvalidation, cache_key_manager, cache_metrics
+from config.cache_strategies import (CacheInvalidation, cache_key_manager,
+                                     cache_metrics)
 from config.settings import settings
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ redis_client = redis.Redis(connection_pool=redis_pool)
 class CacheManager:
     """Redis cache manager with JSON serialization and strategy support"""
 
-    def __init__(self, client: redis.Redis = redis_client):
+    def __init__(self, client: redis.Redis = redis_client) -> None:
         self.client = client
         self.key_manager = cache_key_manager
         self.metrics = cache_metrics
@@ -146,15 +147,15 @@ class CacheManager:
         key = self.key_manager.get_key(strategy_name, **kwargs)
         return await self.delete(key)
 
-    async def invalidate_asset_cache(self, asset_id: str):
+    async def invalidate_asset_cache(self, asset_id: str) -> None:
         """Invalidate all cache entries for an asset"""
         await CacheInvalidation.invalidate_asset_cache(self.client, asset_id)
 
-    async def invalidate_geofence_cache(self, geofence_id: str):
+    async def invalidate_geofence_cache(self, geofence_id: str) -> None:
         """Invalidate all cache entries for a geofence"""
         await CacheInvalidation.invalidate_geofence_cache(self.client, geofence_id)
 
-    async def invalidate_organization_cache(self, organization_id: str):
+    async def invalidate_organization_cache(self, organization_id: str) -> None:
         """Invalidate organization-wide cache entries"""
         await CacheInvalidation.invalidate_organization_cache(
             self.client, organization_id
@@ -198,7 +199,7 @@ class CacheManager:
             logger.error(f"Error publishing to channel {channel}: {e}")
             return 0
 
-    async def subscribe(self, channels: List[str]):
+    async def subscribe(self, channels: List[str]) -> None:
         """Subscribe to channels"""
         try:
             pubsub = self.client.pubsub()
@@ -218,7 +219,7 @@ async def get_cache() -> CacheManager:
     return cache
 
 
-async def close_cache():
+async def close_cache() -> None:
     """Close Redis connections"""
     await redis_client.close()
     logger.info("Redis connections closed")

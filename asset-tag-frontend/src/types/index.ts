@@ -132,7 +132,7 @@ export interface Alert {
   reason?: string; // Additional context
   suggestedAction?: string; // Recommended action to take
   autoResolvable?: boolean; // Can be auto-resolved
-  metadata?: Record<string, any>; // Additional alert-specific data
+  metadata?: Record<string, unknown>; // Additional alert-specific data
   // Status update timestamps
   acknowledgedAt?: string; // When alert was acknowledged
   resolvedAt?: string; // When alert was resolved

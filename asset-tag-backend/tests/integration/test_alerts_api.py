@@ -8,7 +8,7 @@ import pytest
 class TestAlertsAPI:
     """Test Alerts API endpoints"""
 
-    def test_create_alert(self, client, sample_alert_data):
+    def test_create_alert(self, client, sample_alert_data) -> None:
         """Test creating an alert via API"""
         response = client.post("/api/v1/alerts", json=sample_alert_data)
 
@@ -23,7 +23,7 @@ class TestAlertsAPI:
         assert "id" in data
         assert "created_at" in data
 
-    def test_get_alerts(self, client, sample_alert_data):
+    def test_get_alerts(self, client, sample_alert_data) -> None:
         """Test getting list of alerts"""
         # Create a test alert first
         client.post("/api/v1/alerts", json=sample_alert_data)
@@ -40,7 +40,7 @@ class TestAlertsAPI:
         alert_types = [alert["alert_type"] for alert in data]
         assert sample_alert_data["alert_type"] in alert_types
 
-    def test_get_alert_by_id(self, client, sample_alert_data):
+    def test_get_alert_by_id(self, client, sample_alert_data) -> None:
         """Test getting a specific alert by ID"""
         # Create a test alert first
         create_response = client.post("/api/v1/alerts", json=sample_alert_data)
@@ -55,7 +55,7 @@ class TestAlertsAPI:
         assert data["alert_type"] == sample_alert_data["alert_type"]
         assert data["severity"] == sample_alert_data["severity"]
 
-    def test_acknowledge_alert(self, client, sample_alert_data):
+    def test_acknowledge_alert(self, client, sample_alert_data) -> None:
         """Test acknowledging an alert"""
         # Create a test alert first
         create_response = client.post("/api/v1/alerts", json=sample_alert_data)
@@ -70,7 +70,7 @@ class TestAlertsAPI:
         assert data["status"] == "acknowledged"
         assert data["acknowledged_at"] is not None
 
-    def test_resolve_alert(self, client, sample_alert_data):
+    def test_resolve_alert(self, client, sample_alert_data) -> None:
         """Test resolving an alert"""
         # Create a test alert first
         create_response = client.post("/api/v1/alerts", json=sample_alert_data)
@@ -85,7 +85,7 @@ class TestAlertsAPI:
         assert data["status"] == "resolved"
         assert data["resolved_at"] is not None
 
-    def test_alert_filtering(self, client, sample_alert_data):
+    def test_alert_filtering(self, client, sample_alert_data) -> None:
         """Test filtering alerts by various criteria"""
         # Create test alerts with different properties
         alert1_data = sample_alert_data.copy()
@@ -120,7 +120,7 @@ class TestAlertsAPI:
         assert len(data) >= 2
         assert all(alert["status"] == "active" for alert in data)
 
-    def test_alert_pagination(self, client, sample_alert_data):
+    def test_alert_pagination(self, client, sample_alert_data) -> None:
         """Test pagination of alerts"""
         # Create multiple test alerts
         for i in range(5):
@@ -140,7 +140,7 @@ class TestAlertsAPI:
         data = response.json()
         assert len(data) <= 2
 
-    def test_alert_statistics(self, client, sample_alert_data):
+    def test_alert_statistics(self, client, sample_alert_data) -> None:
         """Test alert statistics endpoint"""
         # Create some test alerts
         client.post("/api/v1/alerts", json=sample_alert_data)
@@ -157,7 +157,7 @@ class TestAlertsAPI:
         assert "alerts_by_type" in data
         assert "alerts_by_severity" in data
 
-    def test_alert_validation(self, client):
+    def test_alert_validation(self, client) -> None:
         """Test alert validation"""
         # Test with invalid data
         invalid_data = {
@@ -170,7 +170,7 @@ class TestAlertsAPI:
         response = client.post("/api/v1/alerts", json=invalid_data)
         assert response.status_code == 422  # Validation error
 
-    def test_alert_workflow(self, client, sample_alert_data):
+    def test_alert_workflow(self, client, sample_alert_data) -> None:
         """Test complete alert workflow: create -> acknowledge -> resolve"""
         # Create alert
         create_response = client.post("/api/v1/alerts", json=sample_alert_data)
@@ -191,7 +191,7 @@ class TestAlertsAPI:
         assert response.status_code == 200
         assert response.json()["status"] == "resolved"
 
-    def test_nonexistent_alert_operations(self, client):
+    def test_nonexistent_alert_operations(self, client) -> None:
         """Test operations on nonexistent alerts"""
         nonexistent_id = "00000000-0000-0000-0000-000000000000"
 

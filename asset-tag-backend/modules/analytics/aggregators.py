@@ -44,10 +44,10 @@ class CostMetrics:
 class UtilizationAnalyzer:
     """Analyzer for asset utilization metrics"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.db = None
 
-    async def _get_db(self):
+    async def _get_db(self) -> None:
         """Get database session"""
         if not self.db:
             self.db = await get_db()
@@ -251,10 +251,10 @@ class UtilizationAnalyzer:
 class CostAnalyzer:
     """Analyzer for cost tracking metrics"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.db = None
 
-    async def _get_db(self):
+    async def _get_db(self) -> None:
         """Get database session"""
         if not self.db:
             self.db = await get_db()
@@ -430,10 +430,10 @@ class CostAnalyzer:
 class HeatmapAnalyzer:
     """Analyzer for location heatmap data"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.db = None
 
-    async def _get_db(self):
+    async def _get_db(self) -> None:
         """Get database session"""
         if not self.db:
             self.db = await get_db()

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class GeofenceProcessor:
     """Enhanced geofence evaluation processor with caching and optimization"""
 
-    def __init__(self, processing_interval: float = 5.0):
+    def __init__(self, processing_interval: float = 5.0) -> None:
         self.processing_interval = processing_interval
         self.cache = None
         self.db = None
@@ -34,19 +34,19 @@ class GeofenceProcessor:
         self.cache_ttl = timedelta(hours=1)  # Cache TTL
         self.last_cache_update = datetime.min
 
-    async def _get_cache(self):
+    async def _get_cache(self) -> None:
         """Get cache manager"""
         if not self.cache:
             self.cache = await get_cache()
         return self.cache
 
-    async def _get_db(self):
+    async def _get_db(self) -> None:
         """Get database session"""
         if not self.db:
             self.db = await get_db()
         return self.db
 
-    async def start(self):
+    async def start(self) -> None:
         """Start the geofence processor"""
         if self.running:
             return
@@ -55,7 +55,7 @@ class GeofenceProcessor:
         self.processing_task = asyncio.create_task(self._processing_loop())
         logger.info("Geofence processor started")
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop the geofence processor"""
         self.running = False
         if self.processing_task:
@@ -66,7 +66,7 @@ class GeofenceProcessor:
                 pass
         logger.info("Geofence processor stopped")
 
-    async def process_location_update(self, location_data: Dict[str, Any]):
+    async def process_location_update(self, location_data: Dict[str, Any]) -> None:
         """Process location update for geofence evaluation"""
         try:
             asset_id = location_data.get("asset_id")
@@ -85,7 +85,7 @@ class GeofenceProcessor:
                 f"Error processing location update for geofence evaluation: {e}"
             )
 
-    async def _processing_loop(self):
+    async def _processing_loop(self) -> None:
         """Main processing loop for periodic geofence cache updates"""
         while self.running:
             try:
@@ -106,7 +106,7 @@ class GeofenceProcessor:
         """Check if geofence cache should be updated"""
         return datetime.now() - self.last_cache_update > self.cache_ttl
 
-    async def _update_geofence_cache(self):
+    async def _update_geofence_cache(self) -> None:
         """Update geofence cache from database"""
         try:
             db = await self._get_db()
@@ -465,11 +465,11 @@ async def get_geofence_processor() -> GeofenceProcessor:
     return geofence_processor
 
 
-async def start_geofence_processor():
+async def start_geofence_processor() -> None:
     """Start the geofence processor"""
     await geofence_processor.start()
 
 
-async def stop_geofence_processor():
+async def stop_geofence_processor() -> None:
     """Stop the geofence processor"""
     await geofence_processor.stop()

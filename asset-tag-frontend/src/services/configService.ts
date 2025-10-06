@@ -164,7 +164,7 @@ export async function saveConfig(
   //   body: JSON.stringify(options)
   // });
 
-// console.log(`Would save ${type} config to backend:`, options);
+// // // // // // console.log(`Would save ${type} config to backend:`, options);
 }
 
 /**
@@ -203,7 +203,7 @@ export interface BackendAsset {
   lostItemMechanism?: string;
   hourlyRate?: number;
   availability?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -217,7 +217,7 @@ export interface BackendVehicle {
   capacity?: number;
   location?: string;
   assetsLoaded?: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -235,7 +235,7 @@ export interface BackendJob {
   status: string;
   assets?: string[];
   description?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -249,7 +249,7 @@ export interface BackendMaintenance {
   assignedTo?: string;
   description?: string;
   estimatedDuration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -264,7 +264,7 @@ export interface BackendSite {
   radius?: number;
   tolerance?: number;
   manager?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -284,7 +284,7 @@ export interface BackendGeofence {
   taggedTo?: 'vehicle' | 'asset' | 'fixed-location';
   vehicleId?: string;
   assetId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
 }

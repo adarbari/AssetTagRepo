@@ -23,7 +23,7 @@ export interface MaintenanceTask {
   auditLog: AuditEntry[];
   createdAt?: string;
   updatedAt?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface MaintenanceHistory {
@@ -37,7 +37,7 @@ export interface MaintenanceHistory {
   duration?: number;
   notes: string;
   createdAt?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface PredictiveAlert {
@@ -50,7 +50,7 @@ export interface PredictiveAlert {
   recommendedAction: string;
   createdAt?: string;
   dismissed?: boolean;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface AuditEntry {

@@ -30,7 +30,7 @@ class UUIDMixin:
     """Mixin to add UUID primary key"""
 
     @declared_attr
-    def id(cls):
+    def id(cls) -> None:
         return Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
 

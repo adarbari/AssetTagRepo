@@ -7,7 +7,7 @@ process.setMaxListeners(20);
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
-// console.warn('Unhandled Rejection at:', promise, 'reason:', reason);
+// // // // // // console.warn('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 // Mock fetch globally with proper response structure
@@ -418,7 +418,7 @@ vi.mock('lucide-react', () => {
   ];
 
   // Create the mock object with common icons
-  const mockIcons: Record<string, any> = {};
+  const mockIcons: Record<string, unknown> = {};
   commonIcons.forEach(iconName => {
     mockIcons[iconName] = createIconComponent(iconName);
   });

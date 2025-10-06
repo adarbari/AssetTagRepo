@@ -10,12 +10,8 @@ from typing import Any, Dict, List, Optional, Union
 import numpy as np
 
 from config.cache import get_cache
-from ml.features.feature_store import (
-    AssetBaseline,
-    FeatureStore,
-    FeatureVector,
-    get_feature_store,
-)
+from ml.features.feature_store import (AssetBaseline, FeatureStore,
+                                       FeatureVector, get_feature_store)
 from ml.serving.model_loader import ModelLoader, get_model_loader
 
 logger = logging.getLogger(__name__)
@@ -24,7 +20,7 @@ logger = logging.getLogger(__name__)
 class InferenceEngine:
     """ML model inference engine"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.model_loader = None
         self.feature_store = None
         self.cache = None
@@ -41,7 +37,7 @@ class InferenceEngine:
             self.feature_store = await get_feature_store()
         return self.feature_store
 
-    async def _get_cache(self):
+    async def _get_cache(self) -> None:
         """Get cache manager"""
         if not self.cache:
             self.cache = await get_cache()

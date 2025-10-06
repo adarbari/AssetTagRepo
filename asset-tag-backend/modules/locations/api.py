@@ -7,14 +7,8 @@ import json
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    Query,
-    WebSocket,
-    WebSocketDisconnect,
-)
+from fastapi import (APIRouter, Depends, HTTPException, Query, WebSocket,
+                     WebSocketDisconnect)
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,22 +20,22 @@ router = APIRouter()
 
 # WebSocket connection manager
 class ConnectionManager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_connections: dict[str, List[WebSocket]] = {}
 
-    async def connect(self, websocket: WebSocket, asset_id: str):
+    async def connect(self, websocket: WebSocket, asset_id: str) -> None:
         await websocket.accept()
         if asset_id not in self.active_connections:
             self.active_connections[asset_id] = []
         self.active_connections[asset_id].append(websocket)
 
-    def disconnect(self, websocket: WebSocket, asset_id: str):
+    def disconnect(self, websocket: WebSocket, asset_id: str) -> None:
         if asset_id in self.active_connections:
             self.active_connections[asset_id].remove(websocket)
             if not self.active_connections[asset_id]:
                 del self.active_connections[asset_id]
 
-    async def send_location_update(self, asset_id: str, location_data: dict):
+    async def send_location_update(self, asset_id: str, location_data: dict) -> None:
         if asset_id in self.active_connections:
             for connection in self.active_connections[asset_id]:
                 try:
@@ -213,7 +207,7 @@ async def get_location_track(
 
 
 @router.websocket("/ws/locations/{asset_id}")
-async def websocket_location_updates(websocket: WebSocket, asset_id: str):
+async def websocket_location_updates(websocket: WebSocket, asset_id: str) -> None:
     """WebSocket for real-time location updates"""
     await manager.connect(websocket, asset_id)
     try:

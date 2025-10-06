@@ -10,10 +10,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from streaming.processors.anomaly_processor import get_anomaly_processor
 from streaming.processors.geofence_processor import get_geofence_processor
 from streaming.processors.location_processor import get_location_processor
-from streaming.stream_processor_coordinator import (
-    StreamProcessorCoordinator,
-    get_stream_coordinator,
-)
+from streaming.stream_processor_coordinator import (StreamProcessorCoordinator,
+                                                    get_stream_coordinator)
 
 router = APIRouter()
 

@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 class TestCheckInCheckOutAPI:
     """Test cases for Check-in/Check-out API endpoints"""
 
-    def test_check_in_asset(self, client: TestClient, sample_checkin_data: dict):
+    def test_check_in_asset(self, client: TestClient, sample_checkin_data: dict) -> None:
         """Test checking in an asset"""
         response = client.post(
             "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
@@ -27,7 +27,7 @@ class TestCheckInCheckOutAPI:
         assert "id" in data
         assert "created_at" in data
 
-    def test_check_out_asset(self, client: TestClient):
+    def test_check_out_asset(self, client: TestClient) -> None:
         """Test checking out an asset"""
         checkout_data = {
             "asset_id": "test-asset-001",
@@ -50,7 +50,7 @@ class TestCheckInCheckOutAPI:
         assert data["checked_out_by"] == checkout_data["checked_out_by"]
         assert data["expected_return_date"] == checkout_data["expected_return_date"]
 
-    def test_check_in_checked_out_asset(self, client: TestClient):
+    def test_check_in_checked_out_asset(self, client: TestClient) -> None:
         """Test checking in an asset that was previously checked out"""
         # First check out an asset
         checkout_data = {
@@ -151,13 +151,13 @@ class TestCheckInCheckOutAPI:
         assert data["id"] == record_id
         assert data["asset_id"] == sample_checkin_data["asset_id"]
 
-    def test_get_checkin_checkout_record_not_found(self, client: TestClient):
+    def test_get_checkin_checkout_record_not_found(self, client: TestClient) -> None:
         """Test getting a non-existent check-in/check-out record"""
         fake_id = "00000000-0000-0000-0000-000000000000"
         response = client.get(f"/api/v1/checkin-checkout/records/{fake_id}")
         assert response.status_code == 404
 
-    def test_get_current_status(self, client: TestClient):
+    def test_get_current_status(self, client: TestClient) -> None:
         """Test getting current check-in/check-out status"""
         response = client.get("/api/v1/checkin-checkout/status")
         assert response.status_code == 200
@@ -190,7 +190,7 @@ class TestCheckInCheckOutAPI:
         assert "last_action" in data
         assert "last_action_date" in data
 
-    def test_get_overdue_checkins(self, client: TestClient):
+    def test_get_overdue_checkins(self, client: TestClient) -> None:
         """Test getting overdue check-ins"""
         # Create a record with past expected return date
         overdue_data = {
@@ -266,7 +266,7 @@ class TestCheckInCheckOutAPI:
         assert "checkout_count" in data
         assert "checkin_count" in data
 
-    def test_checkin_validation_error(self, client: TestClient):
+    def test_checkin_validation_error(self, client: TestClient) -> None:
         """Test checking in with invalid data"""
         invalid_data = {
             "asset_id": "",  # Empty asset_id should fail
@@ -276,7 +276,7 @@ class TestCheckInCheckOutAPI:
         response = client.post("/api/v1/checkin-checkout/checkin", json=invalid_data)
         assert response.status_code == 422  # Validation error
 
-    def test_checkout_validation_error(self, client: TestClient):
+    def test_checkout_validation_error(self, client: TestClient) -> None:
         """Test checking out with invalid data"""
         invalid_data = {
             "asset_id": "",  # Empty asset_id should fail
@@ -287,7 +287,7 @@ class TestCheckInCheckOutAPI:
         response = client.post("/api/v1/checkin-checkout/checkout", json=invalid_data)
         assert response.status_code == 422  # Validation error
 
-    def test_get_checkin_checkout_records_pagination(self, client: TestClient):
+    def test_get_checkin_checkout_records_pagination(self, client: TestClient) -> None:
         """Test getting check-in/check-out records with pagination"""
         # Create multiple records
         for i in range(5):

@@ -51,7 +51,7 @@ class NotificationFilters(BaseModel):
     )
 
     @validator("severities")
-    def validate_severities(cls, v):
+    def validate_severities(cls, v) -> None:
         allowed_severities = ["low", "medium", "high", "critical"]
         for severity in v:
             if severity not in allowed_severities:
@@ -74,7 +74,7 @@ class QuietHours(BaseModel):
     )
 
     @validator("start", "end")
-    def validate_time_format(cls, v):
+    def validate_time_format(cls, v) -> None:
         try:
             datetime.strptime(v, "%H:%M")
         except ValueError:
@@ -124,7 +124,7 @@ class NotificationConfigBase(BaseModel):
     )
 
     @validator("level")
-    def validate_level(cls, v):
+    def validate_level(cls, v) -> None:
         allowed_levels = ["user", "site", "asset", "global"]
         if v not in allowed_levels:
             raise ValueError(f'Level must be one of: {", ".join(allowed_levels)}')
@@ -216,7 +216,7 @@ class NotificationTemplateBase(BaseModel):
     )
 
     @validator("template_type")
-    def validate_template_type(cls, v):
+    def validate_template_type(cls, v) -> None:
         allowed_types = [
             "alert",
             "reminder",
@@ -232,7 +232,7 @@ class NotificationTemplateBase(BaseModel):
         return v
 
     @validator("channel")
-    def validate_channel(cls, v):
+    def validate_channel(cls, v) -> None:
         allowed_channels = ["email", "sms", "push", "webhook"]
         if v not in allowed_channels:
             raise ValueError(f'Channel must be one of: {", ".join(allowed_channels)}')
@@ -279,7 +279,7 @@ class NotificationTestRequest(BaseModel):
     custom_message: Optional[str] = Field(None, description="Custom test message")
 
     @validator("channel")
-    def validate_channel(cls, v):
+    def validate_channel(cls, v) -> None:
         allowed_channels = ["email", "sms", "push", "webhook"]
         if v not in allowed_channels:
             raise ValueError(f'Channel must be one of: {", ".join(allowed_channels)}')

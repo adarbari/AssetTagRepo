@@ -20,7 +20,7 @@ from ml.mlflow_client import log_anomaly_detection_model
 logger = logging.getLogger(__name__)
 
 
-async def generate_training_data():
+async def generate_training_data() -> None:
     """Generate synthetic training data for anomaly detection"""
     try:
         # This would normally query real data from the database
@@ -86,7 +86,7 @@ async def generate_training_data():
         return None
 
 
-async def train_anomaly_detection_model():
+async def train_anomaly_detection_model() -> None:
     """Train anomaly detection model"""
     try:
         logger.info("Starting anomaly detection model training...")
@@ -124,12 +124,8 @@ async def train_anomaly_detection_model():
         y_pred_binary = (y_pred == -1).astype(int)  # Convert to binary
 
         # Calculate metrics
-        from sklearn.metrics import (
-            accuracy_score,
-            f1_score,
-            precision_score,
-            recall_score,
-        )
+        from sklearn.metrics import (accuracy_score, f1_score, precision_score,
+                                     recall_score)
 
         accuracy = accuracy_score(y_test, y_pred_binary)
         precision = precision_score(y_test, y_pred_binary)
@@ -170,7 +166,7 @@ async def train_anomaly_detection_model():
         return None
 
 
-async def main():
+async def main() -> None:
     """Main training function"""
     try:
         result = await train_anomaly_detection_model()

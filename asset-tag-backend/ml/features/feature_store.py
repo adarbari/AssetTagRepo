@@ -86,17 +86,17 @@ class AssetBaseline:
 class FeatureStore:
     """Feature store for ML model serving"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache = None
         self.db = None
 
-    async def _get_cache(self):
+    async def _get_cache(self) -> None:
         """Get cache manager"""
         if not self.cache:
             self.cache = await get_cache()
         return self.cache
 
-    async def _get_db(self):
+    async def _get_db(self) -> None:
         """Get database session"""
         if not self.db:
             self.db = await get_db()
@@ -455,7 +455,7 @@ class FeatureStore:
             logger.error(f"Error getting feature history for {asset_id}: {e}")
             return []
 
-    async def invalidate_cache(self, asset_id: str):
+    async def invalidate_cache(self, asset_id: str) -> None:
         """Invalidate feature cache for an asset"""
         try:
             cache = await self._get_cache()

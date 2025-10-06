@@ -1,35 +1,36 @@
-import { useState, useEffect } from 'react';
-import { Save, Package, AlertTriangle } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
+import React from &apos;react&apos;;
+import { useState, useEffect } from &apos;react&apos;;
+import { Save, Package, AlertTriangle } from &apos;lucide-react&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Textarea } from &apos;../ui/textarea&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { toast } from 'sonner';
-import { PageHeader, StatusBadge, PriorityBadge, PageLayout } from '../common';
-import { LoadingState } from '../common/LoadingState';
-import { ErrorState } from '../common/ErrorState';
-import { AuditLogList } from '../common';
+} from &apos;../ui/select&apos;;
+import { toast } from &apos;sonner&apos;;
+import { PageHeader, StatusBadge, PriorityBadge, PageLayout } from &apos;../common&apos;;
+import { LoadingState } from &apos;../common/LoadingState&apos;;
+import { ErrorState } from &apos;../common/ErrorState&apos;;
+import { AuditLogList } from &apos;../common&apos;;
 import {
   fetchMaintenanceTaskById,
   updateMaintenanceTask,
   type MaintenanceTask,
-} from '../../services/maintenanceService';
-import { fetchConfig } from '../../services/configService';
-import { fetchUsersByRole } from '../../services/configService';
-import type { DropdownOption } from '../../data/dropdownOptions';
+} from &apos;../../services/maintenanceService&apos;;
+import { fetchConfig } from &apos;../../services/configService&apos;;
+import { fetchUsersByRole } from &apos;../../services/configService&apos;;
+import type { DropdownOption } from &apos;../../data/dropdownOptions&apos;;
 
 interface EditMaintenanceProps {
   maintenanceId: string;
   onBack: () => void;
-  fromContext?: 'predictive-alert' | 'maintenance-list' | 'asset-details';
+  fromContext?: &apos;predictive-alert&apos; | &apos;maintenance-list&apos; | &apos;asset-details&apos;;
   sourceAssetContext?: any;
 }
 
@@ -53,15 +54,15 @@ export function EditMaintenance({
 
   // Form state
   const [formData, setFormData] = useState({
-    type: '',
-    task: '',
-    dueDate: '',
-    priority: '',
-    status: '',
-    assignedTo: '',
-    estimatedDuration: '',
-    cost: '',
-    notes: '',
+    type: &apos;&apos;,
+    task: &apos;&apos;,
+    dueDate: &apos;&apos;,
+    priority: &apos;&apos;,
+    status: &apos;&apos;,
+    assignedTo: &apos;&apos;,
+    estimatedDuration: &apos;&apos;,
+    cost: &apos;&apos;,
+    notes: &apos;&apos;,
   });
 
   useEffect(() => {
@@ -82,14 +83,14 @@ export function EditMaintenance({
         technicianOptions,
       ] = await Promise.all([
         fetchMaintenanceTaskById(maintenanceId),
-        fetchConfig('maintenanceTypes'),
-        fetchConfig('priorityLevels'),
-        fetchConfig('maintenanceStatuses'),
-        fetchUsersByRole('technician'),
+        fetchConfig(&apos;maintenanceTypes&apos;),
+        fetchConfig(&apos;priorityLevels&apos;),
+        fetchConfig(&apos;maintenanceStatuses&apos;),
+        fetchUsersByRole(&apos;technician&apos;),
       ]);
 
       if (!taskData) {
-        throw new Error('Maintenance task not found');
+        throw new Error(&apos;Maintenance task not found&apos;);
       }
 
       setTask(taskData);
@@ -106,14 +107,14 @@ export function EditMaintenance({
         priority: taskData.priority,
         status: taskData.status,
         assignedTo: taskData.assignedTo,
-        estimatedDuration: taskData.estimatedDuration?.toString() || '',
-        cost: taskData.cost || '',
-        notes: taskData.notes || '',
+        estimatedDuration: taskData.estimatedDuration?.toString() || &apos;&apos;,
+        cost: taskData.cost || &apos;&apos;,
+        notes: taskData.notes || &apos;&apos;,
       });
     } catch (err) {
-// console.error('Error loading maintenance task:', err);
+// // // // // // console.error(&apos;Error loading maintenance task:&apos;, err);
       setError(
-        err instanceof Error ? err.message : 'Failed to load maintenance task'
+        err instanceof Error ? err.message : &apos;Failed to load maintenance task&apos;
       );
     } finally {
       setLoading(false);
@@ -132,12 +133,12 @@ export function EditMaintenance({
 
       if (formData.type !== task.type) {
         updates.type = formData.type;
-        changes.push({ field: 'Type', from: task.type, to: formData.type });
+        changes.push({ field: &apos;Type&apos;, from: task.type, to: formData.type });
       }
       if (formData.task !== task.task) {
         updates.task = formData.task;
         changes.push({
-          field: 'Task Description',
+          field: &apos;Task Description&apos;,
           from: task.task,
           to: formData.task,
         });
@@ -145,7 +146,7 @@ export function EditMaintenance({
       if (formData.dueDate !== task.dueDate) {
         updates.dueDate = formData.dueDate;
         changes.push({
-          field: 'Due Date',
+          field: &apos;Due Date&apos;,
           from: task.dueDate,
           to: formData.dueDate,
         });
@@ -153,7 +154,7 @@ export function EditMaintenance({
       if (formData.priority !== task.priority) {
         updates.priority = formData.priority as any;
         changes.push({
-          field: 'Priority',
+          field: &apos;Priority&apos;,
           from: task.priority,
           to: formData.priority,
         });
@@ -161,7 +162,7 @@ export function EditMaintenance({
       if (formData.status !== task.status) {
         updates.status = formData.status as any;
         changes.push({
-          field: 'Status',
+          field: &apos;Status&apos;,
           from: task.status,
           to: formData.status,
         });
@@ -169,43 +170,43 @@ export function EditMaintenance({
       if (formData.assignedTo !== task.assignedTo) {
         updates.assignedTo = formData.assignedTo;
         changes.push({
-          field: 'Assigned To',
+          field: &apos;Assigned To&apos;,
           from: task.assignedTo,
           to: formData.assignedTo,
         });
       }
       if (
         formData.estimatedDuration !==
-        (task.estimatedDuration?.toString() || '')
+        (task.estimatedDuration?.toString() || &apos;&apos;)
       ) {
         updates.estimatedDuration = formData.estimatedDuration
           ? parseInt(formData.estimatedDuration)
           : undefined;
         changes.push({
-          field: 'Estimated Duration',
-          from: task.estimatedDuration?.toString() || '-',
-          to: formData.estimatedDuration || '-',
+          field: &apos;Estimated Duration&apos;,
+          from: task.estimatedDuration?.toString() || &apos;-&apos;,
+          to: formData.estimatedDuration || &apos;-&apos;,
         });
       }
-      if (formData.cost !== (task.cost || '')) {
+      if (formData.cost !== (task.cost || &apos;&apos;)) {
         updates.cost = formData.cost;
         changes.push({
-          field: 'Cost',
-          from: task.cost || '-',
-          to: formData.cost || '-',
+          field: &apos;Cost&apos;,
+          from: task.cost || &apos;-&apos;,
+          to: formData.cost || &apos;-&apos;,
         });
       }
-      if (formData.notes !== (task.notes || '')) {
+      if (formData.notes !== (task.notes || &apos;&apos;)) {
         updates.notes = formData.notes;
         changes.push({
-          field: 'Notes',
-          from: task.notes || '-',
-          to: formData.notes || '-',
+          field: &apos;Notes&apos;,
+          from: task.notes || &apos;-&apos;,
+          to: formData.notes || &apos;-&apos;,
         });
       }
 
       if (changes.length === 0) {
-        toast.info('No changes to save');
+        toast.info(&apos;No changes to save&apos;);
         return;
       }
 
@@ -213,13 +214,13 @@ export function EditMaintenance({
       const updatedTask = await updateMaintenanceTask(
         maintenanceId,
         updates,
-        `Updated maintenance task${fromContext ? ` from ${fromContext}` : ''}`
+        `Updated maintenance task${fromContext ? ` from ${fromContext}` : &apos;&apos;}`
       );
 
       if (updatedTask) {
         setTask(updatedTask);
-        toast.success('Maintenance task updated', {
-          description: `${changes.length} change${changes.length > 1 ? 's' : ''} saved to audit trail`,
+        toast.success(&apos;Maintenance task updated&apos;, {
+          description: `${changes.length} change${changes.length > 1 ? &apos;s&apos; : &apos;&apos;} saved to audit trail`,
         });
 
         // Optionally go back after a delay
@@ -228,9 +229,9 @@ export function EditMaintenance({
         }, 1000);
       }
     } catch (err) {
-// console.error('Error saving maintenance task:', err);
-      toast.error('Failed to save', {
-        description: err instanceof Error ? err.message : 'An error occurred',
+// // // // // // console.error(&apos;Error saving maintenance task:&apos;, err);
+      toast.error(&apos;Failed to save&apos;, {
+        description: err instanceof Error ? err.message : &apos;An error occurred&apos;,
       });
     } finally {
       setSaving(false);
@@ -238,13 +239,13 @@ export function EditMaintenance({
   };
 
   if (loading) {
-    return <LoadingState message='Loading maintenance task...' />;
+    return <LoadingState message=&apos;Loading maintenance task...&apos; />;
   }
 
   if (error || !task) {
     return (
       <ErrorState
-        message={error || 'Maintenance task not found'}
+        message={error || &apos;Maintenance task not found&apos;}
         onRetry={loadData}
       />
     );
@@ -252,25 +253,25 @@ export function EditMaintenance({
 
   return (
     <PageLayout
-      variant='narrow'
-      padding='lg'
+      variant=&apos;narrow&apos;
+      padding=&apos;lg&apos;
       header={
         <PageHeader
           title={`Edit Maintenance: ${task.id}`}
           description={`${task.assetName} - ${task.assetId}`}
           onBack={onBack}
           actions={
-            <div className='flex gap-2'>
+            <div className=&apos;flex gap-2&apos;>
               <Button
-                variant='outline'
+                variant=&apos;outline&apos;
                 onClick={() => setShowAuditLog(!showAuditLog)}
               >
-                <HistoryIcon className='h-4 w-4 mr-2' />
-                {showAuditLog ? 'Hide' : 'Show'} Audit Log
+                <HistoryIcon className=&apos;h-4 w-4 mr-2&apos; />
+                {showAuditLog ? &apos;Hide&apos; : &apos;Show&apos;} Audit Log
               </Button>
               <Button onClick={handleSave} disabled={saving}>
-                <Save className='h-4 w-4 mr-2' />
-                {saving ? 'Saving...' : 'Save Changes'}
+                <Save className=&apos;h-4 w-4 mr-2&apos; />
+                {saving ? &apos;Saving...&apos; : &apos;Save Changes&apos;}
               </Button>
             </div>
           }
@@ -278,12 +279,12 @@ export function EditMaintenance({
       }
     >
       {fromContext && (
-        <Card className='border-blue-200 bg-blue-50'>
-          <CardContent className='pt-4'>
-            <div className='flex items-center gap-2 text-sm text-blue-900'>
-              <AlertTriangle className='h-4 w-4' />
+        <Card className=&apos;border-blue-200 bg-blue-50&apos;>
+          <CardContent className=&apos;pt-4&apos;>
+            <div className=&apos;flex items-center gap-2 text-sm text-blue-900&apos;>
+              <AlertTriangle className=&apos;h-4 w-4&apos; />
               <span>
-                Editing from {fromContext.replace(/-/g, ' ')}
+                Editing from {fromContext.replace(/-/g, &apos; &apos;)}
                 {sourceAssetContext && ` (Asset: ${sourceAssetContext.name})`}
               </span>
             </div>
@@ -291,25 +292,25 @@ export function EditMaintenance({
         </Card>
       )}
 
-      <div className='grid gap-6 lg:grid-cols-3'>
+      <div className=&apos;grid gap-6 lg:grid-cols-3&apos;>
         {/* Main Form */}
-        <div className='lg:col-span-2 space-y-6'>
+        <div className=&apos;lg:col-span-2 space-y-6&apos;>
           <Card>
             <CardHeader>
               <CardTitle>Maintenance Details</CardTitle>
             </CardHeader>
-            <CardContent className='space-y-4'>
-              <div className='grid gap-4 md:grid-cols-2'>
-                <div className='space-y-2'>
-                  <Label htmlFor='type'>Maintenance Type</Label>
+            <CardContent className=&apos;space-y-4&apos;>
+              <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;type&apos;>Maintenance Type</Label>
                   <Select
                     value={formData.type}
                     onValueChange={value =>
                       setFormData({ ...formData, type: value })
                     }
                   >
-                    <SelectTrigger id='type'>
-                      <SelectValue placeholder='Select type' />
+                    <SelectTrigger id=&apos;type&apos;>
+                      <SelectValue placeholder=&apos;Select type&apos; />
                     </SelectTrigger>
                     <SelectContent>
                       {maintenanceTypes.map(type => (
@@ -321,21 +322,21 @@ export function EditMaintenance({
                   </Select>
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='priority'>Priority</Label>
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;priority&apos;>Priority</Label>
                   <Select
                     value={formData.priority}
                     onValueChange={value =>
                       setFormData({ ...formData, priority: value })
                     }
                   >
-                    <SelectTrigger id='priority'>
-                      <SelectValue placeholder='Select priority' />
+                    <SelectTrigger id=&apos;priority&apos;>
+                      <SelectValue placeholder=&apos;Select priority&apos; />
                     </SelectTrigger>
                     <SelectContent>
                       {priorities.map(priority => (
                         <SelectItem key={priority.value} value={priority.value}>
-                          <div className='flex items-center gap-2'>
+                          <div className=&apos;flex items-center gap-2&apos;>
                             <PriorityBadge priority={priority.value} />
                           </div>
                         </SelectItem>
@@ -345,25 +346,25 @@ export function EditMaintenance({
                 </div>
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='task'>Task Description</Label>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;task&apos;>Task Description</Label>
                 <Textarea
-                  id='task'
+                  id=&apos;task&apos;
                   value={formData.task}
                   onChange={e =>
                     setFormData({ ...formData, task: e.target.value })
                   }
                   rows={3}
-                  placeholder='Describe the maintenance task...'
+                  placeholder=&apos;Describe the maintenance task...&apos;
                 />
               </div>
 
-              <div className='grid gap-4 md:grid-cols-2'>
-                <div className='space-y-2'>
-                  <Label htmlFor='dueDate'>Due Date</Label>
+              <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;dueDate&apos;>Due Date</Label>
                   <Input
-                    id='dueDate'
-                    type='date'
+                    id=&apos;dueDate&apos;
+                    type=&apos;date&apos;
                     value={formData.dueDate}
                     onChange={e =>
                       setFormData({ ...formData, dueDate: e.target.value })
@@ -371,21 +372,21 @@ export function EditMaintenance({
                   />
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='status'>Status</Label>
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;status&apos;>Status</Label>
                   <Select
                     value={formData.status}
                     onValueChange={value =>
                       setFormData({ ...formData, status: value })
                     }
                   >
-                    <SelectTrigger id='status'>
-                      <SelectValue placeholder='Select status' />
+                    <SelectTrigger id=&apos;status&apos;>
+                      <SelectValue placeholder=&apos;Select status&apos; />
                     </SelectTrigger>
                     <SelectContent>
                       {statuses.map(status => (
                         <SelectItem key={status.value} value={status.value}>
-                          <div className='flex items-center gap-2'>
+                          <div className=&apos;flex items-center gap-2&apos;>
                             <StatusBadge status={status.value} />
                           </div>
                         </SelectItem>
@@ -395,17 +396,17 @@ export function EditMaintenance({
                 </div>
               </div>
 
-              <div className='grid gap-4 md:grid-cols-2'>
-                <div className='space-y-2'>
-                  <Label htmlFor='assignedTo'>Assigned To</Label>
+              <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;assignedTo&apos;>Assigned To</Label>
                   <Select
                     value={formData.assignedTo}
                     onValueChange={value =>
                       setFormData({ ...formData, assignedTo: value })
                     }
                   >
-                    <SelectTrigger id='assignedTo'>
-                      <SelectValue placeholder='Select technician' />
+                    <SelectTrigger id=&apos;assignedTo&apos;>
+                      <SelectValue placeholder=&apos;Select technician&apos; />
                     </SelectTrigger>
                     <SelectContent>
                       {technicians.map(tech => (
@@ -417,13 +418,13 @@ export function EditMaintenance({
                   </Select>
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='estimatedDuration'>
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;estimatedDuration&apos;>
                     Estimated Duration (minutes)
                   </Label>
                   <Input
-                    id='estimatedDuration'
-                    type='number'
+                    id=&apos;estimatedDuration&apos;
+                    type=&apos;number&apos;
                     value={formData.estimatedDuration}
                     onChange={e =>
                       setFormData({
@@ -431,34 +432,34 @@ export function EditMaintenance({
                         estimatedDuration: e.target.value,
                       })
                     }
-                    placeholder='e.g., 120'
+                    placeholder=&apos;e.g., 120&apos;
                   />
                 </div>
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='cost'>Cost</Label>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;cost&apos;>Cost</Label>
                 <Input
-                  id='cost'
-                  type='text'
+                  id=&apos;cost&apos;
+                  type=&apos;text&apos;
                   value={formData.cost}
                   onChange={e =>
                     setFormData({ ...formData, cost: e.target.value })
                   }
-                  placeholder='e.g., $150.00'
+                  placeholder=&apos;e.g., $150.00&apos;
                 />
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='notes'>Notes</Label>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;notes&apos;>Notes</Label>
                 <Textarea
-                  id='notes'
+                  id=&apos;notes&apos;
                   value={formData.notes}
                   onChange={e =>
                     setFormData({ ...formData, notes: e.target.value })
                   }
                   rows={4}
-                  placeholder='Add any additional notes...'
+                  placeholder=&apos;Add any additional notes...&apos;
                 />
               </div>
             </CardContent>
@@ -466,26 +467,26 @@ export function EditMaintenance({
         </div>
 
         {/* Sidebar */}
-        <div className='space-y-6'>
+        <div className=&apos;space-y-6&apos;>
           {/* Asset Info */}
           <Card>
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Package className='h-4 w-4' />
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <Package className=&apos;h-4 w-4&apos; />
                 Asset Information
               </CardTitle>
             </CardHeader>
-            <CardContent className='space-y-2'>
+            <CardContent className=&apos;space-y-2&apos;>
               <div>
-                <p className='text-sm text-muted-foreground'>Asset Name</p>
+                <p className=&apos;text-sm text-muted-foreground&apos;>Asset Name</p>
                 <p>{task.assetName}</p>
               </div>
               <div>
-                <p className='text-sm text-muted-foreground'>Asset ID</p>
+                <p className=&apos;text-sm text-muted-foreground&apos;>Asset ID</p>
                 <p>{task.assetId}</p>
               </div>
               <div>
-                <p className='text-sm text-muted-foreground'>Current Status</p>
+                <p className=&apos;text-sm text-muted-foreground&apos;>Current Status</p>
                 <StatusBadge status={task.status} />
               </div>
             </CardContent>
@@ -496,21 +497,21 @@ export function EditMaintenance({
             <CardHeader>
               <CardTitle>Task Metadata</CardTitle>
             </CardHeader>
-            <CardContent className='space-y-2 text-sm'>
+            <CardContent className=&apos;space-y-2 text-sm&apos;>
               {task.createdAt && (
                 <div>
-                  <p className='text-muted-foreground'>Created</p>
+                  <p className=&apos;text-muted-foreground&apos;>Created</p>
                   <p>{new Date(task.createdAt).toLocaleString()}</p>
                 </div>
               )}
               {task.updatedAt && (
                 <div>
-                  <p className='text-muted-foreground'>Last Updated</p>
+                  <p className=&apos;text-muted-foreground&apos;>Last Updated</p>
                   <p>{new Date(task.updatedAt).toLocaleString()}</p>
                 </div>
               )}
               <div>
-                <p className='text-muted-foreground'>Audit Entries</p>
+                <p className=&apos;text-muted-foreground&apos;>Audit Entries</p>
                 <p>{task.auditLog.length} entries</p>
               </div>
             </CardContent>
@@ -529,9 +530,9 @@ export function EditMaintenance({
             changes: entry.changes,
             notes: entry.notes,
           }))}
-          title='Audit Log'
-          description='Track all changes made to this maintenance task'
-          variant='card'
+          title=&apos;Audit Log&apos;
+          description=&apos;Track all changes made to this maintenance task&apos;
+          variant=&apos;card&apos;
         />
       )}
     </PageLayout>

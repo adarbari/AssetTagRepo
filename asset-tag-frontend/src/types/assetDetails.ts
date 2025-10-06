@@ -72,7 +72,7 @@ export interface ActivityLogEntry {
   user?: string;
   userId?: string;
   userName?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   severity?: 'info' | 'warning' | 'error';
 }
 

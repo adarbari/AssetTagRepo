@@ -22,7 +22,7 @@ class UserBase(BaseModel):
     )
 
     @validator("role")
-    def validate_role(cls, v):
+    def validate_role(cls, v) -> None:
         allowed_roles = ["user", "admin", "superuser", "technician", "manager"]
         if v not in allowed_roles:
             raise ValueError(f'Role must be one of: {", ".join(allowed_roles)}')
@@ -35,7 +35,7 @@ class UserCreate(UserBase):
     password: str = Field(..., min_length=8, description="User password")
 
     @validator("password")
-    def validate_password(cls, v):
+    def validate_password(cls, v) -> None:
         if len(v) < 8:
             raise ValueError("Password must be at least 8 characters long")
         return v
@@ -52,7 +52,7 @@ class UserUpdate(BaseModel):
     preferences: Optional[Dict[str, Any]] = None
 
     @validator("role")
-    def validate_role(cls, v):
+    def validate_role(cls, v) -> None:
         if v is not None:
             allowed_roles = ["user", "admin", "superuser", "technician", "manager"]
             if v not in allowed_roles:
@@ -87,7 +87,7 @@ class UserPasswordUpdate(BaseModel):
     new_password: str = Field(..., min_length=8, description="New password")
 
     @validator("new_password")
-    def validate_new_password(cls, v):
+    def validate_new_password(cls, v) -> None:
         if len(v) < 8:
             raise ValueError("New password must be at least 8 characters long")
         return v

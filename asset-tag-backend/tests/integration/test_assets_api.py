@@ -8,7 +8,7 @@ import pytest
 class TestAssetsAPI:
     """Test Assets API endpoints"""
 
-    def test_create_asset(self, client, sample_asset_data):
+    def test_create_asset(self, client, sample_asset_data) -> None:
         """Test creating an asset via API"""
         response = client.post("/api/v1/assets", json=sample_asset_data)
 
@@ -22,7 +22,7 @@ class TestAssetsAPI:
         assert "id" in data
         assert "created_at" in data
 
-    def test_get_assets(self, client, sample_asset_data):
+    def test_get_assets(self, client, sample_asset_data) -> None:
         """Test getting list of assets"""
         # Create a test asset first
         client.post("/api/v1/assets", json=sample_asset_data)
@@ -39,7 +39,7 @@ class TestAssetsAPI:
         asset_names = [asset["name"] for asset in data]
         assert sample_asset_data["name"] in asset_names
 
-    def test_get_asset_by_id(self, client, sample_asset_data):
+    def test_get_asset_by_id(self, client, sample_asset_data) -> None:
         """Test getting a specific asset by ID"""
         # Create a test asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)
@@ -54,13 +54,13 @@ class TestAssetsAPI:
         assert data["name"] == sample_asset_data["name"]
         assert data["asset_type"] == sample_asset_data["asset_type"]
 
-    def test_get_nonexistent_asset(self, client):
+    def test_get_nonexistent_asset(self, client) -> None:
         """Test getting a nonexistent asset"""
         nonexistent_id = "00000000-0000-0000-0000-000000000000"
         response = client.get(f"/api/v1/assets/{nonexistent_id}")
         assert response.status_code == 404
 
-    def test_update_asset(self, client, sample_asset_data):
+    def test_update_asset(self, client, sample_asset_data) -> None:
         """Test updating an asset"""
         # Create a test asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)
@@ -85,7 +85,7 @@ class TestAssetsAPI:
             data["asset_type"] == sample_asset_data["asset_type"]
         )  # Should remain unchanged
 
-    def test_delete_asset(self, client, sample_asset_data):
+    def test_delete_asset(self, client, sample_asset_data) -> None:
         """Test deleting an asset"""
         # Create a test asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)
@@ -99,7 +99,7 @@ class TestAssetsAPI:
         response = client.get(f"/api/v1/assets/{asset_id}")
         assert response.status_code == 404
 
-    def test_asset_filtering(self, client, sample_asset_data):
+    def test_asset_filtering(self, client, sample_asset_data) -> None:
         """Test filtering assets by various criteria"""
         # Create test assets with different properties
         asset1_data = sample_asset_data.copy()
@@ -142,7 +142,7 @@ class TestAssetsAPI:
             for asset in data
         )
 
-    def test_asset_pagination(self, client, sample_asset_data):
+    def test_asset_pagination(self, client, sample_asset_data) -> None:
         """Test pagination of assets"""
         # Create multiple test assets
         for i in range(5):
@@ -163,7 +163,7 @@ class TestAssetsAPI:
         data = response.json()
         assert len(data) <= 2
 
-    def test_asset_validation(self, client):
+    def test_asset_validation(self, client) -> None:
         """Test asset validation"""
         # Test with invalid data
         invalid_data = {
@@ -176,7 +176,7 @@ class TestAssetsAPI:
         response = client.post("/api/v1/assets", json=invalid_data)
         assert response.status_code == 422  # Validation error
 
-    def test_asset_search(self, client, sample_asset_data):
+    def test_asset_search(self, client, sample_asset_data) -> None:
         """Test asset search functionality"""
         # Create a test asset
         client.post("/api/v1/assets", json=sample_asset_data)
@@ -200,7 +200,7 @@ class TestAssetsAPI:
             for asset in data
         )
 
-    def test_asset_battery_history(self, client, sample_asset_data):
+    def test_asset_battery_history(self, client, sample_asset_data) -> None:
         """Test getting asset battery history"""
         # Create a test asset
         create_response = client.post("/api/v1/assets", json=sample_asset_data)

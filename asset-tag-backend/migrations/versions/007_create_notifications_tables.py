@@ -17,7 +17,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Create notification_configs, notification_logs, and notification_templates tables"""
 
     # Create notification_configs table
@@ -191,7 +191,7 @@ def upgrade():
     )
 
 
-def downgrade():
+def downgrade() -> None:
     """Drop notification_configs, notification_logs, and notification_templates tables"""
 
     # Drop indexes

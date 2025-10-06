@@ -5,7 +5,8 @@ Separate from main database.py to avoid circular imports
 
 import os
 
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
+                                    create_async_engine)
 from sqlalchemy.orm import declarative_base
 
 from config.database import Base
@@ -39,7 +40,7 @@ async def get_test_db() -> AsyncSession:
             await session.close()
 
 
-async def init_test_db():
+async def init_test_db() -> None:
     """Initialize test database tables"""
     async with test_engine.begin() as conn:
         # Import all models to ensure they're registered
@@ -48,6 +49,6 @@ async def init_test_db():
         await conn.run_sync(Base.metadata.create_all)
 
 
-async def close_test_db():
+async def close_test_db() -> None:
     """Close test database connections"""
     await test_engine.dispose()

@@ -4,25 +4,25 @@
  * View and manage all reported asset issues
  */
 
-import React, { useState } from 'react';
+import React, { useState } from &apos;react&apos;;
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
-import { SeverityBadge, StatusBadge } from '../common';
+} from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { SeverityBadge, StatusBadge } from &apos;../common&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
+} from &apos;../ui/select&apos;;
 import {
   Table,
   TableBody,
@@ -30,16 +30,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table';
+} from &apos;../ui/table&apos;;
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from '../ui/dropdown-menu';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { PageHeader, EmptyState, StatsCard, PageLayout } from '../common';
+} from &apos;../ui/dropdown-menu&apos;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
+import { PageHeader, EmptyState, StatsCard, PageLayout } from &apos;../common&apos;;
 import {
   AlertTriangle,
   Search,
@@ -52,10 +52,10 @@ import {
   AlertCircle,
   Wrench,
   User,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { useNavigation } from '../../contexts/NavigationContext';
-import type { Issue, IssueStatus, UpdateIssueInput } from '../../types/issue';
+} from &apos;lucide-react&apos;;
+import { toast } from &apos;sonner&apos;;
+import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
+import type { Issue, IssueStatus, UpdateIssueInput } from &apos;../../types/issue&apos;;
 
 interface IssueTrackingProps {
   issues: Issue[];
@@ -79,10 +79,10 @@ export function IssueTracking({
   onDeleteIssue: _onDeleteIssue,
 }: IssueTrackingProps) {
   const navigation = useNavigation();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState<string>('all');
-  const [selectedSeverity, setSelectedSeverity] = useState<string>('all');
-  const [activeTab, setActiveTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState(&apos;&apos;);
+  const [selectedStatus, setSelectedStatus] = useState<string>(&apos;all&apos;);
+  const [selectedSeverity, setSelectedSeverity] = useState<string>(&apos;all&apos;);
+  const [activeTab, setActiveTab] = useState(&apos;all&apos;);
 
   // Filter issues
   const filteredIssues = issues.filter(issue => {
@@ -93,18 +93,18 @@ export function IssueTracking({
       issue.description.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus =
-      selectedStatus === 'all' || issue.status === selectedStatus;
+      selectedStatus === &apos;all&apos; || issue.status === selectedStatus;
     const matchesSeverity =
-      selectedSeverity === 'all' || issue.severity === selectedSeverity;
+      selectedSeverity === &apos;all&apos; || issue.severity === selectedSeverity;
 
     const matchesTab =
-      activeTab === 'all' ||
-      (activeTab === 'open' &&
-        (issue.status === 'open' ||
-          issue.status === 'acknowledged' ||
-          issue.status === 'in-progress')) ||
-      (activeTab === 'resolved' &&
-        (issue.status === 'resolved' || issue.status === 'closed'));
+      activeTab === &apos;all&apos; ||
+      (activeTab === &apos;open&apos; &&
+        (issue.status === &apos;open&apos; ||
+          issue.status === &apos;acknowledged&apos; ||
+          issue.status === &apos;in-progress&apos;)) ||
+      (activeTab === &apos;resolved&apos; &&
+        (issue.status === &apos;resolved&apos; || issue.status === &apos;closed&apos;));
 
     return matchesSearch && matchesStatus && matchesSeverity && matchesTab;
   });
@@ -119,9 +119,9 @@ export function IssueTracking({
   ) => {
     const result = await onUpdateStatus(issueId, newStatus);
     if (result.success) {
-      toast.success('Issue status updated');
+      toast.success(&apos;Issue status updated&apos;);
     } else {
-      toast.error('Failed to update issue status');
+      toast.error(&apos;Failed to update issue status&apos;);
     }
   };
 
@@ -135,78 +135,78 @@ export function IssueTracking({
 
   const openIssuesCount = issues.filter(
     i =>
-      i.status === 'open' ||
-      i.status === 'acknowledged' ||
-      i.status === 'in-progress'
+      i.status === &apos;open&apos; ||
+      i.status === &apos;acknowledged&apos; ||
+      i.status === &apos;in-progress&apos;
   ).length;
 
   const criticalIssuesCount = issues.filter(
     i =>
-      i.severity === 'critical' &&
-      (i.status === 'open' ||
-        i.status === 'acknowledged' ||
-        i.status === 'in-progress')
+      i.severity === &apos;critical&apos; &&
+      (i.status === &apos;open&apos; ||
+        i.status === &apos;acknowledged&apos; ||
+        i.status === &apos;in-progress&apos;)
   ).length;
 
-  const inProgressCount = issues.filter(i => i.status === 'in-progress').length;
+  const inProgressCount = issues.filter(i => i.status === &apos;in-progress&apos;).length;
 
   const resolvedThisWeek = issues.filter(
     i =>
-      i.status === 'resolved' &&
-      new Date(i.resolvedDate || '').getTime() >
+      i.status === &apos;resolved&apos; &&
+      new Date(i.resolvedDate || &apos;&apos;).getTime() >
         Date.now() - 7 * 24 * 60 * 60 * 1000
   ).length;
 
   return (
     <PageLayout
-      variant='wide'
-      padding='lg'
+      variant=&apos;wide&apos;
+      padding=&apos;lg&apos;
       header={
-        <div className='border-b bg-background px-8 py-6'>
+        <div className=&apos;border-b bg-background px-8 py-6&apos;>
           <PageHeader
-            title='Issue Tracking'
-            description='View and manage all reported asset issues'
+            title=&apos;Issue Tracking&apos;
+            description=&apos;View and manage all reported asset issues&apos;
             icon={AlertTriangle}
           />
         </div>
       }
     >
       {/* Stats Cards */}
-      <div className='grid gap-4 md:grid-cols-4'>
+      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
         <StatsCard
-          title='Open Issues'
+          title=&apos;Open Issues&apos;
           value={openIssuesCount.toString()}
           icon={AlertCircle}
           trend={{
             value: Math.abs(openIssuesCount - 5),
-            direction: openIssuesCount > 5 ? 'up' : 'down',
-            label: `${openIssuesCount > 5 ? '↑' : '↓'} ${Math.abs(openIssuesCount - 5)}`,
+            direction: openIssuesCount > 5 ? &apos;up&apos; : &apos;down&apos;,
+            label: `${openIssuesCount > 5 ? &apos;↑&apos; : &apos;↓&apos;} ${Math.abs(openIssuesCount - 5)}`,
           }}
         />
         <StatsCard
-          title='Critical'
+          title=&apos;Critical&apos;
           value={criticalIssuesCount.toString()}
           icon={AlertTriangle}
-          variant='danger'
+          variant=&apos;danger&apos;
         />
         <StatsCard
-          title='In Progress'
+          title=&apos;In Progress&apos;
           value={inProgressCount.toString()}
           icon={Wrench}
-          variant='info'
+          variant=&apos;info&apos;
         />
         <StatsCard
-          title='Resolved (7d)'
+          title=&apos;Resolved (7d)&apos;
           value={resolvedThisWeek.toString()}
           icon={CheckCircle2}
-          variant='success'
+          variant=&apos;success&apos;
         />
       </div>
 
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <div className='flex items-center justify-between'>
+          <div className=&apos;flex items-center justify-between&apos;>
             <div>
               <CardTitle>Issues</CardTitle>
               <CardDescription>
@@ -219,23 +219,23 @@ export function IssueTracking({
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
-            className='space-y-4'
+            className=&apos;space-y-4&apos;
           >
-            <div className='flex items-center justify-between'>
+            <div className=&apos;flex items-center justify-between&apos;>
               <TabsList>
-                <TabsTrigger value='all'>All Issues</TabsTrigger>
-                <TabsTrigger value='open'>Active</TabsTrigger>
-                <TabsTrigger value='resolved'>Resolved</TabsTrigger>
+                <TabsTrigger value=&apos;all&apos;>All Issues</TabsTrigger>
+                <TabsTrigger value=&apos;open&apos;>Active</TabsTrigger>
+                <TabsTrigger value=&apos;resolved&apos;>Resolved</TabsTrigger>
               </TabsList>
 
-              <div className='flex items-center gap-2'>
-                <div className='relative flex-1 max-w-sm'>
-                  <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
+              <div className=&apos;flex items-center gap-2&apos;>
+                <div className=&apos;relative flex-1 max-w-sm&apos;>
+                  <Search className=&apos;absolute left-2 top-2.5 h-4 w-4 text-muted-foreground&apos; />
                   <Input
-                    placeholder='Search issues...'
+                    placeholder=&apos;Search issues...&apos;
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    className='pl-8'
+                    className=&apos;pl-8&apos;
                   />
                 </div>
 
@@ -243,15 +243,15 @@ export function IssueTracking({
                   value={selectedSeverity}
                   onValueChange={setSelectedSeverity}
                 >
-                  <SelectTrigger className='w-[150px]'>
-                    <SelectValue placeholder='Severity' />
+                  <SelectTrigger className=&apos;w-[150px]&apos;>
+                    <SelectValue placeholder=&apos;Severity&apos; />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='all'>All Severities</SelectItem>
-                    <SelectItem value='critical'>Critical</SelectItem>
-                    <SelectItem value='high'>High</SelectItem>
-                    <SelectItem value='medium'>Medium</SelectItem>
-                    <SelectItem value='low'>Low</SelectItem>
+                    <SelectItem value=&apos;all&apos;>All Severities</SelectItem>
+                    <SelectItem value=&apos;critical&apos;>Critical</SelectItem>
+                    <SelectItem value=&apos;high&apos;>High</SelectItem>
+                    <SelectItem value=&apos;medium&apos;>Medium</SelectItem>
+                    <SelectItem value=&apos;low&apos;>Low</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -259,30 +259,30 @@ export function IssueTracking({
                   value={selectedStatus}
                   onValueChange={setSelectedStatus}
                 >
-                  <SelectTrigger className='w-[150px]'>
-                    <SelectValue placeholder='Status' />
+                  <SelectTrigger className=&apos;w-[150px]&apos;>
+                    <SelectValue placeholder=&apos;Status&apos; />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value='all'>All Statuses</SelectItem>
-                    <SelectItem value='open'>Open</SelectItem>
-                    <SelectItem value='acknowledged'>Acknowledged</SelectItem>
-                    <SelectItem value='in-progress'>In Progress</SelectItem>
-                    <SelectItem value='resolved'>Resolved</SelectItem>
-                    <SelectItem value='closed'>Closed</SelectItem>
+                    <SelectItem value=&apos;all&apos;>All Statuses</SelectItem>
+                    <SelectItem value=&apos;open&apos;>Open</SelectItem>
+                    <SelectItem value=&apos;acknowledged&apos;>Acknowledged</SelectItem>
+                    <SelectItem value=&apos;in-progress&apos;>In Progress</SelectItem>
+                    <SelectItem value=&apos;resolved&apos;>Resolved</SelectItem>
+                    <SelectItem value=&apos;closed&apos;>Closed</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            <TabsContent value={activeTab} className='space-y-6'>
+            <TabsContent value={activeTab} className=&apos;space-y-6&apos;>
               {filteredIssues.length === 0 ? (
                 <EmptyState
                   icon={AlertTriangle}
-                  title='No issues found'
-                  description='No issues match your current filters'
+                  title=&apos;No issues found&apos;
+                  description=&apos;No issues match your current filters&apos;
                 />
               ) : (
-                <div className='border rounded-lg'>
+                <div className=&apos;border rounded-lg&apos;>
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -294,41 +294,41 @@ export function IssueTracking({
                         <TableHead>Status</TableHead>
                         <TableHead>Reported</TableHead>
                         <TableHead>Assigned To</TableHead>
-                        <TableHead className='w-[50px]'></TableHead>
+                        <TableHead className=&apos;w-[50px]&apos;></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredIssues.map(issue => (
                         <TableRow
                           key={issue.id}
-                          className='cursor-pointer hover:bg-muted/50'
+                          className=&apos;cursor-pointer hover:bg-muted/50&apos;
                           onClick={() => handleRowClick(issue)}
                         >
-                          <TableCell className='font-mono text-sm'>
+                          <TableCell className=&apos;font-mono text-sm&apos;>
                             {issue.id}
                           </TableCell>
                           <TableCell>
-                            <div className='flex items-center gap-2'>
-                              <Package className='h-4 w-4 text-muted-foreground' />
+                            <div className=&apos;flex items-center gap-2&apos;>
+                              <Package className=&apos;h-4 w-4 text-muted-foreground&apos; />
                               <div>
                                 <div>{issue.assetName}</div>
-                                <div className='text-xs text-muted-foreground'>
+                                <div className=&apos;text-xs text-muted-foreground&apos;>
                                   {issue.assetId}
                                 </div>
                               </div>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className='max-w-xs'>
-                              <div className='truncate'>{issue.title}</div>
-                              <div className='text-xs text-muted-foreground truncate'>
+                            <div className=&apos;max-w-xs&apos;>
+                              <div className=&apos;truncate&apos;>{issue.title}</div>
+                              <div className=&apos;text-xs text-muted-foreground truncate&apos;>
                                 {issue.description}
                               </div>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant='outline' className='capitalize'>
-                              {issue.type.replace('-', ' ')}
+                            <Badge variant=&apos;outline&apos; className=&apos;capitalize&apos;>
+                              {issue.type.replace(&apos;-&apos;, &apos; &apos;)}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -338,8 +338,8 @@ export function IssueTracking({
                             <StatusBadge status={issue.status} />
                           </TableCell>
                           <TableCell>
-                            <div className='flex items-center gap-1 text-sm'>
-                              <Clock className='h-3 w-3 text-muted-foreground' />
+                            <div className=&apos;flex items-center gap-1 text-sm&apos;>
+                              <Clock className=&apos;h-3 w-3 text-muted-foreground&apos; />
                               {new Date(
                                 issue.reportedDate
                               ).toLocaleDateString()}
@@ -347,12 +347,12 @@ export function IssueTracking({
                           </TableCell>
                           <TableCell>
                             {issue.assignedTo ? (
-                              <div className='flex items-center gap-1 text-sm'>
-                                <User className='h-3 w-3 text-muted-foreground' />
+                              <div className=&apos;flex items-center gap-1 text-sm&apos;>
+                                <User className=&apos;h-3 w-3 text-muted-foreground&apos; />
                                 {issue.assignedTo}
                               </div>
                             ) : (
-                              <span className='text-xs text-muted-foreground'>
+                              <span className=&apos;text-xs text-muted-foreground&apos;>
                                 Unassigned
                               </span>
                             )}
@@ -360,51 +360,51 @@ export function IssueTracking({
                           <TableCell>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant='ghost' size='sm'>
-                                  <MoreVertical className='h-4 w-4' />
+                                <Button variant=&apos;ghost&apos; size=&apos;sm&apos;>
+                                  <MoreVertical className=&apos;h-4 w-4&apos; />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align='end'>
+                              <DropdownMenuContent align=&apos;end&apos;>
                                 <DropdownMenuItem
                                   onClick={() => handleViewDetails(issue)}
                                 >
-                                  <Eye className='h-4 w-4 mr-2' />
+                                  <Eye className=&apos;h-4 w-4 mr-2&apos; />
                                   View Details
                                 </DropdownMenuItem>
-                                {issue.status === 'open' && (
+                                {issue.status === &apos;open&apos; && (
                                   <DropdownMenuItem
                                     onClick={() =>
                                       handleUpdateStatus(
                                         issue.id,
-                                        'acknowledged'
+                                        &apos;acknowledged&apos;
                                       )
                                     }
                                   >
-                                    <CheckCircle2 className='h-4 w-4 mr-2' />
+                                    <CheckCircle2 className=&apos;h-4 w-4 mr-2&apos; />
                                     Acknowledge
                                   </DropdownMenuItem>
                                 )}
-                                {(issue.status === 'open' ||
-                                  issue.status === 'acknowledged') && (
+                                {(issue.status === &apos;open&apos; ||
+                                  issue.status === &apos;acknowledged&apos;) && (
                                   <DropdownMenuItem
                                     onClick={() =>
                                       handleUpdateStatus(
                                         issue.id,
-                                        'in-progress'
+                                        &apos;in-progress&apos;
                                       )
                                     }
                                   >
-                                    <Wrench className='h-4 w-4 mr-2' />
+                                    <Wrench className=&apos;h-4 w-4 mr-2&apos; />
                                     Start Work
                                   </DropdownMenuItem>
                                 )}
-                                {issue.status === 'in-progress' && (
+                                {issue.status === &apos;in-progress&apos; && (
                                   <DropdownMenuItem
                                     onClick={() =>
-                                      handleUpdateStatus(issue.id, 'resolved')
+                                      handleUpdateStatus(issue.id, &apos;resolved&apos;)
                                     }
                                   >
-                                    <CheckCircle2 className='h-4 w-4 mr-2' />
+                                    <CheckCircle2 className=&apos;h-4 w-4 mr-2&apos; />
                                     Mark Resolved
                                   </DropdownMenuItem>
                                 )}
@@ -412,7 +412,7 @@ export function IssueTracking({
                                 <DropdownMenuItem
                                   onClick={() => handleEditIssue(issue)}
                                 >
-                                  <Edit className='h-4 w-4 mr-2' />
+                                  <Edit className=&apos;h-4 w-4 mr-2&apos; />
                                   Edit Issue
                                 </DropdownMenuItem>
                               </DropdownMenuContent>

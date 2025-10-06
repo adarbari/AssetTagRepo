@@ -17,7 +17,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Create compliance and compliance_checks tables"""
 
     # Create compliance table
@@ -128,7 +128,7 @@ def upgrade():
     op.create_index("idx_compliance_check_type", "compliance_checks", ["check_type"])
 
 
-def downgrade():
+def downgrade() -> None:
     """Drop compliance and compliance_checks tables"""
 
     # Drop indexes

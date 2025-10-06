@@ -21,7 +21,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-async def start_services():
+async def start_services() -> None:
     """Start all backend services"""
     logger.info("Starting Asset Tag Backend services...")
 

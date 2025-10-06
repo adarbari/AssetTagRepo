@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Separator } from '../ui/separator';
-import { ScrollArea } from '../ui/scroll-area';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Calendar } from '../ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Skeleton } from '../ui/skeleton';
-import { PageLayout, PageHeader, StatsCard } from '../common';
+import React, { useState, useEffect } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
+import { Separator } from &apos;../ui/separator&apos;;
+import { ScrollArea } from &apos;../ui/scroll-area&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Calendar } from &apos;../ui/calendar&apos;;
+import { Popover, PopoverContent, PopoverTrigger } from &apos;../ui/popover&apos;;
+import { Skeleton } from &apos;../ui/skeleton&apos;;
+import { PageLayout, PageHeader, StatsCard } from &apos;../common&apos;;
 import {
   fetchSiteActivity,
   getPresetDateRange,
   type SiteActivityData,
-} from '../../services/api';
-import { GeofenceMapEditor } from '../geofences/GeofenceMapEditor';
+} from &apos;../../services/api&apos;;
+import { GeofenceMapEditor } from &apos;../geofences/GeofenceMapEditor&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
+} from &apos;../ui/select&apos;;
 import {
   Table,
   TableBody,
@@ -31,7 +31,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table';
+} from &apos;../ui/table&apos;;
 import {
   Building2,
   Users,
@@ -50,7 +50,7 @@ import {
   Calendar as CalendarIcon,
   Shield,
   Plus,
-} from 'lucide-react';
+} from &apos;lucide-react&apos;;
 import {
   AreaChart,
   Area,
@@ -62,10 +62,10 @@ import {
   PieChart,
   Pie,
   Cell,
-} from 'recharts';
-import type { Site as SharedSite, Geofence } from '../../types';
+} from &apos;recharts&apos;;
+import type { Site as SharedSite, Geofence } from &apos;../../types&apos;;
 
-type SiteStatus = 'active' | 'maintenance' | 'inactive';
+type SiteStatus = &apos;active&apos; | &apos;maintenance&apos; | &apos;inactive&apos;;
 
 interface Site {
   id: string;
@@ -128,53 +128,53 @@ interface SiteDetailsProps {
 
 // Mock asset types distribution
 const assetTypeData = [
-  { name: 'Equipment', value: 95, count: 95, color: '#3b82f6' },
-  { name: 'Vehicles', value: 52, count: 52, color: '#22c55e' },
-  { name: 'Tools', value: 67, count: 67, color: '#f59e0b' },
-  { name: 'Containers', value: 20, count: 20, color: '#8b5cf6' },
+  { name: &apos;Equipment&apos;, value: 95, count: 95, color: &apos;#3b82f6&apos; },
+  { name: &apos;Vehicles&apos;, value: 52, count: 52, color: &apos;#22c55e&apos; },
+  { name: &apos;Tools&apos;, value: 67, count: 67, color: &apos;#f59e0b&apos; },
+  { name: &apos;Containers&apos;, value: 20, count: 20, color: &apos;#8b5cf6&apos; },
 ];
 
 // Mock recent events
 const recentEvents = [
   {
     id: 1,
-    type: 'arrival',
-    asset: 'Excavator CAT 320',
-    assetId: 'AT-42891',
-    timestamp: '2 min ago',
+    type: &apos;arrival&apos;,
+    asset: &apos;Excavator CAT 320&apos;,
+    assetId: &apos;AT-42891&apos;,
+    timestamp: &apos;2 min ago&apos;,
     icon: Wrench,
   },
   {
     id: 2,
-    type: 'departure',
-    asset: 'Delivery Truck F-350',
-    assetId: 'AT-78234',
-    timestamp: '15 min ago',
+    type: &apos;departure&apos;,
+    asset: &apos;Delivery Truck F-350&apos;,
+    assetId: &apos;AT-78234&apos;,
+    timestamp: &apos;15 min ago&apos;,
     icon: Truck,
   },
   {
     id: 3,
-    type: 'arrival',
-    asset: 'Tool Container #5',
-    assetId: 'AT-33421',
-    timestamp: '32 min ago',
+    type: &apos;arrival&apos;,
+    asset: &apos;Tool Container #5&apos;,
+    assetId: &apos;AT-33421&apos;,
+    timestamp: &apos;32 min ago&apos;,
     icon: Container,
   },
   {
     id: 4,
-    type: 'alert',
-    asset: 'Forklift Toyota 8FG',
-    assetId: 'AT-55678',
-    timestamp: '1 hour ago',
+    type: &apos;alert&apos;,
+    asset: &apos;Forklift Toyota 8FG&apos;,
+    assetId: &apos;AT-55678&apos;,
+    timestamp: &apos;1 hour ago&apos;,
     icon: AlertTriangle,
-    message: 'Low battery warning',
+    message: &apos;Low battery warning&apos;,
   },
   {
     id: 5,
-    type: 'departure',
-    asset: 'Service Van Mercedes',
-    assetId: 'AT-98765',
-    timestamp: '2 hours ago',
+    type: &apos;departure&apos;,
+    asset: &apos;Service Van Mercedes&apos;,
+    assetId: &apos;AT-98765&apos;,
+    timestamp: &apos;2 hours ago&apos;,
     icon: Truck,
   },
 ];
@@ -182,44 +182,44 @@ const recentEvents = [
 // Mock assets at site
 const assetsAtSite = [
   {
-    id: 'AT-42891',
-    name: 'Excavator CAT 320',
-    type: 'equipment',
+    id: &apos;AT-42891&apos;,
+    name: &apos;Excavator CAT 320&apos;,
+    type: &apos;equipment&apos;,
     battery: 87,
-    status: 'active',
-    duration: '2 days 4 hrs',
+    status: &apos;active&apos;,
+    duration: &apos;2 days 4 hrs&apos;,
   },
   {
-    id: 'AT-78234',
-    name: 'Delivery Truck F-350',
-    type: 'vehicles',
+    id: &apos;AT-78234&apos;,
+    name: &apos;Delivery Truck F-350&apos;,
+    type: &apos;vehicles&apos;,
     battery: 92,
-    status: 'idle',
-    duration: '5 hrs 23 min',
+    status: &apos;idle&apos;,
+    duration: &apos;5 hrs 23 min&apos;,
   },
   {
-    id: 'AT-33421',
-    name: 'Tool Container #5',
-    type: 'containers',
+    id: &apos;AT-33421&apos;,
+    name: &apos;Tool Container #5&apos;,
+    type: &apos;containers&apos;,
     battery: 78,
-    status: 'active',
-    duration: '1 day 18 hrs',
+    status: &apos;active&apos;,
+    duration: &apos;1 day 18 hrs&apos;,
   },
   {
-    id: 'AT-55678',
-    name: 'Forklift Toyota 8FG',
-    type: 'equipment',
+    id: &apos;AT-55678&apos;,
+    name: &apos;Forklift Toyota 8FG&apos;,
+    type: &apos;equipment&apos;,
     battery: 34,
-    status: 'active',
-    duration: '8 hrs 12 min',
+    status: &apos;active&apos;,
+    duration: &apos;8 hrs 12 min&apos;,
   },
   {
-    id: 'AT-11223',
-    name: 'Compressor Atlas 225',
-    type: 'equipment',
+    id: &apos;AT-11223&apos;,
+    name: &apos;Compressor Atlas 225&apos;,
+    type: &apos;equipment&apos;,
     battery: 65,
-    status: 'idle',
-    duration: '3 days 2 hrs',
+    status: &apos;idle&apos;,
+    duration: &apos;3 days 2 hrs&apos;,
   },
 ];
 
@@ -229,7 +229,7 @@ export function SiteDetails({
   onCreateGeofence,
   onEditGeofence,
   onSiteUpdate,
-  initialTab = 'overview',
+  initialTab = &apos;overview&apos;,
   onTabChange,
 }: SiteDetailsProps) {
   // Convert shared site to local format
@@ -237,13 +237,13 @@ export function SiteDetails({
     id: sharedSite.id,
     name: sharedSite.name,
     address:
-      sharedSite.address || sharedSite.location || 'Address not available',
-    boundary: sharedSite.area || 'Boundary not defined',
+      sharedSite.address || sharedSite.location || &apos;Address not available&apos;,
+    boundary: sharedSite.area || &apos;Boundary not defined&apos;,
     tolerance: sharedSite.tolerance || 50,
     assets: sharedSite.assets || 0,
     personnel: 0, // Not in shared type
-    status: sharedSite.status === 'active' ? 'active' : 'inactive',
-    lastActivity: 'Unknown', // Not in shared type
+    status: sharedSite.status === &apos;active&apos; ? &apos;active&apos; : &apos;inactive&apos;,
+    lastActivity: &apos;Unknown&apos;, // Not in shared type
     coordinates: sharedSite.coordinates
       ? {
           lat: sharedSite.coordinates.lat,
@@ -255,9 +255,9 @@ export function SiteDetails({
       contactPerson: sharedSite.manager,
       phone: sharedSite.phone,
       email: sharedSite.email,
-      operatingHours: '24/7',
-      timezone: 'UTC',
-      established: '2024',
+      operatingHours: &apos;24/7&apos;,
+      timezone: &apos;UTC&apos;,
+      established: &apos;2024&apos;,
     },
   };
 
@@ -266,8 +266,8 @@ export function SiteDetails({
   const [editedSite, setEditedSite] = useState(siteData);
   const [isBoundaryEditing, setIsBoundaryEditing] = useState(false);
   const [activityTimeRange, setActivityTimeRange] = useState<
-    '24h' | '7d' | '30d' | 'custom'
-  >('24h');
+    &apos;24h&apos; | &apos;7d&apos; | &apos;30d&apos; | &apos;custom&apos;
+  >(&apos;24h&apos;);
   const [customStartDate, setCustomStartDate] = useState<Date | undefined>(
     undefined
   );
@@ -275,7 +275,7 @@ export function SiteDetails({
     undefined
   );
   const [activityData, setActivityData] = useState<SiteActivityData[]>([]);
-  const [isLoadingActivity, setIsLoadingActivity] = useState(false);
+  const [isLoadingActivity, setLoadingActivity] = useState(false);
   const [activityError, setActivityError] = useState<string | null>(null);
   const [siteGeofence, setSiteGeofence] = useState<Geofence | null>(null);
 
@@ -287,7 +287,7 @@ export function SiteDetails({
     // Load associated geofence if it exists
     if (sharedSite.geofenceId) {
       // Fetch geofence from mock data
-      import('../../data/mockData').then(({ getGeofenceById }) => {
+      import(&apos;../../data/mockData&apos;).then(({ getGeofenceById }) => {
         if (sharedSite.geofenceId) {
           const geofence = getGeofenceById(sharedSite.geofenceId);
           if (geofence) {
@@ -306,18 +306,18 @@ export function SiteDetails({
   // Fetch activity data when time range or custom dates change
   useEffect(() => {
     const fetchActivityData = async () => {
-      setIsLoadingActivity(true);
+      setLoadingActivity(true);
       setActivityError(null);
 
       try {
         let startDate: Date;
         let endDate: Date;
-        let granularity: 'hourly' | 'daily' = 'daily';
+        let granularity: &apos;hourly&apos; | &apos;daily&apos; = &apos;daily&apos;;
 
-        if (activityTimeRange === 'custom') {
+        if (activityTimeRange === &apos;custom&apos;) {
           if (!customStartDate || !customEndDate) {
             setActivityData([]);
-            setIsLoadingActivity(false);
+            setLoadingActivity(false);
             return;
           }
           startDate = customStartDate;
@@ -327,7 +327,7 @@ export function SiteDetails({
           const daysDiff = Math.ceil(
             (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
           );
-          granularity = daysDiff <= 2 ? 'hourly' : 'daily';
+          granularity = daysDiff <= 2 ? &apos;hourly&apos; : &apos;daily&apos;;
         } else {
           const range = getPresetDateRange(activityTimeRange);
           startDate = range.start;
@@ -344,11 +344,11 @@ export function SiteDetails({
 
         setActivityData(response.data);
       } catch (error) {
-// console.error('Error fetching activity data:', error);
-        setActivityError('Failed to load activity data. Please try again.');
+// // // // // // console.error(&apos;Error fetching activity data:&apos;, error);
+        setActivityError(&apos;Failed to load activity data. Please try again.&apos;);
         setActivityData([]);
       } finally {
-        setIsLoadingActivity(false);
+        setLoadingActivity(false);
       }
     };
 
@@ -367,48 +367,48 @@ export function SiteDetails({
 
   const getEventIcon = (type: string) => {
     switch (type) {
-      case 'arrival':
-        return <CheckCircle2 className='h-4 w-4 text-green-600' />;
-      case 'departure':
-        return <Navigation className='h-4 w-4 text-blue-600' />;
-      case 'alert':
-        return <AlertTriangle className='h-4 w-4 text-yellow-600' />;
+      case &apos;arrival&apos;:
+        return <CheckCircle2 className=&apos;h-4 w-4 text-green-600&apos; />;
+      case &apos;departure&apos;:
+        return <Navigation className=&apos;h-4 w-4 text-blue-600&apos; />;
+      case &apos;alert&apos;:
+        return <AlertTriangle className=&apos;h-4 w-4 text-yellow-600&apos; />;
       default:
-        return <Activity className='h-4 w-4 text-muted-foreground' />;
+        return <Activity className=&apos;h-4 w-4 text-muted-foreground&apos; />;
     }
   };
 
   return (
     <PageLayout
-      variant='standard'
-      padding='lg'
+      variant=&apos;standard&apos;
+      padding=&apos;lg&apos;
       header={
-        <div className='border-b bg-background px-8 py-6'>
+        <div className=&apos;border-b bg-background px-8 py-6&apos;>
           <PageHeader
             title={editedSite.name}
             description={editedSite.id}
             icon={Building2}
             badge={{
               label: editedSite.status,
-              variant: editedSite.status === 'active' ? 'default' : 'secondary',
+              variant: editedSite.status === &apos;active&apos; ? &apos;default&apos; : &apos;secondary&apos;,
             }}
             onBack={onBack}
             actions={
-              <div className='flex items-center gap-2'>
+              <div className=&apos;flex items-center gap-2&apos;>
                 {isEditing ? (
                   <>
-                    <Button variant='outline' onClick={handleCancel}>
-                      <X className='h-4 w-4 mr-2' />
+                    <Button variant=&apos;outline&apos; onClick={handleCancel}>
+                      <X className=&apos;h-4 w-4 mr-2&apos; />
                       Cancel
                     </Button>
                     <Button onClick={handleSave}>
-                      <Save className='h-4 w-4 mr-2' />
+                      <Save className=&apos;h-4 w-4 mr-2&apos; />
                       Save Changes
                     </Button>
                   </>
                 ) : (
                   <Button onClick={() => setIsEditing(true)}>
-                    <Edit className='h-4 w-4 mr-2' />
+                    <Edit className=&apos;h-4 w-4 mr-2&apos; />
                     Edit Site
                   </Button>
                 )}
@@ -419,30 +419,30 @@ export function SiteDetails({
       }
     >
       {/* Stats Cards */}
-      <div className='grid gap-4 md:grid-cols-4'>
+      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
         <StatsCard
-          title='Assets On-Site'
+          title=&apos;Assets On-Site&apos;
           value={editedSite.assets.toString()}
           icon={Package}
-          variant='info'
+          variant=&apos;info&apos;
         />
         <StatsCard
-          title='Personnel'
+          title=&apos;Personnel&apos;
           value={editedSite.personnel.toString()}
           icon={Users}
-          variant='info'
+          variant=&apos;info&apos;
         />
         <StatsCard
-          title='Active Assets'
-          value='178'
+          title=&apos;Active Assets&apos;
+          value=&apos;178&apos;
           icon={Activity}
-          variant='success'
+          variant=&apos;success&apos;
         />
         <StatsCard
-          title='Utilization'
-          value='76%'
+          title=&apos;Utilization&apos;
+          value=&apos;76%&apos;
           icon={TrendingUp}
-          variant='warning'
+          variant=&apos;warning&apos;
         />
       </div>
 
@@ -455,24 +455,24 @@ export function SiteDetails({
         }}
       >
         <TabsList>
-          <TabsTrigger value='overview'>Overview</TabsTrigger>
-          <TabsTrigger value='assets'>Assets</TabsTrigger>
-          <TabsTrigger value='location'>Location & Boundary</TabsTrigger>
-          <TabsTrigger value='activity'>Activity</TabsTrigger>
+          <TabsTrigger value=&apos;overview&apos;>Overview</TabsTrigger>
+          <TabsTrigger value=&apos;assets&apos;>Assets</TabsTrigger>
+          <TabsTrigger value=&apos;location&apos;>Location & Boundary</TabsTrigger>
+          <TabsTrigger value=&apos;activity&apos;>Activity</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value='overview' className='space-y-6'>
-          <div className='grid gap-6 md:grid-cols-2'>
+        <TabsContent value=&apos;overview&apos; className=&apos;space-y-6&apos;>
+          <div className=&apos;grid gap-6 md:grid-cols-2&apos;>
             {/* Site Information */}
             <Card>
               <CardHeader>
                 <CardTitle>Site Information</CardTitle>
               </CardHeader>
-              <CardContent className='space-y-4'>
+              <CardContent className=&apos;space-y-4&apos;>
                 {isEditing ? (
                   <>
-                    <div className='space-y-2'>
+                    <div className=&apos;space-y-2&apos;>
                       <Label>Site Name</Label>
                       <Input
                         value={editedSite.name}
@@ -481,7 +481,7 @@ export function SiteDetails({
                         }
                       />
                     </div>
-                    <div className='space-y-2'>
+                    <div className=&apos;space-y-2&apos;>
                       <Label>Address</Label>
                       <Input
                         value={editedSite.address}
@@ -493,10 +493,10 @@ export function SiteDetails({
                         }
                       />
                     </div>
-                    <div className='space-y-2'>
+                    <div className=&apos;space-y-2&apos;>
                       <Label>Tolerance (feet)</Label>
                       <Input
-                        type='number'
+                        type=&apos;number&apos;
                         value={editedSite.tolerance}
                         onChange={e =>
                           setEditedSite({
@@ -506,7 +506,7 @@ export function SiteDetails({
                         }
                       />
                     </div>
-                    <div className='space-y-2'>
+                    <div className=&apos;space-y-2&apos;>
                       <Label>Status</Label>
                       <Select
                         value={editedSite.status}
@@ -518,11 +518,11 @@ export function SiteDetails({
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value='active'>Active</SelectItem>
-                          <SelectItem value='maintenance'>
+                          <SelectItem value=&apos;active&apos;>Active</SelectItem>
+                          <SelectItem value=&apos;maintenance&apos;>
                             Maintenance
                           </SelectItem>
-                          <SelectItem value='inactive'>Inactive</SelectItem>
+                          <SelectItem value=&apos;inactive&apos;>Inactive</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -530,46 +530,46 @@ export function SiteDetails({
                 ) : (
                   <>
                     <div>
-                      <p className='text-sm text-muted-foreground'>Address</p>
+                      <p className=&apos;text-sm text-muted-foreground&apos;>Address</p>
                       <p>{editedSite.address}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className='text-sm text-muted-foreground'>Boundary</p>
+                      <p className=&apos;text-sm text-muted-foreground&apos;>Boundary</p>
                       <p>{editedSite.boundary}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className='text-sm text-muted-foreground'>Tolerance</p>
+                      <p className=&apos;text-sm text-muted-foreground&apos;>Tolerance</p>
                       <p>±{editedSite.tolerance} feet</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className='text-sm text-muted-foreground'>
+                      <p className=&apos;text-sm text-muted-foreground&apos;>
                         Contact Person
                       </p>
                       <p>{editedSite.details.contactPerson}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className='text-sm text-muted-foreground'>Phone</p>
+                      <p className=&apos;text-sm text-muted-foreground&apos;>Phone</p>
                       <p>{editedSite.details.phone}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className='text-sm text-muted-foreground'>Email</p>
+                      <p className=&apos;text-sm text-muted-foreground&apos;>Email</p>
                       <p>{editedSite.details.email}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className='text-sm text-muted-foreground'>
+                      <p className=&apos;text-sm text-muted-foreground&apos;>
                         Operating Hours
                       </p>
                       <p>{editedSite.details.operatingHours}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className='text-sm text-muted-foreground'>
+                      <p className=&apos;text-sm text-muted-foreground&apos;>
                         Established
                       </p>
                       <p>{editedSite.details.established}</p>
@@ -585,17 +585,17 @@ export function SiteDetails({
                 <CardTitle>Asset Distribution</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='h-64'>
-                  <ResponsiveContainer width='100%' height='100%'>
+                <div className=&apos;h-64&apos;>
+                  <ResponsiveContainer width=&apos;100%&apos; height=&apos;100%&apos;>
                     <PieChart>
                       <Pie
                         data={assetTypeData}
-                        cx='50%'
-                        cy='50%'
+                        cx=&apos;50%&apos;
+                        cy=&apos;50%&apos;
                         innerRadius={60}
                         outerRadius={80}
                         paddingAngle={2}
-                        dataKey='value'
+                        dataKey=&apos;value&apos;
                       >
                         {assetTypeData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
@@ -605,9 +605,9 @@ export function SiteDetails({
                         content={({ active, payload }) => {
                           if (active && payload && payload.length) {
                             return (
-                              <div className='bg-background border rounded-lg p-2 shadow-lg'>
-                                <p className='font-medium'>{payload[0].name}</p>
-                                <p className='text-sm text-muted-foreground'>
+                              <div className=&apos;bg-background border rounded-lg p-2 shadow-lg&apos;>
+                                <p className=&apos;font-medium&apos;>{payload[0].name}</p>
+                                <p className=&apos;text-sm text-muted-foreground&apos;>
                                   {payload[0].value} assets
                                 </p>
                               </div>
@@ -619,16 +619,16 @@ export function SiteDetails({
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <div className='grid grid-cols-2 gap-4 mt-4'>
+                <div className=&apos;grid grid-cols-2 gap-4 mt-4&apos;>
                   {assetTypeData.map(item => (
-                    <div key={item.name} className='flex items-center gap-2'>
+                    <div key={item.name} className=&apos;flex items-center gap-2&apos;>
                       <div
-                        className='w-3 h-3 rounded-full'
+                        className=&apos;w-3 h-3 rounded-full&apos;
                         style={{ backgroundColor: item.color }}
                       />
-                      <div className='flex-1'>
-                        <p className='text-sm'>{item.name}</p>
-                        <p className='text-sm text-muted-foreground'>
+                      <div className=&apos;flex-1&apos;>
+                        <p className=&apos;text-sm&apos;>{item.name}</p>
+                        <p className=&apos;text-sm text-muted-foreground&apos;>
                           {item.count}
                         </p>
                       </div>
@@ -645,23 +645,23 @@ export function SiteDetails({
               <CardTitle>Recent Events</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className='h-64'>
-                <div className='space-y-4'>
+              <ScrollArea className=&apos;h-64&apos;>
+                <div className=&apos;space-y-4&apos;>
                   {recentEvents.map(event => (
-                    <div key={event.id} className='flex items-start gap-4'>
-                      <div className='mt-1'>{getEventIcon(event.type)}</div>
-                      <div className='flex-1'>
-                        <div className='flex items-center justify-between'>
+                    <div key={event.id} className=&apos;flex items-start gap-4&apos;>
+                      <div className=&apos;mt-1&apos;>{getEventIcon(event.type)}</div>
+                      <div className=&apos;flex-1&apos;>
+                        <div className=&apos;flex items-center justify-between&apos;>
                           <p>{event.asset}</p>
-                          <p className='text-sm text-muted-foreground'>
+                          <p className=&apos;text-sm text-muted-foreground&apos;>
                             {event.timestamp}
                           </p>
                         </div>
-                        <p className='text-sm text-muted-foreground'>
+                        <p className=&apos;text-sm text-muted-foreground&apos;>
                           {event.assetId}
                         </p>
                         {event.message && (
-                          <p className='text-sm text-yellow-600 mt-1'>
+                          <p className=&apos;text-sm text-yellow-600 mt-1&apos;>
                             {event.message}
                           </p>
                         )}
@@ -675,7 +675,7 @@ export function SiteDetails({
         </TabsContent>
 
         {/* Assets Tab */}
-        <TabsContent value='assets' className='space-y-6'>
+        <TabsContent value=&apos;assets&apos; className=&apos;space-y-6&apos;>
           <Card>
             <CardHeader>
               <CardTitle>Assets Currently at Site</CardTitle>
@@ -698,32 +698,32 @@ export function SiteDetails({
                       <TableCell>{asset.id}</TableCell>
                       <TableCell>{asset.name}</TableCell>
                       <TableCell>
-                        <Badge variant='outline'>{asset.type}</Badge>
+                        <Badge variant=&apos;outline&apos;>{asset.type}</Badge>
                       </TableCell>
                       <TableCell>
-                        <div className='flex items-center gap-2'>
-                          <div className='w-16 h-2 bg-muted rounded-full overflow-hidden'>
+                        <div className=&apos;flex items-center gap-2&apos;>
+                          <div className=&apos;w-16 h-2 bg-muted rounded-full overflow-hidden&apos;>
                             <div
                               className={`h-full ${
                                 asset.battery > 50
-                                  ? 'bg-green-500'
+                                  ? &apos;bg-green-500&apos;
                                   : asset.battery > 20
-                                    ? 'bg-yellow-500'
-                                    : 'bg-red-500'
+                                    ? &apos;bg-yellow-500&apos;
+                                    : &apos;bg-red-500&apos;
                               }`}
                               style={{ width: `${asset.battery}%` }}
                             />
                           </div>
-                          <span className='text-sm'>{asset.battery}%</span>
+                          <span className=&apos;text-sm&apos;>{asset.battery}%</span>
                         </div>
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant='outline'
+                          variant=&apos;outline&apos;
                           className={
-                            asset.status === 'active'
-                              ? 'bg-green-100 text-green-700 border-green-200'
-                              : 'bg-gray-100 text-gray-700 border-gray-200'
+                            asset.status === &apos;active&apos;
+                              ? &apos;bg-green-100 text-green-700 border-green-200&apos;
+                              : &apos;bg-gray-100 text-gray-700 border-gray-200&apos;
                           }
                         >
                           {asset.status}
@@ -739,35 +739,35 @@ export function SiteDetails({
         </TabsContent>
 
         {/* Location Tab */}
-        <TabsContent value='location' className='space-y-6'>
+        <TabsContent value=&apos;location&apos; className=&apos;space-y-6&apos;>
           <Card>
             <CardHeader>
-              <div className='flex items-center justify-between'>
+              <div className=&apos;flex items-center justify-between&apos;>
                 <CardTitle>Site Location & Boundary</CardTitle>
                 {!isBoundaryEditing ? (
                   <Button
-                    size='sm'
-                    variant='outline'
+                    size=&apos;sm&apos;
+                    variant=&apos;outline&apos;
                     onClick={() => setIsBoundaryEditing(true)}
                   >
-                    <Edit className='mr-2 h-4 w-4' />
+                    <Edit className=&apos;mr-2 h-4 w-4&apos; />
                     Edit Boundary
                   </Button>
                 ) : (
-                  <div className='flex gap-2'>
+                  <div className=&apos;flex gap-2&apos;>
                     <Button
-                      size='sm'
-                      variant='outline'
+                      size=&apos;sm&apos;
+                      variant=&apos;outline&apos;
                       onClick={() => {
                         setEditedSite(siteData);
                         setIsBoundaryEditing(false);
                       }}
                     >
-                      <X className='mr-2 h-4 w-4' />
+                      <X className=&apos;mr-2 h-4 w-4&apos; />
                       Cancel
                     </Button>
                     <Button
-                      size='sm'
+                      size=&apos;sm&apos;
                       onClick={() => {
                         // Update the site with new boundary data
                         const updatedSharedSite: SharedSite = {
@@ -786,21 +786,21 @@ export function SiteDetails({
                         }
 
                         // Show success message
-                        import('sonner').then(({ toast }) => {
-                          toast.success('Site boundary updated successfully');
+                        import(&apos;sonner&apos;).then(({ toast }) => {
+                          toast.success(&apos;Site boundary updated successfully&apos;);
                         });
 
                         setIsBoundaryEditing(false);
                       }}
                     >
-                      <Save className='mr-2 h-4 w-4' />
+                      <Save className=&apos;mr-2 h-4 w-4&apos; />
                       Save Changes
                     </Button>
                   </div>
                 )}
               </div>
             </CardHeader>
-            <CardContent className='space-y-4'>
+            <CardContent className=&apos;space-y-4&apos;>
               <GeofenceMapEditor
                 coordinates={editedSite.coordinates}
                 tolerance={editedSite.tolerance}
@@ -826,14 +826,14 @@ export function SiteDetails({
           {/* Geofence Management */}
           <Card>
             <CardHeader>
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
-                  <Shield className='h-5 w-5 text-blue-600' />
+              <div className=&apos;flex items-center justify-between&apos;>
+                <div className=&apos;flex items-center gap-2&apos;>
+                  <Shield className=&apos;h-5 w-5 text-blue-600&apos; />
                   <CardTitle>Geofence</CardTitle>
                 </div>
                 {!siteGeofence && onCreateGeofence && (
                   <Button
-                    size='sm'
+                    size=&apos;sm&apos;
                     onClick={() =>
                       onCreateGeofence(
                         {
@@ -848,7 +848,7 @@ export function SiteDetails({
                       )
                     }
                   >
-                    <Plus className='mr-2 h-4 w-4' />
+                    <Plus className=&apos;mr-2 h-4 w-4&apos; />
                     Create Geofence
                   </Button>
                 )}
@@ -856,62 +856,62 @@ export function SiteDetails({
             </CardHeader>
             <CardContent>
               {!siteGeofence ? (
-                <div className='text-center py-6 text-muted-foreground'>
-                  <Shield className='h-10 w-10 mx-auto mb-2 opacity-20' />
-                  <p className='text-sm'>
+                <div className=&apos;text-center py-6 text-muted-foreground&apos;>
+                  <Shield className=&apos;h-10 w-10 mx-auto mb-2 opacity-20&apos; />
+                  <p className=&apos;text-sm&apos;>
                     No geofence configured for this site
                   </p>
-                  <p className='text-xs mt-1'>
+                  <p className=&apos;text-xs mt-1&apos;>
                     Create a geofence to enable entry/exit alerts
                   </p>
                 </div>
               ) : (
-                <div className='space-y-4'>
-                  <div className='flex items-start justify-between'>
-                    <div className='space-y-3 flex-1'>
-                      <div className='flex items-center gap-3'>
+                <div className=&apos;space-y-4&apos;>
+                  <div className=&apos;flex items-start justify-between&apos;>
+                    <div className=&apos;space-y-3 flex-1&apos;>
+                      <div className=&apos;flex items-center gap-3&apos;>
                         <h4>{siteGeofence.name}</h4>
                         <Badge
-                          variant='outline'
+                          variant=&apos;outline&apos;
                           className={
-                            siteGeofence.status === 'active'
-                              ? 'bg-green-100 text-green-700 border-green-200'
-                              : 'bg-gray-100 text-gray-700 border-gray-200'
+                            siteGeofence.status === &apos;active&apos;
+                              ? &apos;bg-green-100 text-green-700 border-green-200&apos;
+                              : &apos;bg-gray-100 text-gray-700 border-gray-200&apos;
                           }
                         >
                           {siteGeofence.status}
                         </Badge>
                       </div>
 
-                      <div className='grid grid-cols-3 gap-4 text-sm'>
+                      <div className=&apos;grid grid-cols-3 gap-4 text-sm&apos;>
                         <div>
-                          <p className='text-muted-foreground'>Geofence ID</p>
-                          <p className='font-mono text-xs'>{siteGeofence.id}</p>
+                          <p className=&apos;text-muted-foreground&apos;>Geofence ID</p>
+                          <p className=&apos;font-mono text-xs&apos;>{siteGeofence.id}</p>
                         </div>
                         <div>
-                          <p className='text-muted-foreground'>Radius</p>
+                          <p className=&apos;text-muted-foreground&apos;>Radius</p>
                           <p>{siteGeofence.radius} feet</p>
                         </div>
                         <div>
-                          <p className='text-muted-foreground'>Tolerance</p>
+                          <p className=&apos;text-muted-foreground&apos;>Tolerance</p>
                           <p>±{siteGeofence.tolerance} feet</p>
                         </div>
                       </div>
 
-                      <div className='flex items-center gap-4 text-sm'>
-                        <div className='flex items-center gap-1'>
+                      <div className=&apos;flex items-center gap-4 text-sm&apos;>
+                        <div className=&apos;flex items-center gap-1&apos;>
                           {siteGeofence.alertOnEntry ? (
-                            <CheckCircle2 className='h-4 w-4 text-green-600' />
+                            <CheckCircle2 className=&apos;h-4 w-4 text-green-600&apos; />
                           ) : (
-                            <X className='h-4 w-4 text-muted-foreground' />
+                            <X className=&apos;h-4 w-4 text-muted-foreground&apos; />
                           )}
                           <span>Entry alerts</span>
                         </div>
-                        <div className='flex items-center gap-1'>
+                        <div className=&apos;flex items-center gap-1&apos;>
                           {siteGeofence.alertOnExit ? (
-                            <CheckCircle2 className='h-4 w-4 text-green-600' />
+                            <CheckCircle2 className=&apos;h-4 w-4 text-green-600&apos; />
                           ) : (
-                            <X className='h-4 w-4 text-muted-foreground' />
+                            <X className=&apos;h-4 w-4 text-muted-foreground&apos; />
                           )}
                           <span>Exit alerts</span>
                         </div>
@@ -919,8 +919,8 @@ export function SiteDetails({
                     </div>
 
                     <Button
-                      size='sm'
-                      variant='outline'
+                      size=&apos;sm&apos;
+                      variant=&apos;outline&apos;
                       onClick={() => {
                         if (onEditGeofence && siteGeofence.center) {
                           onEditGeofence(
@@ -942,7 +942,7 @@ export function SiteDetails({
                         }
                       }}
                     >
-                      <Edit className='h-4 w-4 mr-2' />
+                      <Edit className=&apos;h-4 w-4 mr-2&apos; />
                       Edit
                     </Button>
                   </div>
@@ -953,55 +953,55 @@ export function SiteDetails({
         </TabsContent>
 
         {/* Activity Tab */}
-        <TabsContent value='activity' className='space-y-6'>
+        <TabsContent value=&apos;activity&apos; className=&apos;space-y-6&apos;>
           <Card>
             <CardHeader>
-              <div className='flex items-center justify-between'>
+              <div className=&apos;flex items-center justify-between&apos;>
                 <CardTitle>
-                  {activityTimeRange === '24h' && '24-Hour Activity'}
-                  {activityTimeRange === '7d' && '7-Day Activity'}
-                  {activityTimeRange === '30d' && '30-Day Activity'}
-                  {activityTimeRange === 'custom' && 'Custom Range Activity'}
+                  {activityTimeRange === &apos;24h&apos; && &apos;24-Hour Activity&apos;}
+                  {activityTimeRange === &apos;7d&apos; && &apos;7-Day Activity&apos;}
+                  {activityTimeRange === &apos;30d&apos; && &apos;30-Day Activity&apos;}
+                  {activityTimeRange === &apos;custom&apos; && &apos;Custom Range Activity&apos;}
                 </CardTitle>
-                <div className='flex items-center gap-2'>
+                <div className=&apos;flex items-center gap-2&apos;>
                   <Select
                     value={activityTimeRange}
                     onValueChange={(value: any) => setActivityTimeRange(value)}
                   >
-                    <SelectTrigger className='w-40'>
+                    <SelectTrigger className=&apos;w-40&apos;>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='24h'>24 Hours</SelectItem>
-                      <SelectItem value='7d'>7 Days</SelectItem>
-                      <SelectItem value='30d'>30 Days</SelectItem>
-                      <SelectItem value='custom'>Custom Range</SelectItem>
+                      <SelectItem value=&apos;24h&apos;>24 Hours</SelectItem>
+                      <SelectItem value=&apos;7d&apos;>7 Days</SelectItem>
+                      <SelectItem value=&apos;30d&apos;>30 Days</SelectItem>
+                      <SelectItem value=&apos;custom&apos;>Custom Range</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              {activityTimeRange === 'custom' && (
-                <div className='space-y-3 mt-4 pt-4 border-t'>
-                  <div className='flex items-center gap-4'>
-                    <div className='flex items-center gap-2'>
-                      <Label className='text-sm'>From:</Label>
+              {activityTimeRange === &apos;custom&apos; && (
+                <div className=&apos;space-y-3 mt-4 pt-4 border-t&apos;>
+                  <div className=&apos;flex items-center gap-4&apos;>
+                    <div className=&apos;flex items-center gap-2&apos;>
+                      <Label className=&apos;text-sm&apos;>From:</Label>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
-                            variant='outline'
-                            size='sm'
-                            className='w-40 justify-start'
+                            variant=&apos;outline&apos;
+                            size=&apos;sm&apos;
+                            className=&apos;w-40 justify-start&apos;
                           >
-                            <CalendarIcon className='mr-2 h-4 w-4' />
+                            <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
                             {customStartDate
                               ? customStartDate.toLocaleDateString()
-                              : 'Start date'}
+                              : &apos;Start date&apos;}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className='w-auto p-0' align='start'>
+                        <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
                           <Calendar
-                            mode='single'
+                            mode=&apos;single&apos;
                             selected={customStartDate}
                             onSelect={date => {
                               setCustomStartDate(date);
@@ -1021,24 +1021,24 @@ export function SiteDetails({
                       </Popover>
                     </div>
 
-                    <div className='flex items-center gap-2'>
-                      <Label className='text-sm'>To:</Label>
+                    <div className=&apos;flex items-center gap-2&apos;>
+                      <Label className=&apos;text-sm&apos;>To:</Label>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
-                            variant='outline'
-                            size='sm'
-                            className='w-40 justify-start'
+                            variant=&apos;outline&apos;
+                            size=&apos;sm&apos;
+                            className=&apos;w-40 justify-start&apos;
                           >
-                            <CalendarIcon className='mr-2 h-4 w-4' />
+                            <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
                             {customEndDate
                               ? customEndDate.toLocaleDateString()
-                              : 'End date'}
+                              : &apos;End date&apos;}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className='w-auto p-0' align='start'>
+                        <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
                           <Calendar
-                            mode='single'
+                            mode=&apos;single&apos;
                             selected={customEndDate}
                             onSelect={date => setCustomEndDate(date)}
                             disabled={date => {
@@ -1055,13 +1055,13 @@ export function SiteDetails({
                   </div>
 
                   {customStartDate && customEndDate && (
-                    <div className='text-sm text-muted-foreground'>
-                      Showing data from {customStartDate.toLocaleDateString()}{' '}
+                    <div className=&apos;text-sm text-muted-foreground&apos;>
+                      Showing data from {customStartDate.toLocaleDateString()}{&apos; &apos;}
                       to {customEndDate.toLocaleDateString()}(
                       {Math.ceil(
                         (customEndDate.getTime() - customStartDate.getTime()) /
                           (1000 * 60 * 60 * 24)
-                      )}{' '}
+                      )}{&apos; &apos;}
                       days)
                     </div>
                   )}
@@ -1069,31 +1069,31 @@ export function SiteDetails({
               )}
             </CardHeader>
             <CardContent>
-              {activityTimeRange === 'custom' &&
+              {activityTimeRange === &apos;custom&apos; &&
               (!customStartDate || !customEndDate) ? (
-                <div className='h-80 flex items-center justify-center text-muted-foreground'>
+                <div className=&apos;h-80 flex items-center justify-center text-muted-foreground&apos;>
                   Please select both start and end dates to view activity data
                 </div>
               ) : isLoadingActivity ? (
-                <div className='h-80 space-y-4 p-4'>
-                  <Skeleton className='h-8 w-full' />
-                  <Skeleton className='h-8 w-full' />
-                  <Skeleton className='h-8 w-full' />
-                  <Skeleton className='h-8 w-full' />
-                  <Skeleton className='h-8 w-full' />
-                  <Skeleton className='h-8 w-full' />
-                  <Skeleton className='h-8 w-full' />
+                <div className=&apos;h-80 space-y-4 p-4&apos;>
+                  <Skeleton className=&apos;h-8 w-full&apos; />
+                  <Skeleton className=&apos;h-8 w-full&apos; />
+                  <Skeleton className=&apos;h-8 w-full&apos; />
+                  <Skeleton className=&apos;h-8 w-full&apos; />
+                  <Skeleton className=&apos;h-8 w-full&apos; />
+                  <Skeleton className=&apos;h-8 w-full&apos; />
+                  <Skeleton className=&apos;h-8 w-full&apos; />
                 </div>
               ) : activityError ? (
-                <div className='h-80 flex flex-col items-center justify-center gap-4'>
-                  <AlertTriangle className='h-12 w-12 text-destructive' />
-                  <p className='text-destructive'>{activityError}</p>
+                <div className=&apos;h-80 flex flex-col items-center justify-center gap-4&apos;>
+                  <AlertTriangle className=&apos;h-12 w-12 text-destructive&apos; />
+                  <p className=&apos;text-destructive&apos;>{activityError}</p>
                   <Button
-                    variant='outline'
+                    variant=&apos;outline&apos;
                     onClick={() => {
                       // Trigger refetch by toggling state
                       const currentRange = activityTimeRange;
-                      setActivityTimeRange('24h');
+                      setActivityTimeRange(&apos;24h&apos;);
                       setTimeout(() => setActivityTimeRange(currentRange), 0);
                     }}
                   >
@@ -1101,32 +1101,32 @@ export function SiteDetails({
                   </Button>
                 </div>
               ) : activityData.length === 0 ? (
-                <div className='h-80 flex items-center justify-center text-muted-foreground'>
+                <div className=&apos;h-80 flex items-center justify-center text-muted-foreground&apos;>
                   No activity data available for the selected period
                 </div>
               ) : (
-                <div className='h-80'>
-                  <ResponsiveContainer width='100%' height='100%'>
+                <div className=&apos;h-80&apos;>
+                  <ResponsiveContainer width=&apos;100%&apos; height=&apos;100%&apos;>
                     <AreaChart data={activityData}>
-                      <CartesianGrid strokeDasharray='3 3' />
-                      <XAxis dataKey='time' />
+                      <CartesianGrid strokeDasharray=&apos;3 3&apos; />
+                      <XAxis dataKey=&apos;time&apos; />
                       <YAxis />
                       <Tooltip />
                       <Area
-                        type='monotone'
-                        dataKey='assets'
-                        stroke='#3b82f6'
-                        fill='#3b82f6'
+                        type=&apos;monotone&apos;
+                        dataKey=&apos;assets&apos;
+                        stroke=&apos;#3b82f6&apos;
+                        fill=&apos;#3b82f6&apos;
                         fillOpacity={0.2}
-                        name='Assets'
+                        name=&apos;Assets&apos;
                       />
                       <Area
-                        type='monotone'
-                        dataKey='personnel'
-                        stroke='#8b5cf6'
-                        fill='#8b5cf6'
+                        type=&apos;monotone&apos;
+                        dataKey=&apos;personnel&apos;
+                        stroke=&apos;#8b5cf6&apos;
+                        fill=&apos;#8b5cf6&apos;
                         fillOpacity={0.2}
-                        name='Personnel'
+                        name=&apos;Personnel&apos;
                       />
                     </AreaChart>
                   </ResponsiveContainer>

@@ -13,16 +13,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.geofences.models import Geofence, GeofenceEvent
-from modules.geofences.schemas import (
-    GeofenceCreate,
-    GeofenceEvaluationRequest,
-    GeofenceEvaluationResponse,
-    GeofenceEventCreate,
-    GeofenceEventResponse,
-    GeofenceResponse,
-    GeofenceStatsResponse,
-    GeofenceUpdate,
-)
+from modules.geofences.schemas import (GeofenceCreate,
+                                       GeofenceEvaluationRequest,
+                                       GeofenceEvaluationResponse,
+                                       GeofenceEventCreate,
+                                       GeofenceEventResponse, GeofenceResponse,
+                                       GeofenceStatsResponse, GeofenceUpdate)
 
 router = APIRouter()
 
@@ -52,7 +48,11 @@ def _geofence_to_response(geofence: Geofence) -> GeofenceResponse:
         asset_id=str(geofence.asset_id) if geofence.asset_id else None,
         asset_name=geofence.asset_name,
         attachment_type=geofence.attachment_type,
-        expected_asset_ids=[str(asset_id) for asset_id in geofence.expected_asset_ids] if geofence.expected_asset_ids else None,
+        expected_asset_ids=(
+            [str(asset_id) for asset_id in geofence.expected_asset_ids]
+            if geofence.expected_asset_ids
+            else None
+        ),
         metadata=geofence.metadata or {},
         created_at=geofence.created_at,
         updated_at=geofence.updated_at,

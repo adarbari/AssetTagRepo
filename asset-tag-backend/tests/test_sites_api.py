@@ -9,13 +9,13 @@ from fastapi.testclient import TestClient
 class TestSitesAPI:
     """Test cases for Sites API endpoints"""
 
-    def test_get_sites_empty(self, client: TestClient):
+    def test_get_sites_empty(self, client: TestClient) -> None:
         """Test getting sites when none exist"""
         response = client.get("/api/v1/sites")
         assert response.status_code == 200
         assert response.json() == []
 
-    def test_create_site(self, client: TestClient, sample_site_data: dict):
+    def test_create_site(self, client: TestClient, sample_site_data: dict) -> None:
         """Test creating a new site"""
         response = client.post("/api/v1/sites", json=sample_site_data)
         assert response.status_code == 201
@@ -27,7 +27,7 @@ class TestSitesAPI:
         assert "id" in data
         assert "created_at" in data
 
-    def test_get_site_by_id(self, client: TestClient, sample_site_data: dict):
+    def test_get_site_by_id(self, client: TestClient, sample_site_data: dict) -> None:
         """Test getting a specific site by ID"""
         # Create site first
         create_response = client.post("/api/v1/sites", json=sample_site_data)
@@ -44,13 +44,13 @@ class TestSitesAPI:
         assert "personnel" in data
         assert "gateways" in data
 
-    def test_get_site_not_found(self, client: TestClient):
+    def test_get_site_not_found(self, client: TestClient) -> None:
         """Test getting a non-existent site"""
         fake_id = "00000000-0000-0000-0000-000000000000"
         response = client.get(f"/api/v1/sites/{fake_id}")
         assert response.status_code == 404
 
-    def test_update_site(self, client: TestClient, sample_site_data: dict):
+    def test_update_site(self, client: TestClient, sample_site_data: dict) -> None:
         """Test updating a site"""
         # Create site first
         create_response = client.post("/api/v1/sites", json=sample_site_data)
@@ -65,7 +65,7 @@ class TestSitesAPI:
         assert data["name"] == "Updated Site Name"
         assert data["radius"] == 200
 
-    def test_delete_site(self, client: TestClient, sample_site_data: dict):
+    def test_delete_site(self, client: TestClient, sample_site_data: dict) -> None:
         """Test deleting a site"""
         # Create site first
         create_response = client.post("/api/v1/sites", json=sample_site_data)
@@ -80,7 +80,7 @@ class TestSitesAPI:
         get_response = client.get(f"/api/v1/sites/{site_id}")
         assert get_response.status_code == 404
 
-    def test_get_sites_with_filters(self, client: TestClient, sample_site_data: dict):
+    def test_get_sites_with_filters(self, client: TestClient, sample_site_data: dict) -> None:
         """Test getting sites with filters"""
         # Create multiple sites with different statuses
         site_data_1 = sample_site_data.copy()
@@ -101,7 +101,7 @@ class TestSitesAPI:
         assert len(data) == 1
         assert data[0]["status"] == "active"
 
-    def test_get_site_assets(self, client: TestClient, sample_site_data: dict):
+    def test_get_site_assets(self, client: TestClient, sample_site_data: dict) -> None:
         """Test getting assets for a specific site"""
         # Create site first
         create_response = client.post("/api/v1/sites", json=sample_site_data)
@@ -114,7 +114,7 @@ class TestSitesAPI:
         data = response.json()
         assert isinstance(data, list)
 
-    def test_get_site_personnel(self, client: TestClient, sample_site_data: dict):
+    def test_get_site_personnel(self, client: TestClient, sample_site_data: dict) -> None:
         """Test getting personnel for a specific site"""
         # Create site first
         create_response = client.post("/api/v1/sites", json=sample_site_data)
@@ -127,7 +127,7 @@ class TestSitesAPI:
         data = response.json()
         assert isinstance(data, list)
 
-    def test_get_site_activity(self, client: TestClient, sample_site_data: dict):
+    def test_get_site_activity(self, client: TestClient, sample_site_data: dict) -> None:
         """Test getting activity for a specific site"""
         # Create site first
         create_response = client.post("/api/v1/sites", json=sample_site_data)
@@ -140,7 +140,7 @@ class TestSitesAPI:
         data = response.json()
         assert isinstance(data, list)
 
-    def test_get_sites_stats(self, client: TestClient):
+    def test_get_sites_stats(self, client: TestClient) -> None:
         """Test getting sites statistics"""
         response = client.get("/api/v1/sites/stats")
         assert response.status_code == 200
@@ -150,7 +150,7 @@ class TestSitesAPI:
         assert "total_assets" in data
         assert "total_personnel" in data
 
-    def test_create_personnel(self, client: TestClient, sample_personnel_data: dict):
+    def test_create_personnel(self, client: TestClient, sample_personnel_data: dict) -> None:
         """Test creating new personnel"""
         response = client.post("/api/v1/sites/personnel", json=sample_personnel_data)
         assert response.status_code == 201
@@ -160,7 +160,7 @@ class TestSitesAPI:
         assert "id" in data
         assert "created_at" in data
 
-    def test_get_personnel(self, client: TestClient, sample_personnel_data: dict):
+    def test_get_personnel(self, client: TestClient, sample_personnel_data: dict) -> None:
         """Test getting personnel list"""
         # Create personnel first
         create_response = client.post(
@@ -176,7 +176,7 @@ class TestSitesAPI:
         assert len(data) == 1
         assert data[0]["name"] == sample_personnel_data["name"]
 
-    def test_get_personnel_by_id(self, client: TestClient, sample_personnel_data: dict):
+    def test_get_personnel_by_id(self, client: TestClient, sample_personnel_data: dict) -> None:
         """Test getting specific personnel by ID"""
         # Create personnel first
         create_response = client.post(
@@ -192,7 +192,7 @@ class TestSitesAPI:
         assert data["id"] == personnel_id
         assert data["name"] == sample_personnel_data["name"]
 
-    def test_update_personnel(self, client: TestClient, sample_personnel_data: dict):
+    def test_update_personnel(self, client: TestClient, sample_personnel_data: dict) -> None:
         """Test updating personnel"""
         # Create personnel first
         create_response = client.post(
@@ -211,7 +211,7 @@ class TestSitesAPI:
         assert data["name"] == "Updated Personnel Name"
         assert data["role"] == "supervisor"
 
-    def test_delete_personnel(self, client: TestClient, sample_personnel_data: dict):
+    def test_delete_personnel(self, client: TestClient, sample_personnel_data: dict) -> None:
         """Test deleting personnel"""
         # Create personnel first
         create_response = client.post(
@@ -228,7 +228,7 @@ class TestSitesAPI:
         get_response = client.get(f"/api/v1/sites/personnel/{personnel_id}")
         assert get_response.status_code == 404
 
-    def test_create_site_validation_error(self, client: TestClient):
+    def test_create_site_validation_error(self, client: TestClient) -> None:
         """Test creating site with invalid data"""
         invalid_data = {
             "name": "",

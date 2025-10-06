@@ -31,18 +31,18 @@ class AlertRule:
 class AlertRulesEngine:
     """Alert rules engine for evaluating conditions and generating alerts"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache = None
         self.rules: Dict[str, AlertRule] = {}
         self._initialize_default_rules()
 
-    async def _get_cache(self):
+    async def _get_cache(self) -> None:
         """Get cache client"""
         if not self.cache:
             self.cache = await get_cache()
         return self.cache
 
-    def _initialize_default_rules(self):
+    def _initialize_default_rules(self) -> None:
         """Initialize default alert rules"""
         self.rules = {
             "battery_low": AlertRule(
@@ -398,16 +398,16 @@ class AlertRulesEngine:
         else:
             return "Review and take appropriate action"
 
-    def add_rule(self, rule: AlertRule):
+    def add_rule(self, rule: AlertRule) -> None:
         """Add a new alert rule"""
         self.rules[rule.rule_id] = rule
 
-    def remove_rule(self, rule_id: str):
+    def remove_rule(self, rule_id: str) -> None:
         """Remove an alert rule"""
         if rule_id in self.rules:
             del self.rules[rule_id]
 
-    def update_rule(self, rule_id: str, updates: Dict[str, Any]):
+    def update_rule(self, rule_id: str, updates: Dict[str, Any]) -> None:
         """Update an existing alert rule"""
         if rule_id in self.rules:
             rule = self.rules[rule_id]

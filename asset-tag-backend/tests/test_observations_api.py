@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 class TestObservationsAPI:
     """Test cases for Observations API endpoints"""
 
-    def test_get_observations_empty(self, client: TestClient):
+    def test_get_observations_empty(self, client: TestClient) -> None:
         """Test getting observations when none exist"""
         response = client.get("/api/v1/observations")
         assert response.status_code == 200
@@ -31,7 +31,7 @@ class TestObservationsAPI:
         assert "id" in data
         assert "created_at" in data
 
-    def test_create_observations_bulk(self, client: TestClient):
+    def test_create_observations_bulk(self, client: TestClient) -> None:
         """Test creating multiple observations in bulk"""
         bulk_data = {
             "observations": [
@@ -83,7 +83,7 @@ class TestObservationsAPI:
         assert data["id"] == observation_id
         assert data["asset_id"] == sample_observation_data["asset_id"]
 
-    def test_get_observation_not_found(self, client: TestClient):
+    def test_get_observation_not_found(self, client: TestClient) -> None:
         """Test getting a non-existent observation"""
         fake_id = "00000000-0000-0000-0000-000000000000"
         response = client.get(f"/api/v1/observations/{fake_id}")
@@ -251,7 +251,7 @@ class TestObservationsAPI:
         data = response.json()
         assert len(data) == 1
 
-    def test_get_observations_pagination(self, client: TestClient):
+    def test_get_observations_pagination(self, client: TestClient) -> None:
         """Test getting observations with pagination"""
         # Create multiple observations
         for i in range(5):
@@ -277,7 +277,7 @@ class TestObservationsAPI:
         data = response.json()
         assert len(data) == 2  # Only 2 remaining
 
-    def test_create_observation_batch(self, client: TestClient):
+    def test_create_observation_batch(self, client: TestClient) -> None:
         """Test creating an observation batch record"""
         batch_data = {
             "batch_id": "test-batch-002",
@@ -294,14 +294,14 @@ class TestObservationsAPI:
         assert data["observation_count"] == batch_data["observation_count"]
         assert data["processing_status"] == batch_data["processing_status"]
 
-    def test_get_observation_batches(self, client: TestClient):
+    def test_get_observation_batches(self, client: TestClient) -> None:
         """Test getting observation batches"""
         response = client.get("/api/v1/observations/batches")
         assert response.status_code == 200
         data = response.json()
         assert isinstance(data, list)
 
-    def test_create_observation_validation_error(self, client: TestClient):
+    def test_create_observation_validation_error(self, client: TestClient) -> None:
         """Test creating observation with invalid data"""
         invalid_data = {
             "asset_id": "",  # Empty asset_id should fail
@@ -312,7 +312,7 @@ class TestObservationsAPI:
         response = client.post("/api/v1/observations", json=invalid_data)
         assert response.status_code == 422  # Validation error
 
-    def test_create_observations_bulk_validation_error(self, client: TestClient):
+    def test_create_observations_bulk_validation_error(self, client: TestClient) -> None:
         """Test creating bulk observations with invalid data"""
         invalid_bulk_data = {
             "observations": [

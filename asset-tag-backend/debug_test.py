@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tests.conftest import client
 
 
-def test_alert_creation():
+def test_alert_creation() -> None:
     """Test alert creation to see the actual error"""
     # Use the client fixture from conftest.py
     client_fixture = client()

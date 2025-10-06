@@ -18,18 +18,18 @@ class GUID(TypeDecorator):
     impl = String
     cache_ok = True
 
-    def __init__(self, as_uuid=True, **kwargs):
+    def __init__(self, as_uuid=True, **kwargs) -> None:
         # Store the as_uuid parameter for later use
         self.as_uuid = as_uuid
         super().__init__(**kwargs)
 
-    def load_dialect_impl(self, dialect):
+    def load_dialect_impl(self, dialect) -> None:
         if dialect.name == "postgresql":
             return dialect.type_descriptor(postgresql.UUID(as_uuid=self.as_uuid))
         else:
             return dialect.type_descriptor(String(36))
 
-    def process_bind_param(self, value, dialect):
+    def process_bind_param(self, value, dialect) -> None:
         if value is None:
             return value
         elif dialect.name == "postgresql":
@@ -44,7 +44,7 @@ class GUID(TypeDecorator):
             else:
                 return str(value)
 
-    def process_result_value(self, value, dialect):
+    def process_result_value(self, value, dialect) -> None:
         if value is None:
             return value
         else:
@@ -53,7 +53,7 @@ class GUID(TypeDecorator):
             return value
 
 
-def setup_uuid_compatibility():
+def setup_uuid_compatibility() -> None:
     """
     Set up UUID compatibility for testing.
     This replaces PostgreSQL's UUID type with our GUID type.
@@ -64,7 +64,7 @@ def setup_uuid_compatibility():
     # Add visit_UUID method to SQLite type compiler
     from sqlalchemy.dialects.sqlite.base import SQLiteTypeCompiler
 
-    def visit_UUID(self, type_, **kw):
+    def visit_UUID(self, type_, **kw) -> None:
         return "TEXT"
 
     SQLiteTypeCompiler.visit_UUID = visit_UUID

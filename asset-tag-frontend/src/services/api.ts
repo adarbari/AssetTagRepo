@@ -81,7 +81,7 @@ export function clearAuthToken() {
 
 // Request options interface
 interface RequestOptions extends RequestInit {
-  params?: Record<string, any>;
+  params?: Record<string, unknown>;
   timeout?: number;
 }
 
@@ -215,7 +215,7 @@ export const apiClient = {
   /**
    * Build full URL with query parameters
    */
-  buildUrl(endpoint: string, params?: Record<string, any>): string {
+  buildUrl(endpoint: string, params?: Record<string, unknown>): string {
     // Remove leading slash if present
     const cleanEndpoint = endpoint.startsWith('/')
       ? endpoint.slice(1)

@@ -11,23 +11,18 @@ from sqlalchemy import and_, delete, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
-from modules.notifications.models import (
-    NotificationConfig,
-    NotificationLog,
-    NotificationTemplate,
-)
-from modules.notifications.schemas import (
-    NotificationConfigCreate,
-    NotificationConfigResponse,
-    NotificationConfigUpdate,
-    NotificationLogResponse,
-    NotificationStats,
-    NotificationTemplateCreate,
-    NotificationTemplateResponse,
-    NotificationTemplateUpdate,
-    NotificationTestRequest,
-    NotificationTestResponse,
-)
+from modules.notifications.models import (NotificationConfig, NotificationLog,
+                                          NotificationTemplate)
+from modules.notifications.schemas import (NotificationConfigCreate,
+                                           NotificationConfigResponse,
+                                           NotificationConfigUpdate,
+                                           NotificationLogResponse,
+                                           NotificationStats,
+                                           NotificationTemplateCreate,
+                                           NotificationTemplateResponse,
+                                           NotificationTemplateUpdate,
+                                           NotificationTestRequest,
+                                           NotificationTestResponse)
 
 router = APIRouter()
 

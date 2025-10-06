@@ -32,7 +32,7 @@ class AlertBase(BaseModel):
 
     @validator("triggered_at", pre=True)
     @classmethod
-    def convert_triggered_at_to_str(cls, v):
+    def convert_triggered_at_to_str(cls, v) -> None:
         if isinstance(v, datetime):
             return v.isoformat()
         return v
@@ -71,42 +71,42 @@ class AlertResponse(AlertBase):
 
     @validator("id", pre=True)
     @classmethod
-    def convert_id_to_str(cls, v):
+    def convert_id_to_str(cls, v) -> None:
         if isinstance(v, uuid.UUID):
             return str(v)
         return v
 
     @validator("organization_id", pre=True)
     @classmethod
-    def convert_organization_id_to_str(cls, v):
+    def convert_organization_id_to_str(cls, v) -> None:
         if isinstance(v, uuid.UUID):
             return str(v)
         return v
 
     @validator("asset_id", pre=True)
     @classmethod
-    def convert_asset_id_to_str(cls, v):
+    def convert_asset_id_to_str(cls, v) -> None:
         if isinstance(v, uuid.UUID):
             return str(v)
         return v
 
     @validator("geofence_id", pre=True)
     @classmethod
-    def convert_geofence_id_to_str(cls, v):
+    def convert_geofence_id_to_str(cls, v) -> None:
         if isinstance(v, uuid.UUID):
             return str(v)
         return v
 
     @validator("triggered_at", pre=True)
     @classmethod
-    def convert_triggered_at_to_str(cls, v):
+    def convert_triggered_at_to_str(cls, v) -> None:
         if isinstance(v, datetime):
             return v.isoformat()
         return v
 
     @validator("metadata", pre=True)
     @classmethod
-    def convert_metadata_to_dict(cls, v):
+    def convert_metadata_to_dict(cls, v) -> None:
         if hasattr(v, "__dict__"):
             return v.__dict__
         return v

@@ -36,7 +36,7 @@ class LocationHandler:
         logger.debug(f"Broadcasted location update for asset {asset_id}")
 
     @staticmethod
-    async def broadcast_location_batch(updates: list):
+    async def broadcast_location_batch(updates: list) -> None:
         """Broadcast multiple location updates in a batch"""
         message = {
             "type": "location_batch",
@@ -170,7 +170,7 @@ class DashboardHandler:
         logger.debug(f"Broadcasted metric update: {metric_name} = {value}")
 
     @staticmethod
-    async def broadcast_dashboard_summary(summary_data: Dict[str, Any]):
+    async def broadcast_dashboard_summary(summary_data: Dict[str, Any]) -> None:
         """Broadcast dashboard summary data"""
         message = {
             "type": "dashboard_summary",

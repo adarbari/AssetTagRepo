@@ -16,7 +16,7 @@ class TestAssetModel:
     """Test Asset model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_asset(self, db_session, sample_asset_data):
+    async def test_create_asset(self, db_session, sample_asset_data) -> None:
         """Test creating an asset"""
         asset = Asset(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
@@ -34,7 +34,7 @@ class TestAssetModel:
         assert asset.battery_level == sample_asset_data["battery_level"]
 
     @pytest.mark.asyncio
-    async def test_asset_soft_delete(self, db_session, sample_asset_data):
+    async def test_asset_soft_delete(self, db_session, sample_asset_data) -> None:
         """Test soft delete functionality"""
         asset = Asset(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
@@ -52,7 +52,7 @@ class TestAssetModel:
         assert asset.deleted_at is not None
 
     @pytest.mark.asyncio
-    async def test_asset_metadata(self, db_session, sample_asset_data):
+    async def test_asset_metadata(self, db_session, sample_asset_data) -> None:
         """Test asset metadata handling"""
         asset = Asset(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
@@ -71,7 +71,7 @@ class TestAssetModel:
 class TestAssetSchemas:
     """Test Asset Pydantic schemas"""
 
-    def test_asset_create_schema(self, sample_asset_data):
+    def test_asset_create_schema(self, sample_asset_data) -> None:
         """Test AssetCreate schema validation"""
         asset_create = AssetCreate(**sample_asset_data)
 
@@ -80,7 +80,7 @@ class TestAssetSchemas:
         assert asset_create.status == sample_asset_data["status"]
         assert asset_create.battery_level == sample_asset_data["battery_level"]
 
-    def test_asset_create_validation(self):
+    def test_asset_create_validation(self) -> None:
         """Test AssetCreate validation rules"""
         # Test required fields
         with pytest.raises(ValueError):
@@ -96,7 +96,7 @@ class TestAssetSchemas:
         asset_create = AssetCreate(**valid_data)
         assert asset_create.name == "Test Asset"
 
-    def test_asset_update_schema(self):
+    def test_asset_update_schema(self) -> None:
         """Test AssetUpdate schema"""
         update_data = {"name": "Updated Asset Name", "battery_level": 90}
 
@@ -104,7 +104,7 @@ class TestAssetSchemas:
         assert asset_update.name == "Updated Asset Name"
         assert asset_update.battery_level == 90
 
-    def test_asset_update_partial(self):
+    def test_asset_update_partial(self) -> None:
         """Test partial updates with AssetUpdate"""
         # Should work with empty dict
         asset_update = AssetUpdate()
@@ -119,7 +119,7 @@ class TestAssetSchemas:
 class TestAssetBusinessLogic:
     """Test asset business logic"""
 
-    def test_battery_level_validation(self):
+    def test_battery_level_validation(self) -> None:
         """Test battery level validation"""
         # Valid battery levels
         valid_data = {
@@ -140,7 +140,7 @@ class TestAssetBusinessLogic:
         asset = AssetCreate(**valid_data)
         assert asset.battery_level == 100
 
-    def test_asset_status_validation(self):
+    def test_asset_status_validation(self) -> None:
         """Test asset status validation"""
         valid_statuses = ["active", "inactive", "maintenance", "retired"]
 
@@ -154,7 +154,7 @@ class TestAssetBusinessLogic:
             asset = AssetCreate(**data)
             assert asset.status == status
 
-    def test_asset_type_validation(self):
+    def test_asset_type_validation(self) -> None:
         """Test asset type validation"""
         valid_types = ["excavator", "bulldozer", "crane", "truck", "generator"]
 

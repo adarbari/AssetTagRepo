@@ -45,7 +45,7 @@ class ComplianceBase(BaseModel):
     )
 
     @validator("compliance_type")
-    def validate_compliance_type(cls, v):
+    def validate_compliance_type(cls, v) -> None:
         allowed_types = [
             "safety",
             "environmental",
@@ -62,7 +62,7 @@ class ComplianceBase(BaseModel):
         return v
 
     @validator("document_type")
-    def validate_document_type(cls, v):
+    def validate_document_type(cls, v) -> None:
         if v is not None:
             allowed_types = [
                 "certificate",
@@ -109,7 +109,7 @@ class ComplianceUpdate(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
 
     @validator("status")
-    def validate_status(cls, v):
+    def validate_status(cls, v) -> None:
         if v is not None:
             allowed_statuses = [
                 "pending",
@@ -172,7 +172,7 @@ class ComplianceCheckBase(BaseModel):
     )
 
     @validator("check_type")
-    def validate_check_type(cls, v):
+    def validate_check_type(cls, v) -> None:
         allowed_types = [
             "inspection",
             "audit",
@@ -187,7 +187,7 @@ class ComplianceCheckBase(BaseModel):
         return v
 
     @validator("result")
-    def validate_result(cls, v):
+    def validate_result(cls, v) -> None:
         allowed_results = ["pass", "fail", "warning", "pending", "conditional"]
         if v not in allowed_results:
             raise ValueError(f'Result must be one of: {", ".join(allowed_results)}')

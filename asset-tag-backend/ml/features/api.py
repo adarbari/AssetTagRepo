@@ -7,12 +7,8 @@ from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from ml.features.feature_store import (
-    AssetBaseline,
-    FeatureStore,
-    FeatureVector,
-    get_feature_store,
-)
+from ml.features.feature_store import (AssetBaseline, FeatureStore,
+                                       FeatureVector, get_feature_store)
 
 router = APIRouter()
 
