@@ -1,13 +1,9 @@
 // import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Sites } from '../sites/Sites';
-import {
-  render,
-  createMockNavigation,
-  waitForAsync,
-} from '../../test/test-utils';
+import { render, createMockNavigation } from '../../test/test-utils';
 
 // Mock the navigation context
 vi.mock('../../contexts/NavigationContext', () => ({

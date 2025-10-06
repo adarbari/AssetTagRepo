@@ -12,7 +12,6 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
 import { Badge } from '../ui/badge';
-import { Textarea } from '../ui/textarea';
 import { PageHeader, PageLayout } from '../common';
 import {
   Table,
@@ -56,7 +55,6 @@ import {
   Clock,
   Shield,
   Database,
-  Bell,
   Plus,
   Edit,
   Trash2,

@@ -1,9 +1,9 @@
 // import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { VehicleAssetPairing } from '../vehicles/VehicleAssetPairing';
-import { render, waitForAsync } from '../../test/test-utils';
+import { render } from '../../test/test-utils';
 
 // Mock the navigation context
 vi.mock('../../contexts/NavigationContext', () => ({
@@ -531,7 +531,6 @@ describe('VehicleAssetPairing Component', () => {
   describe('Error Handling', () => {
     it('should handle asset loading errors gracefully', async () => {
       const user = userEvent.setup();
-      const { toast } = await import('sonner');
 
       render(<VehicleAssetPairing {...defaultProps} />);
 

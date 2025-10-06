@@ -8,22 +8,7 @@ import {
 } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Edit,
-  History,
-  User,
-  Calendar,
-  Package,
-  Clock,
-  MessageSquare,
-  Tag,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Save,
-} from 'lucide-react';
+import { AlertTriangle, Edit, Package, Tag, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   PageHeader,

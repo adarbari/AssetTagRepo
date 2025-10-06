@@ -26,9 +26,7 @@ import {
   TableRow,
 } from '../ui/table';
 import {
-  ArrowLeft,
   Edit,
-  DollarSign,
   TrendingUp,
   TrendingDown,
   AlertTriangle,

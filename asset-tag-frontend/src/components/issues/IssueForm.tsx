@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -17,8 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Badge } from '../ui/badge';
-import { AlertTriangle, Save, Upload, Camera } from 'lucide-react';
+import { Save, Upload, Camera } from 'lucide-react';
 import { toast } from 'sonner';
 import { SeverityBadge, StatusBadge } from '../common';
 import { issueTypes, issueSeverities } from '../../data/dropdownOptions';

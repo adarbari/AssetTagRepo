@@ -5,23 +5,13 @@ import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
 import { Progress } from '../ui/progress';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
-import {
   Search,
   MapPin,
   Navigation,
   Radio,
-  Bell,
   Volume2,
-  Compass,
   TrendingUp,
   Target,
-  CheckCircle,
 } from 'lucide-react';
 import { cn } from '../ui/utils';
 import { PageLayout } from '../common';
@@ -128,10 +118,6 @@ export function FindAsset({ onShowOnMap }: FindAssetProps) {
     if (distance <= 50)
       return { level: 'Near', color: 'text-yellow-600', progress: 50 };
     return { level: 'Far', color: 'text-orange-600', progress: 25 };
-  };
-
-  const getDirectionIcon = (direction: string) => {
-    return <Compass className='h-5 w-5' />;
   };
 
   return (

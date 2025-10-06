@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
 import {
   LoadingState,
   EmptyState,
@@ -16,7 +15,6 @@ import {
   getComplianceRecords,
   getComplianceSummary,
   type ComplianceRecord,
-  type ComplianceSummary,
 } from '../../data/mockReportsData';
 import {
   Table,
@@ -37,7 +35,6 @@ import {
 } from '../ui/dropdown-menu';
 import {
   Search,
-  Shield,
   AlertTriangle,
   CheckCircle,
   Clock,
@@ -47,7 +44,6 @@ import {
   Plus,
   MoreVertical,
   Calendar,
-  TrendingUp,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigation } from '../../contexts/NavigationContext';

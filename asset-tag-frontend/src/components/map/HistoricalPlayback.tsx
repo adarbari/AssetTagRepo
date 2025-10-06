@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { LoadingState, PageLayout } from '../common';
-import type { Asset } from '../types';
+import type { Asset } from '../../types';
 import { mockAssets as allMockAssets } from '../../data/mockData';
 
 interface LocationPoint {
@@ -234,7 +234,7 @@ export function HistoricalPlayback({
       }).addTo(mapInstanceRef.current);
 
       // Add event markers
-      pathUpToCurrent.forEach((point, idx) => {
+      pathUpToCurrent.forEach((point, _idx) => {
         if (point.event) {
           const eventMarker = L.circleMarker([point.lat, point.lng], {
             radius: 6,

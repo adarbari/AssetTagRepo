@@ -165,7 +165,9 @@ class CacheManager:
         return self.metrics.get_stats()
 
     # Redis Streams support
-    async def add_to_stream(self, stream_name: str, fields: Dict[str, Any]) -> Optional[str]:
+    async def add_to_stream(
+        self, stream_name: str, fields: Dict[str, Any]
+    ) -> Optional[str]:
         """Add message to Redis stream"""
         try:
             # Convert fields to proper types for Redis

@@ -292,7 +292,7 @@ describe('AssetMap Component', () => {
     });
 
     it('should not render back button when onBack prop is not provided', () => {
-      const { onBack: _onBack, ...propsWithoutBack } = defaultProps;
+      const { onBack, ...propsWithoutBack } = defaultProps;
       render(<AssetMap {...propsWithoutBack} />);
 
       const backButtons = screen.queryAllByRole('button', { name: '' });

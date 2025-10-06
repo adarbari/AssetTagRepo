@@ -15,12 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Card, CardContent } from '../ui/card';
 import { PageHeader, AssetContextCard, PageLayout } from '../common';
 import { cn } from '../ui/utils';
-import {
-  Calendar as CalendarIcon,
-  Wrench,
-  History,
-  ArrowLeft,
-} from 'lucide-react';
+import { Calendar as CalendarIcon, Wrench, History } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import {

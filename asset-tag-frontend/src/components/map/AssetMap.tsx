@@ -37,7 +37,7 @@ import {
 import type {
   Asset as SharedAsset,
   Geofence as SharedGeofence,
-} from '../types';
+} from '../../types';
 import {
   mockAssets as sharedMockAssets,
   mockGeofences as sharedMockGeofences,
@@ -56,13 +56,6 @@ interface Asset {
   status: AssetStatus;
   battery: number;
   lastUpdate: string;
-}
-
-interface Geofence {
-  id: string;
-  name: string;
-  coordinates: [number, number][];
-  color: string;
 }
 
 interface Site {

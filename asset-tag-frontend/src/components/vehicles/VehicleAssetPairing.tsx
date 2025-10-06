@@ -91,7 +91,7 @@ import { toast } from 'sonner';
 import { format, formatDistanceToNow } from 'date-fns';
 import { mockAssets, getAvailableGeofences } from '../../data/mockData';
 import { expirationMechanisms } from '../../data/dropdownOptions';
-import type { Asset } from '../types';
+import type { Asset } from '../../types';
 import { useNavigation } from '../../contexts/NavigationContext';
 
 // Expiration mechanism types - pulled from dropdown config

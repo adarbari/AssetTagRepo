@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import {
@@ -11,7 +11,7 @@ import {
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { PageHeader, LoadingState, PageLayout } from '../common';
-import { Truck, Package, ArrowLeft, Plus, X, AlertCircle } from 'lucide-react';
+import { Truck, Package, Plus, X, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   fetchAvailableVehicles,

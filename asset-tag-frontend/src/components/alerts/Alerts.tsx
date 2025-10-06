@@ -1,11 +1,11 @@
-import {
+import React, {
   useState,
   useEffect,
   useMemo,
   useImperativeHandle,
   forwardRef,
 } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -135,7 +135,6 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         : userPrefs.defaultView || 'all'
     );
     const [alerts, setAlerts] = useState<Alert[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [activeStatFilter, setActiveStatFilter] = useState<string | null>(
       null
     );

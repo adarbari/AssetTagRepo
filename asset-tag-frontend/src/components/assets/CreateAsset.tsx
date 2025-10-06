@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
 import {
   Select,
   SelectContent,
@@ -11,11 +10,10 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Switch } from '../ui/switch';
-import { Separator } from '../ui/separator';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 import { PageHeader, LoadingState, PageLayout } from '../common';
-import { Package, ArrowLeft, X } from 'lucide-react';
+import { Package, X } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   fetchConfig,

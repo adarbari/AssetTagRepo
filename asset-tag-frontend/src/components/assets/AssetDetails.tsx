@@ -12,14 +12,7 @@ import { Input } from '../ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Separator } from '../ui/separator';
 import { ScrollArea } from '../ui/scroll-area';
-import { Slider } from '../ui/slider';
-import {
-  LoadingState,
-  PageHeader,
-  AlertCard,
-  PageLayout,
-  StatusBadge,
-} from '../common';
+import { LoadingState, AlertCard, PageLayout, StatusBadge } from '../common';
 import {
   Table,
   TableBody,
@@ -49,25 +42,17 @@ import {
   Activity,
   AlertTriangle,
   Calendar,
-  QrCode,
   Download,
   Edit,
-  Trash2,
   Wrench,
   Truck,
   Package as PackageIcon,
   Container,
   Navigation,
   TrendingUp,
-  Zap,
   CheckCircle2,
-  XCircle,
   Circle,
-  Play,
-  Pause,
-  RotateCcw,
   Route,
-  Timer,
   LogIn,
   LogOut,
   History,
@@ -77,11 +62,8 @@ import {
   Mail,
   MessageSquare,
   Smartphone,
-  DollarSign,
 } from 'lucide-react';
 import {
-  LineChart,
-  Line,
   AreaChart,
   Area,
   XAxis,
@@ -1542,7 +1524,7 @@ export function AssetDetails({
             </CardHeader>
             <CardContent>
               <div className='space-y-3'>
-                {alerts.map(alert => {
+                {alerts.map((alert, index) => {
                   // Convert AssetAlert to Alert type for the AlertCard component
                   const alertForCard: any = {
                     id: alert.id,
@@ -1557,6 +1539,7 @@ export function AssetDetails({
 
                   return (
                     <AlertCard
+                      key={alert.id || index}
                       alert={alertForCard}
                       onTakeAction={alertData => {
                         // Convert alert data for navigation

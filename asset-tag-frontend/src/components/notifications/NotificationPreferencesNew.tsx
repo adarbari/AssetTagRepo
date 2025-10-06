@@ -46,7 +46,6 @@ import {
   Building2,
   Package,
   Info,
-  Plus,
   Trash2,
   CheckCircle2,
 } from 'lucide-react';
@@ -57,7 +56,6 @@ import type {
   NotificationLevel,
   NotificationChannelType,
 } from '../../types/notificationConfig';
-import { getAllAlertTypes } from '../../data/alertConfigurations';
 
 interface NotificationPreferencesNewProps {
   onBack?: () => void;

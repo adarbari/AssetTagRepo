@@ -544,8 +544,6 @@ describe('Settings', () => {
     });
 
     it('deletes webhook when Delete button is clicked', () => {
-      const { toast } = require('sonner');
-
       render(<Settings />);
 
       fireEvent.click(screen.getByText('API & Integrations'));

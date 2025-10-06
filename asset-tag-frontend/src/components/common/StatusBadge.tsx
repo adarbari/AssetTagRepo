@@ -48,7 +48,11 @@ const statusColors: Record<string, string> = {
   default: 'bg-gray-100 text-gray-700 border-gray-200',
 };
 
-export function StatusBadge({ status, type, className }: StatusBadgeProps) {
+export function StatusBadge({
+  status,
+  type: _type,
+  className,
+}: StatusBadgeProps) {
   const statusLower = status.toLowerCase();
   const colorClass = statusColors[statusLower] || statusColors['default'];
 

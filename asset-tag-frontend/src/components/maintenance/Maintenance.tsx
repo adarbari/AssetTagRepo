@@ -33,7 +33,6 @@ import {
   TrendingUp,
   Package,
   History,
-  User,
 } from 'lucide-react';
 import { TaskAuditLogDialog } from '../TaskAuditLogDialog';
 import { toast } from 'sonner';
@@ -50,15 +49,15 @@ import {
   type PredictiveAlert,
 } from '../../services/maintenanceService';
 import { LoadingState, StatusBadge, PriorityBadge } from '../common';
-import { AuditLogList, PageLayout, type AuditLogEntry } from '../common';
+import { AuditLogList, PageLayout } from '../common';
 
 // Data will be loaded from service
 
 interface MaintenanceProps {
-  onAssetClick: (asset: any) => void;
+  onAssetClick: (_asset: any) => void;
 }
 
-export function Maintenance({ onAssetClick }: MaintenanceProps) {
+export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -169,7 +168,7 @@ export function Maintenance({ onAssetClick }: MaintenanceProps) {
     }
   };
 
-  const handleStartWork = async (taskId: string, taskName: string) => {
+  const handleStartWork = async (taskId: string, _taskName: string) => {
     try {
       const updatedTask = await updateMaintenanceTask(
         taskId,
@@ -219,7 +218,7 @@ export function Maintenance({ onAssetClick }: MaintenanceProps) {
     setIsAuditLogDialogOpen(true);
   };
 
-  const handleCancelTask = async (taskId: string, taskName: string) => {
+  const handleCancelTask = async (taskId: string, _taskName: string) => {
     try {
       const updatedTask = await updateMaintenanceTask(
         taskId,
@@ -257,7 +256,7 @@ export function Maintenance({ onAssetClick }: MaintenanceProps) {
     });
   };
 
-  const handleViewAssetDetails = (assetId: string, assetName: string) => {
+  const handleViewAssetDetails = (assetId: string, _assetName: string) => {
     // Pass full asset context
     import('../../data/mockData').then(({ mockAssets }) => {
       const asset = mockAssets.find(a => a.id === assetId);

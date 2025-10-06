@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import type { Geofence } from '../types';
+import type { Geofence } from '../../types';
 
 interface GeofenceMapEditorProps {
   coordinates: {
@@ -198,7 +198,7 @@ export function GeofenceMapEditor({
   useEffect(() => {
     if (!mapInstanceRef.current || !mapLoaded) return;
 
-    import('leaflet').then(L => {
+    import('leaflet').then(_L => {
       const lat = coordinates.lat;
       const lng = coordinates.lng;
 
@@ -239,7 +239,7 @@ export function GeofenceMapEditor({
   useEffect(() => {
     if (!mapInstanceRef.current || !mapLoaded) return;
 
-    import('leaflet').then(L => {
+    import('leaflet').then(_L => {
       // Remove existing geofence circle
       if (geofenceCircleRef.current) {
         geofenceCircleRef.current.remove();

@@ -3,8 +3,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { PageHeader, PageLayout } from '../common';
 import { useFormSubmit } from '../../hooks/useFormSubmit';
-import { ArrowLeft, Briefcase } from 'lucide-react';
-import { toast } from 'sonner';
+import { Briefcase } from 'lucide-react';
 import type { CreateJobInput, JobPriority } from '../../types/job';
 import { JobInformationSection } from './JobInformationSection';
 import { BudgetSection } from './BudgetSection';
@@ -27,8 +26,6 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
   const [priority, setPriority] = useState<JobPriority>('medium');
   const [projectManager, setProjectManager] = useState('');
   const [clientId, setClientId] = useState('');
-  const [siteId, setSiteId] = useState('');
-  const [groundStationGeofenceId, setGroundStationGeofenceId] = useState('');
   const [notes, setNotes] = useState('');
   const [tags, setTags] = useState<string[]>([]);
 

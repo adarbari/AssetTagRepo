@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -9,9 +9,8 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Calendar } from '../ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Switch } from '../ui/switch';
 import { Skeleton } from '../ui/skeleton';
-import { PageLayout, StatusBadge, PageHeader, StatsCard } from '../common';
+import { PageLayout, PageHeader, StatsCard } from '../common';
 import {
   fetchSiteActivity,
   getPresetDateRange,
@@ -34,8 +33,6 @@ import {
   TableRow,
 } from '../ui/table';
 import {
-  ArrowLeft,
-  MapPin,
   Building2,
   Users,
   Package,
@@ -44,7 +41,6 @@ import {
   X,
   Activity,
   TrendingUp,
-  Clock,
   AlertTriangle,
   CheckCircle2,
   Wrench,
@@ -54,12 +50,8 @@ import {
   Calendar as CalendarIcon,
   Shield,
   Plus,
-  Link as LinkIcon,
-  BellRing,
 } from 'lucide-react';
 import {
-  LineChart,
-  Line,
   AreaChart,
   Area,
   XAxis,

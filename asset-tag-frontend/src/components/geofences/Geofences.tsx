@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigation } from '../../contexts/NavigationContext';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -126,6 +128,7 @@ export function Geofences({
   onEditGeofence,
   onViewViolatingAssets,
 }: GeofencesProps) {
+  const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedGeofence, setSelectedGeofence] = useState<string | null>(null);
@@ -195,14 +198,10 @@ export function Geofences({
         setGeofences(prev => prev.filter(g => g.id !== selectedGeofence));
 
         // Show success notification
-        import('sonner').then(({ toast }) => {
-          toast.success('Geofence deleted successfully');
-        });
+        toast.success('Geofence deleted successfully');
       } else {
         // Show error notification
-        import('sonner').then(({ toast }) => {
-          toast.error('Failed to delete geofence');
-        });
+        toast.error('Failed to delete geofence');
       }
 
       setDeleteDialogOpen(false);

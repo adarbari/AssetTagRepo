@@ -15,13 +15,12 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Badge } from '../ui/badge';
 import { Separator } from '../ui/separator';
 import { Switch } from '../ui/switch';
-import { ScrollArea } from '../ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -40,7 +39,6 @@ import {
 import {
   ArrowLeft,
   Save,
-  RotateCcw,
   Info,
   AlertTriangle,
   CheckCircle2,

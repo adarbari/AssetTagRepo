@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  ArrowLeft,
-  Save,
-  Calendar,
-  User,
-  Package,
-  AlertTriangle,
-} from 'lucide-react';
+import { Save, Package, AlertTriangle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
@@ -19,12 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Badge } from '../ui/badge';
 import { toast } from 'sonner';
 import { PageHeader, StatusBadge, PriorityBadge, PageLayout } from '../common';
 import { LoadingState } from '../common/LoadingState';
 import { ErrorState } from '../common/ErrorState';
-import { AuditLogList, type AuditLogEntry } from '../common';
+import { AuditLogList } from '../common';
 import {
   fetchMaintenanceTaskById,
   updateMaintenanceTask,

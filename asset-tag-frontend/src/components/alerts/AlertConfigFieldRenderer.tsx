@@ -11,12 +11,6 @@ import {
 } from '../ui/select';
 import { Badge } from '../ui/badge';
 import { InfoIcon } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../ui/tooltip';
 
 interface AlertConfigFieldRendererProps {
   field: AlertConfigField;
@@ -166,7 +160,7 @@ export function AlertConfigFieldRenderer({
           </div>
         );
 
-      case 'multiselect':
+      case 'multiselect': {
         const selectedValues = Array.isArray(currentValue)
           ? currentValue
           : [currentValue];
@@ -219,13 +213,14 @@ export function AlertConfigFieldRenderer({
             </div>
           </div>
         );
+      }
 
       default:
         return (
           <div className='space-y-2'>
             <Label htmlFor={field.key}>{field.label}</Label>
             <p className='text-sm text-muted-foreground'>
-              Field type '{field.type}' not yet implemented
+              Field type &apos;{field.type}&apos; not yet implemented
             </p>
           </div>
         );

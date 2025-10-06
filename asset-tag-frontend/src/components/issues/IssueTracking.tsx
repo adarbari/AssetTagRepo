@@ -43,19 +43,15 @@ import { PageHeader, EmptyState, StatsCard, PageLayout } from '../common';
 import {
   AlertTriangle,
   Search,
-  Filter,
   MoreVertical,
   Eye,
   Edit,
   CheckCircle2,
-  XCircle,
   Clock,
   Package,
-  TrendingUp,
   AlertCircle,
   Wrench,
   User,
-  Tag,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigation } from '../../contexts/NavigationContext';
@@ -78,9 +74,9 @@ interface IssueTrackingProps {
 
 export function IssueTracking({
   issues,
-  onUpdateIssue,
+  onUpdateIssue: _onUpdateIssue,
   onUpdateStatus,
-  onDeleteIssue,
+  onDeleteIssue: _onDeleteIssue,
 }: IssueTrackingProps) {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');

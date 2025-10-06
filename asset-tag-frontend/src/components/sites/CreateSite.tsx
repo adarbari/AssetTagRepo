@@ -10,10 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Separator } from '../ui/separator';
 import { Card, CardContent } from '../ui/card';
 import { PageHeader, PageLayout } from '../common';
-import { ArrowLeft, MapPin, Building2 } from 'lucide-react';
+import { MapPin, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface CreateSiteProps {

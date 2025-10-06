@@ -2,7 +2,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { SeverityBadge } from '../common/SeverityBadge';
-import type { IssueSeverity } from '../../types/issue';
 
 describe('SeverityBadge Component', () => {
   describe('Rendering', () => {

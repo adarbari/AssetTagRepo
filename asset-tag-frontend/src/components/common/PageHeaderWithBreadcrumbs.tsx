@@ -8,7 +8,6 @@
 import React from 'react';
 import { ArrowLeft, LucideIcon } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
 import {
   Breadcrumb,
   BreadcrumbItem,

@@ -216,12 +216,12 @@ class LocationEstimator:
             distance = self.reference_distance * (
                 10 ** ((self.reference_power - rssi) / (10 * self.path_loss_exponent))
             )
-            return max(0.1, min(distance, 1000))  # Clamp between 0.1m and 1000m
+            return max(0.1, min(distance, 1000))  # Clamp 0.1m-1000m
         except (ValueError, ZeroDivisionError):
             return 50.0  # Default fallback distance
 
     def _rssi_to_weight(self, rssi: int) -> float:
-        """Convert RSSI to weight for averaging (stronger signal = higher weight)"""
+        """Convert RSSI to weight for averaging (stronger = higher weight)"""
         # Normalize RSSI to 0-1 range, then convert to weight
         # RSSI typically ranges from -100 to -30 dBm
         normalized_rssi = (rssi + 100) / 70  # Normalize to 0-1

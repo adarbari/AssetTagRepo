@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Badge } from '../ui/badge';
 import { AlertTriangle, Camera, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import {

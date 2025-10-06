@@ -46,12 +46,6 @@ import {
   getBatteryStatus,
   getRecentActivity,
   getAlertBreakdown,
-  type DashboardStats,
-  type LocationDataPoint,
-  type AssetTypeDistribution,
-  type BatteryStatusRange,
-  type RecentActivity as RecentActivityType,
-  type AlertBreakdown as AlertBreakdownType,
 } from '../../data/mockDashboardData';
 
 interface DashboardProps {
@@ -93,14 +87,7 @@ export function Dashboard({
     return null;
   }
 
-  const {
-    stats,
-    locationData,
-    assetsByType,
-    batteryStatus,
-    recentActivity,
-    alertBreakdown,
-  } = data;
+  const { stats, locationData, assetsByType, batteryStatus } = data;
 
   return (
     <PageLayout

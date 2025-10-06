@@ -24,10 +24,6 @@ import {
   getTopAssets,
   getReportTemplates,
   calculateTotalROI,
-  type UtilizationData,
-  type CostSavingsData,
-  type TopAsset,
-  type ReportTemplate,
 } from '../../data/mockReportsData';
 import {
   BarChart,

@@ -7,11 +7,10 @@ import io
 import json
 import uuid
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from fastapi.responses import StreamingResponse
-from sqlalchemy import and_, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
@@ -19,7 +18,6 @@ from modules.reports.generators import ReportGenerator
 from modules.reports.schemas import (
     ExportRequest,
     ExportResponse,
-    ReportDownloadResponse,
     ReportGenerationRequest,
     ReportGenerationResponse,
     ReportStatus,
@@ -35,7 +33,7 @@ report_templates = {
     "asset_utilization": ReportTemplate(
         id="asset_utilization",
         name="Asset Utilization Report",
-        description="Report showing asset usage patterns and efficiency metrics",
+        description=("Report showing asset usage patterns and efficiency metrics"),
         category="analytics",
         parameters={
             "date_range": {"type": "date_range", "required": True},
@@ -51,7 +49,7 @@ report_templates = {
     "job_performance": ReportTemplate(
         id="job_performance",
         name="Job Performance Report",
-        description="Report analyzing job completion rates and performance metrics",
+        description=("Report analyzing job completion rates and performance metrics"),
         category="operations",
         parameters={
             "date_range": {"type": "date_range", "required": True},
@@ -97,7 +95,11 @@ report_templates = {
             "date_range": {"type": "date_range", "required": True},
             "compliance_types": {"type": "multi_select", "required": False},
             "status_filter": {"type": "select", "required": False},
-            "include_overdue": {"type": "boolean", "required": False, "default": True},
+            "include_overdue": {
+                "type": "boolean",
+                "required": False,
+                "default": True,
+            },
         },
     ),
 }
@@ -157,14 +159,17 @@ async def generate_report(
         )
 
         return ReportGenerationResponse(
-            report_id=report_id, status="pending", message="Report generation started"
+            report_id=report_id,
+            status="pending",
+            message="Report generation started",
         )
 
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(
-            status_code=500, detail=f"Error starting report generation: {str(e)}"
+            status_code=500,
+            detail=f"Error starting report generation: {str(e)}",
         )
 
 
@@ -196,7 +201,7 @@ async def download_report(report_id: str):
         io.StringIO("Report content would be here"),
         media_type="application/octet-stream",
         headers={
-            "Content-Disposition": f"attachment; filename={report_status.filename}"
+            "Content-Disposition": (f"attachment; filename={report_status.filename}")
         },
     )
 
@@ -276,23 +281,15 @@ async def _generate_report_background(
 
         # Generate report based on template
         if template_id == "asset_utilization":
-            report_data = await generator.generate_asset_utilization_report(
-                parameters, db
-            )
+            await generator.generate_asset_utilization_report(parameters, db)
         elif template_id == "job_performance":
-            report_data = await generator.generate_job_performance_report(
-                parameters, db
-            )
+            await generator.generate_job_performance_report(parameters, db)
         elif template_id == "maintenance_history":
-            report_data = await generator.generate_maintenance_history_report(
-                parameters, db
-            )
+            await generator.generate_maintenance_history_report(parameters, db)
         elif template_id == "alert_summary":
-            report_data = await generator.generate_alert_summary_report(parameters, db)
+            await generator.generate_alert_summary_report(parameters, db)
         elif template_id == "compliance_audit":
-            report_data = await generator.generate_compliance_audit_report(
-                parameters, db
-            )
+            await generator.generate_compliance_audit_report(parameters, db)
         else:
             raise ValueError(f"Unknown template: {template_id}")
 
@@ -301,14 +298,11 @@ async def _generate_report_background(
         # Format report
         if format == "pdf":
             # TODO: Implement PDF generation
-            report_content = "PDF report content would be here"
             filename = f"report_{report_id}.pdf"
         elif format == "excel":
             # TODO: Implement Excel generation
-            report_content = "Excel report content would be here"
             filename = f"report_{report_id}.xlsx"
         else:  # csv
-            report_content = _format_as_csv(report_data)
             filename = f"report_{report_id}.csv"
 
         # Update status to completed

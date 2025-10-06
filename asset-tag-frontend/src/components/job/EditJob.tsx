@@ -23,7 +23,6 @@ import {
   CardDescription,
 } from '../ui/card';
 import { Button } from '../ui/button';
-import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
 import { Badge } from '../ui/badge';
@@ -65,14 +64,12 @@ import {
   X,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import type {
   Job,
   UpdateJobInput,
   JobPriority,
   JobStatus,
 } from '../../types/job';
-import type { Asset } from '../types';
 import { mockAssets } from '../../data/mockData';
 import { jobStatuses, teamMembers } from '../../data/dropdownOptions';
 import { JobInformationSection } from './JobInformationSection';

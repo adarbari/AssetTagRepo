@@ -1,9 +1,9 @@
 // import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SiteDetails } from '../sites/SiteDetails';
-import { render, waitForAsync } from '../../test/test-utils';
+import { render } from '../../test/test-utils';
 
 // Mock the services
 vi.mock('../../services/api', () => ({
@@ -367,6 +367,7 @@ describe('SiteDetails Component', () => {
     });
 
     it('should show create geofence button when no geofence exists', async () => {
+      const user = userEvent.setup();
       const siteWithoutGeofence = { ...mockSite, geofenceId: undefined };
       render(<SiteDetails {...defaultProps} site={siteWithoutGeofence} />);
 
@@ -525,6 +526,7 @@ describe('SiteDetails Component', () => {
 
   describe('Error Handling', () => {
     it('should handle missing geofence gracefully', async () => {
+      const user = userEvent.setup();
       const { getGeofenceById } = await import('../../data/mockData');
       vi.mocked(getGeofenceById).mockReturnValueOnce(null);
 

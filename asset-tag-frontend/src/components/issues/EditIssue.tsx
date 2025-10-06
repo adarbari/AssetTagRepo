@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import { AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import {

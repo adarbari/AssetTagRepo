@@ -1,12 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import {
   EmptyState,
   StatsCard,
-  Section,
   StatusBadge,
   InfoRow,
   FilterPanel,
@@ -307,7 +306,7 @@ export function AssetInventory({
     }
   };
 
-  const handleAssetAdded = (asset: Asset) => {
+  const handleAssetAdded = (_asset: Asset) => {
     // Force re-render by updating refresh key
     setRefreshKey(prev => prev + 1);
   };
@@ -572,8 +571,8 @@ export function AssetInventory({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the asset "{selectedAsset?.name}"
-              (ID: {selectedAsset?.id}). This action cannot be undone.
+              This will permanently delete the asset &quot;{selectedAsset?.name}
+              &quot; (ID: {selectedAsset?.id}). This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
