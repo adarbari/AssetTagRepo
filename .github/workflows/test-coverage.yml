@@ -25,10 +25,21 @@ jobs:
         cache: 'npm'
         cache-dependency-path: asset-tag-frontend/package-lock.json
 
+    - name: Verify package-lock.json exists
+      run: |
+        cd asset-tag-frontend
+        if [ ! -f "package-lock.json" ]; then
+          echo "❌ package-lock.json not found!"
+          exit 1
+        fi
+        echo "✅ package-lock.json found"
+        echo "Lockfile version: $(node -p "require('./package-lock.json').lockfileVersion")"
+
     - name: Install dependencies
       run: |
         cd asset-tag-frontend
-        npm ci
+        npm --version
+        npm ci --verbose
 
     - name: Run tests with coverage
       run: |
@@ -138,10 +149,21 @@ jobs:
         cache: 'npm'
         cache-dependency-path: asset-tag-frontend/package-lock.json
 
+    - name: Verify package-lock.json exists
+      run: |
+        cd asset-tag-frontend
+        if [ ! -f "package-lock.json" ]; then
+          echo "❌ package-lock.json not found!"
+          exit 1
+        fi
+        echo "✅ package-lock.json found"
+        echo "Lockfile version: $(node -p "require('./package-lock.json').lockfileVersion")"
+
     - name: Install dependencies
       run: |
         cd asset-tag-frontend
-        npm ci
+        npm --version
+        npm ci --verbose
 
     - name: Run tests with coverage
       run: |
