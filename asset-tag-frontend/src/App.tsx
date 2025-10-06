@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { AppSidebar } from './components/AppSidebar';
 import { SidebarProvider } from './components/ui/sidebar';
 import { Button } from './components/ui/button';
@@ -49,7 +49,7 @@ import { VehicleAssetPairing } from './components/vehicles/VehicleAssetPairing';
 import { CreateVehicle } from './components/vehicles/CreateVehicle';
 import { EditVehicle } from './components/vehicles/EditVehicle';
 import { AlertFilter } from './components/alerts/Alerts';
-import type { Asset } from './types';
+import type { Asset, Job } from './types';
 
 export type ViewType =
   | 'dashboard'
@@ -93,7 +93,7 @@ function AppContent() {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const alertsRef = useRef<AlertsRef>(null);
   const [highlightedAsset, setHighlightedAsset] = useState<string | null>(null);
-  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   // Job management hook
   const jobManagement = useJobManagement();
@@ -118,10 +118,10 @@ function AppContent() {
     }
   };
 
-  const handleBackToMap = () => {
-    navigation.handleViewChange('map');
-    setSelectedAsset(null);
-  };
+  // const _handleBackToMap = () => {
+  //   navigation.handleViewChange('map');
+  //   setSelectedAsset(null);
+  // };
 
   const handleShowOnMap = (asset: Asset) => {
     setHighlightedAsset(asset.id);
@@ -242,7 +242,7 @@ function AppContent() {
         return (
           <CreateVehicle
             onBack={() => navigation.handleViewChange('vehicle-pairing')}
-            onVehicleCreated={vehicle => {
+            onVehicleCreated={_vehicle => {
               // Handle vehicle creation success
               navigation.handleViewChange('vehicle-pairing');
             }}
@@ -422,11 +422,11 @@ function AppContent() {
           <HierarchicalAlertConfiguration
             alertConfigs={{}}
             jobs={{}}
-            onSaveConfig={async config => {
+            onSaveConfig={async _config => {
               // Handle saving alert configuration
               return { success: true };
             }}
-            onDeleteConfig={async (level, entityId, alertType) => {
+            onDeleteConfig={async (_level, _entityId, _alertType) => {
               // Handle deleting alert configuration
               return { success: true };
             }}
@@ -441,11 +441,11 @@ function AppContent() {
             preselectedEntityId='current-user'
             preselectedEntityName='Your Account'
             notificationConfigs={{}}
-            onSaveConfig={async config => {
+            onSaveConfig={async _config => {
               // Handle saving notification configuration
               return { success: true };
             }}
-            onDeleteConfig={async (level, entityId) => {
+            onDeleteConfig={async (_level, _entityId) => {
               // Handle deleting notification configuration
               return { success: true };
             }}
@@ -454,7 +454,7 @@ function AppContent() {
               // Return a default configuration with correct structure
               return {
                 id: `${level}-${entityId}`,
-                level: level as any,
+                level: level as string,
                 entityId,
                 entityName:
                   entityId === 'current-user' ? 'Your Account' : entityId,
@@ -515,7 +515,7 @@ function AppContent() {
         return (
           <CreateAsset
             onBack={() => navigation.handleViewChange('inventory')}
-            onAssetCreated={asset => {
+            onAssetCreated={_asset => {
               // Handle asset creation success
               navigation.handleViewChange('inventory');
             }}

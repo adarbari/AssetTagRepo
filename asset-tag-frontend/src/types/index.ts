@@ -204,3 +204,18 @@ export type {
   CreateIssueInput,
   UpdateIssueInput,
 } from './issue';
+
+// Re-export job types
+export type {
+  Job,
+  JobStatus,
+  JobPriority,
+  JobAsset,
+  JobVehicle,
+  JobBudget,
+  JobActualCosts,
+  CreateJobInput,
+  UpdateJobInput,
+  JobCostReport,
+  JobAlert,
+} from './job';

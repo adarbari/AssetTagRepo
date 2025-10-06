@@ -1,9 +1,9 @@
-import React from 'react';
+// import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AssetMap } from '../map/AssetMap';
-import { render, waitForAsync } from '../../test/test-utils';
+import { render } from '../../test/test-utils';
 
 // Mock Leaflet and map-related modules
 vi.mock('leaflet', () => ({
@@ -292,7 +292,7 @@ describe('AssetMap Component', () => {
     });
 
     it('should not render back button when onBack prop is not provided', () => {
-      const { onBack, ...propsWithoutBack } = defaultProps;
+      const { onBack: _onBack, ...propsWithoutBack } = defaultProps;
       render(<AssetMap {...propsWithoutBack} />);
 
       const backButtons = screen.queryAllByRole('button', { name: '' });
@@ -451,15 +451,15 @@ describe('AssetMap Component', () => {
   describe('Performance', () => {
     it('should handle large numbers of assets efficiently', () => {
       // Mock large dataset
-      const largeAssetList = Array.from({ length: 1000 }, (_, i) => ({
-        id: `AT-${i}`,
-        name: `Asset ${i}`,
-        type: 'Equipment',
-        status: 'active',
-        coordinates: [30.2672 + i * 0.001, -97.7431 + i * 0.001],
-        battery: 50 + (i % 50),
-        lastSeen: '2024-01-01T10:00:00Z',
-      }));
+      // const _largeAssetList = Array.from({ length: 1000 }, (_, i) => ({
+      //   id: `AT-${i}`,
+      //   name: `Asset ${i}`,
+      //   type: 'Equipment',
+      //   status: 'active',
+      //   coordinates: [30.2672 + i * 0.001, -97.7431 + i * 0.001],
+      //   battery: 50 + (i % 50),
+      //   lastSeen: '2024-01-01T10:00:00Z',
+      // }));
 
       // Should render without performance issues
       render(<AssetMap {...defaultProps} />);

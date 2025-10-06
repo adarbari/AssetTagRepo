@@ -1,8 +1,8 @@
-import React from 'react';
+// import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
 import { Geofences } from '../geofences/Geofences';
-import { mockGeofences } from '../../data/mockData';
+// import { mockGeofences } from '../../data/mockData';
 
 // Mock the data functions
 vi.mock('../../data/mockData', () => ({

@@ -36,7 +36,7 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<State> {
+  static getDerivedStateFromError(_error: Error): Partial<State> {
     // Update state so the next render will show the fallback UI
     return { hasError: true };
   }
@@ -55,6 +55,7 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     // Log error details for debugging
+    // eslint-disable-next-line no-console
     console.error('Error caught by ErrorBoundary:', error, errorInfo);
 
     // Update state with error details

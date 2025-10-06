@@ -7,6 +7,7 @@ import {
 } from './ui/dialog';
 import { ScrollArea } from './ui/scroll-area';
 import { AuditLogList, type AuditLogEntry } from './common';
+import { History } from 'lucide-react';
 
 interface TaskAuditLogDialogProps {
   open: boolean;

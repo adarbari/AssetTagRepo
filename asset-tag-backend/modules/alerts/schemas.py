@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, validator
 
 
 class AlertBase(BaseModel):
@@ -30,7 +30,7 @@ class AlertBase(BaseModel):
     auto_resolvable: Optional[bool] = False
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
-    @field_validator("triggered_at", mode="before")
+    @validator("triggered_at", pre=True)
     @classmethod
     def convert_triggered_at_to_str(cls, v):
         if isinstance(v, datetime):
@@ -69,42 +69,42 @@ class AlertResponse(AlertBase):
     created_at: datetime
     updated_at: datetime
 
-    @field_validator("id", mode="before")
+    @validator("id", pre=True)
     @classmethod
     def convert_id_to_str(cls, v):
         if isinstance(v, uuid.UUID):
             return str(v)
         return v
 
-    @field_validator("organization_id", mode="before")
+    @validator("organization_id", pre=True)
     @classmethod
     def convert_organization_id_to_str(cls, v):
         if isinstance(v, uuid.UUID):
             return str(v)
         return v
 
-    @field_validator("asset_id", mode="before")
+    @validator("asset_id", pre=True)
     @classmethod
     def convert_asset_id_to_str(cls, v):
         if isinstance(v, uuid.UUID):
             return str(v)
         return v
 
-    @field_validator("geofence_id", mode="before")
+    @validator("geofence_id", pre=True)
     @classmethod
     def convert_geofence_id_to_str(cls, v):
         if isinstance(v, uuid.UUID):
             return str(v)
         return v
 
-    @field_validator("triggered_at", mode="before")
+    @validator("triggered_at", pre=True)
     @classmethod
     def convert_triggered_at_to_str(cls, v):
         if isinstance(v, datetime):
             return v.isoformat()
         return v
 
-    @field_validator("metadata", mode="before")
+    @validator("metadata", pre=True)
     @classmethod
     def convert_metadata_to_dict(cls, v):
         if hasattr(v, "__dict__"):

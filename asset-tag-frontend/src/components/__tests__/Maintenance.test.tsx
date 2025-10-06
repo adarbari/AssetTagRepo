@@ -1,9 +1,9 @@
-import React from 'react';
+// import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Maintenance } from '../maintenance/Maintenance';
-import { render, waitForAsync } from '../../test/test-utils';
+import { render } from '../../test/test-utils';
 
 // Mock the maintenance service
 vi.mock('../../services/maintenanceService', () => ({

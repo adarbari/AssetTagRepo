@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { AssetContextCard } from '../common/AssetContextCard';
@@ -12,6 +12,8 @@ describe('AssetContextCard Component', () => {
     status: 'active',
     location: 'Building A, Floor 2',
     lastMaintenance: '2023-10-15',
+    lastSeen: '2023-10-20T10:00:00Z',
+    battery: 85,
   };
 
   const minimalAsset: Asset = {
@@ -20,6 +22,8 @@ describe('AssetContextCard Component', () => {
     type: 'Vehicle',
     status: 'inactive',
     location: 'Garage',
+    lastSeen: '2023-10-19T15:30:00Z',
+    battery: 45,
   };
 
   describe('Rendering', () => {

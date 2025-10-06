@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+// import React from 'react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FilterPanel, type FilterConfig } from '../common/FilterPanel';
@@ -241,8 +241,10 @@ describe('FilterPanel Component', () => {
       const xButton = searchBadge.parentElement?.querySelector('svg');
       expect(xButton).toBeInTheDocument();
 
-      await user.click(xButton!);
-      expect(mockOnClearSearch).toHaveBeenCalledTimes(1);
+      if (xButton) {
+        await user.click(xButton);
+        expect(mockOnClearSearch).toHaveBeenCalledTimes(1);
+      }
     });
 
     it('should call onValueChange when filter badge X is clicked', async () => {
@@ -267,10 +269,12 @@ describe('FilterPanel Component', () => {
       const xButton = statusBadge.parentElement?.querySelector('svg');
       expect(xButton).toBeInTheDocument();
 
-      await user.click(xButton!);
-      expect(filtersWithActiveValues[0].onValueChange).toHaveBeenCalledWith(
-        'all'
-      );
+      if (xButton) {
+        await user.click(xButton);
+        expect(filtersWithActiveValues[0].onValueChange).toHaveBeenCalledWith(
+          'all'
+        );
+      }
     });
   });
 
@@ -308,7 +312,7 @@ describe('FilterPanel Component', () => {
           ...mockFilters[0],
           options: [
             { value: 'active', label: 'Active' },
-            { value: 'unknown', label: undefined as any },
+            { value: 'unknown', label: undefined as string | undefined },
           ],
           currentValue: 'unknown',
           defaultOptionValue: 'active',

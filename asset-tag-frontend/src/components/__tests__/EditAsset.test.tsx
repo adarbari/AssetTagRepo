@@ -1,6 +1,6 @@
-import React from 'react';
+// import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { EditAssetDialog } from '../assets/EditAssetDialog';
 import { render } from '../../test/test-utils';
@@ -92,7 +92,7 @@ describe('EditAssetDialog Component - Basic Tests', () => {
 
   describe('Form Interactions', () => {
     it('should handle form input changes', async () => {
-      const user = userEvent.setup();
+      // const _user = userEvent.setup();
       render(<EditAssetDialog {...mockProps} />);
 
       // Find and interact with form inputs

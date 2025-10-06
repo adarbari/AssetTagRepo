@@ -1,8 +1,7 @@
-import React from 'react';
+// import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
+import { render, screen, fireEvent } from '../../test/test-utils';
 import { Alerts } from '../alerts/Alerts';
-import { mockAlerts } from '../../data/mockData';
 
 // Mock the data functions
 vi.mock('../../data/mockData', () => ({

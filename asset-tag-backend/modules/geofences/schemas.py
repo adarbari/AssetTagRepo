@@ -5,7 +5,7 @@ Geofence Pydantic schemas
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, validator
 
 
 class GeofenceBase(BaseModel):
@@ -52,7 +52,7 @@ class GeofenceBase(BaseModel):
     # Metadata
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
-    @field_validator("coordinates")
+    @validator("coordinates")
     @classmethod
     def validate_coordinates(cls, v, info):
         """Validate coordinates based on geofence type"""
@@ -70,7 +70,7 @@ class GeofenceBase(BaseModel):
                     raise ValueError("Longitude must be between -180 and 180")
         return v
 
-    @field_validator("center_latitude", "center_longitude", "radius")
+    @validator("center_latitude", "center_longitude", "radius")
     @classmethod
     def validate_circular_geofence(cls, v, info):
         """Validate circular geofence parameters"""

@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Reports } from '../reports/Reports';
-import * as mockReportsData from '../../data/mockReportsData';
+// import * as mockReportsData from '../../data/mockReportsData';
 import { useAsyncDataAll } from '../../hooks/useAsyncData';
 
 // Mock the useAsyncDataAll hook
@@ -12,7 +12,7 @@ vi.mock('../../hooks/useAsyncData', () => ({
 
 // Mock the GenerateReportDialog component
 vi.mock('../GenerateReportDialog', () => ({
-  GenerateReportDialog: ({ open, onOpenChange, reportType }: any) => (
+  GenerateReportDialog: ({ open, onOpenChange, reportType }: unknown) => (
     <div
       data-testid='generate-report-dialog'
       data-open={open}
@@ -25,24 +25,24 @@ vi.mock('../GenerateReportDialog', () => ({
 
 // Mock recharts components
 vi.mock('recharts', () => ({
-  BarChart: ({ children }: any) => (
+  BarChart: ({ children }: unknown) => (
     <div data-testid='bar-chart'>{children}</div>
   ),
-  Bar: ({ dataKey, name }: any) => (
+  Bar: ({ dataKey, name }: unknown) => (
     <div data-testid={`bar-${dataKey}`} data-name={name} />
   ),
-  LineChart: ({ children }: any) => (
+  LineChart: ({ children }: unknown) => (
     <div data-testid='line-chart'>{children}</div>
   ),
-  Line: ({ dataKey, name }: any) => (
+  Line: ({ dataKey, name }: unknown) => (
     <div data-testid={`line-${dataKey}`} data-name={name} />
   ),
-  XAxis: ({ dataKey }: any) => <div data-testid={`x-axis-${dataKey}`} />,
+  XAxis: ({ dataKey }: unknown) => <div data-testid={`x-axis-${dataKey}`} />,
   YAxis: () => <div data-testid='y-axis' />,
   CartesianGrid: () => <div data-testid='cartesian-grid' />,
   Tooltip: () => <div data-testid='tooltip' />,
   Legend: () => <div data-testid='legend' />,
-  ResponsiveContainer: ({ children }: any) => (
+  ResponsiveContainer: ({ children }: unknown) => (
     <div data-testid='responsive-container'>{children}</div>
   ),
 }));
