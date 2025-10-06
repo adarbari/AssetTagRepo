@@ -310,8 +310,8 @@ jobs:
 
   # Auto-fix integration - call the reusable workflow
   auto-fix:
-    needs: [lint-and-format, test-fast, test-comprehensive, test-integration, security-scan]
-    if: always() && (needs.lint-and-format.result == 'failure' || needs.test-fast.result == 'failure' || needs.test-comprehensive.result == 'failure' || needs.test-integration.result == 'failure' || needs.security-scan.result == 'failure')
+    needs: [lint-and-format, test-fast, test-comprehensive, security-scan]
+    if: always() && (needs.lint-and-format.result == 'failure' || needs.test-fast.result == 'failure' || needs.test-comprehensive.result == 'failure' || needs.security-scan.result == 'failure')
     uses: ./.github/workflows/auto-fix-reusable.yml
     with:
       workflow-name: "Backend CI"
@@ -320,7 +320,10 @@ jobs:
         Lint and Format: ${{ needs.lint-and-format.result }}
         Test Fast: ${{ needs.test-fast.result }}
         Test Comprehensive: ${{ needs.test-comprehensive.result }}
-        Test Integration: ${{ needs.test-integration.result }}
         Security Scan: ${{ needs.security-scan.result }}
       error-context: "Backend CI workflow failed - check individual job results"
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     secrets: inherit

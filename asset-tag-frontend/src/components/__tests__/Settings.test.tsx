@@ -1,6 +1,7 @@
 import React from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '../../test/test-utils'
+import userEvent from '@testing-library/user-event'
 import { Settings } from '../settings/Settings'
 
 // Mock toast
@@ -572,41 +573,44 @@ describe('Settings', () => {
   })
 
   describe('Form Interactions', () => {
-    it('allows editing user information in edit dialog', () => {
+    it('allows editing user information in edit dialog', async () => {
+      const user = userEvent.setup()
       render(<Settings />)
       
-      const editButtons = screen.getAllByRole('button')
-      const editButton = editButtons.find(button => 
-        button.querySelector('svg') // Look for the Edit icon
-      )
+      // Use specific query for edit button
+      const editButton = screen.getByRole('button', { name: /edit user john smith/i })
+      await user.click(editButton)
       
-      if (editButton) {
-        fireEvent.click(editButton)
-        
-        const nameInput = screen.getByDisplayValue('John Smith')
-        fireEvent.change(nameInput, { target: { value: 'John Updated' } })
-        
-        expect(nameInput).toHaveValue('John Updated')
-      }
+      // Wait for dialog to open
+      await waitFor(() => {
+        expect(screen.getByRole('dialog')).toBeInTheDocument()
+      })
+      
+      const nameInput = screen.getByDisplayValue('John Smith')
+      await user.clear(nameInput)
+      await user.type(nameInput, 'John Updated')
+      
+      expect(nameInput).toHaveValue('John Updated')
     })
 
-    it('allows changing user role in edit dialog', () => {
+    it('allows changing user role in edit dialog', async () => {
+      const user = userEvent.setup()
       render(<Settings />)
       
-      const editButtons = screen.getAllByRole('button')
-      const editButton = editButtons.find(button => 
-        button.querySelector('svg') // Look for the Edit icon
-      )
+      // Use specific query for edit button
+      const editButton = screen.getByRole('button', { name: /edit user john smith/i })
+      await user.click(editButton)
       
-      if (editButton) {
-        fireEvent.click(editButton)
-        
-        const roleSelect = screen.getByDisplayValue('admin')
-        fireEvent.click(roleSelect)
-        fireEvent.click(screen.getByText('manager'))
-        
-        expect(screen.getByDisplayValue('manager')).toBeInTheDocument()
-      }
+      // Wait for dialog to open
+      await waitFor(() => {
+        expect(screen.getByRole('dialog')).toBeInTheDocument()
+      })
+      
+      const roleSelect = screen.getByDisplayValue('admin')
+      await user.click(roleSelect)
+      await user.click(screen.getByText('manager'))
+      
+      expect(screen.getByDisplayValue('manager')).toBeInTheDocument()
     })
 
     it('allows toggling permissions in permissions dialog', () => {

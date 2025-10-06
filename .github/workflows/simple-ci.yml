@@ -59,4 +59,8 @@ jobs:
         Test: ${{ needs.test.result }}
         Download: ${{ needs.download.result }}
       error-context: "Simple CI workflow failed - check individual job results"
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     secrets: inherit

@@ -132,4 +132,8 @@ jobs:
         Frontend Tests: ${{ needs.frontend-tests.result }}
         Download Artifacts: ${{ needs.download-artifacts.result }}
       error-context: "Main CI/CD pipeline failed - check individual job results"
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     secrets: inherit

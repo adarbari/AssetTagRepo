@@ -2,7 +2,7 @@ name: Combined Coverage Report
 
 on:
   workflow_run:
-    workflows: ["Frontend CI", "Backend CI"]
+    workflows: ["Main CI/CD Pipeline"]
     types: [completed]
     branches: [main, develop]
 

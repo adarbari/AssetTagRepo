@@ -136,4 +136,8 @@ jobs:
         Test Fast: ${{ needs.test-fast.result }}
         Test Comprehensive: ${{ needs.test-comprehensive.result }}
       error-context: "Backend CI workflow failed - check individual job results"
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     secrets: inherit

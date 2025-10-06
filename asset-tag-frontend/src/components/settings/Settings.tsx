@@ -525,6 +525,7 @@ export function Settings() {
                             variant="ghost" 
                             size="sm"
                             onClick={() => handleEditUser(user)}
+                            aria-label={`Edit user ${user.name}`}
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -532,6 +533,7 @@ export function Settings() {
                             variant="ghost" 
                             size="sm"
                             onClick={() => handleDeleteUser(user)}
+                            aria-label={`Delete user ${user.name}`}
                           >
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
@@ -799,6 +801,7 @@ export function Settings() {
                             variant="ghost" 
                             size="sm"
                             onClick={() => handleDeleteApiKey(apiKey.id)}
+                            aria-label={`Delete API key ${apiKey.name}`}
                           >
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
@@ -863,6 +866,7 @@ export function Settings() {
                         variant="outline" 
                         size="sm"
                         onClick={() => handleEditWebhook(webhook)}
+                        aria-label={`Edit webhook ${webhook.name}`}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -870,6 +874,7 @@ export function Settings() {
                         variant="ghost" 
                         size="sm"
                         onClick={() => handleDeleteWebhook(webhook)}
+                        aria-label={`Delete webhook ${webhook.name}`}
                       >
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>

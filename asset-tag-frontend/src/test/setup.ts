@@ -102,9 +102,45 @@ Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
 // Mock getComputedStyle
 Object.defineProperty(window, 'getComputedStyle', {
   writable: true,
-  value: vi.fn().mockReturnValue({
-    getPropertyValue: vi.fn().mockReturnValue(''),
-  }),
+  value: vi.fn().mockImplementation((element) => ({
+    getPropertyValue: vi.fn().mockImplementation((prop) => {
+      const styles = {
+        'margin-left': '0px',
+        'margin-right': '0px',
+        'margin-top': '0px',
+        'margin-bottom': '0px',
+        'padding-left': '0px',
+        'padding-right': '0px',
+        'padding-top': '0px',
+        'padding-bottom': '0px',
+        'visibility': 'visible',
+        'display': 'block',
+        'opacity': '1',
+        'position': 'static',
+        'z-index': 'auto',
+        'width': '100px',
+        'height': '100px',
+        'color': 'rgb(0, 0, 0)',
+        'background-color': 'rgb(255, 255, 255)',
+        'border': 'none',
+        'outline': 'none',
+      }
+      return styles[prop] || ''
+    }),
+    marginLeft: '0px',
+    marginRight: '0px',
+    marginTop: '0px',
+    marginBottom: '0px',
+    paddingLeft: '0px',
+    paddingRight: '0px',
+    paddingTop: '0px',
+    paddingBottom: '0px',
+    visibility: 'visible',
+    display: 'block',
+    opacity: '1',
+    position: 'static',
+    zIndex: 'auto',
+  })),
 })
 
 // Mock scrollIntoView
@@ -194,3 +230,62 @@ vi.mock('../components/common/PageContainer', () => ({
     React.createElement('div', { 'data-testid': 'page-container' }, children)
   ),
 }))
+
+// Mock react-remove-scroll-bar to prevent JSDOM issues
+vi.mock('react-remove-scroll-bar', () => ({
+  RemoveScrollBar: ({ children }: { children: React.ReactNode }) => children,
+}))
+
+// Mock lucide-react icons globally with dynamic handling
+vi.mock('lucide-react', () => {
+  // Create a dynamic icon component that handles any icon name
+  const createIconComponent = (iconName: string) => {
+    return () => React.createElement('div', { 
+      'data-testid': `${iconName.toLowerCase()}-icon`,
+      'data-icon-name': iconName 
+    })
+  }
+
+  // Common icons that are frequently used
+  const commonIcons = [
+    'FileText', 'Download', 'Calendar', 'TrendingUp', 'DollarSign', 'Clock', 'Activity',
+    'Shield', 'Battery', 'AlertTriangle', 'MapPin', 'Building2', 'Plus', 'ChevronDown',
+    'ChevronDownIcon', 'X', 'XIcon', 'Search', 'Filter', 'MoreHorizontal', 'Edit', 'Trash2',
+    'Settings', 'Users', 'Building', 'Key', 'Wrench', 'RefreshCw', 'ArrowLeft', 'Eye',
+    'Bell', 'User', 'Home', 'BarChart3', 'PieChart', 'LineChart', 'TrendingDown',
+    'ArrowUp', 'ArrowDown', 'Check', 'AlertCircle', 'Info', 'HelpCircle', 'ExternalLink',
+    'Copy', 'Share', 'Heart', 'Star', 'ThumbsUp', 'ThumbsDown', 'MessageCircle', 'Mail',
+    'Phone', 'Globe', 'Lock', 'Unlock', 'Wifi', 'WifiOff', 'Signal', 'SignalZero',
+    'SignalLow', 'SignalMedium', 'SignalHigh', 'SignalMax', 'Volume2', 'VolumeX',
+    'Play', 'Pause', 'Stop', 'SkipBack', 'SkipForward', 'Repeat', 'Shuffle', 'Music',
+    'Headphones', 'Mic', 'MicOff', 'Video', 'VideoOff', 'Camera', 'CameraOff',
+    'Image', 'ImageOff', 'File', 'FileImage', 'FileVideo', 'FileAudio', 'FileArchive',
+    'FileCode', 'FileSpreadsheet', 'FilePdf', 'FileWord', 'FileExcel', 'FilePowerpoint',
+    'Folder', 'FolderOpen', 'FolderPlus', 'FolderMinus', 'FolderX', 'FolderCheck',
+    'FolderLock', 'FolderUnlock', 'FolderHeart', 'FolderStar', 'FolderUp', 'FolderDown',
+    'FolderLeft', 'FolderRight', 'FolderInput', 'FolderOutput', 'FolderSync', 'FolderGit',
+    'FolderGit2', 'FolderGitBranch', 'FolderGitCommit', 'FolderGitPullRequest',
+    'FolderGitMerge', 'FolderGitDiff', 'FolderGitLog', 'FolderGitRef', 'FolderGitTag',
+    'FolderGitTree', 'FolderGitWorktree', 'FolderGitSubmodule', 'FolderGitLfs',
+    'FolderGitIgnore', 'FolderGitAttributes', 'FolderGitConfig', 'FolderGitHooks',
+    'FolderGitInfo', 'FolderGitLogs', 'FolderGitObjects', 'FolderGitRefs',
+    'FolderGitRemotes', 'FolderGitSparseCheckout', 'FolderGitWorktrees'
+  ]
+
+  // Create the mock object with common icons
+  const mockIcons: Record<string, any> = {}
+  commonIcons.forEach(iconName => {
+    mockIcons[iconName] = createIconComponent(iconName)
+  })
+
+  // Add a Proxy to handle any missing icons dynamically
+  return new Proxy(mockIcons, {
+    get(target, prop) {
+      if (typeof prop === 'string' && target[prop]) {
+        return target[prop]
+      }
+      // For any missing icon, create a dynamic component
+      return createIconComponent(prop as string)
+    }
+  })
+})

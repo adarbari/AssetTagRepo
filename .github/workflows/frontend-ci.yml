@@ -265,8 +265,8 @@ jobs:
 
   # Auto-fix integration - call the reusable workflow
   auto-fix:
-    needs: [test-fast, test-comprehensive, build, security-audit]
-    if: always() && (needs.test-fast.result == 'failure' || needs.test-comprehensive.result == 'failure' || needs.build.result == 'failure' || needs.security-audit.result == 'failure')
+    needs: [test-fast, test-comprehensive, build]
+    if: always() && (needs.test-fast.result == 'failure' || needs.test-comprehensive.result == 'failure' || needs.build.result == 'failure')
     uses: ./.github/workflows/auto-fix-reusable.yml
     with:
       workflow-name: "Frontend CI"
@@ -275,6 +275,9 @@ jobs:
         Test Fast: ${{ needs.test-fast.result }}
         Test Comprehensive: ${{ needs.test-comprehensive.result }}
         Build: ${{ needs.build.result }}
-        Security Audit: ${{ needs.security-audit.result }}
       error-context: "Frontend CI workflow failed - check individual job results"
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     secrets: inherit
