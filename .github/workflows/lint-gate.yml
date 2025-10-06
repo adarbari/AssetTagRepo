@@ -10,6 +10,12 @@ on:
       status:
         description: "Lint gate status"
         value: ${{ jobs.final-status.outputs.status }}
+      backend-changed:
+        description: "Whether backend changed"
+        value: ${{ jobs.changes.outputs.backend }}
+      frontend-changed:
+        description: "Whether frontend changed"
+        value: ${{ jobs.changes.outputs.frontend }}
 
 # Cancel outdated workflow runs to save resources
 concurrency:
@@ -43,7 +49,7 @@ jobs:
           frontend:
             - 'asset-tag-frontend/**'
 
-  # Phase 1: Initial lint + security checks
+  # Comprehensive lint and security check with auto-fix
   lint-and-security-check:
     runs-on: ubuntu-latest
     needs: changes
@@ -84,8 +90,8 @@ jobs:
         npm ci --workspace=asset-tag-frontend
       working-directory: .
     
-    - name: Run comprehensive lint and security checks
-      id: lint-check
+    - name: Run initial lint and security checks
+      id: initial-check
       run: |
         echo "🔍 Running comprehensive lint and security verification..."
         
@@ -93,74 +99,22 @@ jobs:
         chmod +x ./scripts/verify-lint-checks.sh
         chmod +x ./scripts/auto-fix-imports.sh
         
-        # Run verification with JSON output
-        if ./scripts/verify-lint-checks.sh --json; then
-          echo "✅ All lint and security checks passed"
+        # Run verification
+        if ./scripts/verify-lint-checks.sh; then
+          echo "✅ All lint and security checks passed on first attempt"
           echo "lint-status=passed" >> $GITHUB_OUTPUT
-          echo "error-count=0" >> $GITHUB_OUTPUT
         else
-          echo "❌ Lint and security checks failed"
+          echo "❌ Lint and security checks failed - attempting auto-fix"
           echo "lint-status=failed" >> $GITHUB_OUTPUT
-          # Capture error count from script output
-          ERROR_COUNT=$(./scripts/verify-lint-checks.sh --json 2>&1 | grep -o '"error_count":[0-9]*' | cut -d':' -f2 || echo "1")
-          echo "error-count=$ERROR_COUNT" >> $GITHUB_OUTPUT
         fi
     
-    - name: Upload lint check results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: lint-check-results
-        path: |
-          asset-tag-backend/bandit-report.json
-          asset-tag-backend/safety-report.json
-        retention-days: 1
-
-  # Phase 2: Auto-fix (only if Phase 1 fails)
-  auto-fix:
-    runs-on: ubuntu-latest
-    needs: [changes, lint-and-security-check]
-    if: always() && needs.lint-and-security-check.result == 'failure'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
-    
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
-      if: needs.changes.outputs.backend == 'true'
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-    
-    - name: Set up Node.js ${{ env.NODE_VERSION }}
-      if: needs.changes.outputs.frontend == 'true'
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        registry-url: 'https://registry.npmjs.org'
-        cache: 'npm'
-        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
-    
-    - name: Install dependencies
-      run: |
-        if [ "${{ needs.changes.outputs.backend }}" == "true" ]; then
-          python -m pip install --upgrade pip
-          pip install -r asset-tag-backend/requirements-dev.txt
-        fi
-        if [ "${{ needs.changes.outputs.frontend }}" == "true" ]; then
-          npm ci --workspace=asset-tag-frontend
-        fi
-      working-directory: .
-    
-    - name: Run auto-fix (in-workflow mode)
+    - name: Auto-fix issues
+      if: steps.initial-check.outputs.lint-status == 'failed'
       id: auto-fix
       run: |
         echo "🔧 Attempting to auto-fix lint and security issues..."
         
-        # Run auto-fix script in workflow mode (no commit)
+        # Run auto-fix script
         if ./scripts/auto-fix-imports.sh --workflow-mode; then
           echo "✅ Auto-fix completed successfully"
           echo "fix-status=success" >> $GITHUB_OUTPUT
@@ -169,94 +123,22 @@ jobs:
           echo "fix-status=failed" >> $GITHUB_OUTPUT
         fi
     
-    - name: Upload auto-fix results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: auto-fix-results
-        path: |
-          asset-tag-backend/
-          asset-tag-frontend/
-        retention-days: 1
-
-  # Phase 3: Re-validate (only if auto-fix ran)
-  re-validate:
-    runs-on: ubuntu-latest
-    needs: [changes, auto-fix]
-    if: always() && needs.auto-fix.result == 'success'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
-    
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
-      if: needs.changes.outputs.backend == 'true'
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-    
-    - name: Set up Node.js ${{ env.NODE_VERSION }}
-      if: needs.changes.outputs.frontend == 'true'
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        registry-url: 'https://registry.npmjs.org'
-        cache: 'npm'
-        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
-    
-    - name: Install dependencies
-      run: |
-        if [ "${{ needs.changes.outputs.backend }}" == "true" ]; then
-          python -m pip install --upgrade pip
-          pip install -r asset-tag-backend/requirements-dev.txt
-        fi
-        if [ "${{ needs.changes.outputs.frontend }}" == "true" ]; then
-          npm ci --workspace=asset-tag-frontend
-        fi
-      working-directory: .
-    
-    - name: Download and apply auto-fix results
-      uses: actions/download-artifact@v3
-      with:
-        name: auto-fix-results
-        path: .
-    
     - name: Re-validate after auto-fix
+      if: steps.initial-check.outputs.lint-status == 'failed' && steps.auto-fix.outputs.fix-status == 'success'
       id: re-validate
       run: |
         echo "🔍 Re-validating after auto-fix..."
         
-        if ./scripts/verify-lint-checks.sh --json; then
+        if ./scripts/verify-lint-checks.sh; then
           echo "✅ All lint and security checks now pass after auto-fix"
           echo "validation-status=passed" >> $GITHUB_OUTPUT
         else
           echo "❌ Lint and security checks still fail after auto-fix"
           echo "validation-status=failed" >> $GITHUB_OUTPUT
         fi
-
-  # Phase 4: Commit fixes (only if re-validate passed)
-  commit-fixes:
-    runs-on: ubuntu-latest
-    needs: [changes, re-validate]
-    if: needs.re-validate.result == 'success'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
-    
-    - name: Download and apply auto-fix results
-      uses: actions/download-artifact@v3
-      with:
-        name: auto-fix-results
-        path: .
     
     - name: Commit auto-fixes
+      if: steps.initial-check.outputs.lint-status == 'failed' && steps.auto-fix.outputs.fix-status == 'success' && steps.re-validate.outputs.validation-status == 'passed'
       run: |
         echo "📝 Committing auto-fixes..."
         
@@ -287,15 +169,9 @@ jobs:
           
           echo "✅ Auto-fixes committed and pushed"
         fi
-
-  # Phase 5: Create issue (if auto-fix couldn't resolve)
-  create-issue:
-    runs-on: ubuntu-latest
-    needs: [changes, lint-and-security-check, re-validate]
-    if: always() && needs.lint-and-security-check.result == 'failure' && (needs.re-validate.result == 'failure' || needs.re-validate.result == 'skipped')
     
-    steps:
     - name: Create issue for unfixable issues
+      if: steps.initial-check.outputs.lint-status == 'failed' && (steps.auto-fix.outputs.fix-status == 'failed' || steps.re-validate.outputs.validation-status == 'failed')
       uses: actions/github-script@v7
       with:
         script: |
@@ -335,7 +211,7 @@ jobs:
   # Final status job
   final-status:
     runs-on: ubuntu-latest
-    needs: [changes, lint-and-security-check, re-validate]
+    needs: [changes, lint-and-security-check]
     if: always() && (needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true')
     
     outputs:
@@ -348,9 +224,6 @@ jobs:
         if [ "${{ needs.lint-and-security-check.result }}" == "success" ]; then
           echo "✅ Lint gate passed - main CI can proceed"
           echo "status=success" >> $GITHUB_OUTPUT
-        elif [ "${{ needs.re-validate.result }}" == "success" ]; then
-          echo "✅ Lint gate passed after auto-fix - main CI can proceed"
-          echo "status=success" >> $GITHUB_OUTPUT
         else
           echo "❌ Lint gate failed - main CI blocked"
           echo "status=failure" >> $GITHUB_OUTPUT
@@ -362,7 +235,6 @@ jobs:
       with:
         script: |
           const lintStatus = '${{ needs.lint-and-security-check.result }}';
-          const reValidateStatus = '${{ needs.re-validate.result }}';
           const finalStatus = '${{ steps.status.outputs.status }}';
           
           let comment = `## 🔍 Lint and Security Gate Results
@@ -372,11 +244,7 @@ jobs:
           `;
           
           if (finalStatus === 'success') {
-            if (lintStatus === 'success') {
-              comment += `🎉 All lint and security checks passed on first attempt! Your code is ready for the main CI pipeline.`;
-            } else {
-              comment += `🎉 All lint and security checks passed after auto-fix! The issues have been automatically resolved and committed.`;
-            }
+            comment += `🎉 All lint and security checks passed! Your code is ready for the main CI pipeline.`;
           } else {
             comment += `⚠️ **Manual intervention required.** Some lint or security issues could not be automatically fixed. Please review the workflow logs and fix the remaining issues manually.
             
@@ -386,8 +254,7 @@ jobs:
           comment += `
           
           ### Check Results:
-          - **Initial Lint Check**: ${lintStatus}
-          - **Re-validation**: ${reValidateStatus || 'Not applicable'}
+          - **Lint Gate Status**: ${lintStatus}
           - **Final Status**: ${finalStatus}
           
           ---
