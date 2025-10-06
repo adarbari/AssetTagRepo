@@ -13,6 +13,9 @@ from config.settings import settings
 from config.database import init_db, close_db
 from config.cache import close_cache
 from config.streaming import start_streaming, stop_streaming
+from config.elasticsearch import close_elasticsearch
+from ml.serving.model_loader import start_model_refresh_scheduler, stop_model_refresh_scheduler, preload_common_models
+from streaming.stream_processor_coordinator import start_all_stream_processors, stop_all_stream_processors
 
 # Configure logging
 logging.basicConfig(
@@ -36,10 +39,36 @@ async def lifespan(app: FastAPI):
     await start_streaming()
     logger.info("Streaming services started")
     
+    # Start enhanced stream processors
+    await start_all_stream_processors()
+    logger.info("Enhanced stream processors started")
+    
+    # Initialize Elasticsearch indices
+    from config.elasticsearch import get_elasticsearch_manager
+    es_manager = await get_elasticsearch_manager()
+    await es_manager.create_indices()
+    logger.info("Elasticsearch indices initialized")
+    
+    # Start ML model refresh scheduler
+    await start_model_refresh_scheduler()
+    logger.info("ML model refresh scheduler started")
+    
+    # Preload common ML models
+    await preload_common_models()
+    logger.info("Common ML models preloaded")
+    
     yield
     
     # Shutdown
     logger.info("Shutting down Asset Tag Backend...")
+    
+    # Stop ML model refresh scheduler
+    await stop_model_refresh_scheduler()
+    logger.info("ML model refresh scheduler stopped")
+    
+    # Stop enhanced stream processors
+    await stop_all_stream_processors()
+    logger.info("Enhanced stream processors stopped")
     
     # Stop streaming services
     await stop_streaming()
@@ -52,6 +81,10 @@ async def lifespan(app: FastAPI):
     # Close cache connections
     await close_cache()
     logger.info("Cache connections closed")
+    
+    # Close Elasticsearch connections
+    await close_elasticsearch()
+    logger.info("Elasticsearch connections closed")
 
 
 # Create FastAPI application
@@ -129,6 +162,13 @@ from modules.jobs.api import router as jobs_router
 from modules.maintenance.api import router as maintenance_router
 from modules.analytics.api import router as analytics_router
 
+# New API routes
+from modules.search.api import router as search_router
+from ml.features.api import router as features_router
+from ml.serving.api import router as ml_serving_router
+from modules.audit.api import router as audit_router
+from streaming.api import router as streaming_router
+
 # Include routers
 app.include_router(assets_router, prefix=settings.api_v1_prefix, tags=["assets"])
 app.include_router(sites_router, prefix=settings.api_v1_prefix, tags=["sites"])
@@ -140,6 +180,13 @@ app.include_router(alerts_router, prefix=settings.api_v1_prefix, tags=["alerts"]
 app.include_router(jobs_router, prefix=settings.api_v1_prefix, tags=["jobs"])
 app.include_router(maintenance_router, prefix=settings.api_v1_prefix, tags=["maintenance"])
 app.include_router(analytics_router, prefix=settings.api_v1_prefix, tags=["analytics"])
+
+# Include new routers
+app.include_router(search_router, prefix=settings.api_v1_prefix, tags=["search"])
+app.include_router(features_router, prefix=settings.api_v1_prefix, tags=["features"])
+app.include_router(ml_serving_router, prefix=settings.api_v1_prefix, tags=["ml"])
+app.include_router(audit_router, prefix=settings.api_v1_prefix, tags=["audit"])
+app.include_router(streaming_router, prefix=settings.api_v1_prefix, tags=["streaming"])
 
 
 # Root endpoint

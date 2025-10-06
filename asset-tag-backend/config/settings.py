@@ -58,6 +58,10 @@ class Settings(BaseSettings):
     mlflow_tracking_uri: str = "http://localhost:5000"
     use_local_mlflow: bool = True  # Use local MLFlow
     
+    # Elasticsearch
+    elasticsearch_url: str = "http://localhost:9200"
+    use_local_elasticsearch: bool = True  # Use local Elasticsearch
+    
     # Logging
     log_level: str = "INFO"
     use_structured_logging: bool = True
