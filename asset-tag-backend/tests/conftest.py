@@ -17,8 +17,8 @@ from config.settings import settings
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
 
-# Test database URL - use in-memory SQLite for better isolation
-TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+# Test database URL - use file-based SQLite to avoid UUID issues
+TEST_DATABASE_URL = "sqlite+aiosqlite:///./test_integration.db"
 
 # Create test engine with SQLite-specific configuration
 test_engine = create_async_engine(

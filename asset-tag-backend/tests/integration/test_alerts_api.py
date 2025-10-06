@@ -11,9 +11,6 @@ class TestAlertsAPI:
         """Test creating an alert via API"""
         response = client.post("/api/v1/alerts", json=sample_alert_data)
         
-        print(f"Status Code: {response.status_code}")
-        print(f"Response: {response.text}")
-        
         assert response.status_code == 200
         data = response.json()
         
