@@ -68,7 +68,7 @@ export function CreateVehicle({
 
       onBack();
     } catch (error) {
-      // console.error(&apos;Error adding vehicle:&apos;, error);
+// console.error(&apos;Error adding vehicle:&apos;, error);
       toast.error(&apos;Failed to add vehicle&apos;, {
         description: &apos;Please try again&apos;,
       });

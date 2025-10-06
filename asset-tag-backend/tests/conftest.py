@@ -225,15 +225,11 @@ def sample_geofence_data():
     """Sample geofence data for testing."""
     return {
         "name": "Test Geofence",
-        "geofence_type": "polygon",
+        "geofence_type": "circular",
         "status": "active",
-        "coordinates": [
-            [-74.0060, 40.7128],
-            [-74.0050, 40.7128],
-            [-74.0050, 40.7138],
-            [-74.0060, 40.7138],
-            [-74.0060, 40.7128],
-        ],
+        "center_latitude": 40.7128,
+        "center_longitude": -74.0060,
+        "radius": 100,
         "site_id": "550e8400-e29b-41d4-a716-446655440001",
         "geofence_classification": "authorized",
     }

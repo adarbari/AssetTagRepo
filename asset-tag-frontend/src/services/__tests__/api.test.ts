@@ -85,7 +85,7 @@ describe('API Service', () => {
       expect(shouldUseMockData()).toBe(true);
     });
 
-    it('should return false when VITE_USE_MOCK_DATA is "false"', () => {
+    it('should return false when VITE_USE_MOCK_DATA is "false" and API_BASE_URL is not localhost', () => {
       // Mock getApiConfig to return USE_MOCK_DATA as false with non-localhost URL
       vi.spyOn(apiModule, 'getApiConfig').mockReturnValue({
         API_BASE_URL: 'https://api.production.com',
@@ -121,7 +121,7 @@ describe('API Service', () => {
       const response = await apiClient.get('/test-endpoint');
 
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/test-endpoint'),
+        expect.stringContaining('/api/v1/test-endpoint'),
         expect.objectContaining({
           method: 'GET',
           headers: expect.objectContaining({

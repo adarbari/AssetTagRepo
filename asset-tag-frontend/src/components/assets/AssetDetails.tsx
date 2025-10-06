@@ -208,21 +208,21 @@ export function AssetDetails({
       toast.success(&apos;Asset updated successfully&apos;);
     } catch (error) {
       toast.error(&apos;Failed to update asset&apos;);
-      // console.error(&apos;Error updating asset:&apos;, error);
+// console.error(&apos;Error updating asset:&apos;, error);
     }
   };
 
   // Handler for after check-in/out completes in embedded view
   const handleCheckInOutComplete = (updates: Partial<Asset>) => {
-    // console.log(&apos;🔄 handleCheckInOutComplete called with updates:&apos;, updates);
-    // console.log(&apos;🔄 Current asset status before update:&apos;, currentAsset.status);
+// console.log(&apos;🔄 handleCheckInOutComplete called with updates:&apos;, updates);
+// console.log(&apos;🔄 Current asset status before update:&apos;, currentAsset.status);
 
     // Refresh the asset from the mock data layer to get the latest state
     const refreshedAsset = getAssetById(currentAsset.id);
-    // console.log(&apos;🔄 Refreshed asset from mock data:&apos;, refreshedAsset);
+// console.log(&apos;🔄 Refreshed asset from mock data:&apos;, refreshedAsset);
 
     if (refreshedAsset) {
-      // console.log(
+// console.log(
         &apos;✅ Updating asset state with refreshed data, new status:&apos;,
         refreshedAsset.status
       );
@@ -234,10 +234,10 @@ export function AssetDetails({
         assignedTo: refreshedAsset.assignedTo || &apos;&apos;,
       }));
     } else {
-      // console.log(&apos;⚠️ Asset not found in mock data, using fallback update&apos;);
+// console.log(&apos;⚠️ Asset not found in mock data, using fallback update&apos;);
       // Fallback: update local state if asset not found in mock data
       const updatedAsset = { ...currentAsset, ...updates };
-      // console.log(
+// console.log(
         &apos;✅ Updating asset state with fallback data, new status:&apos;,
         updatedAsset.status
       );
@@ -334,7 +334,7 @@ export function AssetDetails({
           },
         },
         (error: Error | null | undefined) => {
-          if (error) // console.error(&apos;QR Code generation error:&apos;, error);
+          if (error) console.error(&apos;QR Code generation error:&apos;, error);
         }
       );
     }, [value]);
@@ -375,7 +375,7 @@ export function AssetDetails({
 
       toast.success(&apos;QR code downloaded successfully&apos;);
     } catch (error) {
-      // console.error(&apos;Error downloading QR code:&apos;, error);
+// console.error(&apos;Error downloading QR code:&apos;, error);
       toast.error(&apos;Failed to download QR code&apos;);
     }
   };
@@ -426,7 +426,7 @@ export function AssetDetails({
                       currentAsset.status === &apos;active&apos; ||
                       currentAsset.status === &apos;inactive&apos; ||
                       currentAsset.status === &apos;maintenance&apos;;
-                    // console.log(
+// console.log(
                       &apos;🔴 Check Out button logic - Asset status:&apos;,
                       currentAsset.status,
                       &apos;Can check out:&apos;,
@@ -438,7 +438,7 @@ export function AssetDetails({
                       variant=&apos;default&apos;
                       size=&apos;sm&apos;
                       onClick={() => {
-                        // console.log(&apos;🔴 Check Out button clicked!&apos;);
+// console.log(&apos;🔴 Check Out button clicked!&apos;);
                         navigation.navigateToCheckInOut({
                           assetId: currentAsset.id,
                           assetName: currentAsset.name,
@@ -462,7 +462,7 @@ export function AssetDetails({
                   {/* Conditionally show Check In button for checked-out assets */}
                   {(() => {
                     const canCheckIn = currentAsset.status === &apos;checked-out&apos;;
-                    // console.log(
+// console.log(
                       &apos;🟢 Check In button logic - Asset status:&apos;,
                       currentAsset.status,
                       &apos;Can check in:&apos;,
@@ -474,7 +474,7 @@ export function AssetDetails({
                       variant=&apos;default&apos;
                       size=&apos;sm&apos;
                       onClick={() => {
-                        // console.log(&apos;🟢 Check In button clicked!&apos;);
+// console.log(&apos;🟢 Check In button clicked!&apos;);
                         navigation.navigateToCheckInOut({
                           assetId: currentAsset.id,
                           assetName: currentAsset.name,
@@ -1018,7 +1018,7 @@ export function AssetDetails({
                     variant=&apos;outline&apos;
                     className=&apos;w-full justify-start&apos;
                     onClick={() => {
-                      // console.log(&apos;🔴 Quick Actions Check Out button clicked!&apos;);
+// console.log(&apos;🔴 Quick Actions Check Out button clicked!&apos;);
                       navigation.navigateToCheckInOut({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,
@@ -1045,7 +1045,7 @@ export function AssetDetails({
                     variant=&apos;outline&apos;
                     className=&apos;w-full justify-start&apos;
                     onClick={() => {
-                      // console.log(&apos;🟢 Quick Actions Check In button clicked!&apos;);
+// console.log(&apos;🟢 Quick Actions Check In button clicked!&apos;);
                       navigation.navigateToCheckInOut({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,

@@ -26,6 +26,70 @@ from modules.sites.schemas import (
 router = APIRouter()
 
 
+def _site_to_response(site: Site) -> SiteResponse:
+    """Convert Site model to SiteResponse schema"""
+    return SiteResponse(
+        id=str(site.id),
+        organization_id=str(site.organization_id),
+        name=site.name,
+        description=site.description,
+        address=site.address,
+        city=site.city,
+        state=site.state,
+        country=site.country,
+        postal_code=site.postal_code,
+        latitude=site.latitude,
+        longitude=site.longitude,
+        timezone=site.timezone,
+        contact_email=site.contact_email,
+        contact_phone=site.contact_phone,
+        site_type=site.site_type,
+        status=site.status,
+        metadata=site.metadata or {},
+        created_at=site.created_at,
+        updated_at=site.updated_at,
+        deleted_at=site.deleted_at,
+    )
+
+
+def _personnel_to_response(person: Personnel) -> PersonnelResponse:
+    """Convert Personnel model to PersonnelResponse schema"""
+    return PersonnelResponse(
+        id=str(person.id),
+        organization_id=str(person.organization_id),
+        site_id=str(person.site_id) if person.site_id else None,
+        first_name=person.first_name,
+        last_name=person.last_name,
+        email=person.email,
+        phone=person.phone,
+        role=person.role,
+        department=person.department,
+        employee_id=person.employee_id,
+        hire_date=person.hire_date.isoformat() if person.hire_date else None,
+        status=person.status,
+        metadata=person.metadata or {},
+        created_at=person.created_at,
+        updated_at=person.updated_at,
+        deleted_at=person.deleted_at,
+    )
+
+
+def _personnel_activity_to_response(activity: PersonnelActivity) -> PersonnelActivityResponse:
+    """Convert PersonnelActivity model to PersonnelActivityResponse schema"""
+    return PersonnelActivityResponse(
+        id=str(activity.id),
+        organization_id=str(activity.organization_id),
+        personnel_id=str(activity.personnel_id),
+        activity_type=activity.activity_type,
+        timestamp=activity.timestamp.isoformat(),
+        location=activity.location,
+        description=activity.description,
+        metadata=activity.metadata or {},
+        created_at=activity.created_at,
+        updated_at=activity.updated_at,
+    )
+
+
 @router.get("/sites", response_model=List[SiteResponse])
 async def get_sites(
     skip: int = Query(0, ge=0),
@@ -50,7 +114,7 @@ async def get_sites(
         result = await db.execute(query)
         sites = result.scalars().all()
 
-        return [SiteResponse.from_orm(site) for site in sites]
+        return [_site_to_response(site) for site in sites]
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching sites: {str(e)}")
@@ -90,7 +154,7 @@ async def get_site(site_id: str, db: AsyncSession = Depends(get_db)):
         gateways = gateways_result.scalars().all()
 
         # Build response
-        site_data = SiteResponse.from_orm(site).dict()
+        site_data = _site_to_response(site).model_dump()
         site_data.update(
             {
                 "assets": [
@@ -182,7 +246,7 @@ async def create_site(site_data: SiteCreate, db: AsyncSession = Depends(get_db))
         await db.commit()
         await db.refresh(site)
 
-        return SiteResponse.from_orm(site)
+        return _site_to_response(site)
 
     except HTTPException:
         raise
@@ -212,7 +276,7 @@ async def update_site(
         await db.commit()
         await db.refresh(site)
 
-        return SiteResponse.from_orm(site)
+        return _site_to_response(site)
 
     except HTTPException:
         raise
@@ -475,7 +539,7 @@ async def get_personnel(
         result = await db.execute(query)
         personnel = result.scalars().all()
 
-        return [PersonnelResponse.from_orm(person) for person in personnel]
+        return [_personnel_to_response(person) for person in personnel]
 
     except Exception as e:
         raise HTTPException(
@@ -493,7 +557,7 @@ async def get_personnel_by_id(personnel_id: str, db: AsyncSession = Depends(get_
         if not person:
             raise HTTPException(status_code=404, detail="Personnel not found")
 
-        return PersonnelResponse.from_orm(person)
+        return _personnel_to_response(person)
 
     except HTTPException:
         raise
@@ -524,7 +588,7 @@ async def create_personnel(
         await db.commit()
         await db.refresh(person)
 
-        return PersonnelResponse.from_orm(person)
+        return _personnel_to_response(person)
 
     except Exception as e:
         await db.rollback()
@@ -555,7 +619,7 @@ async def update_personnel(
         await db.commit()
         await db.refresh(person)
 
-        return PersonnelResponse.from_orm(person)
+        return _personnel_to_response(person)
 
     except HTTPException:
         raise

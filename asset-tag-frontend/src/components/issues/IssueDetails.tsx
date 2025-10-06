@@ -64,7 +64,7 @@ export function IssueDetails({
       }
     } catch (error) {
       toast.error(&apos;Failed to load issue&apos;);
-      // console.error(&apos;Error loading issue:&apos;, error);
+// console.error(&apos;Error loading issue:&apos;, error);
     } finally {
       setLoading(false);
     }
@@ -166,7 +166,7 @@ export function IssueDetails({
       }
     } catch (error) {
       toast.error(&apos;Failed to update issue&apos;);
-      // console.error(&apos;Error updating issue:&apos;, error);
+// console.error(&apos;Error updating issue:&apos;, error);
       return { success: false, error };
     } finally {
       setSaving(false);

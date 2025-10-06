@@ -277,7 +277,7 @@ describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
       const user = userEvent.setup();
       const mockAction = vi.fn().mockRejectedValue(new Error(&apos;Action failed&apos;));
 
-      // Mock // console.error to prevent error from showing in test output
+      // Mock console.error to prevent error from showing in test output
       const consoleSpy = vi
         .spyOn(console, &apos;error&apos;)
         .mockImplementation(() => {});
@@ -303,7 +303,7 @@ describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
 
       expect(mockAction).toHaveBeenCalledTimes(1);
 
-      // Restore // console.error
+      // Restore console.error
       consoleSpy.mockRestore();
     });
   });

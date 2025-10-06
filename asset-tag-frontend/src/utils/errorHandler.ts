@@ -10,11 +10,11 @@
  * This is a known issue with libraries like Leaflet that load CSS from CDNs
  */
 export function suppressCSSSecurityErrors() {
-  // Store the original // console.error
-  const originalError = // console.error;
+  // Store the original console.error
+  const originalError = console.error;
 
-  // Override // console.error to filter out CSS security errors
-  // console.error = (...args: unknown[]) => {
+  // Override console.error to filter out CSS security errors
+// console.error = (...args: unknown[]) => {
     // Check if this is the CSS security error
     const errorMessage = args[0]?.toString() || '';
 
@@ -27,7 +27,7 @@ export function suppressCSSSecurityErrors() {
       return;
     }
 
-    // For all other errors, use the original // console.error
+    // For all other errors, use the original console.error
     originalError.apply(console, args);
   };
 }
@@ -82,7 +82,7 @@ export function safeGetCSSRules(stylesheet: CSSStyleSheet): CSSRuleList | null {
     return stylesheet.cssRules;
   } catch (error) {
     // CSS security error - stylesheet is from a different origin
-    // console.warn('Cannot access CSS rules from external stylesheet:', error);
+// console.warn('Cannot access CSS rules from external stylesheet:', error);
     return null;
   }
 }

@@ -7,30 +7,30 @@ import {
 } from '../errorHandler';
 
 describe('Error Handler Utilities', () => {
-  let originalConsoleError: typeof // console.error;
+  let originalConsoleError: typeof console.error;
   let originalAddEventListener: typeof window.addEventListener;
   let originalRemoveEventListener: typeof window.removeEventListener;
 
   beforeEach(() => {
     // Store original methods
-    originalConsoleError = // console.error;
+    originalConsoleError = console.error;
     originalAddEventListener = window.addEventListener;
     originalRemoveEventListener = window.removeEventListener;
 
-    // Mock // console.error
-    // console.error = vi.fn();
+    // Mock console.error
+// console.error = vi.fn();
   });
 
   afterEach(() => {
     // Restore original methods
-    // console.error = originalConsoleError;
+// console.error = originalConsoleError;
     window.addEventListener = originalAddEventListener;
     window.removeEventListener = originalRemoveEventListener;
     vi.restoreAllMocks();
   });
 
   describe('suppressCSSSecurityErrors', () => {
-    it('should suppress CSS security errors from // console.error', () => {
+    it('should suppress CSS security errors from console.error', () => {
       const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
@@ -44,7 +44,7 @@ describe('Error Handler Utilities', () => {
       ];
 
       cssErrors.forEach(errorMessage => {
-        // console.error(errorMessage);
+// console.error(errorMessage);
         expect(consoleSpy).not.toHaveBeenCalledWith(errorMessage);
       });
 
@@ -58,26 +58,26 @@ describe('Error Handler Utilities', () => {
       suppressCSSSecurityErrors();
 
       const regularError = 'This is a regular error';
-      // console.error(regularError);
+// console.error(regularError);
 
       expect(consoleSpy).toHaveBeenCalledWith(regularError);
       consoleSpy.mockRestore();
     });
 
-    it('should handle multiple arguments in // console.error', () => {
+    it('should handle multiple arguments in console.error', () => {
       const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
       suppressCSSSecurityErrors();
 
       // CSS security error with multiple args
-      // console.error('CSSStyleSheet error', { details: 'test' });
+// console.error('CSSStyleSheet error', { details: 'test' });
       expect(consoleSpy).not.toHaveBeenCalledWith('CSSStyleSheet error', {
         details: 'test',
       });
 
       // Regular error with multiple args
-      // console.error('Regular error', { details: 'test' });
+// console.error('Regular error', { details: 'test' });
       expect(consoleSpy).toHaveBeenCalledWith('Regular error', {
         details: 'test',
       });
@@ -91,9 +91,9 @@ describe('Error Handler Utilities', () => {
         .mockImplementation(() => {});
       suppressCSSSecurityErrors();
 
-      // console.error(undefined);
-      // console.error(null);
-      // console.error('');
+// console.error(undefined);
+// console.error(null);
+// console.error('');
 
       // Should not throw and should allow these through
       expect(consoleSpy).toHaveBeenCalledWith(undefined);
@@ -349,8 +349,8 @@ describe('Error Handler Utilities', () => {
       ];
 
       leafletErrors.forEach(errorMessage => {
-        // console.error(errorMessage);
-        // Should not appear in // console.error calls
+// console.error(errorMessage);
+        // Should not appear in console.error calls
         expect(consoleSpy).not.toHaveBeenCalledWith(errorMessage);
       });
 

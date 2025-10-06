@@ -344,7 +344,7 @@ export function SiteDetails({
 
         setActivityData(response.data);
       } catch (error) {
-        // console.error(&apos;Error fetching activity data:&apos;, error);
+// console.error(&apos;Error fetching activity data:&apos;, error);
         setActivityError(&apos;Failed to load activity data. Please try again.&apos;);
         setActivityData([]);
       } finally {

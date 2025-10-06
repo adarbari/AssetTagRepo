@@ -104,7 +104,7 @@ export function EditAssetDialog({
       onOpenChange(false);
     } catch (error) {
       toast.error(&apos;Failed to update asset&apos;);
-      // console.error(&apos;Error updating asset:&apos;, error);
+// console.error(&apos;Error updating asset:&apos;, error);
     }
   };
 

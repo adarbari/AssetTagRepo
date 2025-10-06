@@ -5,7 +5,7 @@ import { logger } from &apos;npm:hono/logger&apos;;
 const app = new Hono();
 
 // Enable logger
-app.use(&apos;*&apos;, logger(// console.log));
+app.use(&apos;*&apos;, logger(console.log));
 
 // Enable CORS for all routes and methods
 app.use(

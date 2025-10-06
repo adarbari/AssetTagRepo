@@ -14,6 +14,10 @@ export default defineConfig({
       VITE_USE_MOCK_DATA: 'true',
       VITE_API_TIMEOUT: '30000',
     },
+    // Fix for Vite CJS deprecation warning
+    esbuild: {
+      target: 'node14'
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'clover', 'json-summary'],

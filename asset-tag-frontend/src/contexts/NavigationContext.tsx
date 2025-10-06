@@ -264,7 +264,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     useState<Alert | null>(null);
 
   const pushNavigationState = () => {
-    // console.log(&apos;📚 Pushing navigation state, current view:&apos;, currentView);
+// console.log(&apos;📚 Pushing navigation state, current view:&apos;, currentView);
     setNavigationStack(prev => {
       const newStack = [
         ...prev,
@@ -285,7 +285,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
           selectedAlertForWorkflow: selectedAlertForWorkflow,
         },
       ];
-      // console.log(
+// console.log(
         &apos;📚 Navigation stack after push:&apos;,
         newStack.map(s => s.view)
       );
@@ -294,18 +294,18 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const popNavigationState = () => {
-    // console.log(
+// console.log(
       &apos;📚 Popping navigation state, current stack:&apos;,
       navigationStack.map(s => s.view)
     );
     if (navigationStack.length === 0) {
-      // console.log(&apos;📚 Navigation stack is empty, going to dashboard&apos;);
+// console.log(&apos;📚 Navigation stack is empty, going to dashboard&apos;);
       handleViewChange(&apos;dashboard&apos;);
       return;
     }
 
     const previousState = navigationStack[navigationStack.length - 1];
-    // console.log(&apos;📚 Restoring previous state:&apos;, previousState.view);
+// console.log(&apos;📚 Restoring previous state:&apos;, previousState.view);
     setNavigationStack(prev => prev.slice(0, -1));
 
     setCurrentView(previousState.view);
@@ -543,11 +543,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const navigateToCreateMaintenance = (data?: MaintenanceCreationData) => {
-    // console.log(&apos;🚀 navigateToCreateMaintenance called with:&apos;, data);
+// console.log(&apos;🚀 navigateToCreateMaintenance called with:&apos;, data);
     pushNavigationState();
     setMaintenanceCreationData(data);
     setCurrentView(&apos;create-maintenance&apos;);
-    // console.log(&apos;✅ Navigation state updated to create-maintenance&apos;);
+// console.log(&apos;✅ Navigation state updated to create-maintenance&apos;);
   };
 
   const handleBackFromCreateMaintenance = () => {
@@ -662,11 +662,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const navigateToCheckInOut = (data: CheckInOutData) => {
-    // console.log(&apos;🚀 navigateToCheckInOut called with:&apos;, data);
+// console.log(&apos;🚀 navigateToCheckInOut called with:&apos;, data);
     pushNavigationState();
     setCheckInOutData(data);
     setCurrentView(&apos;check-in-out&apos;);
-    // console.log(&apos;✅ Navigation state updated to check-in-out&apos;);
+// console.log(&apos;✅ Navigation state updated to check-in-out&apos;);
   };
 
   const handleBackFromCheckInOut = () => {

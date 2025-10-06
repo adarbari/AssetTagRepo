@@ -70,7 +70,7 @@ export function LoadAsset({
       setVehicles(vehiclesData);
       setAssets(assetsData);
     } catch (error) {
-      // console.error(&apos;Error loading configuration data:&apos;, error);
+// console.error(&apos;Error loading configuration data:&apos;, error);
       toast.error(&apos;Failed to load configuration data&apos;);
     } finally {
       setLoading(false);
@@ -132,7 +132,7 @@ export function LoadAsset({
         description: `${selectedAssets.length} asset(s) loaded onto vehicle`,
       });
 
-      // console.log(&apos;Backend-ready load data:&apos;, loadData);
+// console.log(&apos;Backend-ready load data:&apos;, loadData);
 
       if (onAssetsLoaded) {
         onAssetsLoaded({
@@ -143,7 +143,7 @@ export function LoadAsset({
 
       onBack();
     } catch (error) {
-      // console.error(&apos;Error loading assets:&apos;, error);
+// console.error(&apos;Error loading assets:&apos;, error);
       toast.error(&apos;Failed to load assets&apos;, {
         description: &apos;Please try again&apos;,
       });

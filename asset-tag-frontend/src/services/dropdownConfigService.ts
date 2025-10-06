@@ -225,7 +225,7 @@ export class DropdownConfigService {
 
     const method = methodMap[type];
     if (!method) {
-      // console.warn(`Unknown config type: ${type}`);
+// console.warn(`Unknown config type: ${type}`);
       return [];
     }
 

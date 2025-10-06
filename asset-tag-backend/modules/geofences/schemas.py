@@ -4,6 +4,7 @@ Geofence Pydantic schemas
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional
+from uuid import UUID
 
 from pydantic import BaseModel, Field, validator
 
@@ -25,7 +26,7 @@ class GeofenceBase(BaseModel):
     )
 
     # Site association
-    site_id: Optional[str] = None
+    site_id: Optional[UUID] = None
     site_name: Optional[str] = Field(None, max_length=255)
 
     # Alert configuration
@@ -38,16 +39,16 @@ class GeofenceBase(BaseModel):
 
     # Vehicle-based geofencing
     location_mode: Optional[str] = Field("static", max_length=50)
-    vehicle_id: Optional[str] = None
+    vehicle_id: Optional[UUID] = None
     vehicle_name: Optional[str] = Field(None, max_length=255)
 
     # Asset attachment
-    asset_id: Optional[str] = None
+    asset_id: Optional[UUID] = None
     asset_name: Optional[str] = Field(None, max_length=255)
     attachment_type: Optional[str] = Field("site", max_length=50)
 
     # Expected assets
-    expected_asset_ids: Optional[List[str]] = None
+    expected_asset_ids: Optional[List[UUID]] = None
 
     # Metadata
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
@@ -111,27 +112,49 @@ class GeofenceUpdate(BaseModel):
     center_longitude: Optional[float] = Field(None, ge=-180, le=180)
     radius: Optional[int] = Field(None, ge=0)
     coordinates: Optional[List[List[float]]] = None
-    site_id: Optional[str] = None
+    site_id: Optional[UUID] = None
     site_name: Optional[str] = Field(None, max_length=255)
     alert_on_entry: Optional[bool] = None
     alert_on_exit: Optional[bool] = None
     geofence_classification: Optional[str] = Field(None, max_length=50)
     tolerance: Optional[int] = Field(None, ge=0)
     location_mode: Optional[str] = Field(None, max_length=50)
-    vehicle_id: Optional[str] = None
+    vehicle_id: Optional[UUID] = None
     vehicle_name: Optional[str] = Field(None, max_length=255)
-    asset_id: Optional[str] = None
+    asset_id: Optional[UUID] = None
     asset_name: Optional[str] = Field(None, max_length=255)
     attachment_type: Optional[str] = Field(None, max_length=50)
-    expected_asset_ids: Optional[List[str]] = None
+    expected_asset_ids: Optional[List[UUID]] = None
     metadata: Optional[Dict[str, Any]] = None
 
 
-class GeofenceResponse(GeofenceBase):
+class GeofenceResponse(BaseModel):
     """Schema for geofence response"""
 
     id: str
     organization_id: str
+    name: str
+    description: Optional[str] = None
+    geofence_type: str
+    status: Optional[str] = None
+    center_latitude: Optional[float] = None
+    center_longitude: Optional[float] = None
+    radius: Optional[int] = None
+    coordinates: Optional[List[List[float]]] = None
+    site_id: Optional[str] = None
+    site_name: Optional[str] = None
+    alert_on_entry: Optional[bool] = None
+    alert_on_exit: Optional[bool] = None
+    geofence_classification: Optional[str] = None
+    tolerance: Optional[int] = None
+    location_mode: Optional[str] = None
+    vehicle_id: Optional[str] = None
+    vehicle_name: Optional[str] = None
+    asset_id: Optional[str] = None
+    asset_name: Optional[str] = None
+    attachment_type: Optional[str] = None
+    expected_asset_ids: Optional[List[str]] = None
+    metadata: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None
@@ -143,8 +166,8 @@ class GeofenceResponse(GeofenceBase):
 class GeofenceEventBase(BaseModel):
     """Base geofence event schema"""
 
-    geofence_id: str = Field(..., description="Geofence ID")
-    asset_id: str = Field(..., description="Asset ID")
+    geofence_id: UUID = Field(..., description="Geofence ID")
+    asset_id: UUID = Field(..., description="Asset ID")
     event_type: str = Field(..., pattern="^(entry|exit)$")
     timestamp: str = Field(..., description="ISO timestamp")
     latitude: float = Field(..., ge=-90, le=90)
@@ -159,11 +182,19 @@ class GeofenceEventCreate(GeofenceEventBase):
     pass
 
 
-class GeofenceEventResponse(GeofenceEventBase):
+class GeofenceEventResponse(BaseModel):
     """Schema for geofence event response"""
 
     id: str
     organization_id: str
+    geofence_id: str
+    asset_id: str
+    event_type: str
+    timestamp: str
+    latitude: float
+    longitude: float
+    confidence: Optional[float] = None
+    distance_from_geofence: Optional[float] = None
     created_at: datetime
     updated_at: datetime
 
@@ -174,11 +205,11 @@ class GeofenceEventResponse(GeofenceEventBase):
 class GeofenceEvaluationRequest(BaseModel):
     """Schema for geofence evaluation request"""
 
-    asset_id: str = Field(..., description="Asset ID to evaluate")
+    asset_id: UUID = Field(..., description="Asset ID to evaluate")
     latitude: float = Field(..., ge=-90, le=90)
     longitude: float = Field(..., ge=-180, le=180)
     timestamp: Optional[str] = Field(None, description="ISO timestamp")
-    geofence_ids: Optional[List[str]] = Field(
+    geofence_ids: Optional[List[UUID]] = Field(
         None, description="Specific geofences to evaluate"
     )
 

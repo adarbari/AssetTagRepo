@@ -95,7 +95,7 @@ const loadUserPreferences = () => {
       return JSON.parse(saved);
     }
   } catch (error) {
-    // console.error(&apos;Failed to load alert preferences:&apos;, error);
+// console.error(&apos;Failed to load alert preferences:&apos;, error);
   }
   return {
     defaultView: &apos;all&apos;,
@@ -109,7 +109,7 @@ const saveUserPreferences = (prefs: any) => {
   try {
     localStorage.setItem(&apos;alertPreferences&apos;, JSON.stringify(prefs));
   } catch (error) {
-    // console.error(&apos;Failed to save alert preferences:&apos;, error);
+// console.error(&apos;Failed to save alert preferences:&apos;, error);
   }
 };
 
@@ -150,7 +150,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
           const alertsData = await getAllAlerts();
           setAlerts(alertsData);
         } catch (error) {
-          // console.error(&apos;Failed to load alerts:&apos;, error);
+// console.error(&apos;Failed to load alerts:&apos;, error);
           toast.error(&apos;Failed to load alerts&apos;);
         } finally {
           setIsLoading(false);
@@ -366,7 +366,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         setAlerts(updatedAlerts);
         toast.success(&apos;Alert acknowledged&apos;);
       } catch (error) {
-        // console.error(&apos;Failed to acknowledge alert:&apos;, error);
+// console.error(&apos;Failed to acknowledge alert:&apos;, error);
         toast.error(&apos;Failed to acknowledge alert&apos;);
       }
     };
@@ -381,7 +381,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         setAlerts(updatedAlerts);
         toast.success(&apos;Alert resolved&apos;);
       } catch (error) {
-        // console.error(&apos;Failed to resolve alert:&apos;, error);
+// console.error(&apos;Failed to resolve alert:&apos;, error);
         toast.error(&apos;Failed to resolve alert&apos;);
       }
     };
@@ -393,7 +393,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         setAlerts(updatedAlerts);
         toast.success(&apos;Alerts refreshed&apos;);
       } catch (error) {
-        // console.error(&apos;Failed to refresh alerts:&apos;, error);
+// console.error(&apos;Failed to refresh alerts:&apos;, error);
         toast.error(&apos;Failed to refresh alerts&apos;);
       } finally {
         setIsLoading(false);

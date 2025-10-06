@@ -159,13 +159,13 @@ export function EditJob({
 
   // Debug logging
   useEffect(() => {
-    // console.log(
+// console.log(
       &apos;EditJob - Available Assets:&apos;,
       availableAssets.length,
       availableAssets
     );
-    // console.log(&apos;EditJob - Job Assets:&apos;, job.assets);
-    // console.log(&apos;EditJob - Mock Assets:&apos;, mockAssets.length);
+// console.log(&apos;EditJob - Job Assets:&apos;, job.assets);
+// console.log(&apos;EditJob - Mock Assets:&apos;, mockAssets.length);
   }, [availableAssets, job.assets]);
 
   const handleSave = async () => {
@@ -210,7 +210,7 @@ export function EditJob({
         toast.error(&apos;Failed to update job&apos;);
       }
     } catch (error) {
-      // console.error(&apos;Error updating job:&apos;, error);
+// console.error(&apos;Error updating job:&apos;, error);
       toast.error(&apos;An error occurred while updating the job&apos;);
     }
   };

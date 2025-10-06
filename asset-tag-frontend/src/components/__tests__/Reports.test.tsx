@@ -56,7 +56,7 @@ Object.defineProperty(window, &apos;location&apos;, {
   writable: true,
 });
 
-// Mock // console.log
+// Mock console.log
 const mockConsoleLog = vi.spyOn(console, &apos;log&apos;).mockImplementation(() => {});
 
 describe(&apos;Reports Component&apos;, () => {

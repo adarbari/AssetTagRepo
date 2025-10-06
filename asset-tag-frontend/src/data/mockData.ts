@@ -310,7 +310,7 @@ function populateSiteRelationships() {
     }
   } catch (error) {
     // mockPersonnel not yet defined, will be populated later
-    // console.log(
+// console.log(
       'Personnel relationships will be populated after mockPersonnel is defined'
     );
   }
@@ -1098,7 +1098,7 @@ export function updateMockAsset(
   const assetIndex = mockAssets.findIndex(a => a.id === assetId);
 
   if (assetIndex === -1) {
-    // console.warn(`Asset ${assetId} not found`);
+// console.warn(`Asset ${assetId} not found`);
     return null;
   }
 

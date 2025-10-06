@@ -78,7 +78,7 @@ export function useNotificationConfig() {
         );
       }
     } catch (error) {
-      // console.error('Failed to load notification configurations:', error);
+// console.error('Failed to load notification configurations:', error);
     }
   };
 
@@ -104,7 +104,7 @@ export function useNotificationConfig() {
       // await api.saveNotificationConfig(config);
       return { success: true };
     } catch (error) {
-      // console.error('Failed to save notification configuration:', error);
+// console.error('Failed to save notification configuration:', error);
       return { success: false, error };
     }
   };
@@ -131,7 +131,7 @@ export function useNotificationConfig() {
       // await api.deleteNotificationConfig(level, entityId);
       return { success: true };
     } catch (error) {
-      // console.error('Failed to delete notification configuration:', error);
+// console.error('Failed to delete notification configuration:', error);
       return { success: false, error };
     }
   };

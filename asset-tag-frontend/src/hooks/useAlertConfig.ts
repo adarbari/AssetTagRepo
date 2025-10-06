@@ -22,7 +22,7 @@ export function useAlertConfig() {
         setConfigs({});
       }
     } catch (error) {
-      // console.error('Failed to load alert configurations:', error);
+// console.error('Failed to load alert configurations:', error);
     }
   };
 
@@ -48,7 +48,7 @@ export function useAlertConfig() {
       // await api.saveAlertConfig(config);
       return { success: true };
     } catch (error) {
-      // console.error('Failed to save alert configuration:', error);
+// console.error('Failed to save alert configuration:', error);
       return { success: false, error };
     }
   };
@@ -76,7 +76,7 @@ export function useAlertConfig() {
       // await api.deleteAlertConfig(level, entityId, alertType);
       return { success: true };
     } catch (error) {
-      // console.error('Failed to delete alert configuration:', error);
+// console.error('Failed to delete alert configuration:', error);
       return { success: false, error };
     }
   };

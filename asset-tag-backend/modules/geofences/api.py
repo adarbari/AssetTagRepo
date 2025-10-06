@@ -40,23 +40,40 @@ def _geofence_to_response(geofence: Geofence) -> GeofenceResponse:
         center_longitude=geofence.center_longitude,
         radius=geofence.radius,
         coordinates=geofence.coordinates,
-        site_id=geofence.site_id,
+        site_id=str(geofence.site_id) if geofence.site_id else None,
         site_name=geofence.site_name,
         alert_on_entry=geofence.alert_on_entry,
         alert_on_exit=geofence.alert_on_exit,
         geofence_classification=geofence.geofence_classification,
         tolerance=geofence.tolerance,
         location_mode=geofence.location_mode,
-        vehicle_id=geofence.vehicle_id,
+        vehicle_id=str(geofence.vehicle_id) if geofence.vehicle_id else None,
         vehicle_name=geofence.vehicle_name,
-        asset_id=geofence.asset_id,
+        asset_id=str(geofence.asset_id) if geofence.asset_id else None,
         asset_name=geofence.asset_name,
         attachment_type=geofence.attachment_type,
-        expected_asset_ids=geofence.expected_asset_ids,
+        expected_asset_ids=[str(asset_id) for asset_id in geofence.expected_asset_ids] if geofence.expected_asset_ids else None,
         metadata=geofence.metadata or {},
         created_at=geofence.created_at,
         updated_at=geofence.updated_at,
         deleted_at=geofence.deleted_at,
+    )
+
+
+def _geofence_event_to_response(event: GeofenceEvent) -> GeofenceEventResponse:
+    """Convert GeofenceEvent model to GeofenceEventResponse schema"""
+    return GeofenceEventResponse(
+        id=str(event.id),
+        organization_id=str(event.organization_id),
+        geofence_id=str(event.geofence_id),
+        asset_id=str(event.asset_id),
+        event_type=event.event_type,
+        timestamp=event.timestamp.isoformat(),
+        latitude=event.latitude,
+        longitude=event.longitude,
+        accuracy=event.accuracy,
+        metadata=event.metadata or {},
+        created_at=event.created_at,
     )
 
 
@@ -135,7 +152,7 @@ async def get_geofences(
         result = await db.execute(query)
         geofences = result.scalars().all()
 
-        return [GeofenceResponse.from_orm(geofence) for geofence in geofences]
+        return [_geofence_to_response(geofence) for geofence in geofences]
 
     except Exception as e:
         raise HTTPException(
@@ -454,7 +471,7 @@ async def get_geofence_events(
         result = await db.execute(query)
         events = result.scalars().all()
 
-        return [GeofenceEventResponse.from_orm(event) for event in events]
+        return [_geofence_event_to_response(event) for event in events]
 
     except Exception as e:
         raise HTTPException(

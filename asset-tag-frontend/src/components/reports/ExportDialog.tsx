@@ -37,7 +37,7 @@ export function ExportDialog({
   const [includeInactive, setIncludeInactive] = useState(false);
 
   const handleExport = () => {
-    // console.log(&apos;Exporting data:&apos;, { format, includeHeaders, includeInactive });
+// console.log(&apos;Exporting data:&apos;, { format, includeHeaders, includeInactive });
     onOpenChange(false);
   };
 

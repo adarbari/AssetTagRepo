@@ -56,7 +56,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Log error details for debugging
     // eslint-disable-next-line no-console
-    // console.error(&apos;Error caught by ErrorBoundary:&apos;, error, errorInfo);
+// console.error(&apos;Error caught by ErrorBoundary:&apos;, error, errorInfo);
 
     // Update state with error details
     this.setState({
