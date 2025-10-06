@@ -23,17 +23,22 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: asset-tag-frontend/package-lock.json
 
     - name: Install dependencies
-      run: npm ci
+      run: |
+        cd asset-tag-frontend
+        npm ci
 
     - name: Run tests with coverage
-      run: npm run test:coverage
+      run: |
+        cd asset-tag-frontend
+        npm run test:coverage
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
-        file: ./coverage/lcov.info
+        file: ./asset-tag-frontend/coverage/lcov.info
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
@@ -48,7 +53,7 @@ jobs:
           
           try {
             // Read coverage summary
-            const coveragePath = path.join(process.cwd(), 'coverage', 'coverage-summary.json');
+            const coveragePath = path.join(process.cwd(), 'asset-tag-frontend', 'coverage', 'coverage-summary.json');
             if (fs.existsSync(coveragePath)) {
               const coverage = JSON.parse(fs.readFileSync(coveragePath, 'utf8'));
               const summary = coverage.total;
@@ -89,10 +94,10 @@ jobs:
 
     - name: Fail if coverage is below threshold
       run: |
-        if [ -f "coverage/coverage-summary.json" ]; then
+        if [ -f "asset-tag-frontend/coverage/coverage-summary.json" ]; then
           node -e "
             const fs = require('fs');
-            const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+            const coverage = JSON.parse(fs.readFileSync('asset-tag-frontend/coverage/coverage-summary.json', 'utf8'));
             const summary = coverage.total;
             const thresholds = { statements: 50, branches: 50, functions: 50, lines: 50 };
             
@@ -131,19 +136,24 @@ jobs:
       with:
         node-version: '20.x'
         cache: 'npm'
+        cache-dependency-path: asset-tag-frontend/package-lock.json
 
     - name: Install dependencies
-      run: npm ci
+      run: |
+        cd asset-tag-frontend
+        npm ci
 
     - name: Run tests with coverage
-      run: npm run test:coverage
+      run: |
+        cd asset-tag-frontend
+        npm run test:coverage
 
     - name: Generate coverage badge
       run: |
-        if [ -f "coverage/coverage-summary.json" ]; then
+        if [ -f "asset-tag-frontend/coverage/coverage-summary.json" ]; then
           node -e "
             const fs = require('fs');
-            const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+            const coverage = JSON.parse(fs.readFileSync('asset-tag-frontend/coverage/coverage-summary.json', 'utf8'));
             const summary = coverage.total;
             const overall = Math.round((summary.statements.pct + summary.branches.pct + summary.functions.pct + summary.lines.pct) / 4);
             
