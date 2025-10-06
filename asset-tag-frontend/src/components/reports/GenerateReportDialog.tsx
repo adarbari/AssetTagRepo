@@ -57,8 +57,8 @@ export function GenerateReportDialog({
     //   endDate,
     //   format_type,
     //   includeCharts,
-      includeDetails,
-    });
+    //   includeDetails,
+    // });
     onOpenChange(false);
   };
 

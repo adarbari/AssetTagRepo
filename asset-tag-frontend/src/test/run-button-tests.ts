@@ -32,7 +32,7 @@ function runTests() {
   const missingFiles = BUTTON_TEST_FILES.filter(file => !existsSync(file));
   if (missingFiles.length > 0) {
     // console.warn('⚠️  Missing test files:');
-    missingFiles.forEach(file => // // // // // // console.warn(`   - ${file}`));
+    missingFiles.forEach(file => // console.warn(`   - ${file}`));
     // console.log();
   }
 

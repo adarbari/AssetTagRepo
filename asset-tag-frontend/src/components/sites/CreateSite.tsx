@@ -62,15 +62,15 @@ export function CreateSite({ onBack }: CreateSiteProps) {
     //   state,
     //   zipCode,
     //   latitude,
-      longitude,
-      boundaryType,
-      boundaryRadius,
-      tolerance,
-      contactName,
-      contactPhone,
-      contactEmail,
-      notes,
-    });
+    //   longitude,
+    //   boundaryType,
+    //   boundaryRadius,
+    //   tolerance,
+    //   contactName,
+    //   contactPhone,
+    //   contactEmail,
+    //   notes,
+    // });
 
     toast.success('Site created successfully', {
       description: `${siteName} has been added to your sites`,
