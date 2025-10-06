@@ -12,6 +12,10 @@ jobs:
       (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'auto-detected')) ||
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '/auto-fix'))
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     
     steps:
     - name: Checkout code
