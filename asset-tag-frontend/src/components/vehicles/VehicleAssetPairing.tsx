@@ -527,6 +527,7 @@ export function VehicleAssetPairing({ onBack }: VehicleAssetPairingProps) {
                             }
                           });
                         }}
+                        aria-label="Edit vehicle"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -603,6 +604,7 @@ export function VehicleAssetPairing({ onBack }: VehicleAssetPairingProps) {
                                     size="sm"
                                     variant="ghost"
                                     onClick={() => handleViewPairing(pairing)}
+                                    aria-label="View pairing settings"
                                   >
                                     <Settings className="h-4 w-4" />
                                   </Button>
@@ -610,6 +612,7 @@ export function VehicleAssetPairing({ onBack }: VehicleAssetPairingProps) {
                                     size="sm"
                                     variant="ghost"
                                     onClick={() => handleUnloadAsset(vehicle.id, pairing.id)}
+                                    aria-label="Unload asset"
                                   >
                                     <Unlink className="h-4 w-4" />
                                   </Button>

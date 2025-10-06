@@ -258,7 +258,8 @@ export const apiClient = {
  * Helper to check if we should use mock data
  */
 export function shouldUseMockData(): boolean {
-  return USE_MOCK_DATA || !API_BASE_URL || API_BASE_URL.includes('localhost');
+  const useMockData = getEnvVar('VITE_USE_MOCK_DATA', 'true') !== 'false';
+  return useMockData || !API_BASE_URL || API_BASE_URL.includes('localhost');
 }
 
 // ============================================================================

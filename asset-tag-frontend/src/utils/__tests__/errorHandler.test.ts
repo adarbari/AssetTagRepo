@@ -31,6 +31,7 @@ describe('Error Handler Utilities', () => {
 
   describe('suppressCSSSecurityErrors', () => {
     it('should suppress CSS security errors from console.error', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       suppressCSSSecurityErrors()
 
       // Test CSS security error messages
@@ -42,32 +43,40 @@ describe('Error Handler Utilities', () => {
 
       cssErrors.forEach(errorMessage => {
         console.error(errorMessage)
-        expect(console.error).not.toHaveBeenCalledWith(errorMessage)
+        expect(consoleSpy).not.toHaveBeenCalledWith(errorMessage)
       })
+      
+      consoleSpy.mockRestore()
     })
 
     it('should allow other errors to pass through', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       suppressCSSSecurityErrors()
 
       const regularError = 'This is a regular error'
       console.error(regularError)
 
-      expect(console.error).toHaveBeenCalledWith(regularError)
+      expect(consoleSpy).toHaveBeenCalledWith(regularError)
+      consoleSpy.mockRestore()
     })
 
     it('should handle multiple arguments in console.error', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       suppressCSSSecurityErrors()
 
       // CSS security error with multiple args
       console.error('CSSStyleSheet error', { details: 'test' })
-      expect(console.error).not.toHaveBeenCalledWith('CSSStyleSheet error', { details: 'test' })
+      expect(consoleSpy).not.toHaveBeenCalledWith('CSSStyleSheet error', { details: 'test' })
 
       // Regular error with multiple args
       console.error('Regular error', { details: 'test' })
-      expect(console.error).toHaveBeenCalledWith('Regular error', { details: 'test' })
+      expect(consoleSpy).toHaveBeenCalledWith('Regular error', { details: 'test' })
+      
+      consoleSpy.mockRestore()
     })
 
     it('should handle undefined or null error messages', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       suppressCSSSecurityErrors()
 
       console.error(undefined)
@@ -75,9 +84,11 @@ describe('Error Handler Utilities', () => {
       console.error('')
 
       // Should not throw and should allow these through
-      expect(console.error).toHaveBeenCalledWith(undefined)
-      expect(console.error).toHaveBeenCalledWith(null)
-      expect(console.error).toHaveBeenCalledWith('')
+      expect(consoleSpy).toHaveBeenCalledWith(undefined)
+      expect(consoleSpy).toHaveBeenCalledWith(null)
+      expect(consoleSpy).toHaveBeenCalledWith('')
+      
+      consoleSpy.mockRestore()
     })
   })
 
@@ -293,6 +304,7 @@ describe('Error Handler Utilities', () => {
     })
 
     it('should handle real-world CSS security error scenarios', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       initializeErrorHandlers()
 
       // Simulate the exact error messages that Leaflet might produce
@@ -305,8 +317,10 @@ describe('Error Handler Utilities', () => {
       leafletErrors.forEach(errorMessage => {
         console.error(errorMessage)
         // Should not appear in console.error calls
-        expect(console.error).not.toHaveBeenCalledWith(errorMessage)
+        expect(consoleSpy).not.toHaveBeenCalledWith(errorMessage)
       })
+      
+      consoleSpy.mockRestore()
     })
   })
 })

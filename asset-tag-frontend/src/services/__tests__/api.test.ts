@@ -72,12 +72,13 @@ describe('API Service', () => {
     })
 
     it('should return false when VITE_USE_MOCK_DATA is "false"', () => {
-      Object.defineProperty(import.meta, 'env', {
-        value: { VITE_USE_MOCK_DATA: 'false' },
-        writable: true,
-      })
+      // Mock the environment variable
+      vi.stubEnv('VITE_USE_MOCK_DATA', 'false')
       
       expect(shouldUseMockData()).toBe(false)
+      
+      // Clean up
+      vi.unstubAllEnvs()
     })
   })
 
