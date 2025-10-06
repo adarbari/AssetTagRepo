@@ -1,7 +1,7 @@
 """
 Geofence Pydantic schemas
 """
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 
@@ -10,7 +10,7 @@ class GeofenceBase(BaseModel):
     """Base geofence schema"""
     name: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
-    geofence_type: str = Field(..., regex="^(circular|polygon)$")
+    geofence_type: str = Field(..., pattern="^(circular|polygon)$")
     status: Optional[str] = Field("active", max_length=50)
     
     # Geometric definition
@@ -47,10 +47,11 @@ class GeofenceBase(BaseModel):
     # Metadata
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
     
-    @validator('coordinates')
-    def validate_coordinates(cls, v, values):
+    @field_validator('coordinates')
+    @classmethod
+    def validate_coordinates(cls, v, info):
         """Validate coordinates based on geofence type"""
-        if v is not None and values.get('geofence_type') == 'polygon':
+        if v is not None and info.data.get('geofence_type') == 'polygon':
             if len(v) < 3:
                 raise ValueError('Polygon geofences must have at least 3 coordinate pairs')
             for coord in v:
@@ -62,15 +63,17 @@ class GeofenceBase(BaseModel):
                     raise ValueError('Longitude must be between -180 and 180')
         return v
     
-    @validator('center_latitude', 'center_longitude', 'radius')
-    def validate_circular_geofence(cls, v, values, field):
+    @field_validator('center_latitude', 'center_longitude', 'radius')
+    @classmethod
+    def validate_circular_geofence(cls, v, info):
         """Validate circular geofence parameters"""
-        if values.get('geofence_type') == 'circular':
-            if field.name == 'center_latitude' and v is None:
+        if info.data.get('geofence_type') == 'circular':
+            field_name = info.field_name
+            if field_name == 'center_latitude' and v is None:
                 raise ValueError('Center latitude is required for circular geofences')
-            if field.name == 'center_longitude' and v is None:
+            if field_name == 'center_longitude' and v is None:
                 raise ValueError('Center longitude is required for circular geofences')
-            if field.name == 'radius' and v is None:
+            if field_name == 'radius' and v is None:
                 raise ValueError('Radius is required for circular geofences')
         return v
 
@@ -121,7 +124,7 @@ class GeofenceEventBase(BaseModel):
     """Base geofence event schema"""
     geofence_id: str = Field(..., description="Geofence ID")
     asset_id: str = Field(..., description="Asset ID")
-    event_type: str = Field(..., regex="^(entry|exit)$")
+    event_type: str = Field(..., pattern="^(entry|exit)$")
     timestamp: str = Field(..., description="ISO timestamp")
     latitude: float = Field(..., ge=-90, le=90)
     longitude: float = Field(..., ge=-180, le=180)

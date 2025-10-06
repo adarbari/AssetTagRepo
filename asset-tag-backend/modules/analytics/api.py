@@ -211,10 +211,10 @@ async def get_ml_predictions(
 ):
     """Get ML predictions"""
     try:
-        # This is a placeholder for ML predictions
-        # In a real implementation, this would call ML models
+        from ml.serving.model_server import model_server
         
         if prediction_type == "utilization":
+            # Utilization predictions (simplified for now)
             return {
                 "prediction_type": "utilization",
                 "asset_id": asset_id,
@@ -233,40 +233,52 @@ async def get_ml_predictions(
             }
         
         elif prediction_type == "maintenance":
+            if not asset_id:
+                raise HTTPException(status_code=400, detail="Asset ID required for maintenance predictions")
+            
+            # Use actual ML model for maintenance prediction
+            result = await model_server.predict_maintenance(asset_id)
+            
+            if not result['success']:
+                raise HTTPException(status_code=500, detail=result.get('message', 'Prediction failed'))
+            
             return {
                 "prediction_type": "maintenance",
                 "asset_id": asset_id,
                 "organization_id": organization_id,
-                "predictions": [
-                    {
-                        "asset_id": asset_id,
-                        "predicted_maintenance_date": (datetime.now() + timedelta(days=30)).isoformat(),
-                        "maintenance_type": "scheduled",
-                        "confidence": 0.90,
-                        "reason": "Based on usage patterns and historical data"
-                    }
-                ],
-                "model_version": "v1.0",
-                "last_trained": datetime.now().isoformat()
+                "predictions": [result['prediction']],
+                "model_version": result.get('model_version', 'v1.0'),
+                "last_trained": result.get('last_trained', datetime.now().isoformat())
             }
         
         elif prediction_type == "location":
+            if not asset_id:
+                raise HTTPException(status_code=400, detail="Asset ID required for location predictions")
+            
+            # Use actual ML model for location prediction
+            result = await model_server.predict_location(asset_id, prediction_days)
+            
+            if not result['success']:
+                raise HTTPException(status_code=500, detail=result.get('message', 'Prediction failed'))
+            
+            # Format predictions with dates
+            formatted_predictions = []
+            for i, pred in enumerate(result['predictions']):
+                formatted_predictions.append({
+                    "date": (datetime.now() + timedelta(days=i+1)).isoformat(),
+                    "predicted_latitude": pred['latitude'],
+                    "predicted_longitude": pred['longitude'],
+                    "confidence": pred['confidence']
+                })
+            
             return {
                 "prediction_type": "location",
                 "asset_id": asset_id,
                 "organization_id": organization_id,
                 "prediction_days": prediction_days,
-                "predictions": [
-                    {
-                        "date": (datetime.now() + timedelta(days=i)).isoformat(),
-                        "predicted_latitude": 40.7128 + (i * 0.001),  # Mock data
-                        "predicted_longitude": -74.0060 + (i * 0.001),
-                        "confidence": 0.80
-                    }
-                    for i in range(prediction_days)
-                ],
-                "model_version": "v1.0",
-                "last_trained": datetime.now().isoformat()
+                "predictions": formatted_predictions,
+                "model_version": result.get('model_version', 'v1.0'),
+                "last_trained": result.get('last_trained', datetime.now().isoformat())
             }
         
         else:
@@ -353,3 +365,75 @@ async def get_analytics_trends(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating trends: {str(e)}")
+
+
+@router.post("/analytics/ml/train/location")
+async def train_location_model(
+    asset_id: str = Query(..., description="Asset ID to train model for"),
+    days_back: int = Query(30, ge=7, le=365, description="Days of historical data to use for training")
+):
+    """Train location prediction model for an asset"""
+    try:
+        from ml.serving.model_server import model_server
+        
+        result = await model_server.train_location_model(asset_id, days_back)
+        
+        if not result['success']:
+            raise HTTPException(status_code=500, detail=result.get('message', 'Training failed'))
+        
+        return {
+            "success": True,
+            "asset_id": asset_id,
+            "training_metrics": result['metrics'],
+            "training_samples": result['training_samples'],
+            "model_path": result['model_path']
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error training location model: {str(e)}")
+
+
+@router.post("/analytics/ml/train/maintenance")
+async def train_maintenance_model(
+    organization_id: str = Query(..., description="Organization ID to train model for")
+):
+    """Train maintenance prediction model for an organization"""
+    try:
+        from ml.serving.model_server import model_server
+        
+        result = await model_server.train_maintenance_model(organization_id)
+        
+        if not result['success']:
+            raise HTTPException(status_code=500, detail=result.get('message', 'Training failed'))
+        
+        return {
+            "success": True,
+            "organization_id": organization_id,
+            "training_metrics": result['metrics'],
+            "training_samples": result['training_samples'],
+            "model_path": result['model_path']
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error training maintenance model: {str(e)}")
+
+
+@router.get("/analytics/ml/status")
+async def get_ml_model_status():
+    """Get status of ML models"""
+    try:
+        from ml.serving.model_server import model_server
+        
+        status = await model_server.get_model_status()
+        
+        return {
+            "success": True,
+            "models": status
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting model status: {str(e)}")
