@@ -74,8 +74,15 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org'
-        cache: 'npm'
-        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
+
+    - name: Cache npm dependencies
+      if: needs.changes.outputs.frontend == 'true'
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
     
     - name: Install Python dependencies
       if: needs.changes.outputs.backend == 'true'
