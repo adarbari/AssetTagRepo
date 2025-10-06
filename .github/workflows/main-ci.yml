@@ -1,10 +1,10 @@
 name: Main CI/CD Pipeline
 
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+  workflow_run:
+    workflows: ["Lint and Security Gate"]
+    types: [completed]
+    branches: [main, develop]
 
 # Cancel outdated workflow runs to save resources
 concurrency:
@@ -44,15 +44,19 @@ jobs:
             - 'docs/**'
             - '*.md'
 
-  # Pre-lint check (runs before main CI)
-  pre-lint-check:
-    uses: ./.github/workflows/pre-lint-check.yml
+  # Gate check - only proceed if lint-gate succeeded
+  gate-check:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+    - name: Verify lint-gate passed
+      run: echo "✅ Lint and security gate passed - proceeding with main CI"
 
   # Backend Jobs
   backend-lint:
     runs-on: ubuntu-latest
-    needs: [changes, pre-lint-check]
-    if: needs.changes.outputs.backend == 'true' && needs.pre-lint-check.result == 'success'
+    needs: [changes, gate-check]
+    if: needs.changes.outputs.backend == 'true' && needs.gate-check.result == 'success'
     
     steps:
     - name: Checkout code
@@ -99,8 +103,8 @@ jobs:
 
   backend-test:
     runs-on: ubuntu-latest
-    needs: [changes, pre-lint-check]
-    if: needs.changes.outputs.backend == 'true' && needs.pre-lint-check.result == 'success'
+    needs: [changes, gate-check]
+    if: needs.changes.outputs.backend == 'true' && needs.gate-check.result == 'success'
     
     strategy:
       fail-fast: false
@@ -143,8 +147,8 @@ jobs:
 
   backend-security:
     runs-on: ubuntu-latest
-    needs: [changes, pre-lint-check]
-    if: needs.changes.outputs.backend == 'true' && needs.pre-lint-check.result == 'success' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    needs: [changes, gate-check]
+    if: needs.changes.outputs.backend == 'true' && needs.gate-check.result == 'success' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     
     steps:
     - name: Checkout code
@@ -266,8 +270,8 @@ jobs:
   # Frontend Jobs
   frontend-test:
     runs-on: ubuntu-latest
-    needs: [changes, pre-lint-check]
-    if: needs.changes.outputs.frontend == 'true' && needs.pre-lint-check.result == 'success'
+    needs: [changes, gate-check]
+    if: needs.changes.outputs.frontend == 'true' && needs.gate-check.result == 'success'
     
     steps:
     - name: Checkout code
@@ -342,8 +346,8 @@ jobs:
 
   frontend-coverage:
     runs-on: ubuntu-latest
-    needs: [changes, pre-lint-check, frontend-test]
-    if: always() && needs.changes.outputs.frontend == 'true' && needs.pre-lint-check.result == 'success' && needs.frontend-test.result == 'success'
+    needs: [changes, gate-check, frontend-test]
+    if: always() && needs.changes.outputs.frontend == 'true' && needs.gate-check.result == 'success' && needs.frontend-test.result == 'success'
     
     steps:
     - name: Checkout code
@@ -625,23 +629,5 @@ jobs:
             console.log('Could not generate combined coverage report:', error.message);
           }
 
-  # Single auto-fix integration
-  auto-fix:
-    needs: [changes, backend-lint, backend-test, backend-security, frontend-test, frontend-build]
-    if: always() && (needs.backend-lint.result == 'failure' || needs.backend-test.result == 'failure' || needs.backend-security.result == 'failure' || needs.frontend-test.result == 'failure' || needs.frontend-build.result == 'failure')
-    uses: ./.github/workflows/auto-fix-reusable.yml
-    with:
-      workflow-name: "Main CI/CD Pipeline"
-      workflow-conclusion: "failure"
-      logs-content: |
-        Backend Lint: ${{ needs.backend-lint.result }}
-        Backend Test: ${{ needs.backend-test.result }}
-        Backend Security: ${{ needs.backend-security.result }}
-        Frontend Test: ${{ needs.frontend-test.result }}
-        Frontend Build: ${{ needs.frontend-build.result }}
-      error-context: "Main CI/CD pipeline failed - check individual job results"
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-    secrets: inherit
+  # Note: Auto-fix is now handled by the lint-gate workflow
+  # This ensures lint issues are caught and fixed before main CI runs

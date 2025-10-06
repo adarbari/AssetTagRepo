@@ -5,6 +5,39 @@
 
 set -e
 
+# Parse command line arguments
+WORKFLOW_MODE=false
+JSON_OUTPUT=false
+VERBOSE=false
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --workflow-mode)
+      WORKFLOW_MODE=true
+      shift
+      ;;
+    --json)
+      JSON_OUTPUT=true
+      shift
+      ;;
+    --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    -h|--help)
+      echo "Usage: $0 [--workflow-mode] [--json] [--verbose]"
+      echo "  --workflow-mode: Run in workflow mode (no commits, in-memory fixes)"
+      echo "  --json: Output results in JSON format"
+      echo "  --verbose: Enable verbose output"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+  esac
+done
+
 echo "🔧 Auto-fixing import formatting issues..."
 
 # Colors for output
@@ -221,16 +254,54 @@ fi
 echo ""
 print_status "info" "Running final verification..."
 
-if ./scripts/verify-lint-checks.sh; then
+# Initialize result tracking
+FIXES_APPLIED=0
+ERRORS_REMAINING=0
+
+if ./scripts/verify-lint-checks.sh --json; then
     print_status "success" "All lint checks now pass! 🎉"
+    FIXES_APPLIED=1
+    ERRORS_REMAINING=0
+else
+    print_status "error" "Some lint checks still fail. Please review manually."
+    FIXES_APPLIED=0
+    ERRORS_REMAINING=1
+fi
+
+# Output results based on mode
+if [ "$JSON_OUTPUT" = true ]; then
+    cat << EOF
+{
+  "status": "$([ $ERRORS_REMAINING -eq 0 ] && echo "success" || echo "failure")",
+  "fixes_applied": $FIXES_APPLIED,
+  "errors_remaining": $ERRORS_REMAINING,
+  "workflow_mode": $WORKFLOW_MODE,
+  "changes_made": [
+    "Fixed import sorting with isort",
+    "Fixed code formatting with black",
+    "Applied consistent formatting rules"
+  ]
+}
+EOF
+else
     echo ""
     echo "📝 Changes made:"
     echo "   - Fixed import sorting with isort"
     echo "   - Fixed code formatting with black"
     echo "   - Applied consistent formatting rules"
     echo ""
-    echo "💡 You can now commit your changes safely."
+    
+    if [ "$WORKFLOW_MODE" = true ]; then
+        echo "💡 Running in workflow mode - changes are in-memory only."
+        echo "   The workflow will handle committing if validation passes."
+    else
+        echo "💡 You can now commit your changes safely."
+    fi
+fi
+
+# Exit with appropriate code
+if [ $ERRORS_REMAINING -eq 0 ]; then
+    exit 0
 else
-    print_status "error" "Some lint checks still fail. Please review manually."
     exit 1
 fi

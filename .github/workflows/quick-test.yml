@@ -104,20 +104,5 @@ jobs:
       run: npm run test:run --workspace=asset-tag-frontend
       working-directory: .
 
-  # Single auto-fix integration for quick tests
-  auto-fix:
-    needs: [changes, quick-backend-test, quick-frontend-test]
-    if: always() && (needs.quick-backend-test.result == 'failure' || needs.quick-frontend-test.result == 'failure')
-    uses: ./.github/workflows/auto-fix-reusable.yml
-    with:
-      workflow-name: "Quick Test"
-      workflow-conclusion: "failure"
-      logs-content: |
-        Quick Backend Test: ${{ needs.quick-backend-test.result }}
-        Quick Frontend Test: ${{ needs.quick-frontend-test.result }}
-      error-context: "Quick test workflow failed - check individual job results"
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-    secrets: inherit
+  # Note: Auto-fix is now handled by the lint-gate workflow
+  # This provides fast feedback while ensuring lint issues are caught early

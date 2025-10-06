@@ -5,6 +5,33 @@
 
 set -e
 
+# Parse command line arguments
+JSON_OUTPUT=false
+VERBOSE=false
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --json)
+      JSON_OUTPUT=true
+      shift
+      ;;
+    --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    -h|--help)
+      echo "Usage: $0 [--json] [--verbose]"
+      echo "  --json: Output results in JSON format"
+      echo "  --verbose: Enable verbose output"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+  esac
+done
+
 echo "🔍 Verifying all lint checks..."
 
 # Colors for output
@@ -43,6 +70,10 @@ fi
 
 # Initialize error tracking
 ERRORS=0
+BACKEND_ERRORS=0
+FRONTEND_ERRORS=0
+SECURITY_ERRORS=0
+ERROR_DETAILS=()
 
 # Backend lint checks
 echo "🐍 Running backend lint checks..."
@@ -65,6 +96,8 @@ if [ -d "asset-tag-backend" ]; then
         else
             print_status "error" "Import sorting issues found"
             ERRORS=$((ERRORS + 1))
+            BACKEND_ERRORS=$((BACKEND_ERRORS + 1))
+            ERROR_DETAILS+=("backend:isort:Import sorting issues found")
         fi
         
         # Run black check
@@ -74,6 +107,8 @@ if [ -d "asset-tag-backend" ]; then
         else
             print_status "error" "Code formatting issues found"
             ERRORS=$((ERRORS + 1))
+            BACKEND_ERRORS=$((BACKEND_ERRORS + 1))
+            ERROR_DETAILS+=("backend:black:Code formatting issues found")
         fi
         
         # Run flake8 check with specific error codes (same as CI)
@@ -83,6 +118,8 @@ if [ -d "asset-tag-backend" ]; then
         else
             print_status "error" "Flake8 critical issues found"
             ERRORS=$((ERRORS + 1))
+            BACKEND_ERRORS=$((BACKEND_ERRORS + 1))
+            ERROR_DETAILS+=("backend:flake8:critical:Critical flake8 issues found")
         fi
         
         # Run flake8 general check (same as CI)
@@ -92,6 +129,8 @@ if [ -d "asset-tag-backend" ]; then
         else
             print_status "error" "Flake8 general linting issues found"
             ERRORS=$((ERRORS + 1))
+            BACKEND_ERRORS=$((BACKEND_ERRORS + 1))
+            ERROR_DETAILS+=("backend:flake8:general:General flake8 linting issues found")
         fi
         
         # Run mypy type checking (same as CI)
@@ -101,6 +140,8 @@ if [ -d "asset-tag-backend" ]; then
         else
             print_status "error" "Type checking issues found"
             ERRORS=$((ERRORS + 1))
+            BACKEND_ERRORS=$((BACKEND_ERRORS + 1))
+            ERROR_DETAILS+=("backend:mypy:Type checking issues found")
         fi
         
         # Run bandit security scan (same as CI)
@@ -109,6 +150,8 @@ if [ -d "asset-tag-backend" ]; then
             print_status "success" "Bandit security scan passed"
         else
             print_status "warning" "Bandit security issues found (non-blocking)"
+            SECURITY_ERRORS=$((SECURITY_ERRORS + 1))
+            ERROR_DETAILS+=("backend:bandit:Security issues found")
         fi
         
         # Run safety check (same as CI)
@@ -117,6 +160,8 @@ if [ -d "asset-tag-backend" ]; then
             print_status "success" "Safety dependency check passed"
         else
             print_status "warning" "Safety dependency issues found (non-blocking)"
+            SECURITY_ERRORS=$((SECURITY_ERRORS + 1))
+            ERROR_DETAILS+=("backend:safety:Dependency security issues found")
         fi
         
     else
@@ -150,6 +195,8 @@ if [ -d "asset-tag-frontend" ]; then
         else
             print_status "error" "ESLint issues found"
             ERRORS=$((ERRORS + 1))
+            FRONTEND_ERRORS=$((FRONTEND_ERRORS + 1))
+            ERROR_DETAILS+=("frontend:eslint:ESLint issues found")
         fi
         
         # Run Prettier check (same as CI would run)
@@ -159,6 +206,8 @@ if [ -d "asset-tag-frontend" ]; then
         else
             print_status "error" "Prettier formatting issues found"
             ERRORS=$((ERRORS + 1))
+            FRONTEND_ERRORS=$((FRONTEND_ERRORS + 1))
+            ERROR_DETAILS+=("frontend:prettier:Prettier formatting issues found")
         fi
         
         # Run TypeScript check (same as CI would run)
@@ -168,6 +217,8 @@ if [ -d "asset-tag-frontend" ]; then
         else
             print_status "error" "TypeScript issues found"
             ERRORS=$((ERRORS + 1))
+            FRONTEND_ERRORS=$((FRONTEND_ERRORS + 1))
+            ERROR_DETAILS+=("frontend:typescript:TypeScript issues found")
         fi
         
         # Run npm audit security check (same as CI)
@@ -176,6 +227,8 @@ if [ -d "asset-tag-frontend" ]; then
             print_status "success" "npm security audit passed"
         else
             print_status "warning" "npm security issues found (non-blocking)"
+            SECURITY_ERRORS=$((SECURITY_ERRORS + 1))
+            ERROR_DETAILS+=("frontend:npm-audit:npm security issues found")
         fi
         
         # Run build check (same as CI)
@@ -185,6 +238,8 @@ if [ -d "asset-tag-frontend" ]; then
         else
             print_status "error" "Build check failed"
             ERRORS=$((ERRORS + 1))
+            FRONTEND_ERRORS=$((FRONTEND_ERRORS + 1))
+            ERROR_DETAILS+=("frontend:build:Build check failed")
         fi
         
     else
@@ -200,8 +255,22 @@ fi
 # Summary
 echo ""
 echo "📊 Lint Check Summary:"
+
 if [ $ERRORS -eq 0 ]; then
     print_status "success" "All lint checks passed! 🎉"
+    
+    if [ "$JSON_OUTPUT" = true ]; then
+        cat << EOF
+{
+  "status": "success",
+  "error_count": 0,
+  "backend_errors": 0,
+  "frontend_errors": 0,
+  "security_errors": 0,
+  "error_details": []
+}
+EOF
+    fi
     exit 0
 else
     print_status "error" "Found $ERRORS lint check failure(s)"
@@ -210,5 +279,27 @@ else
     echo "   ./scripts/auto-fix-imports.sh"
     echo "   or"
     echo "   make format"
+    
+    if [ "$JSON_OUTPUT" = true ]; then
+        # Create JSON array of error details
+        ERROR_JSON=""
+        for error in "${ERROR_DETAILS[@]}"; do
+            if [ -n "$ERROR_JSON" ]; then
+                ERROR_JSON="$ERROR_JSON,"
+            fi
+            ERROR_JSON="$ERROR_JSON\"$error\""
+        done
+        
+        cat << EOF
+{
+  "status": "failure",
+  "error_count": $ERRORS,
+  "backend_errors": $BACKEND_ERRORS,
+  "frontend_errors": $FRONTEND_ERRORS,
+  "security_errors": $SECURITY_ERRORS,
+  "error_details": [$ERROR_JSON]
+}
+EOF
+    fi
     exit 1
 fi
