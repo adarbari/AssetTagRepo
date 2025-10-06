@@ -111,7 +111,7 @@ export function EditMaintenance({
         notes: taskData.notes || '',
       });
     } catch (err) {
-// // // // // // // console.error('Error loading maintenance task:', err);
+    // console.error('Error loading maintenance task:', err);
       setError(
         err instanceof Error ? err.message : 'Failed to load maintenance task'
       );
@@ -228,7 +228,7 @@ export function EditMaintenance({
         }, 1000);
       }
     } catch (err) {
-// // // // // // // console.error('Error saving maintenance task:', err);
+    // console.error('Error saving maintenance task:', err);
       toast.error('Failed to save', {
         description: err instanceof Error ? err.message : 'An error occurred',
       });

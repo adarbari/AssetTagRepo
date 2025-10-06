@@ -208,21 +208,21 @@ export function AssetDetails({
       toast.success('Asset updated successfully');
     } catch (error) {
       toast.error('Failed to update asset');
-// // // // // // // console.error('Error updating asset:', error);
+//       console.error('Error updating asset:', error);
     }
   };
 
   // Handler for after check-in/out completes in embedded view
   const handleCheckInOutComplete = (updates: Partial<Asset>) => {
-// // // // // // // console.log('🔄 handleCheckInOutComplete called with updates:', updates);
-// // // // // // // console.log('🔄 Current asset status before update:', currentAsset.status);
+      console.log('🔄 handleCheckInOutComplete called with updates:', updates);
+      console.log('🔄 Current asset status before update:', currentAsset.status);
 
     // Refresh the asset from the mock data layer to get the latest state
     const refreshedAsset = getAssetById(currentAsset.id);
-// // // // // // // console.log('🔄 Refreshed asset from mock data:', refreshedAsset);
+      console.log('🔄 Refreshed asset from mock data:', refreshedAsset);
 
     if (refreshedAsset) {
-// // // // // // // console.log(
+      console.log(
         '✅ Updating asset state with refreshed data, new status:',
         refreshedAsset.status
       );
@@ -234,10 +234,10 @@ export function AssetDetails({
         assignedTo: refreshedAsset.assignedTo || '',
       }));
     } else {
-// // // // // // // console.log('⚠️ Asset not found in mock data, using fallback update');
+      console.log('⚠️ Asset not found in mock data, using fallback update');
       // Fallback: update local state if asset not found in mock data
       const updatedAsset = { ...currentAsset, ...updates };
-// // // // // // // console.log(
+      console.log(
         '✅ Updating asset state with fallback data, new status:',
         updatedAsset.status
       );
@@ -334,7 +334,7 @@ export function AssetDetails({
           },
         },
         (error: Error | null | undefined) => {
-          if (error) // // // // // // console.error('QR Code generation error:', error);
+          if (error) console.error('QR Code generation error:', error);
         }
       );
     }, [value]);
@@ -375,7 +375,7 @@ export function AssetDetails({
 
       toast.success('QR code downloaded successfully');
     } catch (error) {
-// // // // // // // console.error('Error downloading QR code:', error);
+//       console.error('Error downloading QR code:', error);
       toast.error('Failed to download QR code');
     }
   };
@@ -426,7 +426,7 @@ export function AssetDetails({
                       currentAsset.status === 'active' ||
                       currentAsset.status === 'inactive' ||
                       currentAsset.status === 'maintenance';
-// // // // // // // console.log(
+      console.log(
                       '🔴 Check Out button logic - Asset status:',
                       currentAsset.status,
                       'Can check out:',
@@ -438,7 +438,7 @@ export function AssetDetails({
                       variant='default'
                       size='sm'
                       onClick={() => {
-// // // // // // // console.log('🔴 Check Out button clicked!');
+      console.log('🔴 Check Out button clicked!');
                         navigation.navigateToCheckInOut({
                           assetId: currentAsset.id,
                           assetName: currentAsset.name,
@@ -462,7 +462,7 @@ export function AssetDetails({
                   {/* Conditionally show Check In button for checked-out assets */}
                   {(() => {
                     const canCheckIn = currentAsset.status === 'checked-out';
-// // // // // // // console.log(
+      console.log(
                       '🟢 Check In button logic - Asset status:',
                       currentAsset.status,
                       'Can check in:',
@@ -474,7 +474,7 @@ export function AssetDetails({
                       variant='default'
                       size='sm'
                       onClick={() => {
-// // // // // // // console.log('🟢 Check In button clicked!');
+      console.log('🟢 Check In button clicked!');
                         navigation.navigateToCheckInOut({
                           assetId: currentAsset.id,
                           assetName: currentAsset.name,
@@ -1018,7 +1018,7 @@ export function AssetDetails({
                     variant='outline'
                     className='w-full justify-start'
                     onClick={() => {
-// // // // // // // console.log('🔴 Quick Actions Check Out button clicked!');
+      console.log('🔴 Quick Actions Check Out button clicked!');
                       navigation.navigateToCheckInOut({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,
@@ -1045,7 +1045,7 @@ export function AssetDetails({
                     variant='outline'
                     className='w-full justify-start'
                     onClick={() => {
-// // // // // // // console.log('🟢 Quick Actions Check In button clicked!');
+      console.log('🟢 Quick Actions Check In button clicked!');
                       navigation.navigateToCheckInOut({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,

@@ -48,7 +48,7 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
       }
     } catch (error) {
       toast.error('Failed to load issue');
-// // // // // // // console.error('Error loading issue:', error);
+    // console.error('Error loading issue:', error);
     } finally {
       setLoading(false);
     }
@@ -135,7 +135,7 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
       }
     } catch (error) {
       toast.error('Failed to update issue');
-// // // // // // // console.error('Error updating issue:', error);
+    // console.error('Error updating issue:', error);
     } finally {
       setSaving(false);
     }

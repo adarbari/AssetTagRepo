@@ -152,7 +152,7 @@ export function CreateGeofence({
 
           onBack();
         } catch (error) {
-// // // // // // // console.error('Error updating geofence:', error);
+    // console.error('Error updating geofence:', error);
           import('sonner').then(({ toast }) => {
             toast.error('Failed to update geofence');
           });
@@ -197,7 +197,7 @@ export function CreateGeofence({
 
             onBack();
           } catch (error) {
-// // // // // // // console.error('Error creating geofence:', error);
+    // console.error('Error creating geofence:', error);
             import('sonner').then(({ toast }) => {
               toast.error('Failed to create geofence');
             });

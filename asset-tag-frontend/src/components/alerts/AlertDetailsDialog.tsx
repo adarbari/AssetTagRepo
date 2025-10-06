@@ -82,7 +82,7 @@ export function AlertDetailsDialog({
 
   const handleResolve = () => {
     // In a real app, this would save to backend
-// // // // // // // console.log('Resolving alert:', alert.id, 'Notes:', resolutionNotes);
+    // console.log('Resolving alert:', alert.id, 'Notes:', resolutionNotes);
     onResolve?.();
     onOpenChange(false);
     setResolutionNotes('');

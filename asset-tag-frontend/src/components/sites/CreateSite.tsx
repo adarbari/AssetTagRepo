@@ -55,13 +55,13 @@ export function CreateSite({ onBack }: CreateSiteProps) {
     }
 
     // Handle form submission
-// // // // // // // console.log({
-      siteName,
-      address,
-      city,
-      state,
-      zipCode,
-      latitude,
+    // console.log({
+    //   siteName,
+    //   address,
+    //   city,
+    //   state,
+    //   zipCode,
+    //   latitude,
       longitude,
       boundaryType,
       boundaryRadius,

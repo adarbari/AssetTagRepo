@@ -41,7 +41,7 @@ export function useJobManagement() {
         localStorage.setItem('jobAlerts', JSON.stringify(mockJobAlerts));
       }
     } catch (error) {
-// // // // // // // console.error('Failed to load jobs:', error);
+    // console.error('Failed to load jobs:', error);
     }
   };
 
@@ -96,7 +96,7 @@ export function useJobManagement() {
       // await api.createJob(newJob);
       return { success: true, job: newJob };
     } catch (error) {
-// // // // // // // console.error('Failed to create job:', error);
+    // console.error('Failed to create job:', error);
       return { success: false, error };
     }
   };
@@ -141,7 +141,7 @@ export function useJobManagement() {
       // await api.updateJob(jobId, updatedJob);
       return { success: true, job: updatedJob };
     } catch (error) {
-// // // // // // // console.error('Failed to update job:', error);
+    // console.error('Failed to update job:', error);
       return { success: false, error };
     }
   };
@@ -157,7 +157,7 @@ export function useJobManagement() {
       // await api.deleteJob(jobId);
       return { success: true };
     } catch (error) {
-// // // // // // // console.error('Failed to delete job:', error);
+    // console.error('Failed to delete job:', error);
       return { success: false, error };
     }
   };
@@ -287,7 +287,7 @@ export function useJobManagement() {
     try {
       localStorage.setItem('jobAlerts', JSON.stringify(updatedAlerts));
     } catch (error) {
-// // // // // // // console.error('Failed to save job alert:', error);
+    // console.error('Failed to save job alert:', error);
     }
   };
 
@@ -308,7 +308,7 @@ export function useJobManagement() {
     try {
       localStorage.setItem('jobAlerts', JSON.stringify(updatedAlerts));
     } catch (error) {
-// // // // // // // console.error('Failed to resolve job alert:', error);
+    // console.error('Failed to resolve job alert:', error);
     }
   };
 

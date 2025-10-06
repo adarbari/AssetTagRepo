@@ -1,12 +1,13 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
+import React from 'react';
 
 // Fix for MaxListenersExceededWarning
-process.setMaxListeners(20);
+process.setMaxListeners(50);
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
-// // // // // // // console.warn('Unhandled Rejection at:', promise, 'reason:', reason);
+    // console.warn('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 // Mock fetch globally with proper response structure

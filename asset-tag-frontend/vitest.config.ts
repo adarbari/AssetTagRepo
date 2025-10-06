@@ -8,6 +8,22 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    
+    // Add timeout configurations
+    testTimeout: 10000,        // 10 seconds per test
+    hookTimeout: 10000,        // 10 seconds for setup/teardown
+    teardownTimeout: 5000,     // 5 seconds for cleanup
+    
+    // Limit concurrency to prevent resource exhaustion
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: false,
+        maxThreads: 4,         // Limit to 4 threads
+        minThreads: 1,
+      },
+    },
+    
     env: {
       VITE_API_BASE_URL: 'http://localhost:3000',
       VITE_API_VERSION: 'v1',

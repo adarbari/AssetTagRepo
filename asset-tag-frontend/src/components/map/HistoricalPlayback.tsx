@@ -183,7 +183,7 @@ export function HistoricalPlayback({
         setMapLoaded(true);
         setMapLoading(false);
       } catch (error) {
-// // // // // // // console.error('Error loading map:', error);
+    // console.error('Error loading map:', error);
         setMapLoading(false);
       }
     };

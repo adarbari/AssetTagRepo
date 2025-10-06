@@ -50,13 +50,13 @@ export function GenerateReportDialog({
   };
 
   const handleGenerate = () => {
-// // // // // // // console.log('Generating report:', {
-      type: reportType,
-      dateRange,
-      startDate,
-      endDate,
-      format: format_type,
-      includeCharts,
+    // console.log('Generating report:', {
+    //   type: reportType,
+    //   dateRange,
+    //   startDate,
+    //   endDate,
+    //   format_type,
+    //   includeCharts,
       includeDetails,
     });
     onOpenChange(false);

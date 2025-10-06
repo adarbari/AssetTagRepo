@@ -55,7 +55,7 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     // Log error details for debugging
-// // // // // // // console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    // console.error('Error caught by ErrorBoundary:', error, errorInfo);
 
     // Update state with error details
     this.setState({

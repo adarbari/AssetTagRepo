@@ -1096,7 +1096,7 @@ export function updateMockAsset(
   const assetIndex = mockAssets.findIndex(a => a.id === assetId);
 
   if (assetIndex === -1) {
-// // // // // // // console.warn(`Asset ${assetId} not found`);
+    // console.warn(`Asset ${assetId} not found`);
     return null;
   }
 

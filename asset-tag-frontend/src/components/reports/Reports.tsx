@@ -71,7 +71,7 @@ export function Reports() {
   };
 
   const handleExportAll = () => {
-// // // // // // // console.log('Exporting comprehensive report for:', timeRange);
+    // console.log('Exporting comprehensive report for:', timeRange);
   };
 
   if (loading) {

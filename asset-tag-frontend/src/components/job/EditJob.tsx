@@ -159,13 +159,13 @@ export function EditJob({
 
   // Debug logging
   useEffect(() => {
-// // // // // // // console.log(
-      'EditJob - Available Assets:',
-      availableAssets.length,
-      availableAssets
-    );
-// // // // // // // console.log('EditJob - Job Assets:', job.assets);
-// // // // // // // console.log('EditJob - Mock Assets:', mockAssets.length);
+    // console.log(
+    //   'EditJob - Available Assets:',
+    //   availableAssets.length,
+    //   availableAssets
+    // );
+    // console.log('EditJob - Job Assets:', job.assets);
+    // console.log('EditJob - Mock Assets:', mockAssets.length);
   }, [availableAssets, job.assets]);
 
   const handleSave = async () => {
@@ -210,7 +210,7 @@ export function EditJob({
         toast.error('Failed to update job');
       }
     } catch (error) {
-// // // // // // // console.error('Error updating job:', error);
+    // console.error('Error updating job:', error);
       toast.error('An error occurred while updating the job');
     }
   };

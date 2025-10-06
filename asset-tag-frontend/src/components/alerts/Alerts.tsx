@@ -95,7 +95,7 @@ const loadUserPreferences = () => {
       return JSON.parse(saved);
     }
   } catch (error) {
-// // // // // // // console.error('Failed to load alert preferences:', error);
+    // console.error('Failed to load alert preferences:', error);
   }
   return {
     defaultView: 'all',
@@ -109,7 +109,7 @@ const saveUserPreferences = (prefs: any) => {
   try {
     localStorage.setItem('alertPreferences', JSON.stringify(prefs));
   } catch (error) {
-// // // // // // // console.error('Failed to save alert preferences:', error);
+    // console.error('Failed to save alert preferences:', error);
   }
 };
 
@@ -150,7 +150,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
           const alertsData = await getAllAlerts();
           setAlerts(alertsData);
         } catch (error) {
-// // // // // // // console.error('Failed to load alerts:', error);
+    // console.error('Failed to load alerts:', error);
           toast.error('Failed to load alerts');
         } finally {
           setLoading(false);
@@ -366,7 +366,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         setAlerts(updatedAlerts);
         toast.success('Alert acknowledged');
       } catch (error) {
-// // // // // // // console.error('Failed to acknowledge alert:', error);
+    // console.error('Failed to acknowledge alert:', error);
         toast.error('Failed to acknowledge alert');
       }
     };
@@ -381,7 +381,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         setAlerts(updatedAlerts);
         toast.success('Alert resolved');
       } catch (error) {
-// // // // // // // console.error('Failed to resolve alert:', error);
+    // console.error('Failed to resolve alert:', error);
         toast.error('Failed to resolve alert');
       }
     };
@@ -393,7 +393,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         setAlerts(updatedAlerts);
         toast.success('Alerts refreshed');
       } catch (error) {
-// // // // // // // console.error('Failed to refresh alerts:', error);
+    // console.error('Failed to refresh alerts:', error);
         toast.error('Failed to refresh alerts');
       } finally {
         setLoading(false);

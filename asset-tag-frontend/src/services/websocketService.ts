@@ -67,7 +67,7 @@ class WebSocketService {
         this.ws = new WebSocket(this.config.url);
 
         this.ws.onopen = () => {
-// // // // // // // console.log('WebSocket connected');
+    // console.log('WebSocket connected');
           this.isConnecting = false;
           this.reconnectAttempts = 0;
           this.startHeartbeat();
@@ -79,12 +79,12 @@ class WebSocketService {
             const message: WebSocketMessage = JSON.parse(event.data);
             this.handleMessage(message);
           } catch (error) {
-// // // // // // // console.error('Error parsing WebSocket message:', error);
+    // console.error('Error parsing WebSocket message:', error);
           }
         };
 
         this.ws.onclose = event => {
-// // // // // // // console.log('WebSocket disconnected:', event.code, event.reason);
+    // console.log('WebSocket disconnected:', event.code, event.reason);
           this.isConnecting = false;
           this.stopHeartbeat();
 
@@ -97,7 +97,7 @@ class WebSocketService {
         };
 
         this.ws.onerror = error => {
-// // // // // // // console.error('WebSocket error:', error);
+    // console.error('WebSocket error:', error);
           this.isConnecting = false;
           reject(error);
         };
@@ -232,7 +232,7 @@ class WebSocketService {
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
     } else {
-// // // // // // // console.warn('WebSocket not connected, cannot send message:', message);
+    // console.warn('WebSocket not connected, cannot send message:', message);
     }
   }
 
@@ -257,7 +257,7 @@ class WebSocketService {
         this.notifyListeners('maintenance_reminders', message.data);
         break;
       default:
-// // // // // // // console.warn('Unknown message type:', message.type);
+    // console.warn('Unknown message type:', message.type);
     }
   }
 
@@ -294,7 +294,7 @@ class WebSocketService {
         try {
           callback(data);
         } catch (error) {
-// // // // // // // console.error('Error in WebSocket listener:', error);
+    // console.error('Error in WebSocket listener:', error);
         }
       });
     }
@@ -309,14 +309,14 @@ class WebSocketService {
     }
 
     this.reconnectAttempts++;
-// // // // // // // console.log(
-      `Scheduling reconnect attempt ${this.reconnectAttempts} in ${this.config.reconnectInterval}ms`
-    );
+    // console.log(
+    //   `Scheduling reconnect attempt ${this.reconnectAttempts} in ${this.config.reconnectInterval}ms`
+    // );
 
     this.reconnectTimer = setTimeout(() => {
       this.reconnectTimer = null;
       this.connect().catch(error => {
-// // // // // // // console.error('Reconnect failed:', error);
+    // console.error('Reconnect failed:', error);
       });
     }, this.config.reconnectInterval);
   }

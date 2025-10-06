@@ -82,7 +82,7 @@ export function safeGetCSSRules(stylesheet: CSSStyleSheet): CSSRuleList | null {
     return stylesheet.cssRules;
   } catch (error) {
     // CSS security error - stylesheet is from a different origin
-// // // // // // // console.warn('Cannot access CSS rules from external stylesheet:', error);
+    console.warn('Cannot access CSS rules from external stylesheet:', error);
     return null;
   }
 }

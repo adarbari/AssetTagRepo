@@ -25,7 +25,7 @@ export async function getAllAlerts(): Promise<Alert[]> {
     const response = await apiClient.get('/alerts');
     return response.data;
   } catch (error) {
-// // // // // // // console.error('Failed to fetch alerts:', error);
+    // console.error('Failed to fetch alerts:', error);
     // Fallback to mock data on error
     return alerts;
   }
@@ -45,7 +45,7 @@ export async function getAlertById(alertId: string): Promise<Alert | null> {
     const response = await apiClient.get(`/alerts/${alertId}`);
     return response.data;
   } catch (error) {
-// // // // // // // console.error('Failed to fetch alert:', error);
+    // console.error('Failed to fetch alert:', error);
     // Fallback to mock data on error
     const alert = alerts.find(a => a.id === alertId);
     return alert || null;
@@ -92,7 +92,7 @@ export async function updateAlertStatus(
     });
     return response.data;
   } catch (error) {
-// // // // // // // console.error('Failed to update alert status:', error);
+    // console.error('Failed to update alert status:', error);
     throw error;
   }
 }
@@ -168,7 +168,7 @@ export async function executeWorkflowAction(
 
     return updatedAlert;
   } catch (error) {
-// // // // // // // console.error('Failed to execute workflow action:', error);
+    // console.error('Failed to execute workflow action:', error);
     throw error;
   }
 }
@@ -188,7 +188,7 @@ export async function getAlertsByStatus(
     const response = await apiClient.get('/alerts', { params: { status } });
     return response.data;
   } catch (error) {
-// // // // // // // console.error('Failed to fetch alerts by status:', error);
+    // console.error('Failed to fetch alerts by status:', error);
     // Fallback to mock data on error
     return alerts.filter(a => a.status === status);
   }
@@ -209,7 +209,7 @@ export async function getAlertsByAsset(assetId: string): Promise<Alert[]> {
     });
     return response.data;
   } catch (error) {
-// // // // // // // console.error('Failed to fetch alerts by asset:', error);
+    // console.error('Failed to fetch alerts by asset:', error);
     // Fallback to mock data on error
     return alerts.filter(a => a.assetId === assetId);
   }
@@ -236,7 +236,7 @@ export async function createAlert(
     const response = await apiClient.post('/alerts', alertData);
     return response.data;
   } catch (error) {
-// // // // // // // console.error('Failed to create alert:', error);
+    // console.error('Failed to create alert:', error);
     throw error;
   }
 }
@@ -261,7 +261,7 @@ export async function deleteAlert(alertId: string): Promise<boolean> {
 
     return true;
   } catch (error) {
-// // // // // // // console.error('Failed to delete alert:', error);
+    // console.error('Failed to delete alert:', error);
     throw error;
   }
 }
@@ -306,7 +306,7 @@ export async function getAlertStatistics(): Promise<{
     const response = await apiClient.get('/alerts/stats');
     return response.data;
   } catch (error) {
-// // // // // // // console.error('Failed to fetch alert statistics:', error);
+    // console.error('Failed to fetch alert statistics:', error);
     // Fallback to mock data calculation
     const stats = {
       total: alerts.length,

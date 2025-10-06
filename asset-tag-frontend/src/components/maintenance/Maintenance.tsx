@@ -135,7 +135,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
       setPredictiveAlerts(alerts);
       setStats(statistics);
     } catch (error) {
-// // // // // // // console.error('Error loading maintenance data:', error);
+    // console.error('Error loading maintenance data:', error);
       toast.error('Failed to load maintenance data');
     } finally {
       setLoading(false);

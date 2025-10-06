@@ -264,7 +264,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     useState<Alert | null>(null);
 
   const pushNavigationState = () => {
-// // // // // // // console.log('📚 Pushing navigation state, current view:', currentView);
+    // console.log('📚 Pushing navigation state, current view:', currentView);
     setNavigationStack(prev => {
       const newStack = [
         ...prev,
@@ -285,27 +285,27 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
           selectedAlertForWorkflow: selectedAlertForWorkflow,
         },
       ];
-// // // // // // // console.log(
-        '📚 Navigation stack after push:',
-        newStack.map(s => s.view)
-      );
+      // console.log(
+      //   '📚 Navigation stack after push:',
+      //   newStack.map(s => s.view)
+      // );
       return newStack;
     });
   };
 
   const popNavigationState = () => {
-// // // // // // // console.log(
-      '📚 Popping navigation state, current stack:',
-      navigationStack.map(s => s.view)
-    );
+    // console.log(
+    //   '📚 Popping navigation state, current stack:',
+    //   navigationStack.map(s => s.view)
+    // );
     if (navigationStack.length === 0) {
-// // // // // // // console.log('📚 Navigation stack is empty, going to dashboard');
+      // console.log('📚 Navigation stack is empty, going to dashboard');
       handleViewChange('dashboard');
       return;
     }
 
     const previousState = navigationStack[navigationStack.length - 1];
-// // // // // // // console.log('📚 Restoring previous state:', previousState.view);
+    // console.log('📚 Restoring previous state:', previousState.view);
     setNavigationStack(prev => prev.slice(0, -1));
 
     setCurrentView(previousState.view);
@@ -543,11 +543,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const navigateToCreateMaintenance = (data?: MaintenanceCreationData) => {
-// // // // // // // console.log('🚀 navigateToCreateMaintenance called with:', data);
+    // console.log('🚀 navigateToCreateMaintenance called with:', data);
     pushNavigationState();
     setMaintenanceCreationData(data);
     setCurrentView('create-maintenance');
-// // // // // // // console.log('✅ Navigation state updated to create-maintenance');
+    // console.log('✅ Navigation state updated to create-maintenance');
   };
 
   const handleBackFromCreateMaintenance = () => {
@@ -662,11 +662,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const navigateToCheckInOut = (data: CheckInOutData) => {
-// // // // // // // console.log('🚀 navigateToCheckInOut called with:', data);
+    // console.log('🚀 navigateToCheckInOut called with:', data);
     pushNavigationState();
     setCheckInOutData(data);
     setCurrentView('check-in-out');
-// // // // // // // console.log('✅ Navigation state updated to check-in-out');
+    // console.log('✅ Navigation state updated to check-in-out');
   };
 
   const handleBackFromCheckInOut = () => {
