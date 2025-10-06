@@ -127,11 +127,11 @@ class TestAssetsAPI:
         assert all(asset["status"] == "active" for asset in data)
         
         # Filter by site
-        response = client.get(f"/api/v1/assets?site_id={sample_asset_data['site_id']}")
+        response = client.get(f"/api/v1/assets?site_id={sample_asset_data['current_site_id']}")
         assert response.status_code == 200
         data = response.json()
         assert len(data) >= 2
-        assert all(asset["site_id"] == sample_asset_data["site_id"] for asset in data)
+        assert all(asset["current_site_id"] == sample_asset_data["current_site_id"] for asset in data)
     
     def test_asset_pagination(self, client, sample_asset_data):
         """Test pagination of assets"""

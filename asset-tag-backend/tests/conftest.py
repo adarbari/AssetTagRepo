@@ -123,7 +123,7 @@ def sample_asset_data():
         "serial_number": "EXC-001",
         "asset_type": "excavator",
         "status": "active",
-        "site_id": "550e8400-e29b-41d4-a716-446655440001",
+        "current_site_id": "550e8400-e29b-41d4-a716-446655440001",
         "assigned_to_user_id": "550e8400-e29b-41d4-a716-446655440002",
         "battery_level": 85,
         "last_seen": "2024-01-01T12:00:00Z",

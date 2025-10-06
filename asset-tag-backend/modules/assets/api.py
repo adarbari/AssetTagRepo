@@ -54,6 +54,8 @@ router = APIRouter()
 async def get_assets(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
+    page: Optional[int] = Query(None, ge=1),
+    size: Optional[int] = Query(None, ge=1, le=1000),
     asset_type: Optional[str] = None,
     status: Optional[str] = None,
     site_id: Optional[str] = None,
@@ -61,26 +63,148 @@ async def get_assets(
 ):
     """Get list of assets with optional filtering"""
     try:
-        query = select(Asset)
+        # Handle page/size parameters if provided
+        if page is not None and size is not None:
+            skip = (page - 1) * size
+            limit = size
         
-        # Apply filters
+        # Use raw SQL to avoid UUID serialization issues with SQLite
+        raw_query = """
+        SELECT id, organization_id, name, serial_number, asset_type, status, current_site_id, 
+               location_description, last_seen, battery_level, temperature, movement_status, 
+               assigned_to_user_id, assigned_job_id, assignment_start_date, assignment_end_date, 
+               manufacturer, model, purchase_date, warranty_expiry, last_maintenance, 
+               next_maintenance, hourly_rate, availability, asset_metadata, created_at, updated_at
+        FROM assets
+        WHERE deleted_at IS NULL
+        """
+        
+        # Add WHERE clauses for filters
+        where_conditions = ["deleted_at IS NULL"]  # Always filter out soft-deleted assets
+        params = {}
+        
         if asset_type:
-            query = query.where(Asset.asset_type == asset_type)
+            where_conditions.append("asset_type = :asset_type")
+            params["asset_type"] = asset_type
         if status:
-            query = query.where(Asset.status == status)
+            where_conditions.append("status = :status")
+            params["status"] = status
         if site_id:
-            query = query.where(Asset.current_site_id == site_id)
+            where_conditions.append("current_site_id = :site_id")
+            params["site_id"] = site_id
         
-        # Apply pagination
-        query = query.offset(skip).limit(limit)
+        raw_query += " AND " + " AND ".join(where_conditions[1:]) if len(where_conditions) > 1 else ""
         
-        result = await db.execute(query)
-        assets = result.scalars().all()
+        # Add pagination
+        raw_query += f" LIMIT {limit} OFFSET {skip}"
         
-        return [AssetResponse.from_orm(asset) for asset in assets]
+        result = await db.execute(text(raw_query), params)
+        rows = result.fetchall()
+        
+        # Convert rows to Asset objects manually
+        assets = []
+        for row in rows:
+            asset = Asset()
+            asset.id = row[0]
+            asset.organization_id = row[1]
+            asset.name = row[2]
+            asset.serial_number = row[3]
+            asset.asset_type = row[4]
+            asset.status = row[5]
+            asset.current_site_id = row[6]
+            asset.location_description = row[7]
+            asset.last_seen = row[8]
+            asset.battery_level = row[9]
+            asset.temperature = row[10]
+            asset.movement_status = row[11]
+            asset.assigned_to_user_id = row[12]
+            asset.assigned_job_id = row[13]
+            asset.assignment_start_date = row[14]
+            asset.assignment_end_date = row[15]
+            asset.manufacturer = row[16]
+            asset.model = row[17]
+            asset.purchase_date = row[18]
+            asset.warranty_expiry = row[19]
+            asset.last_maintenance = row[20]
+            asset.next_maintenance = row[21]
+            asset.hourly_rate = row[22]
+            asset.availability = row[23]
+            asset.asset_metadata = row[24]
+            asset.created_at = row[25]
+            asset.updated_at = row[26]
+            assets.append(asset)
+        
+        return [asset_to_response(asset) for asset in assets]
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching assets: {str(e)}")
+
+
+@router.get("/assets/search", response_model=List[AssetResponse])
+async def search_assets(
+    q: str = Query(..., min_length=1, description="Search query"),
+    limit: int = Query(50, ge=1, le=100),
+    db: AsyncSession = Depends(get_db)
+):
+    """Search assets by name or serial number"""
+    try:
+        # Use raw SQL to avoid UUID serialization issues with SQLite
+        raw_query = """
+        SELECT id, organization_id, name, serial_number, asset_type, status, current_site_id, 
+               location_description, last_seen, battery_level, temperature, movement_status, 
+               assigned_to_user_id, assigned_job_id, assignment_start_date, assignment_end_date, 
+               manufacturer, model, purchase_date, warranty_expiry, last_maintenance, 
+               next_maintenance, hourly_rate, availability, asset_metadata, created_at, updated_at
+        FROM assets
+        WHERE deleted_at IS NULL
+        AND (name LIKE :search_query OR serial_number LIKE :search_query)
+        LIMIT :limit
+        """
+        
+        search_query = f"%{q}%"
+        result = await db.execute(text(raw_query), {
+            "search_query": search_query,
+            "limit": limit
+        })
+        rows = result.fetchall()
+        
+        # Convert rows to Asset objects manually
+        assets = []
+        for row in rows:
+            asset = Asset()
+            asset.id = row[0]
+            asset.organization_id = row[1]
+            asset.name = row[2]
+            asset.serial_number = row[3]
+            asset.asset_type = row[4]
+            asset.status = row[5]
+            asset.current_site_id = row[6]
+            asset.location_description = row[7]
+            asset.last_seen = row[8]
+            asset.battery_level = row[9]
+            asset.temperature = row[10]
+            asset.movement_status = row[11]
+            asset.assigned_to_user_id = row[12]
+            asset.assigned_job_id = row[13]
+            asset.assignment_start_date = row[14]
+            asset.assignment_end_date = row[15]
+            asset.manufacturer = row[16]
+            asset.model = row[17]
+            asset.purchase_date = row[18]
+            asset.warranty_expiry = row[19]
+            asset.last_maintenance = row[20]
+            asset.next_maintenance = row[21]
+            asset.hourly_rate = row[22]
+            asset.availability = row[23]
+            asset.asset_metadata = row[24]
+            asset.created_at = row[25]
+            asset.updated_at = row[26]
+            assets.append(asset)
+        
+        return [asset_to_response(asset) for asset in assets]
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error searching assets: {str(e)}")
 
 
 @router.get("/assets/{asset_id}", response_model=AssetResponse)
@@ -90,13 +214,56 @@ async def get_asset(
 ):
     """Get asset by ID"""
     try:
-        result = await db.execute(select(Asset).where(Asset.id == asset_id))
-        asset = result.scalar_one_or_none()
+        # Use raw SQL to avoid UUID serialization issues with SQLite
+        # Handle both UUID formats (with and without hyphens)
+        raw_query = """
+        SELECT id, organization_id, name, serial_number, asset_type, status, current_site_id, 
+               location_description, last_seen, battery_level, temperature, movement_status, 
+               assigned_to_user_id, assigned_job_id, assignment_start_date, assignment_end_date, 
+               manufacturer, model, purchase_date, warranty_expiry, last_maintenance, 
+               next_maintenance, hourly_rate, availability, asset_metadata, created_at, updated_at
+        FROM assets
+        WHERE (id = :asset_id OR REPLACE(id, '-', '') = REPLACE(:asset_id, '-', ''))
+        AND deleted_at IS NULL
+        """
         
-        if not asset:
+        result = await db.execute(text(raw_query), {"asset_id": asset_id})
+        row = result.fetchone()
+        
+        if not row:
             raise HTTPException(status_code=404, detail="Asset not found")
         
-        return AssetResponse.from_orm(asset)
+        # Convert row to Asset object manually
+        asset = Asset()
+        asset.id = row[0]
+        asset.organization_id = row[1]
+        asset.name = row[2]
+        asset.serial_number = row[3]
+        asset.asset_type = row[4]
+        asset.status = row[5]
+        asset.current_site_id = row[6]
+        asset.location_description = row[7]
+        asset.last_seen = row[8]
+        asset.battery_level = row[9]
+        asset.temperature = row[10]
+        asset.movement_status = row[11]
+        asset.assigned_to_user_id = row[12]
+        asset.assigned_job_id = row[13]
+        asset.assignment_start_date = row[14]
+        asset.assignment_end_date = row[15]
+        asset.manufacturer = row[16]
+        asset.model = row[17]
+        asset.purchase_date = row[18]
+        asset.warranty_expiry = row[19]
+        asset.last_maintenance = row[20]
+        asset.next_maintenance = row[21]
+        asset.hourly_rate = row[22]
+        asset.availability = row[23]
+        asset.asset_metadata = row[24]
+        asset.created_at = row[25]
+        asset.updated_at = row[26]
+        
+        return asset_to_response(asset)
         
     except HTTPException:
         raise
@@ -125,6 +292,7 @@ async def create_asset(
             serial_number=asset_data.serial_number,
             asset_type=asset_data.asset_type,
             status=asset_data.status or "active",
+            current_site_id=uuid.UUID(asset_data.current_site_id) if asset_data.current_site_id else None,
             location_description=asset_data.location_description,
             battery_level=asset_data.battery_level,
             temperature=asset_data.temperature,
@@ -158,22 +326,135 @@ async def update_asset(
 ):
     """Update an existing asset"""
     try:
-        # Get existing asset
-        result = await db.execute(select(Asset).where(Asset.id == asset_id))
-        asset = result.scalar_one_or_none()
+        # Use raw SQL to update the asset
+        update_data = asset_data.model_dump(exclude_unset=True)
         
-        if not asset:
+        if not update_data:
+            # No fields to update, just return the existing asset
+            raw_query = """
+            SELECT id, organization_id, name, serial_number, asset_type, status, current_site_id, 
+                   location_description, last_seen, battery_level, temperature, movement_status, 
+                   assigned_to_user_id, assigned_job_id, assignment_start_date, assignment_end_date, 
+                   manufacturer, model, purchase_date, warranty_expiry, last_maintenance, 
+                   next_maintenance, hourly_rate, availability, asset_metadata, created_at, updated_at
+            FROM assets
+            WHERE id = :asset_id OR REPLACE(id, '-', '') = REPLACE(:asset_id, '-', '')
+            """
+            
+            result = await db.execute(text(raw_query), {"asset_id": asset_id})
+            row = result.fetchone()
+            
+            if not row:
+                raise HTTPException(status_code=404, detail="Asset not found")
+            
+            # Convert row to Asset object manually
+            asset = Asset()
+            asset.id = row[0]
+            asset.organization_id = row[1]
+            asset.name = row[2]
+            asset.serial_number = row[3]
+            asset.asset_type = row[4]
+            asset.status = row[5]
+            asset.current_site_id = row[6]
+            asset.location_description = row[7]
+            asset.last_seen = row[8]
+            asset.battery_level = row[9]
+            asset.temperature = row[10]
+            asset.movement_status = row[11]
+            asset.assigned_to_user_id = row[12]
+            asset.assigned_job_id = row[13]
+            asset.assignment_start_date = row[14]
+            asset.assignment_end_date = row[15]
+            asset.manufacturer = row[16]
+            asset.model = row[17]
+            asset.purchase_date = row[18]
+            asset.warranty_expiry = row[19]
+            asset.last_maintenance = row[20]
+            asset.next_maintenance = row[21]
+            asset.hourly_rate = row[22]
+            asset.availability = row[23]
+            asset.asset_metadata = row[24]
+            asset.created_at = row[25]
+            asset.updated_at = row[26]
+            
+            return asset_to_response(asset)
+        
+        # Build dynamic UPDATE query
+        set_clauses = []
+        params = {"asset_id": asset_id}
+        
+        for field, value in update_data.items():
+            if field == "asset_metadata" and isinstance(value, dict):
+                set_clauses.append(f"{field} = :{field}")
+                params[field] = json.dumps(value)
+            else:
+                set_clauses.append(f"{field} = :{field}")
+                params[field] = value
+        
+        set_clauses.append("updated_at = :updated_at")
+        params["updated_at"] = datetime.now()
+        
+        update_query = f"""
+        UPDATE assets 
+        SET {', '.join(set_clauses)}
+        WHERE id = :asset_id OR REPLACE(id, '-', '') = REPLACE(:asset_id, '-', '')
+        """
+        
+        result = await db.execute(text(update_query), params)
+        
+        if result.rowcount == 0:
             raise HTTPException(status_code=404, detail="Asset not found")
         
-        # Update fields
-        update_data = asset_data.dict(exclude_unset=True)
-        for field, value in update_data.items():
-            setattr(asset, field, value)
-        
         await db.commit()
-        await db.refresh(asset)
         
-        return AssetResponse.from_orm(asset)
+        # Fetch the updated asset using raw SQL
+        fetch_query = """
+        SELECT id, organization_id, name, serial_number, asset_type, status, current_site_id, 
+               location_description, last_seen, battery_level, temperature, movement_status, 
+               assigned_to_user_id, assigned_job_id, assignment_start_date, assignment_end_date, 
+               manufacturer, model, purchase_date, warranty_expiry, last_maintenance, 
+               next_maintenance, hourly_rate, availability, asset_metadata, created_at, updated_at
+        FROM assets
+        WHERE id = :asset_id OR REPLACE(id, '-', '') = REPLACE(:asset_id, '-', '')
+        """
+        
+        fetch_result = await db.execute(text(fetch_query), {"asset_id": asset_id})
+        row = fetch_result.fetchone()
+        
+        if not row:
+            raise HTTPException(status_code=404, detail="Asset not found")
+        
+        # Convert row to Asset object manually
+        asset = Asset()
+        asset.id = row[0]
+        asset.organization_id = row[1]
+        asset.name = row[2]
+        asset.serial_number = row[3]
+        asset.asset_type = row[4]
+        asset.status = row[5]
+        asset.current_site_id = row[6]
+        asset.location_description = row[7]
+        asset.last_seen = row[8]
+        asset.battery_level = row[9]
+        asset.temperature = row[10]
+        asset.movement_status = row[11]
+        asset.assigned_to_user_id = row[12]
+        asset.assigned_job_id = row[13]
+        asset.assignment_start_date = row[14]
+        asset.assignment_end_date = row[15]
+        asset.manufacturer = row[16]
+        asset.model = row[17]
+        asset.purchase_date = row[18]
+        asset.warranty_expiry = row[19]
+        asset.last_maintenance = row[20]
+        asset.next_maintenance = row[21]
+        asset.hourly_rate = row[22]
+        asset.availability = row[23]
+        asset.asset_metadata = row[24]
+        asset.created_at = row[25]
+        asset.updated_at = row[26]
+        
+        return asset_to_response(asset)
         
     except HTTPException:
         raise
@@ -189,15 +470,24 @@ async def delete_asset(
 ):
     """Delete an asset (soft delete)"""
     try:
-        # Get existing asset
-        result = await db.execute(select(Asset).where(Asset.id == asset_id))
-        asset = result.scalar_one_or_none()
+        # Use raw SQL to soft delete the asset
+        update_query = """
+        UPDATE assets 
+        SET deleted_at = :deleted_at,
+            updated_at = :updated_at
+        WHERE id = :asset_id OR REPLACE(id, '-', '') = REPLACE(:asset_id, '-', '')
+        """
         
-        if not asset:
+        now = datetime.now()
+        result = await db.execute(text(update_query), {
+            "asset_id": asset_id,
+            "deleted_at": now,
+            "updated_at": now
+        })
+        
+        if result.rowcount == 0:
             raise HTTPException(status_code=404, detail="Asset not found")
         
-        # Soft delete
-        asset.deleted_at = datetime.now()
         await db.commit()
         
         return {"message": "Asset deleted successfully"}
@@ -299,29 +589,6 @@ async def get_asset_location_history(
         raise HTTPException(status_code=500, detail=f"Error fetching location history: {str(e)}")
 
 
-@router.get("/assets/search", response_model=List[AssetResponse])
-async def search_assets(
-    q: str = Query(..., min_length=1, description="Search query"),
-    limit: int = Query(50, ge=1, le=100),
-    db: AsyncSession = Depends(get_db)
-):
-    """Search assets by name or serial number"""
-    try:
-        # Search by name or serial number
-        query = select(Asset).where(
-            (Asset.name.ilike(f"%{q}%")) | 
-            (Asset.serial_number.ilike(f"%{q}%"))
-        ).limit(limit)
-        
-        result = await db.execute(query)
-        assets = result.scalars().all()
-        
-        return [AssetResponse.from_orm(asset) for asset in assets]
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error searching assets: {str(e)}")
-
-
 @router.get("/assets/{asset_id}/battery-history")
 async def get_asset_battery_history(
     asset_id: str,
@@ -330,20 +597,30 @@ async def get_asset_battery_history(
 ):
     """Get battery level history for an asset"""
     try:
-        # For now, return a simple history based on the asset's current battery level
-        # In a real implementation, this would query a battery_history table
-        result = await db.execute(select(Asset).where(Asset.id == asset_id))
-        asset = result.scalar_one_or_none()
+        # Use raw SQL to avoid UUID serialization issues with SQLite
+        raw_query = """
+        SELECT id, battery_level, updated_at
+        FROM assets
+        WHERE (id = :asset_id OR REPLACE(id, '-', '') = REPLACE(:asset_id, '-', ''))
+        AND deleted_at IS NULL
+        """
         
-        if not asset:
+        result = await db.execute(text(raw_query), {"asset_id": asset_id})
+        row = result.fetchone()
+        
+        if not row:
             raise HTTPException(status_code=404, detail="Asset not found")
+        
+        asset_id_db = row[0]
+        battery_level = row[1]
+        updated_at = row[2]
         
         # Mock battery history data
         battery_history = []
-        if asset.battery_level is not None:
+        if battery_level is not None:
             battery_history.append({
-                "battery_level": asset.battery_level,
-                "timestamp": asset.updated_at.isoformat(),
+                "battery_level": battery_level,
+                "timestamp": updated_at.isoformat() if hasattr(updated_at, 'isoformat') else str(updated_at),
                 "source": "current_reading"
             })
         

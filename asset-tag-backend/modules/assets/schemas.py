@@ -12,6 +12,7 @@ class AssetBase(BaseModel):
     serial_number: str = Field(..., min_length=1, max_length=100)
     asset_type: str = Field(..., min_length=1, max_length=100)
     status: Optional[str] = Field("active", max_length=50)
+    current_site_id: Optional[str] = Field(None, max_length=100)
     location_description: Optional[str] = Field(None, max_length=500)
     battery_level: Optional[int] = Field(None, ge=0, le=100)
     temperature: Optional[float] = Field(None, ge=-50, le=100)
