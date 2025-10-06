@@ -30,11 +30,7 @@ class StreamProcessorCoordinator:
     """Coordinates all streaming processors"""
 
     def __init__(self):
-        self.processors = {
-            "location": get_location_processor(),
-            "anomaly": get_anomaly_processor(),
-            "geofence": get_geofence_processor(),
-        }
+        self.processors = {}
         self.running = False
         self.startup_tasks = []
 
@@ -46,6 +42,13 @@ class StreamProcessorCoordinator:
 
         try:
             logger.info("Starting all stream processors...")
+
+            # Initialize processors
+            self.processors = {
+                "location": await get_location_processor(),
+                "anomaly": await get_anomaly_processor(),
+                "geofence": await get_geofence_processor(),
+            }
 
             # Start processors in parallel
             self.startup_tasks = [
