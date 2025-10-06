@@ -16,7 +16,7 @@ class TestGeofenceModel:
 
     @pytest.mark.asyncio
     async def test_create_geofence(
-        self, db_session: AsyncSession, sample_geofence_data
+        self, db_session, sample_geofence_data
     ):
         """Test creating a geofence"""
         geofence = Geofence(organization_id="test-org-1", **sample_geofence_data)
@@ -33,7 +33,7 @@ class TestGeofenceModel:
 
     @pytest.mark.asyncio
     async def test_geofence_soft_delete(
-        self, db_session: AsyncSession, sample_geofence_data
+        self, db_session, sample_geofence_data
     ):
         """Test soft delete functionality"""
         geofence = Geofence(organization_id="test-org-1", **sample_geofence_data)
@@ -49,7 +49,7 @@ class TestGeofenceModel:
         assert geofence.deleted_at is not None
 
     @pytest.mark.asyncio
-    async def test_geofence_geometry_validation(self, db_session: AsyncSession):
+    async def test_geofence_geometry_validation(self, db_session):
         """Test geofence geometry validation"""
         # Test with valid polygon geometry
         valid_geometry = {
@@ -101,20 +101,15 @@ class TestGeofenceSchemas:
         # Test valid data
         valid_data = {
             "name": "Test Geofence",
-            "geofence_type": "authorized",
+            "geofence_type": "polygon",
             "status": "active",
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [
-                    [
-                        [-74.0060, 40.7128],
-                        [-74.0050, 40.7128],
-                        [-74.0050, 40.7138],
-                        [-74.0060, 40.7138],
-                        [-74.0060, 40.7128],
-                    ]
-                ],
-            },
+            "coordinates": [
+                [-74.0060, 40.7128],
+                [-74.0050, 40.7128],
+                [-74.0050, 40.7138],
+                [-74.0060, 40.7138],
+                [-74.0060, 40.7128],
+            ],
         }
         geofence_create = GeofenceCreate(**valid_data)
         assert geofence_create.name == "Test Geofence"
@@ -129,25 +124,20 @@ class TestGeofenceSchemas:
 
     def test_geofence_type_validation(self):
         """Test geofence type validation"""
-        valid_types = ["authorized", "restricted", "unauthorized", "work_area"]
+        valid_types = ["circular", "polygon"]
 
         for geofence_type in valid_types:
             data = {
                 "name": "Test Geofence",
                 "geofence_type": geofence_type,
                 "status": "active",
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [-74.0060, 40.7128],
-                            [-74.0050, 40.7128],
-                            [-74.0050, 40.7138],
-                            [-74.0060, 40.7138],
-                            [-74.0060, 40.7128],
-                        ]
-                    ],
-                },
+                "coordinates": [
+                    [-74.0060, 40.7128],
+                    [-74.0050, 40.7128],
+                    [-74.0050, 40.7138],
+                    [-74.0060, 40.7138],
+                    [-74.0060, 40.7128],
+                ],
             }
             geofence = GeofenceCreate(**data)
             assert geofence.geofence_type == geofence_type

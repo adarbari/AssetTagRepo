@@ -14,7 +14,7 @@ class TestAssetModel:
     """Test Asset model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_asset(self, db_session: AsyncSession, sample_asset_data):
+    async def test_create_asset(self, db_session, sample_asset_data):
         """Test creating an asset"""
         asset = Asset(organization_id="test-org-1", **sample_asset_data)
 
@@ -29,7 +29,7 @@ class TestAssetModel:
         assert asset.battery_level == sample_asset_data["battery_level"]
 
     @pytest.mark.asyncio
-    async def test_asset_soft_delete(self, db_session: AsyncSession, sample_asset_data):
+    async def test_asset_soft_delete(self, db_session, sample_asset_data):
         """Test soft delete functionality"""
         asset = Asset(organization_id="test-org-1", **sample_asset_data)
 
@@ -44,7 +44,7 @@ class TestAssetModel:
         assert asset.deleted_at is not None
 
     @pytest.mark.asyncio
-    async def test_asset_metadata(self, db_session: AsyncSession, sample_asset_data):
+    async def test_asset_metadata(self, db_session, sample_asset_data):
         """Test asset metadata handling"""
         asset = Asset(organization_id="test-org-1", **sample_asset_data)
 
@@ -78,6 +78,7 @@ class TestAssetSchemas:
         # Test valid data
         valid_data = {
             "name": "Test Asset",
+            "serial_number": "TEST-001",
             "asset_type": "excavator",
             "status": "active",
         }
@@ -112,6 +113,7 @@ class TestAssetBusinessLogic:
         # Valid battery levels
         valid_data = {
             "name": "Test Asset",
+            "serial_number": "TEST-001",
             "asset_type": "excavator",
             "battery_level": 50,
         }
@@ -132,7 +134,7 @@ class TestAssetBusinessLogic:
         valid_statuses = ["active", "inactive", "maintenance", "retired"]
 
         for status in valid_statuses:
-            data = {"name": "Test Asset", "asset_type": "excavator", "status": status}
+            data = {"name": "Test Asset", "serial_number": "TEST-001", "asset_type": "excavator", "status": status}
             asset = AssetCreate(**data)
             assert asset.status == status
 
@@ -141,6 +143,6 @@ class TestAssetBusinessLogic:
         valid_types = ["excavator", "bulldozer", "crane", "truck", "generator"]
 
         for asset_type in valid_types:
-            data = {"name": "Test Asset", "asset_type": asset_type, "status": "active"}
+            data = {"name": "Test Asset", "serial_number": "TEST-001", "asset_type": asset_type, "status": "active"}
             asset = AssetCreate(**data)
             assert asset.asset_type == asset_type

@@ -29,6 +29,55 @@ test_engine = create_async_engine(
     connect_args={"check_same_thread": False},
 )
 
+# Monkey patch UUID type for SQLite compatibility
+from sqlalchemy.dialects.sqlite.base import SQLiteTypeCompiler
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.types import TypeDecorator, String
+import uuid
+
+class SQLiteUUID(TypeDecorator):
+    """UUID type for SQLite compatibility"""
+    impl = String
+    cache_ok = True
+
+    def process_bind_param(self, value, dialect):
+        if value is None:
+            return value
+        elif isinstance(value, uuid.UUID):
+            return str(value)
+        else:
+            return str(value)
+
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return value
+        else:
+            return uuid.UUID(value)
+
+def visit_UUID(self, type_, **kw):
+    return "TEXT"
+
+SQLiteTypeCompiler.visit_UUID = visit_UUID
+
+# Replace UUID type with SQLiteUUID for testing
+import sqlalchemy.dialects.postgresql
+sqlalchemy.dialects.postgresql.UUID = SQLiteUUID
+
+# Also patch the base model to use String instead of UUID for testing
+import modules.shared.database.base
+original_uuid_mixin = modules.shared.database.base.UUIDMixin
+
+class TestUUIDMixin:
+    """Test UUID mixin that uses String instead of UUID"""
+    from sqlalchemy import Column, String
+    import uuid
+    
+    @property
+    def id(cls):
+        return Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+
+modules.shared.database.base.UUIDMixin = TestUUIDMixin
+
 # Create test session factory
 TestSessionLocal = sessionmaker(
     test_engine, class_=AsyncSession, expire_on_commit=False
@@ -43,7 +92,7 @@ def event_loop() -> Generator:
     loop.close()
 
 
-@pytest.fixture(scope="function")
+@pytest_asyncio.fixture(scope="function")
 async def db_session() -> AsyncGenerator[AsyncSession, None]:
     """Create a test database session."""
     # Create tables
@@ -216,19 +265,15 @@ def sample_geofence_data():
     """Sample geofence data for testing."""
     return {
         "name": "Test Geofence",
-        "geofence_type": "authorized",
+        "geofence_type": "polygon",
         "status": "active",
-        "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-                [
-                    [-74.0060, 40.7128],
-                    [-74.0050, 40.7128],
-                    [-74.0050, 40.7138],
-                    [-74.0060, 40.7138],
-                    [-74.0060, 40.7128],
-                ]
-            ],
-        },
+        "coordinates": [
+            [-74.0060, 40.7128],
+            [-74.0050, 40.7128],
+            [-74.0050, 40.7138],
+            [-74.0060, 40.7138],
+            [-74.0060, 40.7128],
+        ],
         "site_id": "test-site-1",
+        "geofence_classification": "authorized",
     }

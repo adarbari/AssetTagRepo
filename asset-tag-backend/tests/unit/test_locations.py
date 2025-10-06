@@ -21,7 +21,7 @@ class TestLocationModel:
     """Test EstimatedLocation model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_location(self, db_session: AsyncSession):
+    async def test_create_location(self, db_session):
         """Test creating a location estimate"""
         location = EstimatedLocation(
             organization_id="test-org-1",
@@ -45,7 +45,7 @@ class TestLocationModel:
         assert len(location.gateway_ids) == 2
 
     @pytest.mark.asyncio
-    async def test_location_with_distance(self, db_session: AsyncSession):
+    async def test_location_with_distance(self, db_session):
         """Test location with distance calculation"""
         location = EstimatedLocation(
             organization_id="test-org-1",
