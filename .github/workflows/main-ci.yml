@@ -48,6 +48,10 @@ jobs:
   lint-gate:
     uses: ./.github/workflows/lint-gate.yml
     secrets: inherit
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
 
   # Backend Jobs
   backend-lint:
