@@ -14,6 +14,9 @@ from config.database import get_db, Base
 from main import app
 from config.settings import settings
 
+# Import all models to ensure they're registered with SQLAlchemy
+from modules.shared.database import models
+
 # Test database URL
 TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 
@@ -57,11 +60,19 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 @pytest.fixture(scope="function")
-def client(db_session: AsyncSession):
+def client():
     """Create a test client with database dependency override."""
     
+    # Create a new test session for this test
     async def override_get_db():
-        yield db_session
+        async with TestSessionLocal() as session:
+            try:
+                yield session
+            except Exception as e:
+                await session.rollback()
+                raise
+            finally:
+                await session.close()
     
     app.dependency_overrides[get_db] = override_get_db
     
@@ -144,6 +155,7 @@ def sample_alert_data():
         "alert_type": "battery_low",
         "severity": "warning",
         "asset_id": "test-asset-1",
+        "asset_name": "Test Asset",
         "message": "Battery level is low",
         "description": "Asset battery has dropped below 20%",
         "triggered_at": "2024-01-01T12:00:00Z"

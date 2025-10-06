@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update, delete
 from typing import List, Optional
+from datetime import datetime
 import uuid
 
 from config.database import get_db
@@ -261,3 +262,59 @@ async def get_asset_location_history(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching location history: {str(e)}")
+
+
+@router.get("/assets/search", response_model=List[AssetResponse])
+async def search_assets(
+    q: str = Query(..., min_length=1, description="Search query"),
+    limit: int = Query(50, ge=1, le=100),
+    db: AsyncSession = Depends(get_db)
+):
+    """Search assets by name or serial number"""
+    try:
+        # Search by name or serial number
+        query = select(Asset).where(
+            (Asset.name.ilike(f"%{q}%")) | 
+            (Asset.serial_number.ilike(f"%{q}%"))
+        ).limit(limit)
+        
+        result = await db.execute(query)
+        assets = result.scalars().all()
+        
+        return [AssetResponse.from_orm(asset) for asset in assets]
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error searching assets: {str(e)}")
+
+
+@router.get("/assets/{asset_id}/battery-history")
+async def get_asset_battery_history(
+    asset_id: str,
+    limit: int = Query(100, ge=1, le=1000),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get battery level history for an asset"""
+    try:
+        # For now, return a simple history based on the asset's current battery level
+        # In a real implementation, this would query a battery_history table
+        result = await db.execute(select(Asset).where(Asset.id == asset_id))
+        asset = result.scalar_one_or_none()
+        
+        if not asset:
+            raise HTTPException(status_code=404, detail="Asset not found")
+        
+        # Mock battery history data
+        battery_history = []
+        if asset.battery_level is not None:
+            battery_history.append({
+                "battery_level": asset.battery_level,
+                "timestamp": asset.updated_at.isoformat(),
+                "source": "current_reading"
+            })
+        
+        return battery_history
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching battery history: {str(e)}")

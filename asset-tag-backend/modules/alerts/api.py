@@ -121,7 +121,7 @@ async def create_alert(
             longitude=alert_data.longitude,
             geofence_id=alert_data.geofence_id,
             geofence_name=alert_data.geofence_name,
-            triggered_at=datetime.fromisoformat(alert_data.triggered_at),
+            triggered_at=datetime.fromisoformat(alert_data.triggered_at.replace('Z', '+00:00')),
             auto_resolvable=alert_data.auto_resolvable or False,
             metadata=alert_data.metadata or {}
         )
@@ -143,7 +143,7 @@ async def create_alert(
         raise HTTPException(status_code=500, detail=f"Error creating alert: {str(e)}")
 
 
-@router.put("/alerts/{alert_id}/acknowledge")
+@router.patch("/alerts/{alert_id}/acknowledge")
 async def acknowledge_alert(
     alert_id: str,
     db: AsyncSession = Depends(get_db)
@@ -168,7 +168,7 @@ async def acknowledge_alert(
             "alert": AlertResponse.from_orm(alert).dict()
         })
         
-        return {"message": "Alert acknowledged successfully", "alert": AlertResponse.from_orm(alert)}
+        return AlertResponse.from_orm(alert)
         
     except HTTPException:
         raise
@@ -177,7 +177,7 @@ async def acknowledge_alert(
         raise HTTPException(status_code=500, detail=f"Error acknowledging alert: {str(e)}")
 
 
-@router.put("/alerts/{alert_id}/resolve")
+@router.patch("/alerts/{alert_id}/resolve")
 async def resolve_alert(
     alert_id: str,
     resolution_notes: Optional[str] = None,
@@ -205,7 +205,7 @@ async def resolve_alert(
             "alert": AlertResponse.from_orm(alert).dict()
         })
         
-        return {"message": "Alert resolved successfully", "alert": AlertResponse.from_orm(alert)}
+        return AlertResponse.from_orm(alert)
         
     except HTTPException:
         raise
@@ -214,7 +214,7 @@ async def resolve_alert(
         raise HTTPException(status_code=500, detail=f"Error resolving alert: {str(e)}")
 
 
-@router.get("/alerts/stats/summary")
+@router.get("/alerts/statistics")
 async def get_alert_stats(
     db: AsyncSession = Depends(get_db)
 ):

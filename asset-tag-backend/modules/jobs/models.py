@@ -51,7 +51,6 @@ class Job(BaseModel, OrganizationMixin, SoftDeleteMixin):
     assigned_to_user = relationship("User", foreign_keys=[assigned_to_user_id])
     site = relationship("Site", foreign_keys=[site_id])
     assigned_assets = relationship("JobAsset", back_populates="job")
-    check_in_out_records = relationship("CheckInOutRecord", back_populates="job")
     
     # Indexes
     __table_args__ = (
@@ -98,36 +97,3 @@ class JobAsset(BaseModel, OrganizationMixin):
     )
 
 
-class CheckInOutRecord(BaseModel, OrganizationMixin):
-    """Check-in/Check-out record model"""
-    __tablename__ = "check_in_out_records"
-    
-    # Record identification
-    asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id"), nullable=False)
-    job_id = Column(UUID(as_uuid=True), ForeignKey("jobs.id"), nullable=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    
-    # Record details
-    record_type = Column(String(50), nullable=False)  # check-in, check-out
-    timestamp = Column(DateTime(timezone=True), nullable=False, index=True)
-    location_description = Column(String(500), nullable=True)
-    
-    # Location coordinates
-    latitude = Column(Numeric(10, 8), nullable=True)
-    longitude = Column(Numeric(11, 8), nullable=True)
-    
-    # Notes
-    notes = Column(Text, nullable=True)
-    
-    # Relationships
-    asset = relationship("Asset")
-    job = relationship("Job", back_populates="check_in_out_records")
-    user = relationship("User")
-    
-    # Indexes
-    __table_args__ = (
-        Index('idx_checkinout_asset_time', 'asset_id', 'timestamp'),
-        Index('idx_checkinout_job_time', 'job_id', 'timestamp'),
-        Index('idx_checkinout_user_time', 'user_id', 'timestamp'),
-        Index('idx_checkinout_type_time', 'record_type', 'timestamp'),
-    )
