@@ -5,6 +5,7 @@ Revises: 002_create_hypertables
 Create Date: 2025-01-27 11:00:00.000000
 
 """
+
 import sqlalchemy as sa
 from alembic import op
 

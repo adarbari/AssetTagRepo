@@ -5,6 +5,7 @@ Revises: 003_create_analytics_views
 Create Date: 2025-01-27 11:00:00.000000
 
 """
+
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql

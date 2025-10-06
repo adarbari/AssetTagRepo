@@ -1,6 +1,7 @@
 """
 Vehicle models
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

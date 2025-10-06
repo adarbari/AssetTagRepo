@@ -1,6 +1,7 @@
 """
 Test cases for Sites API
 """
+
 import pytest
 from fastapi.testclient import TestClient
 

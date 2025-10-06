@@ -1,6 +1,7 @@
 """
 Maintenance models
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

@@ -1,6 +1,7 @@
 """
 Enhanced anomaly detection processor
 """
+
 import asyncio
 import logging
 from collections import defaultdict, deque

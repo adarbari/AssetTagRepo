@@ -1,28 +1,28 @@
 /**
  * Issue Type Definitions
- * 
+ *
  * Defines the structure for asset issues/problems reported by users
  */
 
-export type IssueType = 
-  | "mechanical"
-  | "electrical"
-  | "battery"
-  | "connectivity"
-  | "damage"
-  | "tracking"
-  | "software"
-  | "other";
+export type IssueType =
+  | 'mechanical'
+  | 'electrical'
+  | 'battery'
+  | 'connectivity'
+  | 'damage'
+  | 'tracking'
+  | 'software'
+  | 'other';
 
-export type IssueSeverity = "low" | "medium" | "high" | "critical";
+export type IssueSeverity = 'low' | 'medium' | 'high' | 'critical';
 
-export type IssueStatus = 
-  | "open"
-  | "acknowledged"
-  | "in-progress"
-  | "resolved"
-  | "closed"
-  | "cancelled";
+export type IssueStatus =
+  | 'open'
+  | 'acknowledged'
+  | 'in-progress'
+  | 'resolved'
+  | 'closed'
+  | 'cancelled';
 
 export interface Issue {
   id: string;

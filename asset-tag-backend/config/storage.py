@@ -1,6 +1,7 @@
 """
 Storage configuration for S3/MinIO
 """
+
 import io
 import logging
 from typing import BinaryIO, Optional

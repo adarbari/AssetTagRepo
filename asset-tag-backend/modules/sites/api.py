@@ -1,6 +1,7 @@
 """
 Site API endpoints
 """
+
 import uuid
 from datetime import datetime
 from typing import List, Optional
@@ -299,12 +300,14 @@ async def get_site_assets(
                 "last_seen": asset.last_seen,
                 "manufacturer": asset.manufacturer,
                 "model": asset.model,
-                "assigned_to_user_id": str(asset.assigned_to_user_id)
-                if asset.assigned_to_user_id
-                else None,
-                "assigned_job_id": str(asset.assigned_job_id)
-                if asset.assigned_job_id
-                else None,
+                "assigned_to_user_id": (
+                    str(asset.assigned_to_user_id)
+                    if asset.assigned_to_user_id
+                    else None
+                ),
+                "assigned_job_id": (
+                    str(asset.assigned_job_id) if asset.assigned_job_id else None
+                ),
             }
             for asset in assets
         ]
@@ -348,9 +351,9 @@ async def get_site_personnel(
                 "status": person.status,
                 "email": person.email,
                 "phone": person.phone,
-                "current_site_id": str(person.current_site_id)
-                if person.current_site_id
-                else None,
+                "current_site_id": (
+                    str(person.current_site_id) if person.current_site_id else None
+                ),
                 "created_at": person.created_at.isoformat(),
                 "updated_at": person.updated_at.isoformat(),
             }

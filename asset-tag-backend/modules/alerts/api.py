@@ -1,6 +1,7 @@
 """
 Alert API endpoints
 """
+
 import json
 import uuid
 from datetime import datetime
@@ -25,18 +26,24 @@ from modules.alerts.schemas import AlertCreate, AlertResponse, AlertUpdate
 def alert_to_response(alert: Alert) -> AlertResponse:
     """Convert Alert SQLAlchemy model to AlertResponse manually to avoid serialization issues"""
     return AlertResponse(
-        id=str(alert.id)
-        if "-" in str(alert.id)
-        else f"{str(alert.id)[:8]}-{str(alert.id)[8:12]}-{str(alert.id)[12:16]}-{str(alert.id)[16:20]}-{str(alert.id)[20:]}",
-        organization_id=str(alert.organization_id)
-        if "-" in str(alert.organization_id)
-        else f"{str(alert.organization_id)[:8]}-{str(alert.organization_id)[8:12]}-{str(alert.organization_id)[12:16]}-{str(alert.organization_id)[16:20]}-{str(alert.organization_id)[20:]}",
+        id=(
+            str(alert.id)
+            if "-" in str(alert.id)
+            else f"{str(alert.id)[:8]}-{str(alert.id)[8:12]}-{str(alert.id)[12:16]}-{str(alert.id)[16:20]}-{str(alert.id)[20:]}"
+        ),
+        organization_id=(
+            str(alert.organization_id)
+            if "-" in str(alert.organization_id)
+            else f"{str(alert.organization_id)[:8]}-{str(alert.organization_id)[8:12]}-{str(alert.organization_id)[12:16]}-{str(alert.organization_id)[16:20]}-{str(alert.organization_id)[20:]}"
+        ),
         alert_type=alert.alert_type,
         severity=alert.severity,
         status=alert.status,
-        asset_id=str(alert.asset_id)
-        if "-" in str(alert.asset_id)
-        else f"{str(alert.asset_id)[:8]}-{str(alert.asset_id)[8:12]}-{str(alert.asset_id)[12:16]}-{str(alert.asset_id)[16:20]}-{str(alert.asset_id)[20:]}",
+        asset_id=(
+            str(alert.asset_id)
+            if "-" in str(alert.asset_id)
+            else f"{str(alert.asset_id)[:8]}-{str(alert.asset_id)[8:12]}-{str(alert.asset_id)[12:16]}-{str(alert.asset_id)[16:20]}-{str(alert.asset_id)[20:]}"
+        ),
         asset_name=alert.asset_name,
         message=alert.message,
         description=alert.description,
@@ -45,43 +52,59 @@ def alert_to_response(alert: Alert) -> AlertResponse:
         location_description=alert.location_description,
         latitude=alert.latitude,
         longitude=alert.longitude,
-        geofence_id=str(alert.geofence_id)
-        if alert.geofence_id and "-" in str(alert.geofence_id)
-        else (
-            f"{str(alert.geofence_id)[:8]}-{str(alert.geofence_id)[8:12]}-{str(alert.geofence_id)[12:16]}-{str(alert.geofence_id)[16:20]}-{str(alert.geofence_id)[20:]}"
-            if alert.geofence_id
-            else None
+        geofence_id=(
+            str(alert.geofence_id)
+            if alert.geofence_id and "-" in str(alert.geofence_id)
+            else (
+                f"{str(alert.geofence_id)[:8]}-{str(alert.geofence_id)[8:12]}-{str(alert.geofence_id)[12:16]}-{str(alert.geofence_id)[16:20]}-{str(alert.geofence_id)[20:]}"
+                if alert.geofence_id
+                else None
+            )
         ),
         geofence_name=alert.geofence_name,
-        triggered_at=alert.triggered_at.isoformat()
-        if hasattr(alert.triggered_at, "isoformat")
-        else str(alert.triggered_at),
+        triggered_at=(
+            alert.triggered_at.isoformat()
+            if hasattr(alert.triggered_at, "isoformat")
+            else str(alert.triggered_at)
+        ),
         auto_resolvable=alert.auto_resolvable,
-        metadata=json.loads(alert.alert_metadata)
-        if isinstance(alert.alert_metadata, str)
-        else (alert.alert_metadata or {}),
-        acknowledged_at=alert.acknowledged_at.isoformat()
-        if alert.acknowledged_at and hasattr(alert.acknowledged_at, "isoformat")
-        else alert.acknowledged_at,
-        resolved_at=alert.resolved_at.isoformat()
-        if alert.resolved_at and hasattr(alert.resolved_at, "isoformat")
-        else alert.resolved_at,
+        metadata=(
+            json.loads(alert.alert_metadata)
+            if isinstance(alert.alert_metadata, str)
+            else (alert.alert_metadata or {})
+        ),
+        acknowledged_at=(
+            alert.acknowledged_at.isoformat()
+            if alert.acknowledged_at and hasattr(alert.acknowledged_at, "isoformat")
+            else alert.acknowledged_at
+        ),
+        resolved_at=(
+            alert.resolved_at.isoformat()
+            if alert.resolved_at and hasattr(alert.resolved_at, "isoformat")
+            else alert.resolved_at
+        ),
         resolution_notes=alert.resolution_notes,
-        resolved_by_user_id=str(alert.resolved_by_user_id)
-        if alert.resolved_by_user_id and "-" in str(alert.resolved_by_user_id)
-        else (
-            f"{str(alert.resolved_by_user_id)[:8]}-{str(alert.resolved_by_user_id)[8:12]}-{str(alert.resolved_by_user_id)[12:16]}-{str(alert.resolved_by_user_id)[16:20]}-{str(alert.resolved_by_user_id)[20:]}"
-            if alert.resolved_by_user_id
-            else None
+        resolved_by_user_id=(
+            str(alert.resolved_by_user_id)
+            if alert.resolved_by_user_id and "-" in str(alert.resolved_by_user_id)
+            else (
+                f"{str(alert.resolved_by_user_id)[:8]}-{str(alert.resolved_by_user_id)[8:12]}-{str(alert.resolved_by_user_id)[12:16]}-{str(alert.resolved_by_user_id)[16:20]}-{str(alert.resolved_by_user_id)[20:]}"
+                if alert.resolved_by_user_id
+                else None
+            )
         ),
         auto_resolved=alert.auto_resolved,
         workflow_actions=alert.workflow_actions,
-        created_at=alert.created_at.isoformat()
-        if hasattr(alert.created_at, "isoformat")
-        else str(alert.created_at),
-        updated_at=alert.updated_at.isoformat()
-        if hasattr(alert.updated_at, "isoformat")
-        else str(alert.updated_at),
+        created_at=(
+            alert.created_at.isoformat()
+            if hasattr(alert.created_at, "isoformat")
+            else str(alert.created_at)
+        ),
+        updated_at=(
+            alert.updated_at.isoformat()
+            if hasattr(alert.updated_at, "isoformat")
+            else str(alert.updated_at)
+        ),
     )
 
 
@@ -360,9 +383,9 @@ async def create_alert(alert_data: AlertCreate, db: AsyncSession = Depends(get_d
             location_description=alert_data.location_description,
             latitude=alert_data.latitude,
             longitude=alert_data.longitude,
-            geofence_id=uuid.UUID(alert_data.geofence_id)
-            if alert_data.geofence_id
-            else None,
+            geofence_id=(
+                uuid.UUID(alert_data.geofence_id) if alert_data.geofence_id else None
+            ),
             geofence_name=alert_data.geofence_name,
             triggered_at=triggered_at,
             auto_resolvable=alert_data.auto_resolvable or False,

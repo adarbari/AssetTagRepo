@@ -1,10 +1,10 @@
 /**
  * Dropdown Configuration Service
- * 
+ *
  * This service provides a centralized way to access dropdown options
  * throughout the application. It's designed to be easily switched to
  * backend API calls when ready.
- * 
+ *
  * Usage:
  * import { dropdownConfigService } from '../services/dropdownConfigService';
  * const assetTypes = await dropdownConfigService.getAssetTypes();
@@ -198,13 +198,13 @@ export class DropdownConfigService {
     const methodMap: Record<string, () => Promise<DropdownOption[]>> = {
       'asset-types': this.getAssetTypes.bind(this),
       'asset-statuses': this.getAssetStatuses.bind(this),
-      'personnel': this.getPersonnel.bind(this),
-      'technicians': this.getTechnicians.bind(this),
-      'drivers': this.getDrivers.bind(this),
+      personnel: this.getPersonnel.bind(this),
+      technicians: this.getTechnicians.bind(this),
+      drivers: this.getDrivers.bind(this),
       'project-managers': this.getProjectManagers.bind(this),
-      'clients': this.getClients.bind(this),
-      'projects': this.getProjects.bind(this),
-      'manufacturers': this.getManufacturers.bind(this),
+      clients: this.getClients.bind(this),
+      projects: this.getProjects.bind(this),
+      manufacturers: this.getManufacturers.bind(this),
       'alert-types': this.getAlertTypes.bind(this),
       'alert-severities': this.getAlertSeverities.bind(this),
       'site-types': this.getSiteTypes.bind(this),

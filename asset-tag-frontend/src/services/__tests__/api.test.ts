@@ -1,20 +1,27 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import * as apiModule from '../api'
-const { apiClient, ApiError, shouldUseMockData, setAuthToken, clearAuthToken, getApiConfig } = apiModule
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import * as apiModule from '../api';
+const {
+  apiClient,
+  ApiError,
+  shouldUseMockData,
+  setAuthToken,
+  clearAuthToken,
+  getApiConfig,
+} = apiModule;
 
 // Mock fetch globally
-const mockFetch = vi.fn()
-global.fetch = mockFetch
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 // Store original getApiConfig
-const originalGetApiConfig = getApiConfig
+const originalGetApiConfig = getApiConfig;
 
 describe('API Service', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    vi.clearAllMocks();
     // Reset auth token
-    clearAuthToken()
-    
+    clearAuthToken();
+
     // Mock successful fetch response
     mockFetch.mockResolvedValue({
       ok: true,
@@ -27,32 +34,32 @@ describe('API Service', () => {
       arrayBuffer: async () => new ArrayBuffer(0),
       formData: async () => new FormData(),
       clone: vi.fn(),
-    } as Response)
-  })
+    } as Response);
+  });
 
   afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.restoreAllMocks();
+  });
 
   describe('ApiError', () => {
     it('should create an ApiError with message', () => {
-      const error = new ApiError('Test error')
-      
-      expect(error.message).toBe('Test error')
-      expect(error.name).toBe('ApiError')
-      expect(error.statusCode).toBeUndefined()
-      expect(error.response).toBeUndefined()
-    })
+      const error = new ApiError('Test error');
+
+      expect(error.message).toBe('Test error');
+      expect(error.name).toBe('ApiError');
+      expect(error.statusCode).toBeUndefined();
+      expect(error.response).toBeUndefined();
+    });
 
     it('should create an ApiError with status code and response', () => {
-      const response = { error: 'Bad request' }
-      const error = new ApiError('Bad request', 400, response)
-      
-      expect(error.message).toBe('Bad request')
-      expect(error.statusCode).toBe(400)
-      expect(error.response).toBe(response)
-    })
-  })
+      const response = { error: 'Bad request' };
+      const error = new ApiError('Bad request', 400, response);
+
+      expect(error.message).toBe('Bad request');
+      expect(error.statusCode).toBe(400);
+      expect(error.response).toBe(response);
+    });
+  });
 
   describe('shouldUseMockData', () => {
     it('should return true when VITE_USE_MOCK_DATA is not set', () => {
@@ -62,10 +69,10 @@ describe('API Service', () => {
         API_VERSION: 'v1',
         API_TIMEOUT: 30000,
         USE_MOCK_DATA: true,
-      })
-      
-      expect(shouldUseMockData()).toBe(true)
-    })
+      });
+
+      expect(shouldUseMockData()).toBe(true);
+    });
 
     it('should return true when VITE_USE_MOCK_DATA is "true"', () => {
       vi.spyOn(apiModule, 'getApiConfig').mockReturnValue({
@@ -73,10 +80,10 @@ describe('API Service', () => {
         API_VERSION: 'v1',
         API_TIMEOUT: 30000,
         USE_MOCK_DATA: true,
-      })
-      
-      expect(shouldUseMockData()).toBe(true)
-    })
+      });
+
+      expect(shouldUseMockData()).toBe(true);
+    });
 
     it('should return false when VITE_USE_MOCK_DATA is "false"', () => {
       // Mock getApiConfig to return USE_MOCK_DATA as false with non-localhost URL
@@ -85,34 +92,34 @@ describe('API Service', () => {
         API_VERSION: 'v1',
         API_TIMEOUT: 30000,
         USE_MOCK_DATA: false,
-      })
-      
-      expect(shouldUseMockData()).toBe(false)
-    })
-  })
+      });
+
+      expect(shouldUseMockData()).toBe(false);
+    });
+  });
 
   describe('Auth Token Management', () => {
     it('should set and get auth token', () => {
-      const token = 'test-token-123'
-      setAuthToken(token)
-      
+      const token = 'test-token-123';
+      setAuthToken(token);
+
       // We can't directly test the internal token, but we can test that
       // subsequent requests include the token
-      expect(() => setAuthToken(token)).not.toThrow()
-    })
+      expect(() => setAuthToken(token)).not.toThrow();
+    });
 
     it('should clear auth token', () => {
-      setAuthToken('test-token')
-      clearAuthToken()
-      
-      expect(() => clearAuthToken()).not.toThrow()
-    })
-  })
+      setAuthToken('test-token');
+      clearAuthToken();
+
+      expect(() => clearAuthToken()).not.toThrow();
+    });
+  });
 
   describe('apiClient.get', () => {
     it('should make a GET request successfully', async () => {
-      const response = await apiClient.get('/test-endpoint')
-      
+      const response = await apiClient.get('/test-endpoint');
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('/test-endpoint'),
         expect.objectContaining({
@@ -121,25 +128,25 @@ describe('API Service', () => {
             'Content-Type': 'application/json',
           }),
         })
-      )
-      expect(response).toEqual({ data: 'test' })
-    })
+      );
+      expect(response).toEqual({ data: 'test' });
+    });
 
     it('should include auth token in headers when set', async () => {
-      const token = 'test-token-123'
-      setAuthToken(token)
-      
-      await apiClient.get('/test-endpoint')
-      
+      const token = 'test-token-123';
+      setAuthToken(token);
+
+      await apiClient.get('/test-endpoint');
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
           headers: expect.objectContaining({
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           }),
         })
-      )
-    })
+      );
+    });
 
     it('should handle API errors', async () => {
       mockFetch.mockResolvedValue({
@@ -147,35 +154,35 @@ describe('API Service', () => {
         status: 404,
         statusText: 'Not Found',
         json: async () => ({ error: 'Resource not found' }),
-      })
+      });
 
-      await expect(apiClient.get('/nonexistent')).rejects.toThrow(ApiError)
-    })
+      await expect(apiClient.get('/nonexistent')).rejects.toThrow(ApiError);
+    });
 
     it('should handle network errors', async () => {
-      mockFetch.mockRejectedValue(new Error('Network error'))
+      mockFetch.mockRejectedValue(new Error('Network error'));
 
-      await expect(apiClient.get('/test')).rejects.toThrow('Network error')
-    })
+      await expect(apiClient.get('/test')).rejects.toThrow('Network error');
+    });
 
     it('should handle non-JSON responses', async () => {
       mockFetch.mockResolvedValue({
         ok: true,
         status: 200,
         text: async () => 'Plain text response',
-      })
+      });
 
-      const response = await apiClient.get('/text-endpoint')
-      expect(response).toBe('Plain text response')
-    })
-  })
+      const response = await apiClient.get('/text-endpoint');
+      expect(response).toBe('Plain text response');
+    });
+  });
 
   describe('apiClient.post', () => {
     it('should make a POST request with data', async () => {
-      const testData = { name: 'Test Asset', type: 'Equipment' }
-      
-      await apiClient.post('/assets', testData)
-      
+      const testData = { name: 'Test Asset', type: 'Equipment' };
+
+      await apiClient.post('/assets', testData);
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('/assets'),
         expect.objectContaining({
@@ -185,8 +192,8 @@ describe('API Service', () => {
             'Content-Type': 'application/json',
           }),
         })
-      )
-    })
+      );
+    });
 
     it('should handle POST request errors', async () => {
       mockFetch.mockResolvedValue({
@@ -194,84 +201,84 @@ describe('API Service', () => {
         status: 400,
         statusText: 'Bad Request',
         json: async () => ({ error: 'Invalid data' }),
-      })
+      });
 
-      await expect(apiClient.post('/assets', {})).rejects.toThrow(ApiError)
-    })
-  })
+      await expect(apiClient.post('/assets', {})).rejects.toThrow(ApiError);
+    });
+  });
 
   describe('apiClient.put', () => {
     it('should make a PUT request with data', async () => {
-      const testData = { name: 'Updated Asset' }
-      
-      await apiClient.put('/assets/123', testData)
-      
+      const testData = { name: 'Updated Asset' };
+
+      await apiClient.put('/assets/123', testData);
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('/assets/123'),
         expect.objectContaining({
           method: 'PUT',
           body: JSON.stringify(testData),
         })
-      )
-    })
-  })
+      );
+    });
+  });
 
   describe('apiClient.delete', () => {
     it('should make a DELETE request', async () => {
-      await apiClient.delete('/assets/123')
-      
+      await apiClient.delete('/assets/123');
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('/assets/123'),
         expect.objectContaining({
           method: 'DELETE',
         })
-      )
-    })
-  })
+      );
+    });
+  });
 
   describe('Request Configuration', () => {
     it('should use correct base URL from environment', async () => {
       Object.defineProperty(import.meta, 'env', {
         value: { VITE_API_BASE_URL: 'https://api.example.com' },
         writable: true,
-      })
+      });
 
-      await apiClient.get('/test')
-      
+      await apiClient.get('/test');
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('https://api.example.com'),
         expect.any(Object)
-      )
-    })
+      );
+    });
 
     it('should use default base URL when not set', async () => {
       Object.defineProperty(import.meta, 'env', {
         value: {},
         writable: true,
-      })
+      });
 
-      await apiClient.get('/test')
-      
+      await apiClient.get('/test');
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('http://localhost:3000'),
         expect.any(Object)
-      )
-    })
+      );
+    });
 
     it('should include API version in URL', async () => {
       Object.defineProperty(import.meta, 'env', {
         value: { VITE_API_VERSION: 'v2' },
         writable: true,
-      })
+      });
 
-      await apiClient.get('/test')
-      
+      await apiClient.get('/test');
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('/v2/test'),
         expect.any(Object)
-      )
-    })
-  })
+      );
+    });
+  });
 
   describe('Error Handling', () => {
     it('should throw ApiError with correct status code', async () => {
@@ -286,19 +293,19 @@ describe('API Service', () => {
         arrayBuffer: async () => new ArrayBuffer(0),
         formData: async () => new FormData(),
         clone: vi.fn(),
-      } as Response)
+      } as Response);
 
       try {
-        await apiClient.get('/test')
+        await apiClient.get('/test');
         // Should not reach here
-        expect(true).toBe(false)
+        expect(true).toBe(false);
       } catch (error) {
-        expect(error).toBeInstanceOf(ApiError)
-        expect((error as ApiError).statusCode).toBe(500)
+        expect(error).toBeInstanceOf(ApiError);
+        expect((error as ApiError).statusCode).toBe(500);
         // Just check that the error message contains relevant info, not necessarily "500"
-        expect((error as ApiError).message).toBeTruthy()
+        expect((error as ApiError).message).toBeTruthy();
       }
-    })
+    });
 
     it('should handle JSON parsing errors', async () => {
       mockFetch.mockResolvedValue({
@@ -306,49 +313,54 @@ describe('API Service', () => {
         status: 400,
         statusText: 'Bad Request',
         json: async () => {
-          throw new Error('Invalid JSON')
+          throw new Error('Invalid JSON');
         },
-      })
+      });
 
-      await expect(apiClient.get('/test')).rejects.toThrow()
-    })
+      await expect(apiClient.get('/test')).rejects.toThrow();
+    });
 
     it('should handle empty responses', async () => {
       mockFetch.mockResolvedValue({
         ok: true,
         status: 204,
         text: async () => '',
-      })
+      });
 
-      const response = await apiClient.get('/test')
-      expect(response).toBe('')
-    })
-  })
+      const response = await apiClient.get('/test');
+      expect(response).toBe('');
+    });
+  });
 
   describe('Request Timeout', () => {
     it('should handle request timeouts', async () => {
       // Mock a slow response
-      mockFetch.mockImplementation(() => 
-        new Promise((resolve) => 
-          setTimeout(() => resolve({
-            ok: true,
-            status: 200,
-            json: async () => ({ data: 'slow response' }),
-          }), 100)
-        )
-      )
+      mockFetch.mockImplementation(
+        () =>
+          new Promise(resolve =>
+            setTimeout(
+              () =>
+                resolve({
+                  ok: true,
+                  status: 200,
+                  json: async () => ({ data: 'slow response' }),
+                }),
+              100
+            )
+          )
+      );
 
       // This test mainly ensures the timeout logic doesn't break
       // In a real implementation, you'd test the actual timeout behavior
-      const response = await apiClient.get('/slow-endpoint')
-      expect(response).toEqual({ data: 'slow response' })
-    })
-  })
+      const response = await apiClient.get('/slow-endpoint');
+      expect(response).toEqual({ data: 'slow response' });
+    });
+  });
 
   describe('Request Interceptors', () => {
     it('should add custom headers', async () => {
-      await apiClient.get('/test')
-      
+      await apiClient.get('/test');
+
       expect(mockFetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
@@ -356,18 +368,18 @@ describe('API Service', () => {
             'Content-Type': 'application/json',
           }),
         })
-      )
-    })
+      );
+    });
 
     it('should handle missing environment variables gracefully', async () => {
       // This test ensures the getEnvVar function handles missing env vars
       Object.defineProperty(import.meta, 'env', {
-        value: {},  // Use empty object instead of undefined
+        value: {}, // Use empty object instead of undefined
         writable: true,
-      })
+      });
 
       // Should not throw when accessing env vars
-      await expect(apiClient.get('/test')).resolves.toBeDefined()
-    })
-  })
-})
+      await expect(apiClient.get('/test')).resolves.toBeDefined();
+    });
+  });
+});

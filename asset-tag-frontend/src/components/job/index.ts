@@ -1,6 +1,6 @@
 /**
  * Job Components Index
- * 
+ *
  * Export all reusable job-related components
  */
 

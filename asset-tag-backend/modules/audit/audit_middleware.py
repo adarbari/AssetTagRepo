@@ -1,6 +1,7 @@
 """
 Audit middleware for automatic change tracking
 """
+
 import json
 import logging
 from datetime import datetime

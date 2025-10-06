@@ -1,25 +1,25 @@
 /**
  * Test Configuration for AssetTag Application
- * 
+ *
  * This file contains configuration and setup for running comprehensive tests
  * across all application components.
  */
 
-import { vi } from 'vitest'
+import { vi } from 'vitest';
 
 // Global test configuration
 export const TEST_CONFIG = {
   // Test timeouts
   DEFAULT_TIMEOUT: 10000,
   ASYNC_TIMEOUT: 5000,
-  
+
   // Mock data settings
   MOCK_DELAY: 100,
   MOCK_SUCCESS_RATE: 0.95,
-  
+
   // Test environment
   ENVIRONMENT: 'test',
-  
+
   // Component-specific settings
   COMPONENTS: {
     SITES: {
@@ -43,7 +43,7 @@ export const TEST_CONFIG = {
       MOCK_GEOFENCES_COUNT: 5,
     },
   },
-}
+};
 
 // Global mocks that should be available in all tests
 export const setupGlobalMocks = () => {
@@ -55,7 +55,7 @@ export const setupGlobalMocks = () => {
     info: vi.fn(),
     warn: vi.fn(),
     error: vi.fn(),
-  }
+  };
 
   // Mock window.matchMedia
   Object.defineProperty(window, 'matchMedia', {
@@ -70,34 +70,34 @@ export const setupGlobalMocks = () => {
       removeEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
     })),
-  })
+  });
 
   // Mock ResizeObserver
   global.ResizeObserver = vi.fn().mockImplementation(() => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
-  }))
+  }));
 
   // Mock IntersectionObserver
   global.IntersectionObserver = vi.fn().mockImplementation(() => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
-  }))
+  }));
 
   // Mock scrollTo
   Object.defineProperty(window, 'scrollTo', {
     writable: true,
     value: vi.fn(),
-  })
+  });
 
   // Mock fetch
-  global.fetch = vi.fn()
+  global.fetch = vi.fn();
 
   // Mock URL.createObjectURL
-  global.URL.createObjectURL = vi.fn(() => 'mock-url')
-  global.URL.revokeObjectURL = vi.fn()
+  global.URL.createObjectURL = vi.fn(() => 'mock-url');
+  global.URL.revokeObjectURL = vi.fn();
 
   // Mock localStorage
   const localStorageMock = {
@@ -105,10 +105,10 @@ export const setupGlobalMocks = () => {
     setItem: vi.fn(),
     removeItem: vi.fn(),
     clear: vi.fn(),
-  }
+  };
   Object.defineProperty(window, 'localStorage', {
     value: localStorageMock,
-  })
+  });
 
   // Mock sessionStorage
   const sessionStorageMock = {
@@ -116,11 +116,11 @@ export const setupGlobalMocks = () => {
     setItem: vi.fn(),
     removeItem: vi.fn(),
     clear: vi.fn(),
-  }
+  };
   Object.defineProperty(window, 'sessionStorage', {
     value: sessionStorageMock,
-  })
-}
+  });
+};
 
 // Test data generators
 export const generateMockData = {
@@ -135,43 +135,46 @@ export const generateMockData = {
       tolerance: 50 + i * 10,
       assets: 100 + i * 50,
       status: i % 3 === 0 ? 'active' : i % 3 === 1 ? 'maintenance' : 'inactive',
-      coordinates: { 
-        lat: 30.2672 + i * 0.01, 
-        lng: -97.7431 + i * 0.01, 
-        radius: 500 + i * 100 
+      coordinates: {
+        lat: 30.2672 + i * 0.01,
+        lng: -97.7431 + i * 0.01,
+        radius: 500 + i * 100,
       },
       manager: `Manager ${i + 1}`,
       phone: `(555) ${String(100 + i).padStart(3, '0')}-${String(1000 + i).padStart(4, '0')}`,
       email: `manager${i + 1}@example.com`,
-      geofenceId: i % 2 === 0 ? `GF-${String(i + 1).padStart(3, '0')}` : undefined,
-    }))
+      geofenceId:
+        i % 2 === 0 ? `GF-${String(i + 1).padStart(3, '0')}` : undefined,
+    }));
   },
 
   // Generate mock assets
   assets: (count = TEST_CONFIG.COMPONENTS.ASSET_MAP.MOCK_ASSETS_COUNT) => {
-    const types = ['Heavy Equipment', 'Vehicle', 'Tool', 'Container']
-    const statuses = ['active', 'idle', 'in-transit', 'offline']
-    
+    const types = ['Heavy Equipment', 'Vehicle', 'Tool', 'Container'];
+    const statuses = ['active', 'idle', 'in-transit', 'offline'];
+
     return Array.from({ length: count }, (_, i) => ({
       id: `AT-${String(i + 1).padStart(5, '0')}`,
       name: `Asset ${i + 1}`,
       type: types[i % types.length],
       status: statuses[i % statuses.length],
       coordinates: [30.2672 + i * 0.001, -97.7431 + i * 0.001],
-      battery: 20 + (i * 5) % 80,
+      battery: 20 + ((i * 5) % 80),
       lastSeen: new Date(Date.now() - i * 60000).toISOString(),
       location: `Location ${i + 1}`,
       manager: `Manager ${i + 1}`,
       phone: `(555) ${String(100 + i).padStart(3, '0')}-${String(1000 + i).padStart(4, '0')}`,
       email: `manager${i + 1}@example.com`,
-    }))
+    }));
   },
 
   // Generate mock vehicles
-  vehicles: (count = TEST_CONFIG.COMPONENTS.VEHICLE_PAIRING.MOCK_VEHICLES_COUNT) => {
-    const types = ['Pickup Truck', 'Box Truck', 'Cargo Van', 'Delivery Truck']
-    const drivers = ['Mike Wilson', 'Sarah Johnson', 'John Smith', 'Jane Doe']
-    
+  vehicles: (
+    count = TEST_CONFIG.COMPONENTS.VEHICLE_PAIRING.MOCK_VEHICLES_COUNT
+  ) => {
+    const types = ['Pickup Truck', 'Box Truck', 'Cargo Van', 'Delivery Truck'];
+    const drivers = ['Mike Wilson', 'Sarah Johnson', 'John Smith', 'Jane Doe'];
+
     return Array.from({ length: count }, (_, i) => ({
       id: `VEH-${String(i + 1).padStart(3, '0')}`,
       name: `Vehicle ${i + 1}`,
@@ -182,15 +185,17 @@ export const generateMockData = {
       location: `Location ${i + 1}`,
       capacity: 10 + i * 5,
       pairings: [],
-    }))
+    }));
   },
 
   // Generate mock maintenance tasks
-  maintenanceTasks: (count = TEST_CONFIG.COMPONENTS.MAINTENANCE.MOCK_TASKS_COUNT) => {
-    const types = ['scheduled', 'emergency', 'preventive', 'corrective']
-    const priorities = ['low', 'medium', 'high', 'critical']
-    const statuses = ['pending', 'in-progress', 'completed', 'cancelled']
-    
+  maintenanceTasks: (
+    count = TEST_CONFIG.COMPONENTS.MAINTENANCE.MOCK_TASKS_COUNT
+  ) => {
+    const types = ['scheduled', 'emergency', 'preventive', 'corrective'];
+    const priorities = ['low', 'medium', 'high', 'critical'];
+    const statuses = ['pending', 'in-progress', 'completed', 'cancelled'];
+
     return Array.from({ length: count }, (_, i) => ({
       id: `MT-${String(i + 1).padStart(3, '0')}`,
       assetId: `AT-${String(i + 1).padStart(5, '0')}`,
@@ -213,7 +218,7 @@ export const generateMockData = {
           notes: `Task ${i + 1} created`,
         },
       ],
-    }))
+    }));
   },
 
   // Generate mock dashboard stats
@@ -234,17 +239,20 @@ export const generateMockData = {
   // Generate mock chart data
   chartData: (points = TEST_CONFIG.COMPONENTS.DASHBOARD.MOCK_CHART_POINTS) => {
     return Array.from({ length: points }, (_, i) => ({
-      time: new Date(Date.now() - (points - i) * 86400000).toISOString().split('T')[0],
+      time: new Date(Date.now() - (points - i) * 86400000)
+        .toISOString()
+        .split('T')[0],
       assets: 10 + Math.floor(Math.random() * 20),
       personnel: 5 + Math.floor(Math.random() * 10),
-    }))
+    }));
   },
-}
+};
 
 // Test utilities
 export const testUtils = {
   // Wait for async operations
-  waitFor: (ms = TEST_CONFIG.MOCK_DELAY) => new Promise(resolve => setTimeout(resolve, ms)),
+  waitFor: (ms = TEST_CONFIG.MOCK_DELAY) =>
+    new Promise(resolve => setTimeout(resolve, ms)),
 
   // Create mock error
   createError: (message = 'Test error') => new Error(message),
@@ -253,28 +261,38 @@ export const testUtils = {
   createSuccessResponse: (data = {}) => ({ success: true, data }),
 
   // Create mock failure response
-  createFailureResponse: (error = 'Operation failed') => ({ success: false, error }),
+  createFailureResponse: (error = 'Operation failed') => ({
+    success: false,
+    error,
+  }),
 
   // Mock async function with delay
-  mockAsyncFunction: (result, delay = TEST_CONFIG.MOCK_DELAY) => 
-    vi.fn().mockImplementation(() => 
-      new Promise(resolve => setTimeout(() => resolve(result), delay))
-    ),
+  mockAsyncFunction: (result, delay = TEST_CONFIG.MOCK_DELAY) =>
+    vi
+      .fn()
+      .mockImplementation(
+        () => new Promise(resolve => setTimeout(() => resolve(result), delay))
+      ),
 
   // Mock async function that can fail
-  mockAsyncFunctionWithFailure: (result, failureRate = 0.1, delay = TEST_CONFIG.MOCK_DELAY) =>
-    vi.fn().mockImplementation(() =>
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (Math.random() < failureRate) {
-            reject(new Error('Mock failure'))
-          } else {
-            resolve(result)
-          }
-        }, delay)
-      })
+  mockAsyncFunctionWithFailure: (
+    result,
+    failureRate = 0.1,
+    delay = TEST_CONFIG.MOCK_DELAY
+  ) =>
+    vi.fn().mockImplementation(
+      () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (Math.random() < failureRate) {
+              reject(new Error('Mock failure'));
+            } else {
+              resolve(result);
+            }
+          }, delay);
+        })
     ),
-}
+};
 
 // Component-specific test helpers
 export const componentTestHelpers = {
@@ -350,7 +368,7 @@ export const componentTestHelpers = {
       ...overrides,
     }),
   },
-}
+};
 
 export default {
   TEST_CONFIG,
@@ -358,4 +376,4 @@ export default {
   generateMockData,
   testUtils,
   componentTestHelpers,
-}
+};

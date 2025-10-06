@@ -1,16 +1,16 @@
-import { Alert } from "../types";
-import { mockAlerts } from "../data/mockData";
-import { apiClient, shouldUseMockData } from "./api";
+import { Alert } from '../types';
+import { mockAlerts } from '../data/mockData';
+import { apiClient, shouldUseMockData } from './api';
 
 /**
  * Alert Service
- * 
+ *
  * This service handles all alert-related operations.
  * Uses backend APIs when available, falls back to mock data.
  */
 
 // In-memory storage (fallback for mock data)
-let alerts = [...mockAlerts];
+const alerts = [...mockAlerts];
 
 /**
  * Get all alerts
@@ -57,8 +57,8 @@ export async function getAlertById(alertId: string): Promise<Alert | null> {
  * Backend equivalent: PATCH /api/alerts/:id/status
  */
 export async function updateAlertStatus(
-  alertId: string, 
-  status: "active" | "acknowledged" | "resolved",
+  alertId: string,
+  status: 'active' | 'acknowledged' | 'resolved',
   notes?: string
 ): Promise<Alert> {
   try {
@@ -72,9 +72,11 @@ export async function updateAlertStatus(
         ...alerts[alertIndex],
         status,
         // Add resolution timestamp if resolving
-        ...(status === "resolved" && { resolvedAt: new Date().toISOString() }),
+        ...(status === 'resolved' && { resolvedAt: new Date().toISOString() }),
         // Add acknowledgment timestamp if acknowledging
-        ...(status === "acknowledged" && { acknowledgedAt: new Date().toISOString() }),
+        ...(status === 'acknowledged' && {
+          acknowledgedAt: new Date().toISOString(),
+        }),
         // Add notes if provided
         ...(notes && { resolutionNotes: notes }),
       };
@@ -99,16 +101,22 @@ export async function updateAlertStatus(
  * Acknowledge an alert
  * Backend equivalent: POST /api/alerts/:id/acknowledge
  */
-export async function acknowledgeAlert(alertId: string, notes?: string): Promise<Alert> {
-  return updateAlertStatus(alertId, "acknowledged", notes);
+export async function acknowledgeAlert(
+  alertId: string,
+  notes?: string
+): Promise<Alert> {
+  return updateAlertStatus(alertId, 'acknowledged', notes);
 }
 
 /**
  * Resolve an alert
  * Backend equivalent: POST /api/alerts/:id/resolve
  */
-export async function resolveAlert(alertId: string, notes?: string): Promise<Alert> {
-  return updateAlertStatus(alertId, "resolved", notes);
+export async function resolveAlert(
+  alertId: string,
+  notes?: string
+): Promise<Alert> {
+  return updateAlertStatus(alertId, 'resolved', notes);
 }
 
 /**
@@ -138,12 +146,13 @@ export async function executeWorkflowAction(
           input,
           notes,
           executedAt: new Date().toISOString(),
-        }
+        },
       ],
       // Update status based on action type
-      status: action.includes("resolve") || action.includes("complete") 
-        ? "resolved" as const 
-        : alerts[alertIndex].status,
+      status:
+        action.includes('resolve') || action.includes('complete')
+          ? ('resolved' as const)
+          : alerts[alertIndex].status,
     };
 
     alerts[alertIndex] = updatedAlert;
@@ -168,7 +177,9 @@ export async function executeWorkflowAction(
  * Get alerts by status
  * Backend equivalent: GET /api/alerts?status=:status
  */
-export async function getAlertsByStatus(status: "active" | "acknowledged" | "resolved"): Promise<Alert[]> {
+export async function getAlertsByStatus(
+  status: 'active' | 'acknowledged' | 'resolved'
+): Promise<Alert[]> {
   try {
     if (shouldUseMockData()) {
       return alerts.filter(a => a.status === status);
@@ -193,7 +204,9 @@ export async function getAlertsByAsset(assetId: string): Promise<Alert[]> {
       return alerts.filter(a => a.assetId === assetId);
     }
 
-    const response = await apiClient.get('/alerts', { params: { asset_id: assetId } });
+    const response = await apiClient.get('/alerts', {
+      params: { asset_id: assetId },
+    });
     return response.data;
   } catch (error) {
     console.error('Failed to fetch alerts by asset:', error);
@@ -206,7 +219,9 @@ export async function getAlertsByAsset(assetId: string): Promise<Alert[]> {
  * Create a new alert
  * Backend equivalent: POST /api/alerts
  */
-export async function createAlert(alertData: Omit<Alert, 'id'>): Promise<Alert> {
+export async function createAlert(
+  alertData: Omit<Alert, 'id'>
+): Promise<Alert> {
   try {
     if (shouldUseMockData()) {
       const newAlert: Alert = {
@@ -267,9 +282,9 @@ export async function getAlertStatistics(): Promise<{
     if (shouldUseMockData()) {
       const stats = {
         total: alerts.length,
-        active: alerts.filter(a => a.status === "active").length,
-        acknowledged: alerts.filter(a => a.status === "acknowledged").length,
-        resolved: alerts.filter(a => a.status === "resolved").length,
+        active: alerts.filter(a => a.status === 'active').length,
+        acknowledged: alerts.filter(a => a.status === 'acknowledged').length,
+        resolved: alerts.filter(a => a.status === 'resolved').length,
         byType: {} as Record<string, number>,
         bySeverity: {} as Record<string, number>,
       };
@@ -281,7 +296,8 @@ export async function getAlertStatistics(): Promise<{
 
       // Count by severity
       alerts.forEach(alert => {
-        stats.bySeverity[alert.severity] = (stats.bySeverity[alert.severity] || 0) + 1;
+        stats.bySeverity[alert.severity] =
+          (stats.bySeverity[alert.severity] || 0) + 1;
       });
 
       return stats;
@@ -294,16 +310,17 @@ export async function getAlertStatistics(): Promise<{
     // Fallback to mock data calculation
     const stats = {
       total: alerts.length,
-      active: alerts.filter(a => a.status === "active").length,
-      acknowledged: alerts.filter(a => a.status === "acknowledged").length,
-      resolved: alerts.filter(a => a.status === "resolved").length,
+      active: alerts.filter(a => a.status === 'active').length,
+      acknowledged: alerts.filter(a => a.status === 'acknowledged').length,
+      resolved: alerts.filter(a => a.status === 'resolved').length,
       byType: {} as Record<string, number>,
       bySeverity: {} as Record<string, number>,
     };
 
     alerts.forEach(alert => {
       stats.byType[alert.type] = (stats.byType[alert.type] || 0) + 1;
-      stats.bySeverity[alert.severity] = (stats.bySeverity[alert.severity] || 0) + 1;
+      stats.bySeverity[alert.severity] =
+        (stats.bySeverity[alert.severity] || 0) + 1;
     });
 
     return stats;

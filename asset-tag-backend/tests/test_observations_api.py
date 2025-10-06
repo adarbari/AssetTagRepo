@@ -1,6 +1,7 @@
 """
 Test cases for Observations API
 """
+
 from datetime import datetime
 
 import pytest

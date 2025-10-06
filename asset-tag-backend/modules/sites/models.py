@@ -1,6 +1,7 @@
 """
 Site models
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

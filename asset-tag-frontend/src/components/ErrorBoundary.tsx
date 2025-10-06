@@ -1,7 +1,13 @@
-import React, { Component, ReactNode } from "react";
-import { AlertTriangle } from "lucide-react";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card";
+import React, { Component, ReactNode } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import { Button } from '../ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '../ui/card';
 
 interface Props {
   children: ReactNode;
@@ -16,7 +22,7 @@ interface State {
 
 /**
  * Error Boundary Component
- * 
+ *
  * Catches JavaScript errors anywhere in the child component tree,
  * logs those errors, and displays a fallback UI instead of crashing.
  */
@@ -50,7 +56,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Log error details for debugging
     console.error('Error caught by ErrorBoundary:', error, errorInfo);
-    
+
     // Update state with error details
     this.setState({
       error,
@@ -75,12 +81,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Default fallback UI
       return (
-        <div className="flex items-center justify-center min-h-screen p-4 bg-muted/30">
-          <Card className="max-w-2xl w-full">
+        <div className='flex items-center justify-center min-h-screen p-4 bg-muted/30'>
+          <Card className='max-w-2xl w-full'>
             <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 rounded-lg bg-destructive/10">
-                  <AlertTriangle className="h-6 w-6 text-destructive" />
+              <div className='flex items-center gap-3 mb-2'>
+                <div className='p-2 rounded-lg bg-destructive/10'>
+                  <AlertTriangle className='h-6 w-6 text-destructive' />
                 </div>
                 <div>
                   <CardTitle>Something went wrong</CardTitle>
@@ -90,33 +96,32 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               {this.state.error && (
-                <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm font-medium mb-2">Error Details:</p>
-                  <code className="text-xs text-muted-foreground block whitespace-pre-wrap">
+                <div className='p-4 bg-muted rounded-lg'>
+                  <p className='text-sm font-medium mb-2'>Error Details:</p>
+                  <code className='text-xs text-muted-foreground block whitespace-pre-wrap'>
                     {this.state.error.toString()}
                   </code>
                 </div>
               )}
-              
-              {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
-                <details className="p-4 bg-muted rounded-lg">
-                  <summary className="text-sm font-medium cursor-pointer mb-2">
-                    Component Stack (Development Only)
-                  </summary>
-                  <code className="text-xs text-muted-foreground block whitespace-pre-wrap mt-2">
-                    {this.state.errorInfo.componentStack}
-                  </code>
-                </details>
-              )}
 
-              <div className="flex gap-2">
-                <Button onClick={this.handleReset}>
-                  Try Again
-                </Button>
+              {process.env.NODE_ENV === 'development' &&
+                this.state.errorInfo && (
+                  <details className='p-4 bg-muted rounded-lg'>
+                    <summary className='text-sm font-medium cursor-pointer mb-2'>
+                      Component Stack (Development Only)
+                    </summary>
+                    <code className='text-xs text-muted-foreground block whitespace-pre-wrap mt-2'>
+                      {this.state.errorInfo.componentStack}
+                    </code>
+                  </details>
+                )}
+
+              <div className='flex gap-2'>
+                <Button onClick={this.handleReset}>Try Again</Button>
                 <Button
-                  variant="outline"
+                  variant='outline'
                   onClick={() => window.location.reload()}
                 >
                   Reload Page

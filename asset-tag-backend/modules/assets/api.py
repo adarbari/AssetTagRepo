@@ -1,6 +1,7 @@
 """
 Asset API endpoints
 """
+
 import json
 import uuid
 from datetime import datetime
@@ -18,76 +19,107 @@ from modules.assets.schemas import AssetCreate, AssetResponse, AssetUpdate
 def asset_to_response(asset: Asset) -> AssetResponse:
     """Convert Asset SQLAlchemy model to AssetResponse manually to avoid serialization issues"""
     return AssetResponse(
-        id=str(asset.id)
-        if "-" in str(asset.id)
-        else f"{str(asset.id)[:8]}-{str(asset.id)[8:12]}-{str(asset.id)[12:16]}-{str(asset.id)[16:20]}-{str(asset.id)[20:]}",
-        organization_id=str(asset.organization_id)
-        if "-" in str(asset.organization_id)
-        else f"{str(asset.organization_id)[:8]}-{str(asset.organization_id)[8:12]}-{str(asset.organization_id)[12:16]}-{str(asset.organization_id)[16:20]}-{str(asset.organization_id)[20:]}",
+        id=(
+            str(asset.id)
+            if "-" in str(asset.id)
+            else f"{str(asset.id)[:8]}-{str(asset.id)[8:12]}-{str(asset.id)[12:16]}-{str(asset.id)[16:20]}-{str(asset.id)[20:]}"
+        ),
+        organization_id=(
+            str(asset.organization_id)
+            if "-" in str(asset.organization_id)
+            else f"{str(asset.organization_id)[:8]}-{str(asset.organization_id)[8:12]}-{str(asset.organization_id)[12:16]}-{str(asset.organization_id)[16:20]}-{str(asset.organization_id)[20:]}"
+        ),
         name=asset.name,
         serial_number=asset.serial_number,
         asset_type=asset.asset_type,
         status=asset.status,
-        current_site_id=str(asset.current_site_id)
-        if asset.current_site_id and "-" in str(asset.current_site_id)
-        else (
-            f"{str(asset.current_site_id)[:8]}-{str(asset.current_site_id)[8:12]}-{str(asset.current_site_id)[12:16]}-{str(asset.current_site_id)[16:20]}-{str(asset.current_site_id)[20:]}"
-            if asset.current_site_id
-            else None
+        current_site_id=(
+            str(asset.current_site_id)
+            if asset.current_site_id and "-" in str(asset.current_site_id)
+            else (
+                f"{str(asset.current_site_id)[:8]}-{str(asset.current_site_id)[8:12]}-{str(asset.current_site_id)[12:16]}-{str(asset.current_site_id)[16:20]}-{str(asset.current_site_id)[20:]}"
+                if asset.current_site_id
+                else None
+            )
         ),
         location_description=asset.location_description,
-        last_seen=asset.last_seen.isoformat()
-        if asset.last_seen and hasattr(asset.last_seen, "isoformat")
-        else asset.last_seen,
+        last_seen=(
+            asset.last_seen.isoformat()
+            if asset.last_seen and hasattr(asset.last_seen, "isoformat")
+            else asset.last_seen
+        ),
         battery_level=asset.battery_level,
         temperature=asset.temperature,
         movement_status=asset.movement_status,
-        assigned_to_user_id=str(asset.assigned_to_user_id)
-        if asset.assigned_to_user_id and "-" in str(asset.assigned_to_user_id)
-        else (
-            f"{str(asset.assigned_to_user_id)[:8]}-{str(asset.assigned_to_user_id)[8:12]}-{str(asset.assigned_to_user_id)[12:16]}-{str(asset.assigned_to_user_id)[16:20]}-{str(asset.assigned_to_user_id)[20:]}"
-            if asset.assigned_to_user_id
-            else None
+        assigned_to_user_id=(
+            str(asset.assigned_to_user_id)
+            if asset.assigned_to_user_id and "-" in str(asset.assigned_to_user_id)
+            else (
+                f"{str(asset.assigned_to_user_id)[:8]}-{str(asset.assigned_to_user_id)[8:12]}-{str(asset.assigned_to_user_id)[12:16]}-{str(asset.assigned_to_user_id)[16:20]}-{str(asset.assigned_to_user_id)[20:]}"
+                if asset.assigned_to_user_id
+                else None
+            )
         ),
-        assigned_job_id=str(asset.assigned_job_id)
-        if asset.assigned_job_id and "-" in str(asset.assigned_job_id)
-        else (
-            f"{str(asset.assigned_job_id)[:8]}-{str(asset.assigned_job_id)[8:12]}-{str(asset.assigned_job_id)[12:16]}-{str(asset.assigned_job_id)[16:20]}-{str(asset.assigned_job_id)[20:]}"
-            if asset.assigned_job_id
-            else None
+        assigned_job_id=(
+            str(asset.assigned_job_id)
+            if asset.assigned_job_id and "-" in str(asset.assigned_job_id)
+            else (
+                f"{str(asset.assigned_job_id)[:8]}-{str(asset.assigned_job_id)[8:12]}-{str(asset.assigned_job_id)[12:16]}-{str(asset.assigned_job_id)[16:20]}-{str(asset.assigned_job_id)[20:]}"
+                if asset.assigned_job_id
+                else None
+            )
         ),
-        assignment_start_date=asset.assignment_start_date.isoformat()
-        if asset.assignment_start_date
-        and hasattr(asset.assignment_start_date, "isoformat")
-        else asset.assignment_start_date,
-        assignment_end_date=asset.assignment_end_date.isoformat()
-        if asset.assignment_end_date and hasattr(asset.assignment_end_date, "isoformat")
-        else asset.assignment_end_date,
+        assignment_start_date=(
+            asset.assignment_start_date.isoformat()
+            if asset.assignment_start_date
+            and hasattr(asset.assignment_start_date, "isoformat")
+            else asset.assignment_start_date
+        ),
+        assignment_end_date=(
+            asset.assignment_end_date.isoformat()
+            if asset.assignment_end_date
+            and hasattr(asset.assignment_end_date, "isoformat")
+            else asset.assignment_end_date
+        ),
         manufacturer=asset.manufacturer,
         model=asset.model,
-        purchase_date=asset.purchase_date.isoformat()
-        if asset.purchase_date and hasattr(asset.purchase_date, "isoformat")
-        else asset.purchase_date,
-        warranty_expiry=asset.warranty_expiry.isoformat()
-        if asset.warranty_expiry and hasattr(asset.warranty_expiry, "isoformat")
-        else asset.warranty_expiry,
-        last_maintenance=asset.last_maintenance.isoformat()
-        if asset.last_maintenance and hasattr(asset.last_maintenance, "isoformat")
-        else asset.last_maintenance,
-        next_maintenance=asset.next_maintenance.isoformat()
-        if asset.next_maintenance and hasattr(asset.next_maintenance, "isoformat")
-        else asset.next_maintenance,
+        purchase_date=(
+            asset.purchase_date.isoformat()
+            if asset.purchase_date and hasattr(asset.purchase_date, "isoformat")
+            else asset.purchase_date
+        ),
+        warranty_expiry=(
+            asset.warranty_expiry.isoformat()
+            if asset.warranty_expiry and hasattr(asset.warranty_expiry, "isoformat")
+            else asset.warranty_expiry
+        ),
+        last_maintenance=(
+            asset.last_maintenance.isoformat()
+            if asset.last_maintenance and hasattr(asset.last_maintenance, "isoformat")
+            else asset.last_maintenance
+        ),
+        next_maintenance=(
+            asset.next_maintenance.isoformat()
+            if asset.next_maintenance and hasattr(asset.next_maintenance, "isoformat")
+            else asset.next_maintenance
+        ),
         hourly_rate=asset.hourly_rate,
         availability=asset.availability,
-        asset_metadata=json.loads(asset.asset_metadata)
-        if isinstance(asset.asset_metadata, str)
-        else (asset.asset_metadata or {}),
-        created_at=asset.created_at.isoformat()
-        if hasattr(asset.created_at, "isoformat")
-        else str(asset.created_at),
-        updated_at=asset.updated_at.isoformat()
-        if hasattr(asset.updated_at, "isoformat")
-        else str(asset.updated_at),
+        asset_metadata=(
+            json.loads(asset.asset_metadata)
+            if isinstance(asset.asset_metadata, str)
+            else (asset.asset_metadata or {})
+        ),
+        created_at=(
+            asset.created_at.isoformat()
+            if hasattr(asset.created_at, "isoformat")
+            else str(asset.created_at)
+        ),
+        updated_at=(
+            asset.updated_at.isoformat()
+            if hasattr(asset.updated_at, "isoformat")
+            else str(asset.updated_at)
+        ),
     )
 
 
@@ -341,9 +373,11 @@ async def create_asset(asset_data: AssetCreate, db: AsyncSession = Depends(get_d
             serial_number=asset_data.serial_number,
             asset_type=asset_data.asset_type,
             status=asset_data.status or "active",
-            current_site_id=uuid.UUID(asset_data.current_site_id)
-            if asset_data.current_site_id
-            else None,
+            current_site_id=(
+                uuid.UUID(asset_data.current_site_id)
+                if asset_data.current_site_id
+                else None
+            ),
             location_description=asset_data.location_description,
             battery_level=asset_data.battery_level,
             temperature=asset_data.temperature,
@@ -627,9 +661,11 @@ async def get_asset_location_history(
                 "estimated_at": loc.estimated_at.isoformat(),
                 "speed": float(loc.speed) if loc.speed else None,
                 "bearing": float(loc.bearing) if loc.bearing else None,
-                "distance_from_previous": float(loc.distance_from_previous)
-                if loc.distance_from_previous
-                else None,
+                "distance_from_previous": (
+                    float(loc.distance_from_previous)
+                    if loc.distance_from_previous
+                    else None
+                ),
             }
             for loc in locations
         ]
@@ -672,9 +708,11 @@ async def get_asset_battery_history(
             battery_history.append(
                 {
                     "battery_level": battery_level,
-                    "timestamp": updated_at.isoformat()
-                    if hasattr(updated_at, "isoformat")
-                    else str(updated_at),
+                    "timestamp": (
+                        updated_at.isoformat()
+                        if hasattr(updated_at, "isoformat")
+                        else str(updated_at)
+                    ),
                     "source": "current_reading",
                 }
             )

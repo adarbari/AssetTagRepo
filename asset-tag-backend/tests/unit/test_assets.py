@@ -1,6 +1,7 @@
 """
 Unit tests for Assets module
 """
+
 import uuid
 from datetime import datetime
 

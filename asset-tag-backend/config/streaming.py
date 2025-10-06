@@ -1,6 +1,7 @@
 """
 Streaming configuration for Kafka/Redpanda and Kinesis
 """
+
 import asyncio
 import json
 import logging

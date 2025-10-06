@@ -1,6 +1,7 @@
 """
 Location estimation algorithms for Bluetooth-based asset tracking
 """
+
 import logging
 import math
 from dataclasses import dataclass
@@ -257,9 +258,7 @@ class LocationEstimator:
         distance_variance = (
             np.var(distances)
             if len(distances) > 1
-            else distances[0]
-            if distances
-            else 50.0
+            else distances[0] if distances else 50.0
         )
 
         # Factor in signal quality

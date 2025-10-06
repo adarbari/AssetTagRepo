@@ -1,9 +1,9 @@
 /**
  * Configuration Service
- * 
+ *
  * Centralized service for managing system configurations like
  * asset types, site types, user roles, etc.
- * 
+ *
  * In production, this will fetch from the backend API.
  * For now, it provides a consistent interface that can be easily
  * switched to API calls.
@@ -11,7 +11,11 @@
 
 import * as dropdownOptions from '../data/dropdownOptions';
 import type { DropdownOption } from '../data/dropdownOptions';
-import { mockAssets, getAvailableSites, getAvailableGeofences } from '../data/mockData';
+import {
+  mockAssets,
+  getAvailableSites,
+  getAvailableGeofences,
+} from '../data/mockData';
 import { mockVehicles } from '../data/mockVehicleData';
 
 // Type for all configuration options
@@ -25,10 +29,10 @@ export async function fetchConfig(type: ConfigType): Promise<DropdownOption[]> {
   // TODO: Replace with actual API call
   // const response = await fetch(`/api/config/${type}`);
   // return response.json();
-  
+
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 50));
-  
+
   const data = dropdownOptions[type];
   if (Array.isArray(data)) {
     return data as DropdownOption[];
@@ -39,16 +43,16 @@ export async function fetchConfig(type: ConfigType): Promise<DropdownOption[]> {
 /**
  * Fetch multiple configuration types at once
  */
-export async function fetchMultipleConfigs(types: ConfigType[]): Promise<Record<string, DropdownOption[]>> {
-  const results = await Promise.all(
-    types.map(type => fetchConfig(type))
-  );
-  
+export async function fetchMultipleConfigs(
+  types: ConfigType[]
+): Promise<Record<string, DropdownOption[]>> {
+  const results = await Promise.all(types.map(type => fetchConfig(type)));
+
   const configMap: Record<string, DropdownOption[]> = {};
   types.forEach((type, index) => {
     configMap[type] = results[index];
   });
-  
+
   return configMap;
 }
 
@@ -56,33 +60,35 @@ export async function fetchMultipleConfigs(types: ConfigType[]): Promise<Record<
  * Fetch users by role
  * This allows filtering users for specific purposes (e.g., only inspectors)
  */
-export async function fetchUsersByRole(role?: string): Promise<DropdownOption[]> {
+export async function fetchUsersByRole(
+  role?: string
+): Promise<DropdownOption[]> {
   // TODO: Replace with actual API call
   // const response = await fetch(`/api/users?role=${role}`);
   // return response.json();
-  
+
   await new Promise(resolve => setTimeout(resolve, 50));
-  
+
   // Mock data - in production, this would come from the backend
   const allUsers: DropdownOption[] = [
-    { value: "user-001", label: "John Smith (Inspector)" },
-    { value: "user-002", label: "Sarah Connor (Inspector)" },
-    { value: "user-003", label: "Mike Wilson (Technician)" },
-    { value: "user-004", label: "Emily Davis (Inspector)" },
-    { value: "user-005", label: "David Brown (Manager)" },
-    { value: "user-006", label: "Maria Garcia (Operator)" },
-    { value: "user-007", label: "Robert Jones (Technician)" },
-    { value: "user-008", label: "Lisa Brown (Inspector)" },
+    { value: 'user-001', label: 'John Smith (Inspector)' },
+    { value: 'user-002', label: 'Sarah Connor (Inspector)' },
+    { value: 'user-003', label: 'Mike Wilson (Technician)' },
+    { value: 'user-004', label: 'Emily Davis (Inspector)' },
+    { value: 'user-005', label: 'David Brown (Manager)' },
+    { value: 'user-006', label: 'Maria Garcia (Operator)' },
+    { value: 'user-007', label: 'Robert Jones (Technician)' },
+    { value: 'user-008', label: 'Lisa Brown (Inspector)' },
   ];
-  
-  if (role === "inspector") {
-    return allUsers.filter(u => u.label.includes("Inspector"));
+
+  if (role === 'inspector') {
+    return allUsers.filter(u => u.label.includes('Inspector'));
   }
-  
-  if (role === "technician") {
-    return allUsers.filter(u => u.label.includes("Technician"));
+
+  if (role === 'technician') {
+    return allUsers.filter(u => u.label.includes('Technician'));
   }
-  
+
   return allUsers;
 }
 
@@ -93,12 +99,12 @@ export async function fetchAvailableAssets(): Promise<DropdownOption[]> {
   // TODO: Replace with actual API call
   // const response = await fetch('/api/assets/available');
   // return response.json();
-  
+
   await new Promise(resolve => setTimeout(resolve, 50));
-  
+
   return mockAssets.map(asset => ({
     value: asset.id,
-    label: `${asset.name} (${asset.id})`
+    label: `${asset.name} (${asset.id})`,
   }));
 }
 
@@ -109,9 +115,9 @@ export async function fetchAvailableSites(): Promise<DropdownOption[]> {
   // TODO: Replace with actual API call
   // const response = await fetch('/api/sites/available');
   // return response.json();
-  
+
   await new Promise(resolve => setTimeout(resolve, 50));
-  
+
   return getAvailableSites();
 }
 
@@ -122,9 +128,9 @@ export async function fetchAvailableGeofences(): Promise<DropdownOption[]> {
   // TODO: Replace with actual API call
   // const response = await fetch('/api/geofences/available');
   // return response.json();
-  
+
   await new Promise(resolve => setTimeout(resolve, 50));
-  
+
   return getAvailableGeofences();
 }
 
@@ -135,26 +141,29 @@ export async function fetchAvailableVehicles(): Promise<DropdownOption[]> {
   // TODO: Replace with actual API call
   // const response = await fetch('/api/vehicles/available');
   // return response.json();
-  
+
   await new Promise(resolve => setTimeout(resolve, 50));
-  
+
   return mockVehicles.map(vehicle => ({
     value: vehicle.id,
-    label: `${vehicle.name} - ${vehicle.licensePlate}`
+    label: `${vehicle.name} - ${vehicle.licensePlate}`,
   }));
 }
 
 /**
  * Save configuration (for admin settings)
  */
-export async function saveConfig(type: ConfigType, options: DropdownOption[]): Promise<void> {
+export async function saveConfig(
+  type: ConfigType,
+  options: DropdownOption[]
+): Promise<void> {
   // TODO: Replace with actual API call
   // await fetch(`/api/config/${type}`, {
   //   method: 'PUT',
   //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify(options)
   // });
-  
+
   console.log(`Would save ${type} config to backend:`, options);
 }
 

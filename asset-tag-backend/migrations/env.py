@@ -1,6 +1,7 @@
 """
 Alembic environment configuration
 """
+
 import asyncio
 import os
 import sys

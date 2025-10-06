@@ -1,6 +1,7 @@
 """
 Feature store for ML model serving
 """
+
 import json
 import logging
 from dataclasses import asdict, dataclass
@@ -344,15 +345,19 @@ class FeatureStore:
             }
 
             typical_movement_pattern = {
-                "avg_distance": float(movement_stats.avg_distance)
-                if movement_stats.avg_distance
-                else 0.0,
-                "avg_speed": float(movement_stats.avg_speed)
-                if movement_stats.avg_speed
-                else 0.0,
-                "location_count": int(movement_stats.location_count)
-                if movement_stats.location_count
-                else 0,
+                "avg_distance": (
+                    float(movement_stats.avg_distance)
+                    if movement_stats.avg_distance
+                    else 0.0
+                ),
+                "avg_speed": (
+                    float(movement_stats.avg_speed) if movement_stats.avg_speed else 0.0
+                ),
+                "location_count": (
+                    int(movement_stats.location_count)
+                    if movement_stats.location_count
+                    else 0
+                ),
             }
 
             # Calculate battery drain rate (simplified)
@@ -380,9 +385,11 @@ class FeatureStore:
                 typical_movement_pattern=typical_movement_pattern,
                 normal_battery_drain_rate=normal_battery_drain_rate,
                 avg_temperature=avg_temperature,
-                typical_confidence=float(avg_confidence.avg_confidence)
-                if avg_confidence and avg_confidence.avg_confidence
-                else 0.8,
+                typical_confidence=(
+                    float(avg_confidence.avg_confidence)
+                    if avg_confidence and avg_confidence.avg_confidence
+                    else 0.8
+                ),
                 last_updated=datetime.now(),
             )
 

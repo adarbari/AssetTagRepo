@@ -1,6 +1,7 @@
 """
 Check-in/Check-out database models
 """
+
 import uuid
 
 from sqlalchemy import JSON, UUID, Column, DateTime, Float, Index, String, Text

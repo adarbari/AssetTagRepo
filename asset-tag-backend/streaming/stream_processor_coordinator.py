@@ -1,6 +1,7 @@
 """
 Stream processor coordinator for managing all streaming processors
 """
+
 import asyncio
 import logging
 from datetime import datetime
@@ -155,9 +156,9 @@ class StreamProcessorCoordinator:
                 try:
                     stats = await processor.get_processing_stats()
                     processor_health = {
-                        "status": "healthy"
-                        if stats.get("running", False)
-                        else "unhealthy",
+                        "status": (
+                            "healthy" if stats.get("running", False) else "unhealthy"
+                        ),
                         "running": stats.get("running", False),
                     }
                     health_status["processors"][name] = processor_health

@@ -1,6 +1,7 @@
 """
 Asset Tag Backend - Simplified FastAPI Application for Testing
 """
+
 import logging
 import time
 

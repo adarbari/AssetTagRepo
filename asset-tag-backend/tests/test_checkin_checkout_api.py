@@ -1,6 +1,7 @@
 """
 Test cases for Check-in/Check-out API
 """
+
 from datetime import datetime, timedelta
 
 import pytest

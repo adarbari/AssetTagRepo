@@ -1,6 +1,7 @@
 """
 Base database models and mixins
 """
+
 import uuid
 from datetime import datetime
 

@@ -1,14 +1,18 @@
-import { AlertType } from "../types";
-import { SavedAlertConfig, AlertRuleConfig, AlertConfigPreset } from "../types/alertConfig";
-import { alertTypeConfigurations } from "../data/alertConfigurations";
+import { AlertType } from '../types';
+import {
+  SavedAlertConfig,
+  AlertRuleConfig,
+  AlertConfigPreset,
+} from '../types/alertConfig';
+import { alertTypeConfigurations } from '../data/alertConfigurations';
 
 /**
  * Alert Configuration Service
- * 
+ *
  * This service handles all alert configuration operations.
  * Currently uses localStorage for persistence, but can be easily
  * switched to backend API calls.
- * 
+ *
  * To integrate with backend:
  * 1. Replace localStorage calls with API client calls
  * 2. Add authentication headers
@@ -24,7 +28,9 @@ const VERSION = '1.0.0';
  * Load all alert configurations
  * Backend equivalent: GET /api/alert-configs
  */
-export const loadAlertConfigurations = async (): Promise<Record<AlertType, AlertRuleConfig>> => {
+export const loadAlertConfigurations = async (): Promise<
+  Record<AlertType, AlertRuleConfig>
+> => {
   try {
     // Current: localStorage
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -55,7 +61,7 @@ export const saveAlertConfigurations = async (
   try {
     // Prepare saved configs with metadata
     const savedConfigs: Record<string, SavedAlertConfig> = {};
-    
+
     Object.entries(configurations).forEach(([type, config]) => {
       savedConfigs[type] = {
         id: `alert-config-${type}-${Date.now()}`,
@@ -87,12 +93,15 @@ export const saveAlertConfigurations = async (
 /**
  * Get default configurations for all alert types
  */
-export const getDefaultConfigurations = (): Record<AlertType, AlertRuleConfig> => {
+export const getDefaultConfigurations = (): Record<
+  AlertType,
+  AlertRuleConfig
+> => {
   const defaults: Record<AlertType, AlertRuleConfig> = {} as any;
-  
+
   Object.entries(alertTypeConfigurations).forEach(([type, typeConfig]) => {
     const fields: Record<string, any> = {};
-    
+
     typeConfig.fields.forEach(field => {
       fields[field.key] = field.defaultValue;
     });
@@ -123,7 +132,9 @@ export const getDefaultConfigurations = (): Record<AlertType, AlertRuleConfig> =
  * Load configuration for a specific alert type
  * Backend equivalent: GET /api/alert-configs/:type
  */
-export const loadAlertConfigByType = async (type: AlertType): Promise<AlertRuleConfig | null> => {
+export const loadAlertConfigByType = async (
+  type: AlertType
+): Promise<AlertRuleConfig | null> => {
   try {
     const allConfigs = await loadAlertConfigurations();
     return allConfigs[type] || null;
@@ -208,7 +219,7 @@ export const importConfigurations = async (
 ): Promise<void> => {
   try {
     const configs = JSON.parse(jsonData);
-    
+
     // Validate the structure
     Object.keys(configs).forEach(type => {
       if (!alertTypeConfigurations[type as AlertType]) {
@@ -238,7 +249,9 @@ export const importConfigurations = async (
  * Save a configuration preset
  * Backend equivalent: POST /api/alert-presets
  */
-export const savePreset = async (preset: Omit<AlertConfigPreset, 'id'>): Promise<void> => {
+export const savePreset = async (
+  preset: Omit<AlertConfigPreset, 'id'>
+): Promise<void> => {
   try {
     const presets = await loadPresets();
     const newPreset: AlertConfigPreset = {
@@ -246,7 +259,7 @@ export const savePreset = async (preset: Omit<AlertConfigPreset, 'id'>): Promise
       id: `preset-${Date.now()}`,
     };
     presets.push(newPreset);
-    
+
     localStorage.setItem(PRESETS_KEY, JSON.stringify(presets));
 
     // Backend implementation:
@@ -285,7 +298,7 @@ export const applyPreset = async (
   try {
     const presets = await loadPresets();
     const preset = presets.find(p => p.id === presetId);
-    
+
     if (!preset) {
       throw new Error('Preset not found');
     }
@@ -315,12 +328,19 @@ export const validateConfiguration = (
     const value = config.fields[field.key];
 
     // Check required fields
-    if (field.required && (value === undefined || value === null || value === '')) {
+    if (
+      field.required &&
+      (value === undefined || value === null || value === '')
+    ) {
       errors[field.key] = `${field.label} is required`;
     }
 
     // Check min/max for numbers
-    if (field.type === 'number' || field.type === 'duration' || field.type === 'percentage') {
+    if (
+      field.type === 'number' ||
+      field.type === 'duration' ||
+      field.type === 'percentage'
+    ) {
       if (field.min !== undefined && value < field.min) {
         errors[field.key] = `${field.label} must be at least ${field.min}`;
       }
@@ -347,7 +367,10 @@ export const validateConfiguration = (
 /**
  * Get configuration summary for display
  */
-export const getConfigurationSummary = (type: AlertType, config: AlertRuleConfig): string[] => {
+export const getConfigurationSummary = (
+  type: AlertType,
+  config: AlertRuleConfig
+): string[] => {
   const typeConfig = alertTypeConfigurations[type];
   const summary: string[] = [];
 

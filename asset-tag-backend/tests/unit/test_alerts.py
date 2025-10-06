@@ -1,6 +1,7 @@
 """
 Unit tests for Alerts module
 """
+
 import uuid
 from datetime import datetime
 

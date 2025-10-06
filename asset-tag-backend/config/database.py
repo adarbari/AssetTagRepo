@@ -1,6 +1,7 @@
 """
 Database configuration and connection management
 """
+
 import logging
 import os
 

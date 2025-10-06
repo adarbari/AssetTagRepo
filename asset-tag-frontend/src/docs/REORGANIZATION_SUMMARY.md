@@ -7,6 +7,7 @@ The file reorganization has been **started** but is **not yet complete**. Here's
 ## ✅ Completed Work
 
 ### 1. Documentation Organization
+
 - Created `/docs` directory
 - Added reorganization planning documents:
   - `FILE_REORGANIZATION_STATUS.md`
@@ -16,6 +17,7 @@ The file reorganization has been **started** but is **not yet complete**. Here's
 - **Note**: Cannot move root-level .md files (they are protected)
 
 ### 2. Generic Components
+
 - ✅ Created `/components/common/` with reusable components:
   - StatusBadge.tsx
   - PriorityBadge.tsx
@@ -32,11 +34,13 @@ The file reorganization has been **started** but is **not yet complete**. Here's
   - index.ts (barrel export)
 
 ### 3. Assets Feature
+
 - ✅ Created `/components/assets/`
   - AssetInventory.tsx
   - index.ts
 
 ### 4. Jobs Feature (Partial)
+
 - ✅ Created `/components/job/` with form components:
   - JobInformationSection.tsx
   - BudgetSection.tsx
@@ -46,6 +50,7 @@ The file reorganization has been **started** but is **not yet complete**. Here's
   - index.ts
 
 ### 5. Alerts Feature (Started)
+
 - ✅ Created `/components/alerts/`
   - Alerts.tsx (moved and updated imports)
 
@@ -56,75 +61,91 @@ The file reorganization has been **started** but is **not yet complete**. Here's
 These 40+ components need to be moved to their feature folders:
 
 #### Alerts (4 more files)
+
 - AlertWorkflow.tsx → `/components/alerts/`
 - AlertDetailsDialog.tsx → `/components/alerts/`
 - HierarchicalAlertConfiguration.tsx → `/components/alerts/`
 - AlertConfigFieldRenderer.tsx → `/components/alerts/`
 
 #### Assets (4 files)
+
 - AssetDetails.tsx → `/components/assets/`
 - CreateAsset.tsx → `/components/assets/`
 - EditAssetDialog.tsx → `/components/assets/`
 - LoadAsset.tsx → `/components/assets/`
 
 #### Sites (3 files)
+
 - Sites.tsx → `/components/sites/`
 - SiteDetails.tsx → `/components/sites/`
 - CreateSite.tsx → `/components/sites/`
 
 #### Geofences (3 files)
+
 - Geofences.tsx → `/components/geofences/`
 - CreateGeofence.tsx → `/components/geofences/`
 - GeofenceMapEditor.tsx → `/components/geofences/`
 
 #### Jobs (4 files to merge with existing `/job/`)
+
 - JobManagement.tsx → `/components/jobs/`
 - JobDetails.tsx → `/components/jobs/`
 - CreateJob.tsx → `/components/jobs/`
 - EditJob.tsx → `/components/jobs/`
 
 #### Maintenance (4 files)
+
 - Maintenance.tsx → `/components/maintenance/`
 - CreateMaintenance.tsx → `/components/maintenance/`
 - EditMaintenance.tsx → `/components/maintenance/`
 - EditMaintenanceDialog.tsx → `/components/maintenance/`
 
 #### Vehicles (3 files)
+
 - VehicleAssetPairing.tsx → `/components/vehicles/`
 - CreateVehicle.tsx → `/components/vehicles/`
 - EditVehicle.tsx → `/components/vehicles/`
 
 #### Issues (2 files)
+
 - IssueTracking.tsx → `/components/issues/`
 - CreateIssue.tsx → `/components/issues/`
 
 #### Compliance (2 files)
+
 - ComplianceTracking.tsx → `/components/compliance/`
 - CreateCompliance.tsx → `/components/compliance/`
 
 #### Reports (3 files)
+
 - Reports.tsx → `/components/reports/`
 - GenerateReportDialog.tsx → `/components/reports/`
 - ExportDialog.tsx → `/components/reports/`
 
 #### Map (3 files)
+
 - AssetMap.tsx → `/components/map/`
 - HistoricalPlayback.tsx → `/components/map/`
 - FindAsset.tsx → `/components/map/`
 
 #### Dashboard (1 file)
+
 - Dashboard.tsx → `/components/dashboard/`
 
 #### Settings (1 file)
+
 - Settings.tsx → `/components/settings/`
 
 #### Check-In/Out (1 file)
+
 - CreateCheckInOut.tsx → `/components/check-in-out/`
 
 #### Notifications (1 file)
+
 - NotificationPreferencesNew.tsx → `/components/notifications/`
 
 #### Root-Level (Keep in /components)
+
 - AppSidebar.tsx ✅ (keep)
 - ErrorBoundary.tsx ✅ (keep)
 - ConfigurationInspector.tsx ✅ (keep)
@@ -137,6 +158,7 @@ To complete this reorganization, you need to:
 ### Step 1: Move All Remaining Components
 
 For each component listed above:
+
 1. Create the feature folder if it doesn't exist
 2. Move the file to the feature folder
 3. Update all import paths within the file:
@@ -165,24 +187,31 @@ export { AlertConfigFieldRenderer } from './AlertConfigFieldRenderer';
 Replace all individual imports with feature-based imports:
 
 **Before:**
+
 ```typescript
-import { Dashboard } from "./components/Dashboard";
-import { AssetMap } from "./components/AssetMap";
-import { Alerts } from "./components/Alerts";
+import { Dashboard } from './components/Dashboard';
+import { AssetMap } from './components/AssetMap';
+import { Alerts } from './components/Alerts';
 // ... 40+ more imports
 ```
 
 **After:**
+
 ```typescript
-import { Dashboard } from "./components/dashboard";
-import { AssetMap, HistoricalPlayback, FindAsset } from "./components/map";
-import { Alerts, AlertWorkflow, HierarchicalAlertConfiguration } from "./components/alerts";
+import { Dashboard } from './components/dashboard';
+import { AssetMap, HistoricalPlayback, FindAsset } from './components/map';
+import {
+  Alerts,
+  AlertWorkflow,
+  HierarchicalAlertConfiguration,
+} from './components/alerts';
 // ... organized by feature
 ```
 
 ### Step 4: Rename `/job/` to `/jobs/`
 
 For consistency:
+
 1. Rename `/components/job/` → `/components/jobs/`
 2. Move the 4 job management files into this folder
 3. Update all imports throughout the app
@@ -205,7 +234,7 @@ The old component files in `/components` root will still exist after moving. Whi
 ✅ **Clean Imports**: Feature-based barrel exports  
 ✅ **Scalability**: Easy to add new features  
 ✅ **Maintainability**: Clear separation of concerns  
-✅ **Team Collaboration**: Easier to work on specific features  
+✅ **Team Collaboration**: Easier to work on specific features
 
 ## Example Feature Folder Structure
 
@@ -246,6 +275,7 @@ The old component files in `/components` root will still exist after moving. Whi
 ## Questions or Issues?
 
 If you need help completing this reorganization:
+
 1. Review `/docs/REORGANIZATION_PLAN_DETAILED.md` for the complete structure
 2. Follow the import path update rules
 3. Test incrementally as you move each feature

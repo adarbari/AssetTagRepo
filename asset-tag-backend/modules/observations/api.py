@@ -1,6 +1,7 @@
 """
 Observation API endpoints
 """
+
 import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional
@@ -474,19 +475,25 @@ async def get_observation_stats(
             avg_rssi=float(rssi_data.avg_rssi) if rssi_data.avg_rssi else None,
             min_rssi=rssi_data.min_rssi,
             max_rssi=rssi_data.max_rssi,
-            avg_battery_level=float(other_data.avg_battery)
-            if other_data.avg_battery
-            else None,
-            avg_temperature=float(other_data.avg_temperature)
-            if other_data.avg_temperature
-            else None,
+            avg_battery_level=(
+                float(other_data.avg_battery) if other_data.avg_battery else None
+            ),
+            avg_temperature=(
+                float(other_data.avg_temperature)
+                if other_data.avg_temperature
+                else None
+            ),
             time_range={
-                "start": time_range_data.min_time.isoformat()
-                if time_range_data.min_time
-                else None,
-                "end": time_range_data.max_time.isoformat()
-                if time_range_data.max_time
-                else None,
+                "start": (
+                    time_range_data.min_time.isoformat()
+                    if time_range_data.min_time
+                    else None
+                ),
+                "end": (
+                    time_range_data.max_time.isoformat()
+                    if time_range_data.max_time
+                    else None
+                ),
             },
             signal_quality_distribution=quality_distribution,
         )

@@ -1,6 +1,7 @@
 """
 Location estimation models
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

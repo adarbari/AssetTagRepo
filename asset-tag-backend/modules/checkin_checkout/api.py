@@ -1,6 +1,7 @@
 """
 Check-in/Check-out API endpoints
 """
+
 from datetime import datetime, timedelta
 from typing import List, Optional
 
@@ -246,16 +247,22 @@ async def get_current_checkin_status(asset_id: str, db: AsyncSession = Depends(g
             "check_in_time": record.check_in_time.isoformat(),
             "user_name": record.user_name,
             "purpose": record.purpose,
-            "expected_duration_hours": float(record.expected_duration_hours)
-            if record.expected_duration_hours
-            else None,
+            "expected_duration_hours": (
+                float(record.expected_duration_hours)
+                if record.expected_duration_hours
+                else None
+            ),
             "check_in_location": {
-                "latitude": float(record.check_in_location_lat)
-                if record.check_in_location_lat
-                else None,
-                "longitude": float(record.check_in_location_lng)
-                if record.check_in_location_lng
-                else None,
+                "latitude": (
+                    float(record.check_in_location_lat)
+                    if record.check_in_location_lat
+                    else None
+                ),
+                "longitude": (
+                    float(record.check_in_location_lng)
+                    if record.check_in_location_lng
+                    else None
+                ),
                 "description": record.check_in_location_description,
             },
         }

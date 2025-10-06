@@ -1,9 +1,9 @@
-import '@testing-library/jest-dom'
-import { vi } from 'vitest'
-import React from 'react'
+import '@testing-library/jest-dom';
+import { vi } from 'vitest';
+import React from 'react';
 
 // Mock fetch globally with proper response structure
-global.fetch = vi.fn((url: string) => 
+global.fetch = vi.fn((url: string) =>
   Promise.resolve({
     ok: true,
     status: 200,
@@ -16,7 +16,7 @@ global.fetch = vi.fn((url: string) =>
     formData: async () => new FormData(),
     clone: vi.fn(),
   } as Response)
-) as any
+) as any;
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -31,27 +31,27 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
   })),
-})
+});
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
-}))
+}));
 
 // Mock IntersectionObserver
 global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
-}))
+}));
 
 // Mock scrollTo
 Object.defineProperty(window, 'scrollTo', {
   writable: true,
   value: vi.fn(),
-})
+});
 
 // Mock console methods to reduce noise in tests
 global.console = {
@@ -62,26 +62,26 @@ global.console = {
   // info: vi.fn(),
   // warn: vi.fn(),
   // error: vi.fn(),
-}
+};
 
 // Fix JSDOM compatibility issues with Radix UI
 // Mock hasPointerCapture method
 Object.defineProperty(HTMLElement.prototype, 'hasPointerCapture', {
   writable: true,
   value: vi.fn().mockReturnValue(false),
-})
+});
 
 // Mock setPointerCapture method
 Object.defineProperty(HTMLElement.prototype, 'setPointerCapture', {
   writable: true,
   value: vi.fn(),
-})
+});
 
 // Mock releasePointerCapture method
 Object.defineProperty(HTMLElement.prototype, 'releasePointerCapture', {
   writable: true,
   value: vi.fn(),
-})
+});
 
 // Mock getBoundingClientRect for better element positioning
 Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
@@ -97,13 +97,13 @@ Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
     y: 0,
     toJSON: vi.fn(),
   }),
-})
+});
 
 // Mock getComputedStyle
 Object.defineProperty(window, 'getComputedStyle', {
   writable: true,
-  value: vi.fn().mockImplementation((element) => ({
-    getPropertyValue: vi.fn().mockImplementation((prop) => {
+  value: vi.fn().mockImplementation(element => ({
+    getPropertyValue: vi.fn().mockImplementation(prop => {
       const styles = {
         'margin-left': '0px',
         'margin-right': '0px',
@@ -113,19 +113,19 @@ Object.defineProperty(window, 'getComputedStyle', {
         'padding-right': '0px',
         'padding-top': '0px',
         'padding-bottom': '0px',
-        'visibility': 'visible',
-        'display': 'block',
-        'opacity': '1',
-        'position': 'static',
+        visibility: 'visible',
+        display: 'block',
+        opacity: '1',
+        position: 'static',
         'z-index': 'auto',
-        'width': '100px',
-        'height': '100px',
-        'color': 'rgb(0, 0, 0)',
+        width: '100px',
+        height: '100px',
+        color: 'rgb(0, 0, 0)',
         'background-color': 'rgb(255, 255, 255)',
-        'border': 'none',
-        'outline': 'none',
-      }
-      return styles[prop] || ''
+        border: 'none',
+        outline: 'none',
+      };
+      return styles[prop] || '';
     }),
     marginLeft: '0px',
     marginRight: '0px',
@@ -141,16 +141,16 @@ Object.defineProperty(window, 'getComputedStyle', {
     position: 'static',
     zIndex: 'auto',
   })),
-})
+});
 
 // Mock scrollIntoView
 Object.defineProperty(Element.prototype, 'scrollIntoView', {
   writable: true,
   value: vi.fn(),
-})
+});
 
 // Mock console methods for testing - but allow individual tests to override
-const originalConsole = global.console
+const originalConsole = global.console;
 global.console = {
   ...originalConsole,
   error: vi.fn(),
@@ -158,7 +158,7 @@ global.console = {
   log: vi.fn(),
   info: vi.fn(),
   debug: vi.fn(),
-}
+};
 
 // Mock NavigationContext
 vi.mock('../contexts/NavigationContext', () => ({
@@ -203,89 +203,226 @@ vi.mock('../contexts/NavigationContext', () => ({
     handleViewHistoricalPlayback: vi.fn(),
   }),
   NavigationProvider: ({ children }: { children: React.ReactNode }) => children,
-}))
+}));
 
 // Mock common layout components
 vi.mock('../components/common/PageLayout', () => ({
-  PageLayout: ({ children, header }: { children: React.ReactNode, header?: React.ReactNode }) => (
-    React.createElement('div', { 'data-testid': 'page-layout' }, 
+  PageLayout: ({
+    children,
+    header,
+  }: {
+    children: React.ReactNode;
+    header?: React.ReactNode;
+  }) =>
+    React.createElement(
+      'div',
+      { 'data-testid': 'page-layout' },
       header,
       children
-    )
-  ),
-}))
+    ),
+}));
 
 vi.mock('../components/common/PageHeader', () => ({
-  PageHeader: ({ title, description, actions, onBack }: { title: string, description?: string, actions?: React.ReactNode, onBack?: () => void }) => (
-    React.createElement('div', { 'data-testid': 'page-header' }, 
+  PageHeader: ({
+    title,
+    description,
+    actions,
+    onBack,
+  }: {
+    title: string;
+    description?: string;
+    actions?: React.ReactNode;
+    onBack?: () => void;
+  }) =>
+    React.createElement(
+      'div',
+      { 'data-testid': 'page-header' },
       React.createElement('h1', null, title),
       description && React.createElement('p', null, description),
-      actions && React.createElement('div', { 'data-testid': 'page-header-actions' }, actions)
-    )
-  ),
-}))
+      actions &&
+        React.createElement(
+          'div',
+          { 'data-testid': 'page-header-actions' },
+          actions
+        )
+    ),
+}));
 
 vi.mock('../components/common/PageContainer', () => ({
-  PageContainer: ({ children }: { children: React.ReactNode }) => (
-    React.createElement('div', { 'data-testid': 'page-container' }, children)
-  ),
-}))
+  PageContainer: ({ children }: { children: React.ReactNode }) =>
+    React.createElement('div', { 'data-testid': 'page-container' }, children),
+}));
 
 // Mock react-remove-scroll-bar to prevent JSDOM issues
 vi.mock('react-remove-scroll-bar', () => ({
   RemoveScrollBar: ({ children }: { children: React.ReactNode }) => children,
-}))
+}));
 
 // Mock lucide-react icons globally with dynamic handling
 vi.mock('lucide-react', () => {
   // Create a dynamic icon component that handles any icon name
   const createIconComponent = (iconName: string) => {
-    return () => React.createElement('div', { 
-      'data-testid': `${iconName.toLowerCase()}-icon`,
-      'data-icon-name': iconName 
-    })
-  }
+    return () =>
+      React.createElement('div', {
+        'data-testid': `${iconName.toLowerCase()}-icon`,
+        'data-icon-name': iconName,
+      });
+  };
 
   // Common icons that are frequently used
   const commonIcons = [
-    'FileText', 'Download', 'Calendar', 'TrendingUp', 'DollarSign', 'Clock', 'Activity',
-    'Shield', 'Battery', 'AlertTriangle', 'MapPin', 'Building2', 'Plus', 'ChevronDown',
-    'ChevronDownIcon', 'X', 'XIcon', 'Search', 'Filter', 'MoreHorizontal', 'Edit', 'Trash2',
-    'Settings', 'Users', 'Building', 'Key', 'Wrench', 'RefreshCw', 'ArrowLeft', 'Eye',
-    'Bell', 'User', 'Home', 'BarChart3', 'PieChart', 'LineChart', 'TrendingDown',
-    'ArrowUp', 'ArrowDown', 'Check', 'AlertCircle', 'Info', 'HelpCircle', 'ExternalLink',
-    'Copy', 'Share', 'Heart', 'Star', 'ThumbsUp', 'ThumbsDown', 'MessageCircle', 'Mail',
-    'Phone', 'Globe', 'Lock', 'Unlock', 'Wifi', 'WifiOff', 'Signal', 'SignalZero',
-    'SignalLow', 'SignalMedium', 'SignalHigh', 'SignalMax', 'Volume2', 'VolumeX',
-    'Play', 'Pause', 'Stop', 'SkipBack', 'SkipForward', 'Repeat', 'Shuffle', 'Music',
-    'Headphones', 'Mic', 'MicOff', 'Video', 'VideoOff', 'Camera', 'CameraOff',
-    'Image', 'ImageOff', 'File', 'FileImage', 'FileVideo', 'FileAudio', 'FileArchive',
-    'FileCode', 'FileSpreadsheet', 'FilePdf', 'FileWord', 'FileExcel', 'FilePowerpoint',
-    'Folder', 'FolderOpen', 'FolderPlus', 'FolderMinus', 'FolderX', 'FolderCheck',
-    'FolderLock', 'FolderUnlock', 'FolderHeart', 'FolderStar', 'FolderUp', 'FolderDown',
-    'FolderLeft', 'FolderRight', 'FolderInput', 'FolderOutput', 'FolderSync', 'FolderGit',
-    'FolderGit2', 'FolderGitBranch', 'FolderGitCommit', 'FolderGitPullRequest',
-    'FolderGitMerge', 'FolderGitDiff', 'FolderGitLog', 'FolderGitRef', 'FolderGitTag',
-    'FolderGitTree', 'FolderGitWorktree', 'FolderGitSubmodule', 'FolderGitLfs',
-    'FolderGitIgnore', 'FolderGitAttributes', 'FolderGitConfig', 'FolderGitHooks',
-    'FolderGitInfo', 'FolderGitLogs', 'FolderGitObjects', 'FolderGitRefs',
-    'FolderGitRemotes', 'FolderGitSparseCheckout', 'FolderGitWorktrees'
-  ]
+    'FileText',
+    'Download',
+    'Calendar',
+    'TrendingUp',
+    'DollarSign',
+    'Clock',
+    'Activity',
+    'Shield',
+    'Battery',
+    'AlertTriangle',
+    'MapPin',
+    'Building2',
+    'Plus',
+    'ChevronDown',
+    'ChevronDownIcon',
+    'X',
+    'XIcon',
+    'Search',
+    'Filter',
+    'MoreHorizontal',
+    'Edit',
+    'Trash2',
+    'Settings',
+    'Users',
+    'Building',
+    'Key',
+    'Wrench',
+    'RefreshCw',
+    'ArrowLeft',
+    'Eye',
+    'Bell',
+    'User',
+    'Home',
+    'BarChart3',
+    'PieChart',
+    'LineChart',
+    'TrendingDown',
+    'ArrowUp',
+    'ArrowDown',
+    'Check',
+    'AlertCircle',
+    'Info',
+    'HelpCircle',
+    'ExternalLink',
+    'Copy',
+    'Share',
+    'Heart',
+    'Star',
+    'ThumbsUp',
+    'ThumbsDown',
+    'MessageCircle',
+    'Mail',
+    'Phone',
+    'Globe',
+    'Lock',
+    'Unlock',
+    'Wifi',
+    'WifiOff',
+    'Signal',
+    'SignalZero',
+    'SignalLow',
+    'SignalMedium',
+    'SignalHigh',
+    'SignalMax',
+    'Volume2',
+    'VolumeX',
+    'Play',
+    'Pause',
+    'Stop',
+    'SkipBack',
+    'SkipForward',
+    'Repeat',
+    'Shuffle',
+    'Music',
+    'Headphones',
+    'Mic',
+    'MicOff',
+    'Video',
+    'VideoOff',
+    'Camera',
+    'CameraOff',
+    'Image',
+    'ImageOff',
+    'File',
+    'FileImage',
+    'FileVideo',
+    'FileAudio',
+    'FileArchive',
+    'FileCode',
+    'FileSpreadsheet',
+    'FilePdf',
+    'FileWord',
+    'FileExcel',
+    'FilePowerpoint',
+    'Folder',
+    'FolderOpen',
+    'FolderPlus',
+    'FolderMinus',
+    'FolderX',
+    'FolderCheck',
+    'FolderLock',
+    'FolderUnlock',
+    'FolderHeart',
+    'FolderStar',
+    'FolderUp',
+    'FolderDown',
+    'FolderLeft',
+    'FolderRight',
+    'FolderInput',
+    'FolderOutput',
+    'FolderSync',
+    'FolderGit',
+    'FolderGit2',
+    'FolderGitBranch',
+    'FolderGitCommit',
+    'FolderGitPullRequest',
+    'FolderGitMerge',
+    'FolderGitDiff',
+    'FolderGitLog',
+    'FolderGitRef',
+    'FolderGitTag',
+    'FolderGitTree',
+    'FolderGitWorktree',
+    'FolderGitSubmodule',
+    'FolderGitLfs',
+    'FolderGitIgnore',
+    'FolderGitAttributes',
+    'FolderGitConfig',
+    'FolderGitHooks',
+    'FolderGitInfo',
+    'FolderGitLogs',
+    'FolderGitObjects',
+    'FolderGitRefs',
+    'FolderGitRemotes',
+    'FolderGitSparseCheckout',
+    'FolderGitWorktrees',
+  ];
 
   // Create the mock object with common icons
-  const mockIcons: Record<string, any> = {}
+  const mockIcons: Record<string, any> = {};
   commonIcons.forEach(iconName => {
-    mockIcons[iconName] = createIconComponent(iconName)
-  })
+    mockIcons[iconName] = createIconComponent(iconName);
+  });
 
   // Add a Proxy to handle any missing icons dynamically
   return new Proxy(mockIcons, {
     get(target, prop) {
       if (typeof prop === 'string' && target[prop]) {
-        return target[prop]
+        return target[prop];
       }
       // For any missing icon, create a dynamic component
-      return createIconComponent(prop as string)
-    }
-  })
-})
+      return createIconComponent(prop as string);
+    },
+  });
+});

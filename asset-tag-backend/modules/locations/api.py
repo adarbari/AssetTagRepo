@@ -1,6 +1,7 @@
 """
 Location API endpoints
 """
+
 import asyncio
 import json
 from datetime import datetime, timedelta
@@ -82,12 +83,16 @@ async def get_current_location(asset_id: str, db: AsyncSession = Depends(get_db)
             "estimated_at": location.estimated_at.isoformat(),
             "speed": float(location.speed) if location.speed else None,
             "bearing": float(location.bearing) if location.bearing else None,
-            "distance_from_previous": float(location.distance_from_previous)
-            if location.distance_from_previous
-            else None,
-            "signal_quality_score": float(location.signal_quality_score)
-            if location.signal_quality_score
-            else None,
+            "distance_from_previous": (
+                float(location.distance_from_previous)
+                if location.distance_from_previous
+                else None
+            ),
+            "signal_quality_score": (
+                float(location.signal_quality_score)
+                if location.signal_quality_score
+                else None
+            ),
             "gateway_count": location.gateway_count,
             "gateway_ids": location.gateway_ids,
         }
@@ -138,12 +143,16 @@ async def get_location_history(
                 "estimated_at": loc.estimated_at.isoformat(),
                 "speed": float(loc.speed) if loc.speed else None,
                 "bearing": float(loc.bearing) if loc.bearing else None,
-                "distance_from_previous": float(loc.distance_from_previous)
-                if loc.distance_from_previous
-                else None,
-                "signal_quality_score": float(loc.signal_quality_score)
-                if loc.signal_quality_score
-                else None,
+                "distance_from_previous": (
+                    float(loc.distance_from_previous)
+                    if loc.distance_from_previous
+                    else None
+                ),
+                "signal_quality_score": (
+                    float(loc.signal_quality_score)
+                    if loc.signal_quality_score
+                    else None
+                ),
                 "gateway_count": loc.gateway_count,
                 "gateway_ids": loc.gateway_ids,
             }

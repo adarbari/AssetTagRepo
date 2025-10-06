@@ -35,7 +35,7 @@ export interface LocationPoint {
   location: string;
   lat: number;
   lng: number;
-  event: "arrived" | "departed" | "moving" | "idle" | "stopped";
+  event: 'arrived' | 'departed' | 'moving' | 'idle' | 'stopped';
   speed?: number; // mph or km/h
   heading?: number; // degrees
   distance?: number; // cumulative distance traveled
@@ -57,13 +57,23 @@ export interface ActivityLogEntry {
   id: string | number;
   assetId?: string;
   timestamp: string;
-  type: "location" | "status" | "checkout" | "checkin" | "maintenance" | "alert" | "edit" | "assignment" | "geofence" | "system";
+  type:
+    | 'location'
+    | 'status'
+    | 'checkout'
+    | 'checkin'
+    | 'maintenance'
+    | 'alert'
+    | 'edit'
+    | 'assignment'
+    | 'geofence'
+    | 'system';
   description: string;
   user?: string;
   userId?: string;
   userName?: string;
   metadata?: Record<string, any>;
-  severity?: "info" | "warning" | "error";
+  severity?: 'info' | 'warning' | 'error';
 }
 
 export interface ActivityLog {
@@ -83,12 +93,18 @@ export interface MaintenanceRecord {
   assetId?: string;
   assetName?: string;
   date: string;
-  type: "Scheduled" | "Unscheduled" | "Repair" | "Inspection";
+  type: 'Scheduled' | 'Unscheduled' | 'Repair' | 'Inspection';
   description: string;
   technician?: string;
   technicianId?: string;
-  status: "pending" | "scheduled" | "in-progress" | "completed" | "overdue" | "cancelled";
-  priority?: "Low" | "Medium" | "High" | "Critical";
+  status:
+    | 'pending'
+    | 'scheduled'
+    | 'in-progress'
+    | 'completed'
+    | 'overdue'
+    | 'cancelled';
+  priority?: 'Low' | 'Medium' | 'High' | 'Critical';
   assignedTo?: string;
   assignedToId?: string;
   scheduledDate?: string;
@@ -127,10 +143,18 @@ export interface AssetAlert {
   assetId?: string;
   assetName?: string;
   date: string;
-  severity: "critical" | "high" | "medium" | "low";
-  category: "Battery" | "Geofence" | "Maintenance" | "Anomaly" | "Theft" | "Temperature" | "Offline" | "Movement";
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  category:
+    | 'Battery'
+    | 'Geofence'
+    | 'Maintenance'
+    | 'Anomaly'
+    | 'Theft'
+    | 'Temperature'
+    | 'Offline'
+    | 'Movement';
   message: string;
-  status: "active" | "acknowledged" | "resolved" | "dismissed";
+  status: 'active' | 'acknowledged' | 'resolved' | 'dismissed';
   description?: string;
   location?: string;
   coordinates?: [number, number];
@@ -199,7 +223,7 @@ export interface DateRangeParams {
   startDate?: string;
   endDate?: string;
   days?: number; // Alternative to startDate/endDate
-  aggregation?: "1h" | "4h" | "1d" | "1w";
+  aggregation?: '1h' | '4h' | '1d' | '1w';
 }
 
 export interface PaginationParams {
@@ -210,8 +234,8 @@ export interface PaginationParams {
 }
 
 export interface AlertFilters {
-  status?: "active" | "acknowledged" | "resolved";
-  severity?: "critical" | "high" | "medium" | "low";
+  status?: 'active' | 'acknowledged' | 'resolved';
+  severity?: 'critical' | 'high' | 'medium' | 'low';
   category?: string;
   startDate?: string;
   endDate?: string;
@@ -251,7 +275,7 @@ export interface CreateMaintenanceData {
   estimatedCost?: number;
   notes?: string;
   recurrence?: {
-    type: "hours" | "days" | "weeks" | "months";
+    type: 'hours' | 'days' | 'weeks' | 'months';
     interval: number;
   };
 }

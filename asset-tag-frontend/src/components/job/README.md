@@ -9,6 +9,7 @@ Reusable components for job creation and editing forms.
 Basic job information fields including name, description, dates, priority, project manager, and client.
 
 **Usage:**
+
 ```tsx
 import { JobInformationSection } from './job/JobInformationSection';
 
@@ -29,7 +30,7 @@ import { JobInformationSection } from './job/JobInformationSection';
   onClientIdChange={setClientId}
   jobNumber={job?.jobNumber} // Optional - only for edit mode
   showClientField={true} // Optional - defaults to false
-/>
+/>;
 ```
 
 ### BudgetSection
@@ -37,6 +38,7 @@ import { JobInformationSection } from './job/JobInformationSection';
 Budget allocation fields for total, labor, equipment, materials, and other costs.
 
 **Usage:**
+
 ```tsx
 import { BudgetSection } from './job/BudgetSection';
 
@@ -51,7 +53,7 @@ import { BudgetSection } from './job/BudgetSection';
   onMaterialsBudgetChange={setMaterialsBudget}
   otherBudget={otherBudget}
   onOtherBudgetChange={setOtherBudget}
-/>
+/>;
 ```
 
 ### NotesSection
@@ -59,13 +61,11 @@ import { BudgetSection } from './job/BudgetSection';
 Simple notes textarea for additional job information.
 
 **Usage:**
+
 ```tsx
 import { NotesSection } from './job/NotesSection';
 
-<NotesSection
-  notes={notes}
-  onNotesChange={setNotes}
-/>
+<NotesSection notes={notes} onNotesChange={setNotes} />;
 ```
 
 ### TagsSection
@@ -73,6 +73,7 @@ import { NotesSection } from './job/NotesSection';
 Tag management with add/remove functionality and built-in dialog.
 
 **Usage:**
+
 ```tsx
 import { TagsSection } from './job/TagsSection';
 

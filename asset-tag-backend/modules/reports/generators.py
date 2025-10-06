@@ -1,6 +1,7 @@
 """
 Report generators for different report types
 """
+
 from datetime import datetime, timedelta
 from typing import Any, Dict, List
 

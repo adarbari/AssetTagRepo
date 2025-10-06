@@ -1,6 +1,7 @@
 """
 Compliance API endpoints
 """
+
 import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional

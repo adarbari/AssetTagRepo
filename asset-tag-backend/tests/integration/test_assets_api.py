@@ -1,6 +1,7 @@
 """
 Integration tests for Assets API endpoints
 """
+
 import pytest
 
 

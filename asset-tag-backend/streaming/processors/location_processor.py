@@ -1,6 +1,7 @@
 """
 Enhanced location estimation processor
 """
+
 import asyncio
 import logging
 from collections import defaultdict, deque
@@ -286,12 +287,12 @@ class LocationProcessor:
                     buffer_stats[asset_id] = {
                         "buffer_size": len(buffer),
                         "max_buffer_size": buffer.maxlen,
-                        "oldest_observation": buffer[0]["received_at"].isoformat()
-                        if buffer
-                        else None,
-                        "newest_observation": buffer[-1]["received_at"].isoformat()
-                        if buffer
-                        else None,
+                        "oldest_observation": (
+                            buffer[0]["received_at"].isoformat() if buffer else None
+                        ),
+                        "newest_observation": (
+                            buffer[-1]["received_at"].isoformat() if buffer else None
+                        ),
                     }
 
                 return {

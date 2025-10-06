@@ -1,6 +1,7 @@
 """
 Maintenance API endpoints
 """
+
 from datetime import datetime
 from typing import List, Optional
 
@@ -208,23 +209,27 @@ async def get_asset_maintenance_history(
                 "status": record.status,
                 "priority": record.priority,
                 "scheduled_date": record.scheduled_date.isoformat(),
-                "completed_date": record.completed_date.isoformat()
-                if record.completed_date
-                else None,
+                "completed_date": (
+                    record.completed_date.isoformat() if record.completed_date else None
+                ),
                 "assigned_to_user_name": record.assigned_to_user_name,
                 "description": record.description,
-                "estimated_duration_hours": float(record.estimated_duration_hours)
-                if record.estimated_duration_hours
-                else None,
-                "estimated_cost": float(record.estimated_cost)
-                if record.estimated_cost
-                else None,
-                "actual_duration_hours": float(record.actual_duration_hours)
-                if record.actual_duration_hours
-                else None,
-                "actual_cost": float(record.actual_cost)
-                if record.actual_cost
-                else None,
+                "estimated_duration_hours": (
+                    float(record.estimated_duration_hours)
+                    if record.estimated_duration_hours
+                    else None
+                ),
+                "estimated_cost": (
+                    float(record.estimated_cost) if record.estimated_cost else None
+                ),
+                "actual_duration_hours": (
+                    float(record.actual_duration_hours)
+                    if record.actual_duration_hours
+                    else None
+                ),
+                "actual_cost": (
+                    float(record.actual_cost) if record.actual_cost else None
+                ),
                 "notes": record.notes,
             }
             for record in records

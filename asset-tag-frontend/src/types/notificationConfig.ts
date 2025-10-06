@@ -1,14 +1,14 @@
-import { AlertType } from "./index";
+import { AlertType } from './index';
 
 /**
  * Notification Configuration Hierarchy
- * 
+ *
  * Supports four levels (matching alert configuration hierarchy):
  * 1. User Level (default) - Personal preferences
  * 2. Site Level - Override for specific sites
  * 3. Asset Level - Override for specific assets
  * 4. Job Level - Override for specific jobs
- * 
+ *
  * Resolution order: Job → Asset → Site → User (most specific wins)
  */
 
@@ -57,7 +57,7 @@ export interface NotificationPreferences {
   id: string;
   level: NotificationLevel;
   entityId: string; // userId, siteId, or assetId depending on level
-  
+
   // Channel configurations
   channels: {
     email: ChannelConfig;
@@ -65,20 +65,20 @@ export interface NotificationPreferences {
     push: ChannelConfig;
     webhook: ChannelConfig;
   };
-  
+
   // Filtering
   filters: AlertFilters;
-  
+
   // Scheduling
   quietHours: QuietHours;
-  
+
   // Rate limiting
   frequency: FrequencyLimits;
-  
+
   // Override settings
   isOverride: boolean; // True if this overrides a parent level
   overrideReason?: string; // Optional note about why this override exists
-  
+
   // Metadata
   createdAt: string;
   updatedAt: string;

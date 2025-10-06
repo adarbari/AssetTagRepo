@@ -1,8 +1,8 @@
-import React from 'react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '../../test/test-utils'
-import { HierarchicalAlertConfiguration } from '../alerts/HierarchicalAlertConfiguration'
-import type { AlertConfig } from '../../types/alertConfig'
+import React from 'react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
+import { HierarchicalAlertConfiguration } from '../alerts/HierarchicalAlertConfiguration';
+import type { AlertConfig } from '../../types/alertConfig';
 
 // Mock toast
 vi.mock('sonner', () => ({
@@ -10,7 +10,7 @@ vi.mock('sonner', () => ({
     success: vi.fn(),
     error: vi.fn(),
   },
-}))
+}));
 
 const mockAlertConfigs: Record<string, AlertConfig> = {
   'global:theft': {
@@ -80,7 +80,7 @@ const mockAlertConfigs: Record<string, AlertConfig> = {
       recipients: ['compliance@example.com'],
     },
   },
-}
+};
 
 const mockJobs = {
   'JOB-001': {
@@ -110,24 +110,24 @@ const mockJobs = {
     hasActiveAlerts: false,
     missingAssets: [],
   },
-}
+};
 
 describe('HierarchicalAlertConfiguration', () => {
-  const mockOnSaveConfig = vi.fn()
-  const mockOnDeleteConfig = vi.fn()
-  const mockOnBack = vi.fn()
+  const mockOnSaveConfig = vi.fn();
+  const mockOnDeleteConfig = vi.fn();
+  const mockOnBack = vi.fn();
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    
+    vi.clearAllMocks();
+
     // Setup default mock implementations
-    mockOnSaveConfig.mockResolvedValue({ success: true })
-    mockOnDeleteConfig.mockResolvedValue({ success: true })
-  })
+    mockOnSaveConfig.mockResolvedValue({ success: true });
+    mockOnDeleteConfig.mockResolvedValue({ success: true });
+  });
 
   afterEach(() => {
-    vi.resetAllMocks()
-  })
+    vi.resetAllMocks();
+  });
 
   describe('Component Rendering', () => {
     it('renders the alert configuration page with correct title', () => {
@@ -139,10 +139,10 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Alert Configuration')).toBeInTheDocument()
-    })
+      );
+
+      expect(screen.getByText('Alert Configuration')).toBeInTheDocument();
+    });
 
     it('renders the back button', () => {
       render(
@@ -153,10 +153,10 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Back')).toBeInTheDocument()
-    })
+      );
+
+      expect(screen.getByText('Back')).toBeInTheDocument();
+    });
 
     it('renders the three-level tab selector', () => {
       render(
@@ -167,12 +167,12 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Global')).toBeInTheDocument()
-      expect(screen.getByText('Site Level')).toBeInTheDocument()
-      expect(screen.getByText('Asset Level')).toBeInTheDocument()
-    })
+      );
+
+      expect(screen.getByText('Global')).toBeInTheDocument();
+      expect(screen.getByText('Site Level')).toBeInTheDocument();
+      expect(screen.getByText('Asset Level')).toBeInTheDocument();
+    });
 
     it('renders the add configuration button', () => {
       render(
@@ -183,11 +183,11 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Add Configuration')).toBeInTheDocument()
-    })
-  })
+      );
+
+      expect(screen.getByText('Add Configuration')).toBeInTheDocument();
+    });
+  });
 
   describe('Tab Navigation', () => {
     it('starts with Global tab selected by default', () => {
@@ -199,11 +199,11 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      const globalTab = screen.getByText('Global')
-      expect(globalTab).toHaveClass('data-[state=active]')
-    })
+      );
+
+      const globalTab = screen.getByText('Global');
+      expect(globalTab).toHaveClass('data-[state=active]');
+    });
 
     it('switches to Site Level tab when clicked', () => {
       render(
@@ -214,13 +214,13 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Site Level'))
-      
-      const siteTab = screen.getByText('Site Level')
-      expect(siteTab).toHaveClass('data-[state=active]')
-    })
+      );
+
+      fireEvent.click(screen.getByText('Site Level'));
+
+      const siteTab = screen.getByText('Site Level');
+      expect(siteTab).toHaveClass('data-[state=active]');
+    });
 
     it('switches to Asset Level tab when clicked', () => {
       render(
@@ -231,14 +231,14 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Asset Level'))
-      
-      const assetTab = screen.getByText('Asset Level')
-      expect(assetTab).toHaveClass('data-[state=active]')
-    })
-  })
+      );
+
+      fireEvent.click(screen.getByText('Asset Level'));
+
+      const assetTab = screen.getByText('Asset Level');
+      expect(assetTab).toHaveClass('data-[state=active]');
+    });
+  });
 
   describe('Configuration Display', () => {
     it('displays global configurations in Global tab', () => {
@@ -250,11 +250,11 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Theft Alert')).toBeInTheDocument()
-      expect(screen.getByText('Global')).toBeInTheDocument()
-    })
+      );
+
+      expect(screen.getByText('Theft Alert')).toBeInTheDocument();
+      expect(screen.getByText('Global')).toBeInTheDocument();
+    });
 
     it('displays site configurations in Site Level tab', () => {
       render(
@@ -265,13 +265,13 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Site Level'))
-      
-      expect(screen.getByText('Battery Alert')).toBeInTheDocument()
-      expect(screen.getByText('Construction Site A')).toBeInTheDocument()
-    })
+      );
+
+      fireEvent.click(screen.getByText('Site Level'));
+
+      expect(screen.getByText('Battery Alert')).toBeInTheDocument();
+      expect(screen.getByText('Construction Site A')).toBeInTheDocument();
+    });
 
     it('displays asset configurations in Asset Level tab', () => {
       render(
@@ -282,14 +282,14 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Asset Level'))
-      
-      expect(screen.getByText('Compliance Alert')).toBeInTheDocument()
-      expect(screen.getByText('Generator-001')).toBeInTheDocument()
-    })
-  })
+      );
+
+      fireEvent.click(screen.getByText('Asset Level'));
+
+      expect(screen.getByText('Compliance Alert')).toBeInTheDocument();
+      expect(screen.getByText('Generator-001')).toBeInTheDocument();
+    });
+  });
 
   describe('Configuration Details', () => {
     it('displays configuration status badges', () => {
@@ -301,10 +301,10 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Enabled')).toBeInTheDocument()
-    })
+      );
+
+      expect(screen.getByText('Enabled')).toBeInTheDocument();
+    });
 
     it('displays severity levels', () => {
       render(
@@ -315,10 +315,10 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Critical')).toBeInTheDocument()
-    })
+      );
+
+      expect(screen.getByText('Critical')).toBeInTheDocument();
+    });
 
     it('displays threshold values', () => {
       render(
@@ -329,11 +329,11 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Movement Distance: 100m')).toBeInTheDocument()
-      expect(screen.getByText('Time Threshold: 5min')).toBeInTheDocument()
-    })
+      );
+
+      expect(screen.getByText('Movement Distance: 100m')).toBeInTheDocument();
+      expect(screen.getByText('Time Threshold: 5min')).toBeInTheDocument();
+    });
 
     it('displays suppression settings', () => {
       render(
@@ -344,10 +344,12 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Suppression: 1h, max 5 alerts')).toBeInTheDocument()
-    })
+      );
+
+      expect(
+        screen.getByText('Suppression: 1h, max 5 alerts')
+      ).toBeInTheDocument();
+    });
 
     it('displays escalation settings', () => {
       render(
@@ -358,11 +360,11 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('Escalation: 30min delay')).toBeInTheDocument()
-    })
-  })
+      );
+
+      expect(screen.getByText('Escalation: 30min delay')).toBeInTheDocument();
+    });
+  });
 
   describe('Configuration Actions', () => {
     it('renders edit and delete buttons for each configuration', () => {
@@ -374,14 +376,14 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      const editButtons = screen.getAllByText('Edit')
-      const deleteButtons = screen.getAllByText('Delete')
-      
-      expect(editButtons.length).toBeGreaterThan(0)
-      expect(deleteButtons.length).toBeGreaterThan(0)
-    })
+      );
+
+      const editButtons = screen.getAllByText('Edit');
+      const deleteButtons = screen.getAllByText('Delete');
+
+      expect(editButtons.length).toBeGreaterThan(0);
+      expect(deleteButtons.length).toBeGreaterThan(0);
+    });
 
     it('opens edit dialog when Edit button is clicked', () => {
       render(
@@ -392,13 +394,13 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      const editButtons = screen.getAllByText('Edit')
-      fireEvent.click(editButtons[0])
-      
-      expect(screen.getByText('Edit Alert Configuration')).toBeInTheDocument()
-    })
+      );
+
+      const editButtons = screen.getAllByText('Edit');
+      fireEvent.click(editButtons[0]);
+
+      expect(screen.getByText('Edit Alert Configuration')).toBeInTheDocument();
+    });
 
     it('shows delete confirmation when Delete button is clicked', () => {
       render(
@@ -409,15 +411,17 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      const deleteButtons = screen.getAllByText('Delete')
-      fireEvent.click(deleteButtons[0])
-      
-      expect(screen.getByText('Are you sure?')).toBeInTheDocument()
-      expect(screen.getByText('This will permanently delete the alert configuration')).toBeInTheDocument()
-    })
-  })
+      );
+
+      const deleteButtons = screen.getAllByText('Delete');
+      fireEvent.click(deleteButtons[0]);
+
+      expect(screen.getByText('Are you sure?')).toBeInTheDocument();
+      expect(
+        screen.getByText('This will permanently delete the alert configuration')
+      ).toBeInTheDocument();
+    });
+  });
 
   describe('Add Configuration', () => {
     it('opens add configuration dialog when Add Configuration button is clicked', () => {
@@ -429,12 +433,12 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Add Configuration'))
-      
-      expect(screen.getByText('Add Alert Configuration')).toBeInTheDocument()
-    })
+      );
+
+      fireEvent.click(screen.getByText('Add Configuration'));
+
+      expect(screen.getByText('Add Alert Configuration')).toBeInTheDocument();
+    });
 
     it('shows alert type selector in add dialog', () => {
       render(
@@ -445,12 +449,12 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Add Configuration'))
-      
-      expect(screen.getByText('Alert Type')).toBeInTheDocument()
-    })
+      );
+
+      fireEvent.click(screen.getByText('Add Configuration'));
+
+      expect(screen.getByText('Alert Type')).toBeInTheDocument();
+    });
 
     it('shows entity selector for site and asset levels', () => {
       render(
@@ -461,14 +465,14 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Site Level'))
-      fireEvent.click(screen.getByText('Add Configuration'))
-      
-      expect(screen.getByText('Site')).toBeInTheDocument()
-    })
-  })
+      );
+
+      fireEvent.click(screen.getByText('Site Level'));
+      fireEvent.click(screen.getByText('Add Configuration'));
+
+      expect(screen.getByText('Site')).toBeInTheDocument();
+    });
+  });
 
   describe('Form Validation', () => {
     it('validates required fields in add configuration form', async () => {
@@ -480,17 +484,19 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Add Configuration'))
-      
-      const saveButton = screen.getByText('Save Configuration')
-      fireEvent.click(saveButton)
-      
+      );
+
+      fireEvent.click(screen.getByText('Add Configuration'));
+
+      const saveButton = screen.getByText('Save Configuration');
+      fireEvent.click(saveButton);
+
       await waitFor(() => {
-        expect(screen.getByText('Please select an alert type')).toBeInTheDocument()
-      })
-    })
+        expect(
+          screen.getByText('Please select an alert type')
+        ).toBeInTheDocument();
+      });
+    });
 
     it('validates threshold values', async () => {
       render(
@@ -501,27 +507,29 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Add Configuration'))
-      
+      );
+
+      fireEvent.click(screen.getByText('Add Configuration'));
+
       // Select alert type
-      const alertTypeSelect = screen.getByDisplayValue('Select alert type')
-      fireEvent.click(alertTypeSelect)
-      fireEvent.click(screen.getByText('Battery Alert'))
-      
+      const alertTypeSelect = screen.getByDisplayValue('Select alert type');
+      fireEvent.click(alertTypeSelect);
+      fireEvent.click(screen.getByText('Battery Alert'));
+
       // Enter invalid threshold
-      const thresholdInput = screen.getByLabelText('Battery Level (%)')
-      fireEvent.change(thresholdInput, { target: { value: '150' } })
-      
-      const saveButton = screen.getByText('Save Configuration')
-      fireEvent.click(saveButton)
-      
+      const thresholdInput = screen.getByLabelText('Battery Level (%)');
+      fireEvent.change(thresholdInput, { target: { value: '150' } });
+
+      const saveButton = screen.getByText('Save Configuration');
+      fireEvent.click(saveButton);
+
       await waitFor(() => {
-        expect(screen.getByText('Battery level must be between 0 and 100')).toBeInTheDocument()
-      })
-    })
-  })
+        expect(
+          screen.getByText('Battery level must be between 0 and 100')
+        ).toBeInTheDocument();
+      });
+    });
+  });
 
   describe('Save and Delete Operations', () => {
     it('calls onSaveConfig when saving new configuration', async () => {
@@ -533,29 +541,29 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Add Configuration'))
-      
+      );
+
+      fireEvent.click(screen.getByText('Add Configuration'));
+
       // Fill out form
-      const alertTypeSelect = screen.getByDisplayValue('Select alert type')
-      fireEvent.click(alertTypeSelect)
-      fireEvent.click(screen.getByText('Battery Alert'))
-      
-      const thresholdInput = screen.getByLabelText('Battery Level (%)')
-      fireEvent.change(thresholdInput, { target: { value: '20' } })
-      
-      const saveButton = screen.getByText('Save Configuration')
-      fireEvent.click(saveButton)
-      
+      const alertTypeSelect = screen.getByDisplayValue('Select alert type');
+      fireEvent.click(alertTypeSelect);
+      fireEvent.click(screen.getByText('Battery Alert'));
+
+      const thresholdInput = screen.getByLabelText('Battery Level (%)');
+      fireEvent.change(thresholdInput, { target: { value: '20' } });
+
+      const saveButton = screen.getByText('Save Configuration');
+      fireEvent.click(saveButton);
+
       await waitFor(() => {
-        expect(mockOnSaveConfig).toHaveBeenCalled()
-      })
-    })
+        expect(mockOnSaveConfig).toHaveBeenCalled();
+      });
+    });
 
     it('shows success toast when save is successful', async () => {
-      const { toast } = require('sonner')
-      
+      const { toast } = require('sonner');
+
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -564,25 +572,27 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Add Configuration'))
-      
+      );
+
+      fireEvent.click(screen.getByText('Add Configuration'));
+
       // Fill out form
-      const alertTypeSelect = screen.getByDisplayValue('Select alert type')
-      fireEvent.click(alertTypeSelect)
-      fireEvent.click(screen.getByText('Battery Alert'))
-      
-      const thresholdInput = screen.getByLabelText('Battery Level (%)')
-      fireEvent.change(thresholdInput, { target: { value: '20' } })
-      
-      const saveButton = screen.getByText('Save Configuration')
-      fireEvent.click(saveButton)
-      
+      const alertTypeSelect = screen.getByDisplayValue('Select alert type');
+      fireEvent.click(alertTypeSelect);
+      fireEvent.click(screen.getByText('Battery Alert'));
+
+      const thresholdInput = screen.getByLabelText('Battery Level (%)');
+      fireEvent.change(thresholdInput, { target: { value: '20' } });
+
+      const saveButton = screen.getByText('Save Configuration');
+      fireEvent.click(saveButton);
+
       await waitFor(() => {
-        expect(toast.success).toHaveBeenCalledWith('Alert configuration saved successfully')
-      })
-    })
+        expect(toast.success).toHaveBeenCalledWith(
+          'Alert configuration saved successfully'
+        );
+      });
+    });
 
     it('calls onDeleteConfig when confirming deletion', async () => {
       render(
@@ -593,22 +603,22 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      const deleteButtons = screen.getAllByText('Delete')
-      fireEvent.click(deleteButtons[0])
-      
-      const confirmButton = screen.getByText('Delete')
-      fireEvent.click(confirmButton)
-      
+      );
+
+      const deleteButtons = screen.getAllByText('Delete');
+      fireEvent.click(deleteButtons[0]);
+
+      const confirmButton = screen.getByText('Delete');
+      fireEvent.click(confirmButton);
+
       await waitFor(() => {
-        expect(mockOnDeleteConfig).toHaveBeenCalled()
-      })
-    })
+        expect(mockOnDeleteConfig).toHaveBeenCalled();
+      });
+    });
 
     it('shows success toast when deletion is successful', async () => {
-      const { toast } = require('sonner')
-      
+      const { toast } = require('sonner');
+
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -617,19 +627,21 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      const deleteButtons = screen.getAllByText('Delete')
-      fireEvent.click(deleteButtons[0])
-      
-      const confirmButton = screen.getByText('Delete')
-      fireEvent.click(confirmButton)
-      
+      );
+
+      const deleteButtons = screen.getAllByText('Delete');
+      fireEvent.click(deleteButtons[0]);
+
+      const confirmButton = screen.getByText('Delete');
+      fireEvent.click(confirmButton);
+
       await waitFor(() => {
-        expect(toast.success).toHaveBeenCalledWith('Alert configuration deleted successfully')
-      })
-    })
-  })
+        expect(toast.success).toHaveBeenCalledWith(
+          'Alert configuration deleted successfully'
+        );
+      });
+    });
+  });
 
   describe('Empty States', () => {
     it('shows empty state when no configurations exist for a level', () => {
@@ -641,12 +653,18 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      expect(screen.getByText('No alert configurations found')).toBeInTheDocument()
-      expect(screen.getByText('Get started by creating your first alert configuration')).toBeInTheDocument()
-    })
-  })
+      );
+
+      expect(
+        screen.getByText('No alert configurations found')
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Get started by creating your first alert configuration'
+        )
+      ).toBeInTheDocument();
+    });
+  });
 
   describe('Back Navigation', () => {
     it('calls onBack when Back button is clicked', () => {
@@ -658,11 +676,11 @@ describe('HierarchicalAlertConfiguration', () => {
           onDeleteConfig={mockOnDeleteConfig}
           onBack={mockOnBack}
         />
-      )
-      
-      fireEvent.click(screen.getByText('Back'))
-      
-      expect(mockOnBack).toHaveBeenCalled()
-    })
-  })
-})
+      );
+
+      fireEvent.click(screen.getByText('Back'));
+
+      expect(mockOnBack).toHaveBeenCalled();
+    });
+  });
+});

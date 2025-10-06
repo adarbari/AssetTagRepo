@@ -1,6 +1,7 @@
 """
 Observation models for Bluetooth signal data
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

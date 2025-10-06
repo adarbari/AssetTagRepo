@@ -1,11 +1,11 @@
 /**
  * Notification Configuration Service
- * 
+ *
  * Handles hierarchical notification preferences:
  * - User Level (default)
  * - Site Level (overrides user)
  * - Asset Level (overrides site and user)
- * 
+ *
  * Provides configuration resolution and inspection tools.
  */
 
@@ -14,8 +14,8 @@ import type {
   EffectiveNotificationConfig,
   ConfigurationInspection,
   NotificationLevel,
-} from "../types/notificationConfig";
-import type { Asset, Site } from "../types";
+} from '../types/notificationConfig';
+import type { Asset, Site } from '../types';
 
 /**
  * Mock storage for notification preferences
@@ -31,23 +31,23 @@ class NotificationConfigStore {
   private initializeMockData() {
     // Default user-level config
     const userConfig: NotificationPreferences = {
-      id: "user-default-001",
-      level: "user",
-      entityId: "current-user",
+      id: 'user-default-001',
+      level: 'user',
+      entityId: 'current-user',
       channels: {
         email: {
           enabled: true,
-          addresses: ["user@example.com"],
+          addresses: ['user@example.com'],
           verified: true,
         },
         sms: {
           enabled: true,
-          phoneNumbers: ["+1-555-0123"],
+          phoneNumbers: ['+1-555-0123'],
           verified: true,
         },
         push: {
           enabled: true,
-          devices: ["device-1", "device-2"],
+          devices: ['device-1', 'device-2'],
         },
         webhook: {
           enabled: false,
@@ -56,15 +56,15 @@ class NotificationConfigStore {
       },
       filters: {
         types: [], // All types
-        severities: ["medium", "high", "critical"], // Skip low severity
+        severities: ['medium', 'high', 'critical'], // Skip low severity
         sites: [],
         assets: [],
       },
       quietHours: {
         enabled: true,
-        start: "22:00",
-        end: "08:00",
-        timezone: "America/New_York",
+        start: '22:00',
+        end: '08:00',
+        timezone: 'America/New_York',
         excludeCritical: true,
         daysOfWeek: [],
       },
@@ -78,14 +78,17 @@ class NotificationConfigStore {
       updatedAt: new Date().toISOString(),
     };
 
-    this.configs.set(this.getKey("user", "current-user"), userConfig);
+    this.configs.set(this.getKey('user', 'current-user'), userConfig);
   }
 
   private getKey(level: NotificationLevel, entityId: string): string {
     return `${level}:${entityId}`;
   }
 
-  get(level: NotificationLevel, entityId: string): NotificationPreferences | undefined {
+  get(
+    level: NotificationLevel,
+    entityId: string
+  ): NotificationPreferences | undefined {
     return this.configs.get(this.getKey(level, entityId));
   }
 
@@ -107,9 +110,9 @@ const configStore = new NotificationConfigStore();
 
 /**
  * Resolve effective notification configuration for a given context
- * 
+ *
  * Resolution order: Asset → Site → User (most specific wins)
- * 
+ *
  * @param configs - Optional external configs (from App.tsx state). If not provided, uses internal store.
  */
 export function resolveNotificationConfig(
@@ -121,24 +124,27 @@ export function resolveNotificationConfig(
   configs?: Record<string, NotificationPreferences>
 ): EffectiveNotificationConfig {
   // Helper to get config from either external source or internal store
-  const getConfig = (level: NotificationLevel, entityId: string): NotificationPreferences | undefined => {
+  const getConfig = (
+    level: NotificationLevel,
+    entityId: string
+  ): NotificationPreferences | undefined => {
     if (configs) {
       const key = `${level}:${entityId}`;
       return configs[key];
     }
     return configStore.get(level, entityId);
   };
-  const inheritanceChain: EffectiveNotificationConfig["inheritanceChain"] = [];
+  const inheritanceChain: EffectiveNotificationConfig['inheritanceChain'] = [];
   let effectiveConfig: NotificationPreferences | undefined;
-  let activeLevel: NotificationLevel = "user";
+  let activeLevel: NotificationLevel = 'user';
 
   // Check user level (base level)
-  const userConfig = getConfig("user", userId);
+  const userConfig = getConfig('user', userId);
   if (userConfig) {
     inheritanceChain.push({
-      level: "user",
+      level: 'user',
       entityId: userId,
-      entityName: "Your Account",
+      entityName: 'Your Account',
       isActive: true, // May be set to false later if overridden
     });
     effectiveConfig = userConfig;
@@ -146,10 +152,10 @@ export function resolveNotificationConfig(
 
   // Check site level
   if (siteId && site) {
-    const siteConfig = getConfig("site", siteId);
+    const siteConfig = getConfig('site', siteId);
     if (siteConfig && siteConfig.isOverride) {
       inheritanceChain.push({
-        level: "site",
+        level: 'site',
         entityId: siteId,
         entityName: site.name,
         isActive: true,
@@ -161,10 +167,10 @@ export function resolveNotificationConfig(
         }
       });
       effectiveConfig = siteConfig;
-      activeLevel = "site";
+      activeLevel = 'site';
     } else if (site) {
       inheritanceChain.push({
-        level: "site",
+        level: 'site',
         entityId: siteId,
         entityName: site.name,
         isActive: false,
@@ -174,10 +180,10 @@ export function resolveNotificationConfig(
 
   // Check asset level
   if (assetId && asset) {
-    const assetConfig = getConfig("asset", assetId);
+    const assetConfig = getConfig('asset', assetId);
     if (assetConfig && assetConfig.isOverride) {
       inheritanceChain.push({
-        level: "asset",
+        level: 'asset',
         entityId: assetId,
         entityName: asset.name,
         isActive: true,
@@ -189,10 +195,10 @@ export function resolveNotificationConfig(
         }
       });
       effectiveConfig = assetConfig;
-      activeLevel = "asset";
+      activeLevel = 'asset';
     } else if (asset) {
       inheritanceChain.push({
-        level: "asset",
+        level: 'asset',
         entityId: assetId,
         entityName: asset.name,
         isActive: false,
@@ -201,14 +207,17 @@ export function resolveNotificationConfig(
   }
 
   // Determine overrides
-  const overrides: EffectiveNotificationConfig["overrides"] = [];
-  if (activeLevel !== "user") {
+  const overrides: EffectiveNotificationConfig['overrides'] = [];
+  if (activeLevel !== 'user') {
     // Compare effective config with user config to find overrides
     if (userConfig && effectiveConfig) {
       // This is simplified - in production, you'd do a deep comparison
-      if (effectiveConfig.channels.email.enabled !== userConfig.channels.email.enabled) {
+      if (
+        effectiveConfig.channels.email.enabled !==
+        userConfig.channels.email.enabled
+      ) {
         overrides.push({
-          field: "channels.email.enabled",
+          field: 'channels.email.enabled',
           value: effectiveConfig.channels.email.enabled,
           source: activeLevel,
         });
@@ -227,12 +236,18 @@ export function resolveNotificationConfig(
     preferences: effectiveConfig || createDefaultPreferences(userId),
     source: {
       level: activeLevel,
-      entityId: activeLevel === "user" ? userId : activeLevel === "site" ? siteId! : assetId!,
-      entityName: activeLevel === "user" 
-        ? "Your Account" 
-        : activeLevel === "site" 
-        ? site?.name || "Unknown Site"
-        : asset?.name || "Unknown Asset",
+      entityId:
+        activeLevel === 'user'
+          ? userId
+          : activeLevel === 'site'
+            ? siteId!
+            : assetId!,
+      entityName:
+        activeLevel === 'user'
+          ? 'Your Account'
+          : activeLevel === 'site'
+            ? site?.name || 'Unknown Site'
+            : asset?.name || 'Unknown Asset',
     },
     inheritanceChain,
     overrides,
@@ -247,7 +262,7 @@ export function resolveNotificationConfig(
 function createDefaultPreferences(userId: string): NotificationPreferences {
   return {
     id: `user-${userId}`,
-    level: "user",
+    level: 'user',
     entityId: userId,
     channels: {
       email: { enabled: true, addresses: [], verified: false },
@@ -257,12 +272,12 @@ function createDefaultPreferences(userId: string): NotificationPreferences {
     },
     filters: {
       types: [],
-      severities: ["high", "critical"],
+      severities: ['high', 'critical'],
     },
     quietHours: {
       enabled: false,
-      start: "22:00",
-      end: "08:00",
+      start: '22:00',
+      end: '08:00',
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       excludeCritical: true,
     },
@@ -279,11 +294,11 @@ function createDefaultPreferences(userId: string): NotificationPreferences {
 
 /**
  * Inspect configuration for debugging
- * 
+ *
  * @param configs - Optional external configs (from App.tsx state). If not provided, uses internal store.
  */
 export function inspectConfiguration(
-  entityType: "user" | "site" | "asset",
+  entityType: 'user' | 'site' | 'asset',
   entityId: string,
   entityName: string,
   userId: string,
@@ -293,10 +308,20 @@ export function inspectConfiguration(
   site?: Site,
   configs?: Record<string, NotificationPreferences>
 ): ConfigurationInspection {
-  const effectiveConfig = resolveNotificationConfig(userId, siteId, assetId, asset, site, configs);
+  const effectiveConfig = resolveNotificationConfig(
+    userId,
+    siteId,
+    assetId,
+    asset,
+    site,
+    configs
+  );
 
   // Helper to get config from either external source or internal store
-  const getConfig = (level: NotificationLevel, entityId: string): NotificationPreferences | undefined => {
+  const getConfig = (
+    level: NotificationLevel,
+    entityId: string
+  ): NotificationPreferences | undefined => {
     if (configs) {
       const key = `${level}:${entityId}`;
       return configs[key];
@@ -305,27 +330,27 @@ export function inspectConfiguration(
   };
 
   // Check which levels have configurations
-  const availableLevels: ConfigurationInspection["availableLevels"] = [
+  const availableLevels: ConfigurationInspection['availableLevels'] = [
     {
-      level: "user",
-      exists: !!getConfig("user", userId),
-      config: getConfig("user", userId),
+      level: 'user',
+      exists: !!getConfig('user', userId),
+      config: getConfig('user', userId),
     },
   ];
 
   if (siteId) {
     availableLevels.push({
-      level: "site",
-      exists: !!getConfig("site", siteId),
-      config: getConfig("site", siteId),
+      level: 'site',
+      exists: !!getConfig('site', siteId),
+      config: getConfig('site', siteId),
     });
   }
 
   if (assetId) {
     availableLevels.push({
-      level: "asset",
-      exists: !!getConfig("asset", assetId),
-      config: getConfig("asset", assetId),
+      level: 'asset',
+      exists: !!getConfig('asset', assetId),
+      config: getConfig('asset', assetId),
     });
   }
 

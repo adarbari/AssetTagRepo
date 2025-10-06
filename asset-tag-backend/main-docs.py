@@ -2,6 +2,7 @@
 Asset Tag Backend - FastAPI Application for Documentation
 This version works without database dependencies for API documentation
 """
+
 import logging
 import time
 

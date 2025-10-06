@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { toast } from "sonner";
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface FormSubmitOptions {
   onSuccess?: () => void;
@@ -23,8 +23,8 @@ export function useFormSubmit<T = any>(
   const {
     onSuccess,
     onError,
-    successMessage = "Operation completed successfully",
-    errorMessage = "Operation failed",
+    successMessage = 'Operation completed successfully',
+    errorMessage = 'Operation failed',
     validate,
   } = options;
 

@@ -2,6 +2,7 @@
 Test database configuration module
 Separate from main database.py to avoid circular imports
 """
+
 import os
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine

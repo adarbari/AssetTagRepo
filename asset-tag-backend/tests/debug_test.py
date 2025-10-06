@@ -1,6 +1,7 @@
 """
 Debug test to check client fixture
 """
+
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession

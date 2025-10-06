@@ -1,14 +1,14 @@
 /**
  * PageHeader with Breadcrumbs Component
- * 
+ *
  * Provides consistent page header UI with breadcrumb navigation for sub-actions
  * Used for forms and actions that are accessed from detail pages
  */
 
-import React from "react";
-import { ArrowLeft, LucideIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
+import React from 'react';
+import { ArrowLeft, LucideIcon } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,8 +16,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../ui/breadcrumb";
-import { PageHeader } from "./PageHeader";
+} from '../ui/breadcrumb';
+import { PageHeader } from './PageHeader';
 
 interface PageHeaderWithBreadcrumbsProps {
   title: string;
@@ -25,7 +25,7 @@ interface PageHeaderWithBreadcrumbsProps {
   icon?: LucideIcon;
   badge?: {
     label: string;
-    variant?: "default" | "secondary" | "outline" | "destructive";
+    variant?: 'default' | 'secondary' | 'outline' | 'destructive';
   };
   actions?: React.ReactNode;
   onBack: () => void;
@@ -44,15 +44,15 @@ export function PageHeaderWithBreadcrumbs({
   breadcrumbCurrent,
 }: PageHeaderWithBreadcrumbsProps) {
   return (
-    <div className="border-b bg-background px-8 py-4">
-      <div className="flex items-center gap-4 mb-4">
-        <Button variant="ghost" size="icon" onClick={onBack}>
-          <ArrowLeft className="h-5 w-5" />
+    <div className='border-b bg-background px-8 py-4'>
+      <div className='flex items-center gap-4 mb-4'>
+        <Button variant='ghost' size='icon' onClick={onBack}>
+          <ArrowLeft className='h-5 w-5' />
         </Button>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink onClick={onBack} className="cursor-pointer">
+              <BreadcrumbLink onClick={onBack} className='cursor-pointer'>
                 {breadcrumbParent}
               </BreadcrumbLink>
             </BreadcrumbItem>

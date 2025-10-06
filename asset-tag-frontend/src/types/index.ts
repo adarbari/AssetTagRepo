@@ -1,18 +1,18 @@
 // Common types shared across the application
 
-export type AssetAvailability = 
-  | "available"
-  | "assigned"
-  | "in-use"
-  | "maintenance"
-  | "reserved"
-  | "unavailable";
+export type AssetAvailability =
+  | 'available'
+  | 'assigned'
+  | 'in-use'
+  | 'maintenance'
+  | 'reserved'
+  | 'unavailable';
 
 export interface Asset {
   id: string;
   name: string;
   type: string;
-  status: "active" | "inactive" | "maintenance" | "in-transit" | "checked-out";
+  status: 'active' | 'inactive' | 'maintenance' | 'in-transit' | 'checked-out';
   location: string;
   lastSeen: string;
   battery: number;
@@ -27,14 +27,14 @@ export interface Asset {
   nextMaintenance?: string;
   coordinates?: [number, number];
   temperature?: number;
-  movement?: "stationary" | "moving";
+  movement?: 'stationary' | 'moving';
   // Pricing and availability
   hourlyRate?: number;
   availability?: AssetAvailability;
   assignedJobId?: string;
   assignedJobName?: string;
-  assignmentStartDate?: string;  // ISO timestamp - when asset was assigned to job
-  assignmentEndDate?: string;    // ISO timestamp - when asset assignment ends
+  assignmentStartDate?: string; // ISO timestamp - when asset was assigned to job
+  assignmentEndDate?: string; // ISO timestamp - when asset assignment ends
 }
 
 export interface Site {
@@ -43,7 +43,7 @@ export interface Site {
   location: string;
   assets: number; // Computed from assetIds.length
   area: string;
-  status: "active" | "inactive";
+  status: 'active' | 'inactive';
   manager?: string;
   coordinates?: {
     lat: number;
@@ -63,8 +63,8 @@ export interface Site {
 export interface Geofence {
   id: string;
   name: string;
-  type: "circular" | "polygon";
-  status: "active" | "inactive";
+  type: 'circular' | 'polygon';
+  status: 'active' | 'inactive';
   assets: number;
   center?: [number, number];
   radius?: number;
@@ -74,21 +74,21 @@ export interface Geofence {
   tolerance?: number; // Buffer zone tolerance in feet
   alertOnEntry?: boolean; // Trigger alerts when assets enter
   alertOnExit?: boolean; // Trigger alerts when assets exit
-  geofenceType?: "authorized" | "restricted"; // Zone classification
+  geofenceType?: 'authorized' | 'restricted'; // Zone classification
   expectedAssetIds?: string[]; // Assets that should be within this geofence
   // Compliance tracking
   expectedAssets?: number; // Number of assets expected in this geofence
   violatingAssets?: number; // Number of assets violating this geofence
   complianceRate?: number; // Compliance rate percentage
   // Vehicle-based geofencing support
-  locationMode?: "static" | "vehicle-based"; // NEW: Static location or follows vehicle
+  locationMode?: 'static' | 'vehicle-based'; // NEW: Static location or follows vehicle
   vehicleId?: string; // NEW: ID of vehicle to follow (for vehicle-based mode)
   vehicleName?: string; // NEW: Name of vehicle (for display)
   // Asset attachment
   assetId?: string; // Specific asset this geofence is attached to
   assetName?: string; // Asset name for display
   // Attachment type (helps determine how to display the geofence)
-  attachmentType?: "site" | "vehicle" | "asset" | "none";
+  attachmentType?: 'site' | 'vehicle' | 'asset' | 'none';
 }
 
 // Vehicle type for vehicle-based geofencing
@@ -97,44 +97,46 @@ export interface Vehicle {
   name: string;
   type: string;
   licensePlate?: string;
-  status: "active" | "inactive" | "maintenance";
-  location?: {
-    lat: number;
-    lng: number;
-  } | string; // Support both coordinate object and string location
+  status: 'active' | 'inactive' | 'maintenance';
+  location?:
+    | {
+        lat: number;
+        lng: number;
+      }
+    | string; // Support both coordinate object and string location
   assignedDriver?: string;
   driver?: string; // Alternative property name
   lastSeen?: string;
 }
 
-export type AlertType = 
-  | "theft"                    // Out of hours, unusual movement pattern
-  | "battery"                  // Low battery alert
-  | "compliance"               // Compliance violations (geofence, certification)
-  | "underutilized"           // Asset not being used effectively
-  | "offline"                  // Not reachable/no signal
-  | "unauthorized-zone"        // Entered restricted area
-  | "predictive-maintenance"; // Predicted failure/maintenance needed
+export type AlertType =
+  | 'theft' // Out of hours, unusual movement pattern
+  | 'battery' // Low battery alert
+  | 'compliance' // Compliance violations (geofence, certification)
+  | 'underutilized' // Asset not being used effectively
+  | 'offline' // Not reachable/no signal
+  | 'unauthorized-zone' // Entered restricted area
+  | 'predictive-maintenance'; // Predicted failure/maintenance needed
 
 export interface Alert {
   id: string;
   type: AlertType;
-  severity: "critical" | "warning" | "info";
+  severity: 'critical' | 'warning' | 'info';
   asset: string;
   assetId?: string;
   message: string;
   timestamp: string;
-  status: "active" | "acknowledged" | "resolved";
+  status: 'active' | 'acknowledged' | 'resolved';
   location?: string;
-  geofenceId?: string;         // For geofence-related alerts
-  reason?: string;             // Additional context
-  suggestedAction?: string;    // Recommended action to take
-  autoResolvable?: boolean;    // Can be auto-resolved
+  geofenceId?: string; // For geofence-related alerts
+  reason?: string; // Additional context
+  suggestedAction?: string; // Recommended action to take
+  autoResolvable?: boolean; // Can be auto-resolved
   metadata?: Record<string, any>; // Additional alert-specific data
   // Status update timestamps
-  acknowledgedAt?: string;     // When alert was acknowledged
-  resolvedAt?: string;         // When alert was resolved
-  resolutionNotes?: string;    // Notes added during resolution
+  acknowledgedAt?: string; // When alert was acknowledged
+  resolvedAt?: string; // When alert was resolved
+  resolutionNotes?: string; // Notes added during resolution
   // Workflow execution history
   workflowActions?: Array<{
     action: string;
@@ -148,9 +150,9 @@ export interface MaintenanceRecord {
   id: string;
   assetId: string;
   assetName: string;
-  type: "scheduled" | "unscheduled" | "inspection";
-  status: "pending" | "in-progress" | "completed" | "overdue";
-  priority: "low" | "medium" | "high" | "critical";
+  type: 'scheduled' | 'unscheduled' | 'inspection';
+  status: 'pending' | 'in-progress' | 'completed' | 'overdue';
+  priority: 'low' | 'medium' | 'high' | 'critical';
   scheduledDate: string;
   completedDate?: string;
   assignedTo?: string;
@@ -160,12 +162,11 @@ export interface MaintenanceRecord {
   notes?: string;
 }
 
-
 export interface CheckInOutRecord {
   id: string;
   assetId: string;
   assetName: string;
-  type: "check-in" | "check-out";
+  type: 'check-in' | 'check-out';
   timestamp: string;
   user: string;
   location: string;
@@ -177,14 +178,14 @@ export interface ActivityEvent {
   timestamp: Date;
   siteId: string;
   siteName: string;
-  type: "arrival" | "departure";
+  type: 'arrival' | 'departure';
 }
 
 export interface Personnel {
   id: string;
   name: string;
   role: string;
-  status: "on-duty" | "off-duty" | "on-break";
+  status: 'on-duty' | 'off-duty' | 'on-break';
   currentSite?: string;
   activityHistory: ActivityEvent[];
 }
@@ -195,4 +196,11 @@ export interface AssetWithActivity extends Asset {
 }
 
 // Re-export issue types
-export type { Issue, IssueType, IssueSeverity, IssueStatus, CreateIssueInput, UpdateIssueInput } from './issue';
+export type {
+  Issue,
+  IssueType,
+  IssueSeverity,
+  IssueStatus,
+  CreateIssueInput,
+  UpdateIssueInput,
+} from './issue';

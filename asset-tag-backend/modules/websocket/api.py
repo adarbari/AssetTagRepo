@@ -1,6 +1,7 @@
 """
 WebSocket API endpoints for real-time communication
 """
+
 import json
 import logging
 from typing import Any, Dict, Optional

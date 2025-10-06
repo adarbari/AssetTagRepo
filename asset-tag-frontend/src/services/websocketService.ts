@@ -1,11 +1,11 @@
 /**
  * WebSocket Service for Real-time Updates
- * 
+ *
  * This service handles WebSocket connections for real-time updates
  * including location updates, alerts, and other live data.
  */
 
-import { Alert } from "../types";
+import { Alert } from '../types';
 
 export interface LocationUpdate {
   assetId: string;
@@ -42,7 +42,7 @@ class WebSocketService {
       reconnectInterval: 5000,
       maxReconnectAttempts: 10,
       heartbeatInterval: 30000,
-      ...config
+      ...config,
     };
   }
 
@@ -74,7 +74,7 @@ class WebSocketService {
           resolve();
         };
 
-        this.ws.onmessage = (event) => {
+        this.ws.onmessage = event => {
           try {
             const message: WebSocketMessage = JSON.parse(event.data);
             this.handleMessage(message);
@@ -83,22 +83,24 @@ class WebSocketService {
           }
         };
 
-        this.ws.onclose = (event) => {
+        this.ws.onclose = event => {
           console.log('WebSocket disconnected:', event.code, event.reason);
           this.isConnecting = false;
           this.stopHeartbeat();
-          
-          if (!event.wasClean && this.reconnectAttempts < this.config.maxReconnectAttempts!) {
+
+          if (
+            !event.wasClean &&
+            this.reconnectAttempts < this.config.maxReconnectAttempts!
+          ) {
             this.scheduleReconnect();
           }
         };
 
-        this.ws.onerror = (error) => {
+        this.ws.onerror = error => {
           console.error('WebSocket error:', error);
           this.isConnecting = false;
           reject(error);
         };
-
       } catch (error) {
         this.isConnecting = false;
         reject(error);
@@ -112,7 +114,7 @@ class WebSocketService {
   disconnect(): void {
     this.stopHeartbeat();
     this.clearReconnectTimer();
-    
+
     if (this.ws) {
       this.ws.close(1000, 'Client disconnect');
       this.ws = null;
@@ -122,15 +124,18 @@ class WebSocketService {
   /**
    * Subscribe to location updates for a specific asset
    */
-  subscribeToLocationUpdates(assetId: string, callback: (update: LocationUpdate) => void): () => void {
+  subscribeToLocationUpdates(
+    assetId: string,
+    callback: (update: LocationUpdate) => void
+  ): () => void {
     const key = `location:${assetId}`;
     this.addListener(key, callback);
-    
+
     // Send subscription message
     this.send({
       type: 'subscribe',
       channel: 'location_updates',
-      assetId: assetId
+      assetId: assetId,
     });
 
     // Return unsubscribe function
@@ -139,7 +144,7 @@ class WebSocketService {
       this.send({
         type: 'unsubscribe',
         channel: 'location_updates',
-        assetId: assetId
+        assetId: assetId,
       });
     };
   }
@@ -150,11 +155,11 @@ class WebSocketService {
   subscribeToAlerts(callback: (alert: Alert) => void): () => void {
     const key = 'alerts';
     this.addListener(key, callback);
-    
+
     // Send subscription message
     this.send({
       type: 'subscribe',
-      channel: 'alerts'
+      channel: 'alerts',
     });
 
     // Return unsubscribe function
@@ -162,7 +167,7 @@ class WebSocketService {
       this.removeListener(key, callback);
       this.send({
         type: 'unsubscribe',
-        channel: 'alerts'
+        channel: 'alerts',
       });
     };
   }
@@ -170,15 +175,18 @@ class WebSocketService {
   /**
    * Subscribe to asset status updates
    */
-  subscribeToAssetStatus(assetId: string, callback: (status: any) => void): () => void {
+  subscribeToAssetStatus(
+    assetId: string,
+    callback: (status: any) => void
+  ): () => void {
     const key = `asset_status:${assetId}`;
     this.addListener(key, callback);
-    
+
     // Send subscription message
     this.send({
       type: 'subscribe',
       channel: 'asset_status',
-      assetId: assetId
+      assetId: assetId,
     });
 
     // Return unsubscribe function
@@ -187,7 +195,7 @@ class WebSocketService {
       this.send({
         type: 'unsubscribe',
         channel: 'asset_status',
-        assetId: assetId
+        assetId: assetId,
       });
     };
   }
@@ -195,14 +203,16 @@ class WebSocketService {
   /**
    * Subscribe to maintenance reminders
    */
-  subscribeToMaintenanceReminders(callback: (reminder: any) => void): () => void {
+  subscribeToMaintenanceReminders(
+    callback: (reminder: any) => void
+  ): () => void {
     const key = 'maintenance_reminders';
     this.addListener(key, callback);
-    
+
     // Send subscription message
     this.send({
       type: 'subscribe',
-      channel: 'maintenance_reminders'
+      channel: 'maintenance_reminders',
     });
 
     // Return unsubscribe function
@@ -210,7 +220,7 @@ class WebSocketService {
       this.removeListener(key, callback);
       this.send({
         type: 'unsubscribe',
-        channel: 'maintenance_reminders'
+        channel: 'maintenance_reminders',
       });
     };
   }
@@ -238,7 +248,10 @@ class WebSocketService {
         this.notifyListeners('alerts', message.data);
         break;
       case 'asset_status':
-        this.notifyListeners(`asset_status:${message.data.assetId}`, message.data);
+        this.notifyListeners(
+          `asset_status:${message.data.assetId}`,
+          message.data
+        );
         break;
       case 'maintenance_reminder':
         this.notifyListeners('maintenance_reminders', message.data);
@@ -296,7 +309,9 @@ class WebSocketService {
     }
 
     this.reconnectAttempts++;
-    console.log(`Scheduling reconnect attempt ${this.reconnectAttempts} in ${this.config.reconnectInterval}ms`);
+    console.log(
+      `Scheduling reconnect attempt ${this.reconnectAttempts} in ${this.config.reconnectInterval}ms`
+    );
 
     this.reconnectTimer = setTimeout(() => {
       this.reconnectTimer = null;
@@ -321,7 +336,7 @@ class WebSocketService {
    */
   private startHeartbeat(): void {
     this.stopHeartbeat();
-    
+
     this.heartbeatTimer = setInterval(() => {
       if (this.ws?.readyState === WebSocket.OPEN) {
         this.send({ type: 'ping' });
@@ -360,14 +375,15 @@ class WebSocketService {
     return {
       status: this.getConnectionStatus(),
       reconnectAttempts: this.reconnectAttempts,
-      url: this.config.url
+      url: this.config.url,
     };
   }
 }
 
 // Create singleton instance
 const getWebSocketUrl = (): string => {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+  const backendUrl =
+    import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
   return backendUrl.replace('http', 'ws') + '/ws';
 };
 
@@ -375,7 +391,7 @@ export const websocketService = new WebSocketService({
   url: getWebSocketUrl(),
   reconnectInterval: 5000,
   maxReconnectAttempts: 10,
-  heartbeatInterval: 30000
+  heartbeatInterval: 30000,
 });
 
 // Export types and service

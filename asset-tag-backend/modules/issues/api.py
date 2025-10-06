@@ -1,6 +1,7 @@
 """
 Issue API endpoints
 """
+
 import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional

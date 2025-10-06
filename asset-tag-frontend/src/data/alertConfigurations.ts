@@ -6,9 +6,9 @@ import {
   WifiOff,
   MapPin,
   Wrench,
-} from "lucide-react";
-import { AlertTypeConfig, AlertConfigField } from "../types/alertConfig";
-import { AlertType } from "../types";
+} from 'lucide-react';
+import { AlertTypeConfig, AlertConfigField } from '../types/alertConfig';
+import { AlertType } from '../types';
 
 // Field configurations reusable across alert types
 const commonFields = {
@@ -22,7 +22,8 @@ const commonFields = {
     max: 60,
     unit: 'minutes',
     required: true,
-    helpText: 'Shorter intervals provide faster detection but increase system load',
+    helpText:
+      'Shorter intervals provide faster detection but increase system load',
   },
   cooldownPeriod: {
     key: 'cooldownPeriod',
@@ -56,7 +57,8 @@ const commonFields = {
 const theftAlertConfig: AlertTypeConfig = {
   type: 'theft',
   label: 'Theft Detection',
-  description: 'Detect unauthorized asset movement and potential theft scenarios',
+  description:
+    'Detect unauthorized asset movement and potential theft scenarios',
   icon: Shield,
   category: 'security',
   color: 'text-red-600',
@@ -164,7 +166,7 @@ const batteryAlertConfig: AlertTypeConfig = {
       max: 25,
       unit: '%',
       required: true,
-      validation: (value) => {
+      validation: value => {
         // This will be validated against lowBatteryThreshold in the component
         return null;
       },
@@ -192,7 +194,7 @@ const batteryAlertConfig: AlertTypeConfig = {
       key: 'excludeCharging',
       label: 'Exclude While Charging',
       type: 'toggle',
-      description: 'Don\'t alert when asset is actively charging',
+      description: "Don't alert when asset is actively charging",
       defaultValue: true,
     },
     commonFields.checkInterval,
@@ -361,14 +363,14 @@ const underutilizedAlertConfig: AlertTypeConfig = {
       key: 'excludeWeekends',
       label: 'Exclude Weekends',
       type: 'toggle',
-      description: 'Don\'t count weekends in utilization calculation',
+      description: "Don't count weekends in utilization calculation",
       defaultValue: true,
     },
     {
       key: 'excludeSeasonalAssets',
       label: 'Exclude Seasonal Assets',
       type: 'toggle',
-      description: 'Don\'t alert for assets marked as seasonal',
+      description: "Don't alert for assets marked as seasonal",
       defaultValue: true,
     },
     {
@@ -387,7 +389,7 @@ const underutilizedAlertConfig: AlertTypeConfig = {
   ],
   examples: [
     'Excavator #23 idle for 14 days - only 15% utilized this month',
-    'Generator #8 hasn\'t moved in 21 days - consider redeployment',
+    "Generator #8 hasn't moved in 21 days - consider redeployment",
   ],
   recommendations: [
     'Set thresholds based on asset rental cost vs utilization',
@@ -434,7 +436,7 @@ const offlineAlertConfig: AlertTypeConfig = {
       key: 'excludeKnownDeadZones',
       label: 'Exclude Dead Zones',
       type: 'toggle',
-      description: 'Don\'t alert when asset is in known coverage gaps',
+      description: "Don't alert when asset is in known coverage gaps",
       defaultValue: true,
       helpText: 'Configure dead zones in geofence settings',
     },
@@ -663,11 +665,11 @@ const predictiveMaintenanceAlertConfig: AlertTypeConfig = {
 
 // Export all configurations as a map
 export const alertTypeConfigurations: Record<AlertType, AlertTypeConfig> = {
-  'theft': theftAlertConfig,
-  'battery': batteryAlertConfig,
-  'compliance': complianceAlertConfig,
-  'underutilized': underutilizedAlertConfig,
-  'offline': offlineAlertConfig,
+  theft: theftAlertConfig,
+  battery: batteryAlertConfig,
+  compliance: complianceAlertConfig,
+  underutilized: underutilizedAlertConfig,
+  offline: offlineAlertConfig,
   'unauthorized-zone': unauthorizedZoneAlertConfig,
   'predictive-maintenance': predictiveMaintenanceAlertConfig,
 };
@@ -683,6 +685,10 @@ export const getAllAlertTypes = (): AlertType[] => {
 };
 
 // Helper to get alert types by category
-export const getAlertTypesByCategory = (category: 'security' | 'operational' | 'maintenance' | 'compliance'): AlertTypeConfig[] => {
-  return Object.values(alertTypeConfigurations).filter(config => config.category === category);
+export const getAlertTypesByCategory = (
+  category: 'security' | 'operational' | 'maintenance' | 'compliance'
+): AlertTypeConfig[] => {
+  return Object.values(alertTypeConfigurations).filter(
+    config => config.category === category
+  );
 };

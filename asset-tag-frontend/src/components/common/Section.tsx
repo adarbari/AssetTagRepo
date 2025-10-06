@@ -1,11 +1,11 @@
 /**
  * Generic Section Component
- * 
+ *
  * Provides consistent section UI with optional icon and actions
  */
 
-import React from "react";
-import { LucideIcon } from "lucide-react";
+import React from 'react';
+import { LucideIcon } from 'lucide-react';
 
 interface SectionProps {
   title: string;
@@ -26,17 +26,17 @@ export function Section({
 }: SectionProps) {
   return (
     <div className={className}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          {Icon && <Icon className="h-5 w-5 text-muted-foreground" />}
+      <div className='flex items-center justify-between mb-4'>
+        <div className='flex items-center gap-2'>
+          {Icon && <Icon className='h-5 w-5 text-muted-foreground' />}
           <div>
-            <div className="text-xl text-muted-foreground">{title}</div>
+            <div className='text-xl text-muted-foreground'>{title}</div>
             {description && (
-              <p className="text-sm text-muted-foreground">{description}</p>
+              <p className='text-sm text-muted-foreground'>{description}</p>
             )}
           </div>
         </div>
-        {actions && <div className="flex items-center gap-2">{actions}</div>}
+        {actions && <div className='flex items-center gap-2'>{actions}</div>}
       </div>
       {children}
     </div>

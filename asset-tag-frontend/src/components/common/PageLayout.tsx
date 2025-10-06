@@ -1,5 +1,5 @@
-import React from "react";
-import { PageContainer } from "./PageContainer";
+import React from 'react';
+import { PageContainer } from './PageContainer';
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -14,10 +14,10 @@ export function PageLayout({
   variant = 'standard',
   padding = 'md',
   header,
-  className = ''
+  className = '',
 }: PageLayoutProps) {
   const paddingClasses = {
-    sm: 'p-4 md:p-6',     // Responsive: 16px mobile, 24px desktop
+    sm: 'p-4 md:p-6', // Responsive: 16px mobile, 24px desktop
     md: 'p-4 md:p-6 lg:p-8', // Responsive: 16px mobile, 24px tablet, 32px desktop
     lg: 'p-6 md:p-8 lg:p-10', // Responsive: 24px mobile, 32px tablet, 40px desktop
   };
@@ -25,7 +25,7 @@ export function PageLayout({
   if (header) {
     // Full-height layout with header
     return (
-      <div className="h-full flex flex-col">
+      <div className='h-full flex flex-col'>
         {header}
         <div className={`flex-1 overflow-auto ${paddingClasses[padding]}`}>
           <PageContainer variant={variant} className={className}>
@@ -45,4 +45,3 @@ export function PageLayout({
     </div>
   );
 }
-

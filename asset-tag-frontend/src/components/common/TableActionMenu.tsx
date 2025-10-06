@@ -1,5 +1,5 @@
-import React from "react";
-import { Button } from "../ui/button";
+import React from 'react';
+import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,8 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { MoreVertical, LucideIcon } from "lucide-react";
+} from '../ui/dropdown-menu';
+import { MoreVertical, LucideIcon } from 'lucide-react';
 
 export interface TableAction {
   label: string;
@@ -24,15 +24,18 @@ interface TableActionMenuProps {
   label?: string;
 }
 
-export function TableActionMenu({ actions, label = "Actions" }: TableActionMenuProps) {
+export function TableActionMenu({
+  actions,
+  label = 'Actions',
+}: TableActionMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-          <MoreVertical className="h-4 w-4" />
+        <Button variant='ghost' size='icon' className='h-8 w-8 p-0'>
+          <MoreVertical className='h-4 w-4' />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align='end'>
         <DropdownMenuLabel>{label}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {actions.map((action, index) => (
@@ -40,9 +43,9 @@ export function TableActionMenu({ actions, label = "Actions" }: TableActionMenuP
             {action.separatorBefore && <DropdownMenuSeparator />}
             <DropdownMenuItem
               onClick={action.onClick}
-              className={action.isDestructive ? "text-destructive" : ""}
+              className={action.isDestructive ? 'text-destructive' : ''}
             >
-              {action.icon && <action.icon className="h-4 w-4 mr-2" />}
+              {action.icon && <action.icon className='h-4 w-4 mr-2' />}
               {action.label}
             </DropdownMenuItem>
           </React.Fragment>
@@ -51,4 +54,3 @@ export function TableActionMenu({ actions, label = "Actions" }: TableActionMenuP
     </DropdownMenu>
   );
 }
-

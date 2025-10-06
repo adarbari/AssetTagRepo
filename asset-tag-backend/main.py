@@ -1,6 +1,7 @@
 """
 Asset Tag Backend - FastAPI Application
 """
+
 import logging
 import time
 from contextlib import asynccontextmanager
@@ -150,9 +151,11 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={
             "error": "Internal server error",
-            "message": "An unexpected error occurred"
-            if settings.environment == "production"
-            else str(exc),
+            "message": (
+                "An unexpected error occurred"
+                if settings.environment == "production"
+                else str(exc)
+            ),
         },
     )
 

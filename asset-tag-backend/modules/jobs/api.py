@@ -1,6 +1,7 @@
 """
 Job API endpoints
 """
+
 from datetime import datetime
 from typing import List, Optional
 
@@ -80,12 +81,16 @@ async def create_job(job_data: JobCreate, db: AsyncSession = Depends(get_db)):
             job_type=job_data.job_type,
             status=job_data.status or "pending",
             priority=job_data.priority or "medium",
-            scheduled_start=datetime.fromisoformat(job_data.scheduled_start)
-            if job_data.scheduled_start
-            else None,
-            scheduled_end=datetime.fromisoformat(job_data.scheduled_end)
-            if job_data.scheduled_end
-            else None,
+            scheduled_start=(
+                datetime.fromisoformat(job_data.scheduled_start)
+                if job_data.scheduled_start
+                else None
+            ),
+            scheduled_end=(
+                datetime.fromisoformat(job_data.scheduled_end)
+                if job_data.scheduled_end
+                else None
+            ),
             assigned_to_user_id=job_data.assigned_to_user_id,
             assigned_to_user_name=job_data.assigned_to_user_name,
             site_id=job_data.site_id,

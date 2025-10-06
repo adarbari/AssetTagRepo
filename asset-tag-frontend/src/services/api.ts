@@ -1,17 +1,17 @@
 /**
  * API Client - Unified Backend Communication Layer
- * 
+ *
  * This module provides a centralized API client for all backend communication.
  * It handles authentication, error handling, request/response formatting,
  * and provides a consistent interface for all API calls.
- * 
+ *
  * Features:
  * - Automatic authentication header injection
  * - Centralized error handling
  * - Request/response interceptors
  * - Type-safe API calls
  * - Development mode with mock data
- * 
+ *
  * Production Integration:
  * 1. Set VITE_API_BASE_URL in environment variables
  * 2. Configure authentication token storage
@@ -34,7 +34,7 @@ export const getApiConfig = () => ({
   API_VERSION: getEnvVar('VITE_API_VERSION', 'v1'),
   API_TIMEOUT: parseInt(getEnvVar('VITE_API_TIMEOUT', '30000')),
   USE_MOCK_DATA: getEnvVar('VITE_USE_MOCK_DATA', 'true') !== 'false',
-})
+});
 
 // Module-level constants (can be overridden by mocking getApiConfig)
 const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', 'http://localhost:3000');
@@ -99,7 +99,11 @@ export const apiClient = {
   /**
    * POST request
    */
-  async post<T = any>(endpoint: string, data?: any, options?: RequestOptions): Promise<T> {
+  async post<T = any>(
+    endpoint: string,
+    data?: any,
+    options?: RequestOptions
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'POST',
@@ -110,7 +114,11 @@ export const apiClient = {
   /**
    * PUT request
    */
-  async put<T = any>(endpoint: string, data?: any, options?: RequestOptions): Promise<T> {
+  async put<T = any>(
+    endpoint: string,
+    data?: any,
+    options?: RequestOptions
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'PUT',
@@ -121,7 +129,11 @@ export const apiClient = {
   /**
    * PATCH request
    */
-  async patch<T = any>(endpoint: string, data?: any, options?: RequestOptions): Promise<T> {
+  async patch<T = any>(
+    endpoint: string,
+    data?: any,
+    options?: RequestOptions
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'PATCH',
@@ -132,14 +144,20 @@ export const apiClient = {
   /**
    * DELETE request
    */
-  async delete<T = any>(endpoint: string, options?: RequestOptions): Promise<T> {
+  async delete<T = any>(
+    endpoint: string,
+    options?: RequestOptions
+  ): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'DELETE' });
   },
 
   /**
    * Core request handler
    */
-  async request<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+  async request<T = any>(
+    endpoint: string,
+    options: RequestOptions = {}
+  ): Promise<T> {
     // Build URL with query parameters
     const url = this.buildUrl(endpoint, options.params);
 
@@ -172,7 +190,7 @@ export const apiClient = {
         return await response.json();
       }
 
-      return await response.text() as any;
+      return (await response.text()) as any;
     } catch (error) {
       clearTimeout(timeoutId);
 
@@ -199,8 +217,10 @@ export const apiClient = {
    */
   buildUrl(endpoint: string, params?: Record<string, any>): string {
     // Remove leading slash if present
-    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-    
+    const cleanEndpoint = endpoint.startsWith('/')
+      ? endpoint.slice(1)
+      : endpoint;
+
     let url = `${API_BASE_URL}/api/${API_VERSION}/${cleanEndpoint}`;
 
     // Add query parameters
@@ -253,7 +273,7 @@ export const apiClient = {
         errorData = await response.json();
         errorMessage = errorData.message || errorData.error || errorMessage;
       } else {
-        errorMessage = await response.text() || errorMessage;
+        errorMessage = (await response.text()) || errorMessage;
       }
     } catch (e) {
       // Failed to parse error response
@@ -268,7 +288,11 @@ export const apiClient = {
  */
 export function shouldUseMockData(): boolean {
   const config = getApiConfig();
-  return config.USE_MOCK_DATA || !config.API_BASE_URL || config.API_BASE_URL.includes('localhost');
+  return (
+    config.USE_MOCK_DATA ||
+    !config.API_BASE_URL ||
+    config.API_BASE_URL.includes('localhost')
+  );
 }
 
 // ============================================================================
@@ -320,7 +344,7 @@ export async function fetchSiteActivity(
   assetActivityMap.forEach(activities => {
     allAssetActivity.push(...activities);
   });
-  
+
   const allPersonnelActivity = mockPersonnel.flatMap(p => p.activityHistory);
 
   // Helper to count entities at site during a time period
@@ -331,26 +355,28 @@ export async function fetchSiteActivity(
     periodEnd: Date
   ): number => {
     const entitiesAtSite = new Set<string>();
-    
+
     activities.forEach(event => {
       if (event.siteId !== targetSiteId) return;
-      
+
       const eventTime = new Date(event.timestamp);
       if (eventTime < periodStart || eventTime > periodEnd) return;
-      
+
       if (event.type === 'arrival') {
         entitiesAtSite.add(event.id.split('-')[0]); // Extract entity ID
       }
     });
-    
+
     return entitiesAtSite.size;
   };
 
   const data: SiteActivityData[] = [];
   const start = new Date(startDate);
   const end = new Date(endDate);
-  
-  const daysDiff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+
+  const daysDiff = Math.ceil(
+    (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   if (granularity === 'hourly') {
     // Generate hourly data for the date range (max 48 hours)
@@ -358,14 +384,24 @@ export async function fetchSiteActivity(
     for (let i = 0; i <= hours; i++) {
       const date = new Date(start);
       date.setHours(date.getHours() + i);
-      
+
       const periodStart = new Date(date);
       const periodEnd = new Date(date);
       periodEnd.setHours(periodEnd.getHours() + 1);
-      
-      const assets = countEntitiesAtSite(allAssetActivity, siteId, periodStart, periodEnd);
-      const personnel = countEntitiesAtSite(allPersonnelActivity, siteId, periodStart, periodEnd);
-      
+
+      const assets = countEntitiesAtSite(
+        allAssetActivity,
+        siteId,
+        periodStart,
+        periodEnd
+      );
+      const personnel = countEntitiesAtSite(
+        allPersonnelActivity,
+        siteId,
+        periodStart,
+        periodEnd
+      );
+
       data.push({
         time: `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:00`,
         assets,
@@ -378,14 +414,24 @@ export async function fetchSiteActivity(
       const date = new Date(start);
       date.setDate(date.getDate() + i);
       date.setHours(0, 0, 0, 0);
-      
+
       const periodStart = new Date(date);
       const periodEnd = new Date(date);
       periodEnd.setDate(periodEnd.getDate() + 1);
-      
-      const assets = countEntitiesAtSite(allAssetActivity, siteId, periodStart, periodEnd);
-      const personnel = countEntitiesAtSite(allPersonnelActivity, siteId, periodStart, periodEnd);
-      
+
+      const assets = countEntitiesAtSite(
+        allAssetActivity,
+        siteId,
+        periodStart,
+        periodEnd
+      );
+      const personnel = countEntitiesAtSite(
+        allPersonnelActivity,
+        siteId,
+        periodStart,
+        periodEnd
+      );
+
       data.push({
         time: `${date.getMonth() + 1}/${date.getDate()}`,
         assets,
@@ -397,16 +443,26 @@ export async function fetchSiteActivity(
     const weeks = Math.ceil(daysDiff / 7);
     for (let i = 0; i < weeks; i++) {
       const date = new Date(start);
-      date.setDate(date.getDate() + (i * 7));
+      date.setDate(date.getDate() + i * 7);
       date.setHours(0, 0, 0, 0);
-      
+
       const periodStart = new Date(date);
       const periodEnd = new Date(date);
       periodEnd.setDate(periodEnd.getDate() + 7);
-      
-      const assets = countEntitiesAtSite(allAssetActivity, siteId, periodStart, periodEnd);
-      const personnel = countEntitiesAtSite(allPersonnelActivity, siteId, periodStart, periodEnd);
-      
+
+      const assets = countEntitiesAtSite(
+        allAssetActivity,
+        siteId,
+        periodStart,
+        periodEnd
+      );
+      const personnel = countEntitiesAtSite(
+        allPersonnelActivity,
+        siteId,
+        periodStart,
+        periodEnd
+      );
+
       data.push({
         time: `Week ${i + 1}`,
         assets,
@@ -426,7 +482,11 @@ export async function fetchSiteActivity(
 /**
  * Get preset date ranges for common time periods
  */
-export function getPresetDateRange(preset: '24h' | '7d' | '30d'): { start: Date; end: Date; granularity: 'hourly' | 'daily' } {
+export function getPresetDateRange(preset: '24h' | '7d' | '30d'): {
+  start: Date;
+  end: Date;
+  granularity: 'hourly' | 'daily';
+} {
   const end = new Date();
   const start = new Date();
 

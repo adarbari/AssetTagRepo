@@ -1,6 +1,7 @@
 """
 Unit tests for Geofences module
 """
+
 import uuid
 from datetime import datetime
 

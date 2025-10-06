@@ -1,6 +1,7 @@
 """
 Asset models
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

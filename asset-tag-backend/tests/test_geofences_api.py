@@ -1,6 +1,7 @@
 """
 Test cases for Geofences API
 """
+
 import pytest
 from fastapi.testclient import TestClient
 

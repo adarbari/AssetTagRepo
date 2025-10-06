@@ -1,6 +1,7 @@
 """
 UUID compatibility module for SQLite and PostgreSQL
 """
+
 import uuid
 
 from sqlalchemy import String, TypeDecorator

@@ -1,7 +1,12 @@
-import { useState, useEffect } from "react";
-import type { Job, CreateJobInput, UpdateJobInput, JobAlert } from "../types/job";
-import { mockJobs, mockJobAlerts } from "../data/mockJobData";
-import { updateMockAsset } from "../data/mockData";
+import { useState, useEffect } from 'react';
+import type {
+  Job,
+  CreateJobInput,
+  UpdateJobInput,
+  JobAlert,
+} from '../types/job';
+import { mockJobs, mockJobAlerts } from '../data/mockJobData';
+import { updateMockAsset } from '../data/mockData';
 
 /**
  * Custom hook for managing jobs
@@ -18,31 +23,31 @@ export function useJobManagement() {
 
   const loadJobs = () => {
     try {
-      const saved = localStorage.getItem("jobs");
+      const saved = localStorage.getItem('jobs');
       if (saved) {
         setJobs(JSON.parse(saved));
       } else {
         // Load mock data if no saved data exists
         setJobs(mockJobs);
-        localStorage.setItem("jobs", JSON.stringify(mockJobs));
+        localStorage.setItem('jobs', JSON.stringify(mockJobs));
       }
 
-      const savedAlerts = localStorage.getItem("jobAlerts");
+      const savedAlerts = localStorage.getItem('jobAlerts');
       if (savedAlerts) {
         setJobAlerts(JSON.parse(savedAlerts));
       } else {
         // Load mock alerts if no saved data exists
         setJobAlerts(mockJobAlerts);
-        localStorage.setItem("jobAlerts", JSON.stringify(mockJobAlerts));
+        localStorage.setItem('jobAlerts', JSON.stringify(mockJobAlerts));
       }
     } catch (error) {
-      console.error("Failed to load jobs:", error);
+      console.error('Failed to load jobs:', error);
     }
   };
 
   const createJob = async (input: CreateJobInput) => {
     const jobNumber = `JOB-${new Date().getFullYear()}-${String(Object.keys(jobs).length + 1).padStart(3, '0')}`;
-    
+
     const newJob: Job = {
       id: `job-${Date.now()}`,
       jobNumber,
@@ -50,8 +55,8 @@ export function useJobManagement() {
       description: input.description,
       siteId: input.siteId,
       clientId: input.clientId,
-      status: "planning",
-      priority: input.priority || "medium",
+      status: 'planning',
+      priority: input.priority || 'medium',
       startDate: input.startDate,
       endDate: input.endDate,
       estimatedDuration: 0,
@@ -73,7 +78,7 @@ export function useJobManagement() {
       groundStationGeofenceId: input.groundStationGeofenceId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      createdBy: "current-user",
+      createdBy: 'current-user',
       notes: input.notes,
       tags: input.tags || [],
     };
@@ -86,12 +91,12 @@ export function useJobManagement() {
     setJobs(updatedJobs);
 
     try {
-      localStorage.setItem("jobs", JSON.stringify(updatedJobs));
+      localStorage.setItem('jobs', JSON.stringify(updatedJobs));
       // TODO: Backend integration
       // await api.createJob(newJob);
       return { success: true, job: newJob };
     } catch (error) {
-      console.error("Failed to create job:", error);
+      console.error('Failed to create job:', error);
       return { success: false, error };
     }
   };
@@ -99,21 +104,29 @@ export function useJobManagement() {
   const updateJob = async (jobId: string, input: UpdateJobInput) => {
     const existingJob = jobs[jobId];
     if (!existingJob) {
-      return { success: false, error: "Job not found" };
+      return { success: false, error: 'Job not found' };
     }
 
     const updatedJob: Job = {
       ...existingJob,
       ...input,
-      budget: input.budget ? { ...existingJob.budget, ...input.budget } : existingJob.budget,
-      actualCosts: input.actualCosts ? { ...existingJob.actualCosts, ...input.actualCosts } : existingJob.actualCosts,
-      vehicle: input.vehicle ? { ...existingJob.vehicle, ...input.vehicle } : existingJob.vehicle,
+      budget: input.budget
+        ? { ...existingJob.budget, ...input.budget }
+        : existingJob.budget,
+      actualCosts: input.actualCosts
+        ? { ...existingJob.actualCosts, ...input.actualCosts }
+        : existingJob.actualCosts,
+      vehicle: input.vehicle
+        ? { ...existingJob.vehicle, ...input.vehicle }
+        : existingJob.vehicle,
       updatedAt: new Date().toISOString(),
     };
 
     // Recalculate variance
-    updatedJob.variance = updatedJob.budget.total - updatedJob.actualCosts.total;
-    updatedJob.variancePercentage = (updatedJob.variance / updatedJob.budget.total) * 100;
+    updatedJob.variance =
+      updatedJob.budget.total - updatedJob.actualCosts.total;
+    updatedJob.variancePercentage =
+      (updatedJob.variance / updatedJob.budget.total) * 100;
 
     const updatedJobs = {
       ...jobs,
@@ -123,12 +136,12 @@ export function useJobManagement() {
     setJobs(updatedJobs);
 
     try {
-      localStorage.setItem("jobs", JSON.stringify(updatedJobs));
+      localStorage.setItem('jobs', JSON.stringify(updatedJobs));
       // TODO: Backend integration
       // await api.updateJob(jobId, updatedJob);
       return { success: true, job: updatedJob };
     } catch (error) {
-      console.error("Failed to update job:", error);
+      console.error('Failed to update job:', error);
       return { success: false, error };
     }
   };
@@ -139,21 +152,21 @@ export function useJobManagement() {
     setJobs(remaining);
 
     try {
-      localStorage.setItem("jobs", JSON.stringify(remaining));
+      localStorage.setItem('jobs', JSON.stringify(remaining));
       // TODO: Backend integration
       // await api.deleteJob(jobId);
       return { success: true };
     } catch (error) {
-      console.error("Failed to delete job:", error);
+      console.error('Failed to delete job:', error);
       return { success: false, error };
     }
   };
 
   const addAssetToJob = async (
-    jobId: string, 
-    assetId: string, 
-    assetName: string, 
-    assetType: string, 
+    jobId: string,
+    assetId: string,
+    assetName: string,
+    assetType: string,
     required: boolean = true,
     useFullJobDuration: boolean = true,
     customStartDate?: string,
@@ -161,12 +174,16 @@ export function useJobManagement() {
   ) => {
     const job = jobs[jobId];
     if (!job) {
-      return { success: false, error: "Job not found" };
+      return { success: false, error: 'Job not found' };
     }
 
     // Determine assignment dates
-    const assignmentStartDate = useFullJobDuration ? job.startDate : (customStartDate || job.startDate);
-    const assignmentEndDate = useFullJobDuration ? job.endDate : (customEndDate || job.endDate);
+    const assignmentStartDate = useFullJobDuration
+      ? job.startDate
+      : customStartDate || job.startDate;
+    const assignmentEndDate = useFullJobDuration
+      ? job.endDate
+      : customEndDate || job.endDate;
 
     const newAsset = {
       assetId,
@@ -187,7 +204,7 @@ export function useJobManagement() {
 
     // Update the asset's availability status and job assignment
     updateMockAsset(assetId, {
-      availability: "assigned",
+      availability: 'assigned',
       assignedJobId: jobId,
       assignedJobName: job.name,
       assignmentStartDate,
@@ -200,7 +217,7 @@ export function useJobManagement() {
   const removeAssetFromJob = async (jobId: string, assetId: string) => {
     const job = jobs[jobId];
     if (!job) {
-      return { success: false, error: "Job not found" };
+      return { success: false, error: 'Job not found' };
     }
 
     const updatedJob: Job = {
@@ -211,7 +228,7 @@ export function useJobManagement() {
 
     // Update the asset's availability status back to available and clear job assignment
     updateMockAsset(assetId, {
-      availability: "available",
+      availability: 'available',
       assignedJobId: undefined,
       assignedJobName: undefined,
       assignmentStartDate: undefined,
@@ -246,8 +263,8 @@ export function useJobManagement() {
       id: `job-alert-${Date.now()}`,
       jobId: job.id,
       jobName: job.name,
-      type: "missing-assets",
-      severity: "high",
+      type: 'missing-assets',
+      severity: 'high',
       message: `Vehicle departed for ${job.name} without ${missingAssetIds.length} required asset(s)`,
       details: {
         vehicleId: job.vehicle?.vehicleId,
@@ -268,9 +285,9 @@ export function useJobManagement() {
     });
 
     try {
-      localStorage.setItem("jobAlerts", JSON.stringify(updatedAlerts));
+      localStorage.setItem('jobAlerts', JSON.stringify(updatedAlerts));
     } catch (error) {
-      console.error("Failed to save job alert:", error);
+      console.error('Failed to save job alert:', error);
     }
   };
 
@@ -289,9 +306,9 @@ export function useJobManagement() {
     setJobAlerts(updatedAlerts);
 
     try {
-      localStorage.setItem("jobAlerts", JSON.stringify(updatedAlerts));
+      localStorage.setItem('jobAlerts', JSON.stringify(updatedAlerts));
     } catch (error) {
-      console.error("Failed to resolve job alert:", error);
+      console.error('Failed to resolve job alert:', error);
     }
   };
 

@@ -1,6 +1,7 @@
 """
 Kinesis/Redpanda consumer for Bluetooth observations
 """
+
 import asyncio
 import json
 import logging

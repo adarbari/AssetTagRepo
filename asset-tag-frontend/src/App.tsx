@@ -1,92 +1,100 @@
-import React, { useState, useRef } from "react";
-import { AppSidebar } from "./components/AppSidebar";
-import { SidebarProvider } from "./components/ui/sidebar";
-import { Button } from "./components/ui/button";
-import { Dashboard } from "./components/dashboard/Dashboard";
-import { AssetInventory } from "./components/assets/AssetInventory";
-import { AssetMap } from "./components/map/AssetMap";
-import { AssetDetails } from "./components/assets/AssetDetails";
-import { CreateAsset } from "./components/assets/CreateAsset";
-import { CreateCheckInOut } from "./components/check-in-out/CreateCheckInOut";
-import { CreateMaintenance } from "./components/maintenance/CreateMaintenance";
-import { EditMaintenance } from "./components/maintenance/EditMaintenance";
-import { CreateIssue } from "./components/issues/CreateIssue";
-import { EditIssue } from "./components/issues/EditIssue";
-import { IssueDetails } from "./components/issues/IssueDetails";
-import { JobManagement } from "./components/job/JobManagement";
-import { JobDetails } from "./components/job/JobDetails";
-import { CreateJob } from "./components/job/CreateJob";
-import { EditJob } from "./components/job/EditJob";
-import { useJobManagement } from "./hooks/useJobManagement";
-import { Maintenance } from "./components/maintenance/Maintenance";
-import { IssueTracking } from "./components/issues/IssueTracking";
-import { mockIssues, updateIssue, updateIssueStatus, deleteIssue } from "./data/mockIssueData";
-import { ComplianceTracking } from "./components/compliance/ComplianceTracking";
-import { CreateCompliance } from "./components/compliance/CreateCompliance";
-import { Geofences } from "./components/geofences/Geofences";
-import { Reports } from "./components/reports/Reports";
-import { Settings } from "./components/settings/Settings";
-import { Alerts, AlertsRef } from "./components/alerts/Alerts";
-import { AlertWorkflow } from "./components/alerts/AlertWorkflow";
-import { HierarchicalAlertConfiguration } from "./components/alerts/HierarchicalAlertConfiguration";
-import { HistoricalPlayback } from "./components/map/HistoricalPlayback";
-import { NotificationPreferencesNew } from "./components/notifications/NotificationPreferencesNew";
-import { NavigationProvider, useNavigation } from "./contexts/NavigationContext";
-import { Toaster } from "./components/ui/sonner";
-import { Sites } from "./components/sites/Sites";
-import { SiteDetails } from "./components/sites/SiteDetails";
-import { CreateSite } from "./components/sites/CreateSite";
-import { CreateGeofence } from "./components/geofences/CreateGeofence";
-import { VehicleAssetPairing } from "./components/vehicles/VehicleAssetPairing";
-import { CreateVehicle } from "./components/vehicles/CreateVehicle";
-import { EditVehicle } from "./components/vehicles/EditVehicle";
-import { AlertFilter } from "./components/alerts/Alerts";
-import type { Asset } from "./types";
+import React, { useState, useRef } from 'react';
+import { AppSidebar } from './components/AppSidebar';
+import { SidebarProvider } from './components/ui/sidebar';
+import { Button } from './components/ui/button';
+import { Dashboard } from './components/dashboard/Dashboard';
+import { AssetInventory } from './components/assets/AssetInventory';
+import { AssetMap } from './components/map/AssetMap';
+import { AssetDetails } from './components/assets/AssetDetails';
+import { CreateAsset } from './components/assets/CreateAsset';
+import { CreateCheckInOut } from './components/check-in-out/CreateCheckInOut';
+import { CreateMaintenance } from './components/maintenance/CreateMaintenance';
+import { EditMaintenance } from './components/maintenance/EditMaintenance';
+import { CreateIssue } from './components/issues/CreateIssue';
+import { EditIssue } from './components/issues/EditIssue';
+import { IssueDetails } from './components/issues/IssueDetails';
+import { JobManagement } from './components/job/JobManagement';
+import { JobDetails } from './components/job/JobDetails';
+import { CreateJob } from './components/job/CreateJob';
+import { EditJob } from './components/job/EditJob';
+import { useJobManagement } from './hooks/useJobManagement';
+import { Maintenance } from './components/maintenance/Maintenance';
+import { IssueTracking } from './components/issues/IssueTracking';
+import {
+  mockIssues,
+  updateIssue,
+  updateIssueStatus,
+  deleteIssue,
+} from './data/mockIssueData';
+import { ComplianceTracking } from './components/compliance/ComplianceTracking';
+import { CreateCompliance } from './components/compliance/CreateCompliance';
+import { Geofences } from './components/geofences/Geofences';
+import { Reports } from './components/reports/Reports';
+import { Settings } from './components/settings/Settings';
+import { Alerts, AlertsRef } from './components/alerts/Alerts';
+import { AlertWorkflow } from './components/alerts/AlertWorkflow';
+import { HierarchicalAlertConfiguration } from './components/alerts/HierarchicalAlertConfiguration';
+import { HistoricalPlayback } from './components/map/HistoricalPlayback';
+import { NotificationPreferencesNew } from './components/notifications/NotificationPreferencesNew';
+import {
+  NavigationProvider,
+  useNavigation,
+} from './contexts/NavigationContext';
+import { Toaster } from './components/ui/sonner';
+import { Sites } from './components/sites/Sites';
+import { SiteDetails } from './components/sites/SiteDetails';
+import { CreateSite } from './components/sites/CreateSite';
+import { CreateGeofence } from './components/geofences/CreateGeofence';
+import { VehicleAssetPairing } from './components/vehicles/VehicleAssetPairing';
+import { CreateVehicle } from './components/vehicles/CreateVehicle';
+import { EditVehicle } from './components/vehicles/EditVehicle';
+import { AlertFilter } from './components/alerts/Alerts';
+import type { Asset } from './types';
 
-export type ViewType = 
-  | "dashboard"
-  | "inventory" 
-  | "map"
-  | "asset-details"
-  | "site-details"
-  | "sites"
-  | "vehicle-pairing"
-  | "jobs"
-  | "job-details"
-  | "maintenance"
-  | "issues"
-  | "compliance"
-  | "geofences"
-  | "reports"
-  | "settings"
-  | "alerts"
-  | "alert-configuration"
-  | "notifications"
-  | "create-asset"
-  | "check-in-out"
-  | "create-maintenance"
-  | "report-issue"
-  | "historical-playback"
-  | "create-geofence"
-  | "create-site"
-  | "create-compliance"
-  | "create-vehicle"
-  | "edit-vehicle"
-  | "create-job"
-  | "edit-job"
-  | "edit-maintenance"
-  | "edit-issue"
-  | "issue-details"
-  | "alert-workflow"
-  | "violation-map"
-  | "load-asset";
+export type ViewType =
+  | 'dashboard'
+  | 'inventory'
+  | 'map'
+  | 'asset-details'
+  | 'site-details'
+  | 'sites'
+  | 'vehicle-pairing'
+  | 'jobs'
+  | 'job-details'
+  | 'maintenance'
+  | 'issues'
+  | 'compliance'
+  | 'geofences'
+  | 'reports'
+  | 'settings'
+  | 'alerts'
+  | 'alert-configuration'
+  | 'notifications'
+  | 'create-asset'
+  | 'check-in-out'
+  | 'create-maintenance'
+  | 'report-issue'
+  | 'historical-playback'
+  | 'create-geofence'
+  | 'create-site'
+  | 'create-compliance'
+  | 'create-vehicle'
+  | 'edit-vehicle'
+  | 'create-job'
+  | 'edit-job'
+  | 'edit-maintenance'
+  | 'edit-issue'
+  | 'issue-details'
+  | 'alert-workflow'
+  | 'violation-map'
+  | 'load-asset';
 
 function AppContent() {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const alertsRef = useRef<AlertsRef>(null);
   const [highlightedAsset, setHighlightedAsset] = useState<string | null>(null);
   const [selectedJob, setSelectedJob] = useState<any>(null);
-  
+
   // Job management hook
   const jobManagement = useJobManagement();
   const navigation = useNavigation();
@@ -111,7 +119,7 @@ function AppContent() {
   };
 
   const handleBackToMap = () => {
-    navigation.handleViewChange("map");
+    navigation.handleViewChange('map');
     setSelectedAsset(null);
   };
 
@@ -130,7 +138,7 @@ function AppContent() {
   };
 
   const handleBackToDashboard = () => {
-    navigation.handleViewChange("dashboard");
+    navigation.handleViewChange('dashboard');
     setSelectedAsset(null);
   };
 
@@ -138,7 +146,7 @@ function AppContent() {
     if (filter) {
       navigation.navigateToAlerts(filter);
     } else {
-      navigation.handleViewChange("alerts");
+      navigation.handleViewChange('alerts');
     }
   };
 
@@ -148,21 +156,23 @@ function AppContent() {
 
   const renderCurrentView = () => {
     switch (currentView) {
-      case "dashboard":
+      case 'dashboard':
         return (
-          <Dashboard 
+          <Dashboard
             onViewChange={handleViewChange}
             onNavigateToAlerts={handleNavigateToAlerts}
           />
         );
-      case "inventory":
+      case 'inventory':
         return (
-          <AssetInventory 
+          <AssetInventory
             onAssetClick={handleAssetClick}
-            onNavigateToCreateAsset={() => navigation.handleViewChange("create-asset")}
+            onNavigateToCreateAsset={() =>
+              navigation.handleViewChange('create-asset')
+            }
           />
         );
-      case "map":
+      case 'map':
         return (
           <AssetMap
             onAssetClick={handleAssetClick}
@@ -172,7 +182,7 @@ function AppContent() {
             onBack={handleBackToDashboard}
           />
         );
-      case "asset-details":
+      case 'asset-details':
         return selectedAsset ? (
           <AssetDetails
             asset={selectedAsset}
@@ -182,40 +192,38 @@ function AppContent() {
             onAssetUpdate={handleAssetUpdate}
           />
         ) : null;
-      case "sites":
+      case 'sites':
         return (
-          <Sites 
-            onSiteClick={(site) => navigation.navigateToSiteDetails(site)}
-          />
+          <Sites onSiteClick={site => navigation.navigateToSiteDetails(site)} />
         );
-      case "site-details":
+      case 'site-details':
         return navigation.selectedSite ? (
           <SiteDetails
             site={navigation.selectedSite}
             onBack={navigation.handleBackFromSiteDetails}
-            onCreateGeofence={(data, currentTab) => navigation.navigateToCreateGeofence(data, currentTab)}
-            onEditGeofence={(geofenceId, data, currentTab) => navigation.navigateToEditGeofence(geofenceId, data, currentTab)}
+            onCreateGeofence={(data, currentTab) =>
+              navigation.navigateToCreateGeofence(data, currentTab)
+            }
+            onEditGeofence={(geofenceId, data, currentTab) =>
+              navigation.navigateToEditGeofence(geofenceId, data, currentTab)
+            }
             onSiteUpdate={navigation.handleSiteUpdate}
             initialTab={navigation.siteActiveTab}
             onTabChange={navigation.setSiteActiveTab}
           />
         ) : (
-          <div className="p-6">
+          <div className='p-6'>
             <p>No site selected</p>
-            <Button onClick={() => navigation.handleViewChange("sites")}>
+            <Button onClick={() => navigation.handleViewChange('sites')}>
               Back to Sites
             </Button>
           </div>
         );
-      case "create-site":
+      case 'create-site':
+        return <CreateSite onBack={navigation.handleBackFromCreateSite} />;
+      case 'create-geofence':
         return (
-          <CreateSite 
-            onBack={navigation.handleBackFromCreateSite}
-          />
-        );
-      case "create-geofence":
-        return (
-          <CreateGeofence 
+          <CreateGeofence
             onBack={navigation.handleBackFromCreateGeofence}
             onGeofenceCreated={navigation.handleGeofenceCreated}
             onGeofenceUpdated={navigation.handleGeofenceUpdated}
@@ -224,41 +232,43 @@ function AppContent() {
             initialData={navigation.geofenceCreationData}
           />
         );
-      case "vehicle-pairing":
+      case 'vehicle-pairing':
         return (
-          <VehicleAssetPairing 
-            onBack={() => navigation.handleViewChange("dashboard")}
+          <VehicleAssetPairing
+            onBack={() => navigation.handleViewChange('dashboard')}
           />
         );
-      case "create-vehicle":
+      case 'create-vehicle':
         return (
-          <CreateVehicle 
-            onBack={() => navigation.handleViewChange("vehicle-pairing")}
-            onVehicleCreated={(vehicle) => {
+          <CreateVehicle
+            onBack={() => navigation.handleViewChange('vehicle-pairing')}
+            onVehicleCreated={vehicle => {
               // Handle vehicle creation success
-              navigation.handleViewChange("vehicle-pairing");
+              navigation.handleViewChange('vehicle-pairing');
             }}
           />
         );
-      case "edit-vehicle":
+      case 'edit-vehicle':
         return navigation.vehicleEditData ? (
-          <EditVehicle 
+          <EditVehicle
             vehicleId={navigation.vehicleEditData.vehicleId}
             onBack={navigation.handleBackFromEditVehicle}
             onVehicleUpdated={navigation.vehicleEditData.onVehicleUpdated}
           />
         ) : (
-          <div className="p-8">
+          <div className='p-8'>
             <h2>Edit Vehicle</h2>
             <p>No vehicle selected for editing</p>
-            <Button onClick={() => navigation.handleViewChange("vehicle-pairing")}>
+            <Button
+              onClick={() => navigation.handleViewChange('vehicle-pairing')}
+            >
               Back to Vehicle Pairing
             </Button>
           </div>
         );
-      case "jobs":
+      case 'jobs':
         return (
-          <JobManagement 
+          <JobManagement
             jobs={jobManagement.jobs}
             onCreateJob={jobManagement.createJob}
             onUpdateJob={jobManagement.updateJob}
@@ -266,65 +276,63 @@ function AppContent() {
             onAddAssetToJob={jobManagement.addAssetToJob}
             onRemoveAssetFromJob={jobManagement.removeAssetFromJob}
             jobAlerts={jobManagement.jobAlerts}
-            onNavigateToCreateJob={() => navigation.handleViewChange("create-job")}
-            onNavigateToJobDetails={(job) => {
+            onNavigateToCreateJob={() =>
+              navigation.handleViewChange('create-job')
+            }
+            onNavigateToJobDetails={job => {
               setSelectedJob(job);
               navigation.navigateToJobDetails({ job });
             }}
           />
         );
-      case "create-job":
+      case 'create-job':
         return (
-          <CreateJob 
-            onBack={() => navigation.handleViewChange("jobs")}
+          <CreateJob
+            onBack={() => navigation.handleViewChange('jobs')}
             onCreateJob={jobManagement.createJob}
           />
         );
-      case "edit-job":
+      case 'edit-job':
         return selectedJob ? (
-          <EditJob 
+          <EditJob
             jobId={selectedJob.id}
             job={selectedJob}
-            onBack={() => navigation.handleViewChange("job-details")}
+            onBack={() => navigation.handleViewChange('job-details')}
             onUpdateJob={jobManagement.updateJob}
             onAddAssetToJob={jobManagement.addAssetToJob}
             onRemoveAssetFromJob={jobManagement.removeAssetFromJob}
           />
         ) : (
-          <div className="p-6">
+          <div className='p-6'>
             <p>No job selected for editing</p>
-            <Button onClick={() => navigation.handleViewChange("jobs")}>
+            <Button onClick={() => navigation.handleViewChange('jobs')}>
               Back to Jobs
             </Button>
           </div>
         );
-      case "job-details":
+      case 'job-details':
         return selectedJob ? (
-          <JobDetails 
+          <JobDetails
             job={selectedJob}
-            onBack={() => navigation.handleViewChange("jobs")}
-            onEdit={(job) => {
+            onBack={() => navigation.handleViewChange('jobs')}
+            onEdit={job => {
               setSelectedJob(job);
-              navigation.handleViewChange("edit-job");
+              navigation.handleViewChange('edit-job');
             }}
           />
         ) : (
-          <div className="p-6">
+          <div className='p-6'>
             <p>No job selected</p>
-            <Button onClick={() => navigation.handleViewChange("jobs")}>
+            <Button onClick={() => navigation.handleViewChange('jobs')}>
               Back to Jobs
             </Button>
           </div>
         );
-      case "maintenance":
+      case 'maintenance':
+        return <Maintenance onAssetClick={handleAssetClick} />;
+      case 'issues':
         return (
-          <Maintenance 
-            onAssetClick={handleAssetClick}
-          />
-        );
-      case "issues":
-        return (
-          <IssueTracking 
+          <IssueTracking
             issues={mockIssues}
             onUpdateIssue={async (issueId, input) => {
               try {
@@ -332,7 +340,7 @@ function AppContent() {
                 if (updatedIssue) {
                   return { success: true, issue: updatedIssue };
                 } else {
-                  return { success: false, error: "Issue not found" };
+                  return { success: false, error: 'Issue not found' };
                 }
               } catch (error) {
                 return { success: false, error: error };
@@ -344,13 +352,13 @@ function AppContent() {
                 if (updatedIssue) {
                   return { success: true };
                 } else {
-                  return { success: false, error: "Issue not found" };
+                  return { success: false, error: 'Issue not found' };
                 }
               } catch (error) {
                 return { success: false, error: error };
               }
             }}
-            onDeleteIssue={async (issueId) => {
+            onDeleteIssue={async issueId => {
               try {
                 const deleted = deleteIssue(issueId);
                 return { success: deleted };
@@ -360,49 +368,61 @@ function AppContent() {
             }}
           />
         );
-      case "compliance":
+      case 'compliance':
         return <ComplianceTracking />;
-      case "create-compliance":
+      case 'create-compliance':
         return (
-          <CreateCompliance 
+          <CreateCompliance
             onBack={navigation.handleBackFromCreateCompliance}
           />
         );
-      case "geofences":
+      case 'geofences':
         return (
-          <Geofences 
+          <Geofences
             onCreateGeofence={() => navigation.navigateToCreateGeofence()}
-            onEditGeofence={(geofenceId) => navigation.navigateToEditGeofence(geofenceId)}
-            onViewViolatingAssets={(geofenceId, violatingAssetIds, expectedAssetIds, actualAssetIds) => {
-              navigation.handleViewViolatingAssets(geofenceId, violatingAssetIds, expectedAssetIds, actualAssetIds);
+            onEditGeofence={geofenceId =>
+              navigation.navigateToEditGeofence(geofenceId)
+            }
+            onViewViolatingAssets={(
+              geofenceId,
+              violatingAssetIds,
+              expectedAssetIds,
+              actualAssetIds
+            ) => {
+              navigation.handleViewViolatingAssets(
+                geofenceId,
+                violatingAssetIds,
+                expectedAssetIds,
+                actualAssetIds
+              );
             }}
           />
         );
-      case "reports":
+      case 'reports':
         return <Reports />;
-      case "settings":
+      case 'settings':
         return <Settings />;
-      case "alerts":
+      case 'alerts':
         return (
-          <Alerts 
+          <Alerts
             ref={alertsRef}
             initialFilter={navigation.alertFilter}
-            onTakeAction={(alert) => {
+            onTakeAction={alert => {
               // Navigate to alert workflow
               navigation.navigateToAlertWorkflow(alert);
             }}
             onNavigateToConfiguration={() => {
               // Handle navigation to alert configuration
-              navigation.handleViewChange("alert-configuration");
+              navigation.handleViewChange('alert-configuration');
             }}
           />
         );
-      case "alert-configuration":
+      case 'alert-configuration':
         return (
-          <HierarchicalAlertConfiguration 
+          <HierarchicalAlertConfiguration
             alertConfigs={{}}
             jobs={{}}
-            onSaveConfig={async (config) => {
+            onSaveConfig={async config => {
               // Handle saving alert configuration
               return { success: true };
             }}
@@ -410,18 +430,18 @@ function AppContent() {
               // Handle deleting alert configuration
               return { success: true };
             }}
-            onBack={() => navigation.handleViewChange("dashboard")}
+            onBack={() => navigation.handleViewChange('dashboard')}
           />
         );
-      case "notifications":
+      case 'notifications':
         return (
-          <NotificationPreferencesNew 
-            onBack={() => navigation.handleViewChange("dashboard")}
-            preselectedLevel="user"
-            preselectedEntityId="current-user"
-            preselectedEntityName="Your Account"
+          <NotificationPreferencesNew
+            onBack={() => navigation.handleViewChange('dashboard')}
+            preselectedLevel='user'
+            preselectedEntityId='current-user'
+            preselectedEntityName='Your Account'
             notificationConfigs={{}}
-            onSaveConfig={async (config) => {
+            onSaveConfig={async config => {
               // Handle saving notification configuration
               return { success: true };
             }}
@@ -436,11 +456,12 @@ function AppContent() {
                 id: `${level}-${entityId}`,
                 level: level as any,
                 entityId,
-                entityName: entityId === "current-user" ? "Your Account" : entityId,
+                entityName:
+                  entityId === 'current-user' ? 'Your Account' : entityId,
                 channels: {
                   email: {
                     enabled: true,
-                    addresses: ["user@example.com"],
+                    addresses: ['user@example.com'],
                     verified: true,
                   },
                   sms: {
@@ -457,17 +478,25 @@ function AppContent() {
                     enabled: false,
                     endpoints: [],
                     verified: false,
-                  }
+                  },
                 },
                 filters: {
-                  types: ["theft", "battery", "compliance", "offline", "unauthorized-zone", "underutilized", "predictive-maintenance"],
-                  severities: ["low", "medium", "high", "critical"],
+                  types: [
+                    'theft',
+                    'battery',
+                    'compliance',
+                    'offline',
+                    'unauthorized-zone',
+                    'underutilized',
+                    'predictive-maintenance',
+                  ],
+                  severities: ['low', 'medium', 'high', 'critical'],
                 },
                 quietHours: {
                   enabled: false,
-                  start: "22:00",
-                  end: "08:00",
-                  timezone: "America/New_York",
+                  start: '22:00',
+                  end: '08:00',
+                  timezone: 'America/New_York',
                   excludeCritical: true,
                 },
                 frequency: {
@@ -482,19 +511,19 @@ function AppContent() {
             }}
           />
         );
-      case "create-asset":
+      case 'create-asset':
         return (
-          <CreateAsset 
-            onBack={() => navigation.handleViewChange("inventory")}
-            onAssetCreated={(asset) => {
+          <CreateAsset
+            onBack={() => navigation.handleViewChange('inventory')}
+            onAssetCreated={asset => {
               // Handle asset creation success
-              navigation.handleViewChange("inventory");
+              navigation.handleViewChange('inventory');
             }}
           />
         );
-      case "check-in-out":
+      case 'check-in-out':
         return navigation.checkInOutData ? (
-          <CreateCheckInOut 
+          <CreateCheckInOut
             onBack={navigation.handleBackFromCheckInOut}
             assetId={navigation.checkInOutData.assetId}
             assetName={navigation.checkInOutData.assetName}
@@ -504,41 +533,51 @@ function AppContent() {
             onComplete={navigation.checkInOutData.onComplete}
           />
         ) : (
-          <div className="p-8">
+          <div className='p-8'>
             <h2>Check In/Out</h2>
             <p>No check-in/out data available</p>
-            <button onClick={() => navigation.handleViewChange("asset-details")}>Back</button>
+            <button
+              onClick={() => navigation.handleViewChange('asset-details')}
+            >
+              Back
+            </button>
           </div>
         );
-      case "create-maintenance":
+      case 'create-maintenance':
         return (
-          <CreateMaintenance 
+          <CreateMaintenance
             onBack={navigation.handleBackFromCreateMaintenance}
-            preSelectedAsset={navigation.maintenanceCreationData?.preSelectedAsset}
-            preSelectedAssetName={navigation.maintenanceCreationData?.preSelectedAssetName}
+            preSelectedAsset={
+              navigation.maintenanceCreationData?.preSelectedAsset
+            }
+            preSelectedAssetName={
+              navigation.maintenanceCreationData?.preSelectedAssetName
+            }
             assetContext={navigation.maintenanceCreationData?.assetContext}
           />
         );
-      case "edit-maintenance":
+      case 'edit-maintenance':
         return navigation.maintenanceEditData ? (
-          <EditMaintenance 
+          <EditMaintenance
             maintenanceId={navigation.maintenanceEditData.maintenanceId}
             onBack={navigation.handleBackFromEditMaintenance}
             fromContext={navigation.maintenanceEditData.fromContext}
-            sourceAssetContext={navigation.maintenanceEditData.sourceAssetContext}
+            sourceAssetContext={
+              navigation.maintenanceEditData.sourceAssetContext
+            }
           />
         ) : (
-          <div className="p-8">
+          <div className='p-8'>
             <h2>Edit Maintenance</h2>
             <p>No maintenance edit data available</p>
-            <Button onClick={() => navigation.handleViewChange("maintenance")}>
+            <Button onClick={() => navigation.handleViewChange('maintenance')}>
               Back to Maintenance
             </Button>
           </div>
         );
-      case "edit-issue":
+      case 'edit-issue':
         return navigation.selectedIssueId ? (
-          <EditIssue 
+          <EditIssue
             issueId={navigation.selectedIssueId}
             onBack={navigation.handleBackFromEditIssue}
             onUpdateIssue={async (issueId, input) => {
@@ -547,7 +586,7 @@ function AppContent() {
                 if (updatedIssue) {
                   return { success: true, issue: updatedIssue };
                 } else {
-                  return { success: false, error: "Issue not found" };
+                  return { success: false, error: 'Issue not found' };
                 }
               } catch (error) {
                 return { success: false, error: error };
@@ -555,17 +594,17 @@ function AppContent() {
             }}
           />
         ) : (
-          <div className="p-8">
+          <div className='p-8'>
             <h2>Edit Issue</h2>
             <p>No issue selected</p>
-            <Button onClick={() => navigation.handleViewChange("issues")}>
+            <Button onClick={() => navigation.handleViewChange('issues')}>
               Back to Issues
             </Button>
           </div>
         );
-      case "issue-details":
+      case 'issue-details':
         return navigation.selectedIssueId ? (
-          <IssueDetails 
+          <IssueDetails
             issueId={navigation.selectedIssueId}
             onBack={navigation.handleBackFromEditIssue}
             onUpdateIssue={async (issueId, input) => {
@@ -574,7 +613,7 @@ function AppContent() {
                 if (updatedIssue) {
                   return { success: true, issue: updatedIssue };
                 } else {
-                  return { success: false, error: "Issue not found" };
+                  return { success: false, error: 'Issue not found' };
                 }
               } catch (error) {
                 return { success: false, error: error };
@@ -582,37 +621,40 @@ function AppContent() {
             }}
           />
         ) : (
-          <div className="p-8">
+          <div className='p-8'>
             <h2>Issue Details</h2>
             <p>No issue selected</p>
-            <Button onClick={() => navigation.handleViewChange("issues")}>
+            <Button onClick={() => navigation.handleViewChange('issues')}>
               Back to Issues
             </Button>
           </div>
         );
-      case "report-issue":
+      case 'report-issue':
         return navigation.issueData ? (
-          <CreateIssue 
-            onBack={() => navigation.handleViewChange("asset-details")}
+          <CreateIssue
+            onBack={() => navigation.handleViewChange('asset-details')}
             assetId={navigation.issueData.assetId}
             assetName={navigation.issueData.assetName}
             assetContext={navigation.issueData.assetContext}
-            onCreateIssue={async (issueInput) => {
+            onCreateIssue={async issueInput => {
               // TODO: Backend integration - create issue
-              return { success: true, issue: { id: "ISSUE-001", ...issueInput } };
+              return {
+                success: true,
+                issue: { id: 'ISSUE-001', ...issueInput },
+              };
             }}
           />
         ) : null;
-      case "historical-playback":
+      case 'historical-playback':
         return (
-          <HistoricalPlayback 
-            onBack={() => navigation.handleViewChange("asset-details")}
+          <HistoricalPlayback
+            onBack={() => navigation.handleViewChange('asset-details')}
             preselectedAsset={selectedAsset || undefined}
           />
         );
-      case "alert-workflow":
+      case 'alert-workflow':
         return navigation.selectedAlertForWorkflow ? (
-          <AlertWorkflow 
+          <AlertWorkflow
             alert={navigation.selectedAlertForWorkflow}
             onBack={navigation.handleBackFromAlertWorkflow}
             onActionComplete={async () => {
@@ -625,17 +667,17 @@ function AppContent() {
             }}
           />
         ) : (
-          <div className="p-8">
+          <div className='p-8'>
             <h2>Alert Workflow</h2>
             <p>No alert selected for workflow</p>
-            <Button onClick={() => navigation.handleViewChange("alerts")}>
+            <Button onClick={() => navigation.handleViewChange('alerts')}>
               Back to Alerts
             </Button>
           </div>
         );
       default:
         return (
-          <Dashboard 
+          <Dashboard
             onViewChange={handleViewChange}
             onNavigateToAlerts={handleNavigateToAlerts}
           />
@@ -645,15 +687,13 @@ function AppContent() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background">
-        <AppSidebar 
+      <div className='flex h-screen bg-background'>
+        <AppSidebar
           currentView={currentView}
           onViewChange={handleViewChange}
           onAlertTypeClick={handleAlertTypeClick}
         />
-        <main className="flex-1 overflow-auto">
-          {renderCurrentView()}
-        </main>
+        <main className='flex-1 overflow-auto'>{renderCurrentView()}</main>
         <Toaster />
       </div>
     </SidebarProvider>

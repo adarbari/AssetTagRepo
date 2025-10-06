@@ -1,6 +1,7 @@
 """
 Search API endpoints using Elasticsearch
 """
+
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 

@@ -1,6 +1,7 @@
 """
 Observation processing pipeline
 """
+
 import asyncio
 import logging
 from collections import defaultdict

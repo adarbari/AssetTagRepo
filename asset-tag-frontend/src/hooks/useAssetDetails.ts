@@ -2,8 +2,8 @@
 // These hooks provide a clean interface for components to fetch asset data
 // Can be easily migrated to React Query or SWR for production
 
-import { useState, useEffect } from "react";
-import { assetService } from "../services/assetService";
+import { useState, useEffect } from 'react';
+import { assetService } from '../services/assetService';
 import type {
   AssetDetailsResponse,
   BatteryHistory,
@@ -11,8 +11,8 @@ import type {
   ActivityLog,
   MaintenanceSchedule,
   AssetAlertHistory,
-} from "../types/assetDetails";
-import type { Asset } from "../types";
+} from '../types/assetDetails';
+import type { Asset } from '../types';
 
 /**
  * Hook to fetch complete asset details
@@ -37,7 +37,11 @@ export function useAssetDetails(assetId: string) {
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err : new Error("Failed to fetch asset details"));
+          setError(
+            err instanceof Error
+              ? err
+              : new Error('Failed to fetch asset details')
+          );
         }
       } finally {
         if (!cancelled) {
@@ -77,7 +81,11 @@ export function useBatteryHistory(assetId: string, params?: { days?: number }) {
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err : new Error("Failed to fetch battery history"));
+          setError(
+            err instanceof Error
+              ? err
+              : new Error('Failed to fetch battery history')
+          );
         }
       } finally {
         if (!cancelled) {
@@ -99,7 +107,10 @@ export function useBatteryHistory(assetId: string, params?: { days?: number }) {
 /**
  * Hook to fetch location history
  */
-export function useLocationHistory(assetId: string, params?: { days?: number }) {
+export function useLocationHistory(
+  assetId: string,
+  params?: { days?: number }
+) {
   const [data, setData] = useState<LocationHistory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -117,7 +128,11 @@ export function useLocationHistory(assetId: string, params?: { days?: number }) 
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err : new Error("Failed to fetch location history"));
+          setError(
+            err instanceof Error
+              ? err
+              : new Error('Failed to fetch location history')
+          );
         }
       } finally {
         if (!cancelled) {
@@ -139,7 +154,10 @@ export function useLocationHistory(assetId: string, params?: { days?: number }) 
 /**
  * Hook to fetch activity log
  */
-export function useActivityLog(assetId: string, params?: { page?: number; pageSize?: number }) {
+export function useActivityLog(
+  assetId: string,
+  params?: { page?: number; pageSize?: number }
+) {
   const [data, setData] = useState<ActivityLog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -157,7 +175,11 @@ export function useActivityLog(assetId: string, params?: { page?: number; pageSi
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err : new Error("Failed to fetch activity log"));
+          setError(
+            err instanceof Error
+              ? err
+              : new Error('Failed to fetch activity log')
+          );
         }
       } finally {
         if (!cancelled) {
@@ -197,7 +219,11 @@ export function useMaintenanceSchedule(assetId: string) {
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err : new Error("Failed to fetch maintenance schedule"));
+          setError(
+            err instanceof Error
+              ? err
+              : new Error('Failed to fetch maintenance schedule')
+          );
         }
       } finally {
         if (!cancelled) {
@@ -237,7 +263,9 @@ export function useAssetAlerts(assetId: string, filters?: { status?: string }) {
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err : new Error("Failed to fetch alerts"));
+          setError(
+            err instanceof Error ? err : new Error('Failed to fetch alerts')
+          );
         }
       } finally {
         if (!cancelled) {
@@ -270,7 +298,8 @@ export function useAssetMutations(assetId: string) {
       const result = await assetService.updateAsset(assetId, updates);
       return result;
     } catch (err) {
-      const error = err instanceof Error ? err : new Error("Failed to update asset");
+      const error =
+        err instanceof Error ? err : new Error('Failed to update asset');
       setError(error);
       throw error;
     } finally {
@@ -285,7 +314,8 @@ export function useAssetMutations(assetId: string) {
       const result = await assetService.checkIn(assetId, data);
       return result;
     } catch (err) {
-      const error = err instanceof Error ? err : new Error("Failed to check in asset");
+      const error =
+        err instanceof Error ? err : new Error('Failed to check in asset');
       setError(error);
       throw error;
     } finally {
@@ -300,7 +330,8 @@ export function useAssetMutations(assetId: string) {
       const result = await assetService.checkOut(assetId, data);
       return result;
     } catch (err) {
-      const error = err instanceof Error ? err : new Error("Failed to check out asset");
+      const error =
+        err instanceof Error ? err : new Error('Failed to check out asset');
       setError(error);
       throw error;
     } finally {
@@ -319,9 +350,9 @@ export function useAssetMutations(assetId: string) {
 
 /**
  * Example usage with React Query (for future migration):
- * 
+ *
  * import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
- * 
+ *
  * export function useAssetDetails(assetId: string) {
  *   return useQuery({
  *     queryKey: ['asset', assetId, 'details'],
@@ -330,10 +361,10 @@ export function useAssetMutations(assetId: string) {
  *     cacheTime: 300000, // 5 minutes
  *   });
  * }
- * 
+ *
  * export function useUpdateAsset(assetId: string) {
  *   const queryClient = useQueryClient();
- *   
+ *
  *   return useMutation({
  *     mutationFn: (updates: Partial<Asset>) => assetService.updateAsset(assetId, updates),
  *     onSuccess: (updatedAsset) => {

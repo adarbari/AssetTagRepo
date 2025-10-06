@@ -1,6 +1,7 @@
 """
 Geofence models
 """
+
 from sqlalchemy import (
     ARRAY,
     JSON,

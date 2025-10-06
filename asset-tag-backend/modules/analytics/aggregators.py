@@ -1,6 +1,7 @@
 """
 Analytics aggregators for utilization and cost tracking
 """
+
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta

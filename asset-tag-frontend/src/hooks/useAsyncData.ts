@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
 export interface AsyncDataState<T> {
   data: T | null;
@@ -20,14 +20,14 @@ export interface UseAsyncDataOptions {
 
 /**
  * Custom hook for managing async data fetching with loading and error states
- * 
+ *
  * @example
  * ```tsx
  * const { data, loading, error, refetch } = useAsyncData(
  *   async () => {
  *     const response = await api.getAssets();
  *     return response.data;
-  * },
+ * },
  *   { immediate: true }
  * );
  * ```
@@ -37,7 +37,7 @@ export function useAsyncData<T>(
   options: UseAsyncDataOptions = {}
 ) {
   const { immediate = true, deps = [] } = options;
-  
+
   const [state, setState] = useState<AsyncDataState<T>>({
     data: null,
     loading: immediate,
@@ -46,7 +46,7 @@ export function useAsyncData<T>(
 
   const execute = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
-    
+
     try {
       const result = await fetcher();
       setState({ data: result, loading: false, error: null });
@@ -66,7 +66,7 @@ export function useAsyncData<T>(
 
   useEffect(() => {
     if (immediate) {
-      execute().catch((err) => {
+      execute().catch(err => {
         console.error('Unhandled promise rejection in useAsyncData:', err);
       });
     }
@@ -81,7 +81,7 @@ export function useAsyncData<T>(
 
 /**
  * Hook for managing multiple async data sources
- * 
+ *
  * @example
  * ```tsx
  * const { data, loading, error } = useAsyncDataAll({
@@ -96,7 +96,7 @@ export function useAsyncDataAll<T extends Record<string, () => Promise<any>>>(
   options: UseAsyncDataOptions = {}
 ): AsyncDataState<{ [K in keyof T]: Awaited<ReturnType<T[K]>> }> {
   const { immediate = true, deps = [] } = options;
-  
+
   const [state, setState] = useState<AsyncDataState<any>>({
     data: null,
     loading: immediate,
@@ -108,17 +108,17 @@ export function useAsyncDataAll<T extends Record<string, () => Promise<any>>>(
 
     const execute = async () => {
       setState(prev => ({ ...prev, loading: true, error: null }));
-      
+
       try {
         const entries = Object.entries(fetchers);
         const results = await Promise.all(
           entries.map(([key, fetcher]) => fetcher())
         );
-        
+
         const data = Object.fromEntries(
           entries.map(([key], index) => [key, results[index]])
         );
-        
+
         setState({ data, loading: false, error: null });
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
@@ -129,7 +129,7 @@ export function useAsyncDataAll<T extends Record<string, () => Promise<any>>>(
     };
 
     // Handle promise rejection properly
-    execute().catch((err) => {
+    execute().catch(err => {
       console.error('Unhandled promise rejection in useAsyncDataAll:', err);
     });
   }, [...deps, immediate]);

@@ -1,8 +1,8 @@
-import { LucideIcon } from "lucide-react";
-import { AlertType } from "./index";
+import { LucideIcon } from 'lucide-react';
+import { AlertType } from './index';
 
 // Field types supported in alert configuration
-export type AlertConfigFieldType = 
+export type AlertConfigFieldType =
   | 'number'
   | 'text'
   | 'select'
@@ -38,17 +38,17 @@ export interface AlertConfigField {
  * Alert Configuration Level
  * Similar to NotificationPreferences hierarchy
  */
-export type AlertConfigLevel = "user" | "site" | "asset" | "job";
+export type AlertConfigLevel = 'user' | 'site' | 'asset' | 'job';
 
 // Alert rule configuration
 // Note: Notification channels are now managed in NotificationPreferences (user/site/asset level)
 export interface AlertRuleConfig {
-  id?: string;  // Unique ID for the config
-  level?: AlertConfigLevel;  // Configuration level
-  entityId?: string;  // ID of user/site/asset/job
-  isOverride?: boolean;  // Is this an override of parent level?
-  overrideReason?: string;  // Why this override exists
-  
+  id?: string; // Unique ID for the config
+  level?: AlertConfigLevel; // Configuration level
+  entityId?: string; // ID of user/site/asset/job
+  isOverride?: boolean; // Is this an override of parent level?
+  overrideReason?: string; // Why this override exists
+
   enabled: boolean;
   severity: 'low' | 'medium' | 'high' | 'critical';
   autoEscalate: boolean;
@@ -60,7 +60,7 @@ export interface AlertRuleConfig {
     duration?: number; // minutes to suppress duplicate alerts
     conditions?: Record<string, any>; // Additional suppression conditions
   };
-  
+
   createdAt?: string;
   updatedAt?: string;
   createdBy?: string;
@@ -91,8 +91,8 @@ export interface AlertTypeConfig {
 export interface SavedAlertConfig {
   id: string;
   type: AlertType;
-  level: AlertConfigLevel;  // user/site/asset/job
-  entityId: string;  // ID of the entity (user-id, site-id, asset-id, job-id)
+  level: AlertConfigLevel; // user/site/asset/job
+  entityId: string; // ID of the entity (user-id, site-id, asset-id, job-id)
   version: string; // For config versioning
   config: AlertRuleConfig;
   createdAt: string;

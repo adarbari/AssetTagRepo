@@ -1,6 +1,7 @@
 """
 Job models
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

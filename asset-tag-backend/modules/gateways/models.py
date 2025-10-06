@@ -1,6 +1,7 @@
 """
 Gateway models for Bluetooth gateways
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

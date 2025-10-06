@@ -1,6 +1,7 @@
 """
 User schemas
 """
+
 from datetime import datetime
 from typing import Any, Dict, Optional
 from uuid import UUID

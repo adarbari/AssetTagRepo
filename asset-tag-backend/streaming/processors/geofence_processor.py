@@ -1,6 +1,7 @@
 """
 Enhanced geofence evaluation processor
 """
+
 import asyncio
 import logging
 import math

@@ -1,6 +1,6 @@
 /**
  * Global error handler utilities
- * 
+ *
  * Handles common errors that occur from third-party libraries
  * like the CSS security error from Leaflet
  */
@@ -17,7 +17,7 @@ export function suppressCSSSecurityErrors() {
   console.error = (...args: any[]) => {
     // Check if this is the CSS security error
     const errorMessage = args[0]?.toString() || '';
-    
+
     if (
       errorMessage.includes('cssRules') ||
       errorMessage.includes('CSSStyleSheet') ||
@@ -37,7 +37,7 @@ export function suppressCSSSecurityErrors() {
  * Catches errors that would otherwise be uncaught
  */
 export function setupGlobalErrorHandler() {
-  window.addEventListener('error', (event) => {
+  window.addEventListener('error', event => {
     // Check if this is the CSS security error
     if (
       event.message?.includes('cssRules') ||
@@ -49,15 +49,15 @@ export function setupGlobalErrorHandler() {
       event.stopPropagation();
       return false;
     }
-    
+
     // Allow other errors to bubble up normally
     return true;
   });
 
   // Also handle unhandled promise rejections
-  window.addEventListener('unhandledrejection', (event) => {
+  window.addEventListener('unhandledrejection', event => {
     const errorMessage = event.reason?.toString() || '';
-    
+
     if (
       errorMessage.includes('cssRules') ||
       errorMessage.includes('CSSStyleSheet') ||

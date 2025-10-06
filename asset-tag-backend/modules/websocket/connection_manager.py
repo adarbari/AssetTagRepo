@@ -1,6 +1,7 @@
 """
 WebSocket connection manager for handling real-time connections
 """
+
 import asyncio
 import json
 import logging

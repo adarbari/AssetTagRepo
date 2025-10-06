@@ -1,6 +1,7 @@
 """
 Check-in/Check-out Pydantic schemas
 """
+
 from datetime import datetime
 from typing import Any, Dict, Optional
 

@@ -1,6 +1,7 @@
 """
 Issue models
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

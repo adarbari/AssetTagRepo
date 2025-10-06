@@ -1,6 +1,7 @@
 """
 Reports API endpoints
 """
+
 import csv
 import io
 import json
@@ -314,9 +315,9 @@ async def _generate_report_background(
         report_statuses[report_id].status = "completed"
         report_statuses[report_id].progress = 100
         report_statuses[report_id].completed_at = datetime.now()
-        report_statuses[
-            report_id
-        ].download_url = f"/api/v1/reports/{report_id}/download"
+        report_statuses[report_id].download_url = (
+            f"/api/v1/reports/{report_id}/download"
+        )
         report_statuses[report_id].filename = filename
 
     except Exception as e:

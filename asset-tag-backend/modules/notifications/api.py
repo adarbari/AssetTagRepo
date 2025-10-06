@@ -1,6 +1,7 @@
 """
 Notification API endpoints
 """
+
 import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
@@ -382,9 +383,9 @@ async def test_notification(
             title="Test Notification",
             message=test_data.custom_message or "This is a test notification",
             channel=test_data.channel,
-            recipient_email=test_data.recipient
-            if test_data.channel == "email"
-            else None,
+            recipient_email=(
+                test_data.recipient if test_data.channel == "email" else None
+            ),
             recipient_phone=test_data.recipient if test_data.channel == "sms" else None,
             delivery_status="sent",
             delivered_at=datetime.now(),

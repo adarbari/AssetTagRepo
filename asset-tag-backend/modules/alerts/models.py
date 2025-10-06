@@ -1,6 +1,7 @@
 """
 Alert models
 """
+
 from sqlalchemy import (
     JSON,
     Boolean,

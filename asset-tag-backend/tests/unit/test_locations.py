@@ -1,6 +1,7 @@
 """
 Unit tests for Locations module
 """
+
 import uuid
 from datetime import datetime
 from unittest.mock import Mock

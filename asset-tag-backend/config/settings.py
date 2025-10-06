@@ -2,6 +2,7 @@
 Configuration settings for Asset Tag Backend
 Supports local development with free alternatives and production AWS services
 """
+
 from enum import Enum
 from typing import Optional
 

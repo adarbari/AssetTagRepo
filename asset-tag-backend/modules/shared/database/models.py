@@ -1,6 +1,7 @@
 """
 Shared database models
 """
+
 from sqlalchemy import JSON, Boolean, Column, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship

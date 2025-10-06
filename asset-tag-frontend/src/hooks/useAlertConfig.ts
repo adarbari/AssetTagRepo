@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import type { AlertConfigurationsStore } from "../types/alertConfig";
+import { useState, useEffect } from 'react';
+import type { AlertConfigurationsStore } from '../types/alertConfig';
 
 /**
  * Custom hook for managing alert configurations
@@ -15,20 +15,20 @@ export function useAlertConfig() {
 
   const loadConfigs = () => {
     try {
-      const saved = localStorage.getItem("alertConfigurations");
+      const saved = localStorage.getItem('alertConfigurations');
       if (saved) {
         setConfigs(JSON.parse(saved));
       } else {
         setConfigs({});
       }
     } catch (error) {
-      console.error("Failed to load alert configurations:", error);
+      console.error('Failed to load alert configurations:', error);
     }
   };
 
   const saveConfig = async (config: AlertConfigurationsStore[string]) => {
     const key = `${config.level}:${config.entityId}:${config.type}`;
-    
+
     const updatedConfigs = {
       ...configs,
       [key]: {
@@ -38,21 +38,31 @@ export function useAlertConfig() {
     };
 
     setConfigs(updatedConfigs);
-    
+
     try {
-      localStorage.setItem("alertConfigurations", JSON.stringify(updatedConfigs));
+      localStorage.setItem(
+        'alertConfigurations',
+        JSON.stringify(updatedConfigs)
+      );
       // TODO: Backend integration
       // await api.saveAlertConfig(config);
       return { success: true };
     } catch (error) {
-      console.error("Failed to save alert configuration:", error);
+      console.error('Failed to save alert configuration:', error);
       return { success: false, error };
     }
   };
 
-  const deleteConfig = async (level: string, entityId: string, alertType: string) => {
-    if (level === "user") {
-      return { success: false, error: "Cannot delete user-level configuration" };
+  const deleteConfig = async (
+    level: string,
+    entityId: string,
+    alertType: string
+  ) => {
+    if (level === 'user') {
+      return {
+        success: false,
+        error: 'Cannot delete user-level configuration',
+      };
     }
 
     const key = `${level}:${entityId}:${alertType}`;
@@ -61,12 +71,12 @@ export function useAlertConfig() {
     setConfigs(remaining);
 
     try {
-      localStorage.setItem("alertConfigurations", JSON.stringify(remaining));
+      localStorage.setItem('alertConfigurations', JSON.stringify(remaining));
       // TODO: Backend integration
       // await api.deleteAlertConfig(level, entityId, alertType);
       return { success: true };
     } catch (error) {
-      console.error("Failed to delete alert configuration:", error);
+      console.error('Failed to delete alert configuration:', error);
       return { success: false, error };
     }
   };
