@@ -282,7 +282,7 @@ describe('Sites Component', () => {
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       const siteRow = screen.getByText('Main Warehouse').closest('tr');
-      await user.click(siteRow!);
+      if (siteRow) await user.click(siteRow);
 
       expect(mockOnSiteClick).toHaveBeenCalledWith(
         expect.objectContaining({

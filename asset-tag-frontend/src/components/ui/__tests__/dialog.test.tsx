@@ -233,7 +233,7 @@ describe('Dialog Component - Click Tests', () => {
             <DialogHeader>
               <DialogTitle>Non-closing Dialog</DialogTitle>
             </DialogHeader>
-            <div>This action won't close the dialog</div>
+            <div>This action won&apos;t close the dialog</div>
             <DialogFooter>
               <Button onClick={mockAction}>Perform Action</Button>
             </DialogFooter>

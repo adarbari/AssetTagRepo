@@ -181,7 +181,7 @@ describe('Button Component - Click Tests', () => {
 
       const icon = document.querySelector('svg');
       expect(icon).toBeInTheDocument();
-      await user.click(icon!);
+      if (icon) await user.click(icon);
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });

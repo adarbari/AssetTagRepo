@@ -78,8 +78,8 @@ const mockAssets: Asset[] = sharedMockAssets
         : asset.type.toLowerCase().includes('container')
           ? 'containers'
           : 'equipment',
-    lat: asset.coordinates![0],
-    lng: asset.coordinates![1],
+    lat: asset.coordinates?.[0] || 0,
+    lng: asset.coordinates?.[1] || 0,
     status: asset.status as AssetStatus,
     battery: asset.battery,
     lastUpdate: asset.lastSeen,
@@ -215,7 +215,8 @@ export function AssetMap({
       });
 
       // Initialize map centered on San Francisco
-      const map = L.map(mapRef.current!).setView([37.7749, -122.4194], 13);
+      if (!mapRef.current) return;
+      const map = L.map(mapRef.current).setView([37.7749, -122.4194], 13);
 
       // Add OpenStreetMap tiles
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

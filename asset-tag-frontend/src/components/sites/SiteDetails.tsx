@@ -288,12 +288,14 @@ export function SiteDetails({
     if (sharedSite.geofenceId) {
       // Fetch geofence from mock data
       import('../../data/mockData').then(({ getGeofenceById }) => {
-        const geofence = getGeofenceById(sharedSite.geofenceId!);
-        if (geofence) {
-          setSiteGeofence(geofence);
-        } else {
-          // Geofence ID exists but geofence not found, clear it
-          setSiteGeofence(null);
+        if (sharedSite.geofenceId) {
+          const geofence = getGeofenceById(sharedSite.geofenceId);
+          if (geofence) {
+            setSiteGeofence(geofence);
+          } else {
+            // Geofence ID exists but geofence not found, clear it
+            setSiteGeofence(null);
+          }
         }
       });
     } else {

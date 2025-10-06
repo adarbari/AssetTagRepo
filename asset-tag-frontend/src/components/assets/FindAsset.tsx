@@ -163,7 +163,7 @@ export function FindAsset({ onShowOnMap }: FindAssetProps) {
               </div>
               <div className='text-sm text-muted-foreground'>
                 Enter an asset ID or name to start finding. The system will
-                guide you to the asset's location.
+                guide you to the asset&apos;s location.
               </div>
             </div>
           </CardContent>
@@ -371,7 +371,7 @@ export function FindAsset({ onShowOnMap }: FindAssetProps) {
           <CardContent>
             <div className='text-center py-8 text-muted-foreground'>
               <Search className='h-12 w-12 mx-auto mb-4 opacity-50' />
-              <p>Searching for assets matching "{searchTerm}"...</p>
+              <p>Searching for assets matching &quot;{searchTerm}&quot;...</p>
             </div>
           </CardContent>
         </Card>

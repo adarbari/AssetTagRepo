@@ -93,7 +93,10 @@ export function ConfigurationLevelWidget({
 
   const getLevelLabel = (levelType: ConfigLevel): string => {
     if (labels && labels[levelType]) {
-      return labels[levelType]!;
+      return (
+        labels[levelType] ||
+        levelType.charAt(0).toUpperCase() + levelType.slice(1)
+      );
     }
     return levelType.charAt(0).toUpperCase() + levelType.slice(1);
   };

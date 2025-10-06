@@ -148,7 +148,8 @@ export function AuditLogList({
             {entry.field || 'record'}
             {entry.oldValue && entry.newValue && (
               <span className='ml-1'>
-                from "{entry.oldValue}" to "{entry.newValue}"
+                from &quot;{entry.oldValue}&quot; to &quot;{entry.newValue}
+                &quot;
               </span>
             )}
           </p>
