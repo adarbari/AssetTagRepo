@@ -13,7 +13,6 @@ from fastapi import (
     WebSocket,
     WebSocketDisconnect,
 )
-
 from modules.websocket.connection_manager import manager
 from modules.websocket.handlers import (
     AlertHandler,

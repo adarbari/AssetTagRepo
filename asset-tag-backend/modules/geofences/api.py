@@ -5,11 +5,8 @@ import math
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import and_, func, or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from config.database import get_db
+from fastapi import APIRouter, Depends, HTTPException, Query
 from modules.geofences.models import Geofence, GeofenceEvent
 from modules.geofences.schemas import (
     GeofenceCreate,
@@ -21,6 +18,8 @@ from modules.geofences.schemas import (
     GeofenceStatsResponse,
     GeofenceUpdate,
 )
+from sqlalchemy import and_, func, or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 

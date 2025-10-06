@@ -5,11 +5,8 @@ import uuid
 from datetime import datetime
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import and_, delete, func, or_, select, update
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from config.database import get_db
+from fastapi import APIRouter, Depends, HTTPException, Query
 from modules.vehicles.models import Vehicle, VehicleAssetPairing
 from modules.vehicles.schemas import (
     VehicleAssetPairingCreate,
@@ -20,6 +17,8 @@ from modules.vehicles.schemas import (
     VehicleUpdate,
     VehicleWithAssets,
 )
+from sqlalchemy import and_, delete, func, or_, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 

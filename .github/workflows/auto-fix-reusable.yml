@@ -72,8 +72,7 @@ jobs:
           echo "fix-applied=true" >> $GITHUB_OUTPUT
         elif echo "$LOGS_CONTENT" | grep -q "loadVirtual requires existing shrinkwrap file"; then
           echo "🔧 Detected npm workspace error - applying fix"
-          cd asset-tag-frontend
-          rm -f package-lock.json
+          # Generate root package-lock.json for npm workspaces
           npm install
           echo "fix-applied=true" >> $GITHUB_OUTPUT
         elif echo "$LOGS_CONTENT" | grep -q "ModuleNotFoundError"; then

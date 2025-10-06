@@ -5,11 +5,8 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import and_, delete, func, or_, select, update
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from config.database import get_db
+from fastapi import APIRouter, Depends, HTTPException, Query
 from modules.notifications.models import (
     NotificationConfig,
     NotificationLog,
@@ -27,6 +24,8 @@ from modules.notifications.schemas import (
     NotificationTestRequest,
     NotificationTestResponse,
 )
+from sqlalchemy import and_, delete, func, or_, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 

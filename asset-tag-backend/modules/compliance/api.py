@@ -5,11 +5,8 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import and_, delete, func, or_, select, update
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from config.database import get_db
+from fastapi import APIRouter, Depends, HTTPException, Query
 from modules.compliance.models import Compliance, ComplianceCheck
 from modules.compliance.schemas import (
     ComplianceCheckCreate,
@@ -20,6 +17,8 @@ from modules.compliance.schemas import (
     ComplianceUpdate,
     ComplianceWithChecks,
 )
+from sqlalchemy import and_, delete, func, or_, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 

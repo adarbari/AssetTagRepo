@@ -4,17 +4,16 @@ Check-in/Check-out API endpoints
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import delete, select, update
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from config.database import get_db
+from fastapi import APIRouter, Depends, HTTPException, Query
 from modules.checkin_checkout.models import CheckInOutRecord
 from modules.checkin_checkout.schemas import (
     CheckInCreate,
     CheckInOutResponse,
     CheckOutCreate,
 )
+from sqlalchemy import delete, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
