@@ -10,9 +10,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.checkin_checkout.models import CheckInOutRecord
-from modules.checkin_checkout.schemas import (CheckInCreate,
-                                              CheckInOutResponse,
-                                              CheckOutCreate)
+from modules.checkin_checkout.schemas import (
+    CheckInCreate,
+    CheckInOutResponse,
+    CheckOutCreate,
+)
 
 router = APIRouter()
 

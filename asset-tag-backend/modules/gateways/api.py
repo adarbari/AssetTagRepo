@@ -11,8 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.gateways.models import Gateway
-from modules.gateways.schemas import (GatewayCreate, GatewayResponse,
-                                      GatewayUpdate)
+from modules.gateways.schemas import GatewayCreate, GatewayResponse, GatewayUpdate
 
 router = APIRouter()
 

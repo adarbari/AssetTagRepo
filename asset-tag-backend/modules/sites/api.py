@@ -11,10 +11,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.sites.models import Personnel, PersonnelActivity, Site
-from modules.sites.schemas import (PersonnelActivityResponse, PersonnelCreate,
-                                   PersonnelResponse, PersonnelUpdate,
-                                   SiteCreate, SiteResponse, SiteUpdate,
-                                   SiteWithAssetsResponse)
+from modules.sites.schemas import (
+    PersonnelActivityResponse,
+    PersonnelCreate,
+    PersonnelResponse,
+    PersonnelUpdate,
+    SiteCreate,
+    SiteResponse,
+    SiteUpdate,
+    SiteWithAssetsResponse,
+)
 
 router = APIRouter()
 

@@ -1,12 +1,12 @@
 """
 Shared database models
 """
-from sqlalchemy import (JSON, Boolean, Column, ForeignKey, Index, Integer,
-                        String, Text)
+from sqlalchemy import JSON, Boolean, Column, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from modules.alerts.models import Alert
+
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.assets.models import Asset, AssetType
 from modules.checkin_checkout.models import CheckInOutRecord
@@ -16,8 +16,7 @@ from modules.jobs.models import Job
 from modules.locations.models import EstimatedLocation
 from modules.maintenance.models import MaintenanceRecord
 from modules.observations.models import Observation
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 from modules.sites.models import Site
 from modules.vehicles.models import Vehicle, VehicleAssetPairing
 

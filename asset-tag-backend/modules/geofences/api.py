@@ -11,12 +11,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.geofences.models import Geofence, GeofenceEvent
-from modules.geofences.schemas import (GeofenceCreate,
-                                       GeofenceEvaluationRequest,
-                                       GeofenceEvaluationResponse,
-                                       GeofenceEventCreate,
-                                       GeofenceEventResponse, GeofenceResponse,
-                                       GeofenceStatsResponse, GeofenceUpdate)
+from modules.geofences.schemas import (
+    GeofenceCreate,
+    GeofenceEvaluationRequest,
+    GeofenceEvaluationResponse,
+    GeofenceEventCreate,
+    GeofenceEventResponse,
+    GeofenceResponse,
+    GeofenceStatsResponse,
+    GeofenceUpdate,
+)
 
 router = APIRouter()
 

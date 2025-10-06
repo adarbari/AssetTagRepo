@@ -1,13 +1,22 @@
 """
 Geofence models
 """
-from sqlalchemy import (ARRAY, JSON, Boolean, Column, ForeignKey, Index,
-                        Integer, Numeric, String, Text)
+from sqlalchemy import (
+    ARRAY,
+    JSON,
+    Boolean,
+    Column,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Geofence(BaseModel, OrganizationMixin, SoftDeleteMixin):

@@ -6,8 +6,14 @@ import json
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import (APIRouter, Depends, HTTPException, Query, WebSocket,
-                     WebSocketDisconnect)
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Query,
+    WebSocket,
+    WebSocketDisconnect,
+)
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 

@@ -1,13 +1,21 @@
 """
 Compliance models
 """
-from sqlalchemy import (JSON, Boolean, Column, DateTime, ForeignKey, Index,
-                        Integer, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Compliance(BaseModel, OrganizationMixin, SoftDeleteMixin):
