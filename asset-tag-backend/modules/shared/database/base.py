@@ -1,7 +1,7 @@
 """
 Base database models and mixins
 """
-from sqlalchemy import Column, String, DateTime, func, Index
+from sqlalchemy import Column, String, DateTime, func, Index, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declared_attr
 from config.database import Base
@@ -32,7 +32,7 @@ class BaseModel(Base, UUIDMixin, TimestampMixin):
 class OrganizationMixin:
     """Mixin to add organization_id for multi-tenancy"""
     
-    organization_id = Column(UUID(as_uuid=True), nullable=False, index=True)
+    organization_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False, index=True)
 
 
 class SoftDeleteMixin:

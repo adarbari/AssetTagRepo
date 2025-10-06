@@ -41,6 +41,7 @@ class Site(BaseModel, OrganizationMixin, SoftDeleteMixin):
     site_metadata = Column(JSON, default={})
     
     # Relationships
+    organization = relationship("Organization", back_populates="sites")
     manager = relationship("User", foreign_keys=[manager_id])
     geofence = relationship("Geofence", foreign_keys=[geofence_id])
     assets = relationship("Asset", foreign_keys="Asset.current_site_id", back_populates="current_site")

@@ -76,25 +76,35 @@ def client():
     
     app.dependency_overrides[get_db] = override_get_db
     
-    # Override the lifespan to skip database initialization during testing
+    # Create a test app with minimal lifespan
+    from fastapi import FastAPI
     from contextlib import asynccontextmanager
     
     @asynccontextmanager
     async def test_lifespan(app):
-        # Skip all initialization for testing
+        # Create tables for testing
+        async with test_engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
         yield
-        # Skip all cleanup for testing
+        # Clean up tables after testing
+        async with test_engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
     
-    # Temporarily replace the lifespan
-    original_lifespan = app.router.lifespan_context
-    app.router.lifespan_context = test_lifespan
+    # Create a new test app instance
+    test_app = FastAPI(lifespan=test_lifespan)
+    
+    # Copy all routes from the main app
+    for route in app.routes:
+        test_app.router.routes.append(route)
+    
+    # Copy middleware
+    for middleware in app.user_middleware:
+        test_app.add_middleware(middleware.cls, **middleware.kwargs)
     
     from fastapi.testclient import TestClient
-    with TestClient(app) as tc:
+    with TestClient(test_app) as tc:
         yield tc
     
-    # Restore original lifespan
-    app.router.lifespan_context = original_lifespan
     app.dependency_overrides.clear()
 
 
@@ -112,8 +122,8 @@ def sample_asset_data():
         "serial_number": "EXC-001",
         "asset_type": "excavator",
         "status": "active",
-        "site_id": "test-site-1",
-        "assigned_to_user_id": "test-user-1",
+        "site_id": "550e8400-e29b-41d4-a716-446655440001",
+        "assigned_to_user_id": "550e8400-e29b-41d4-a716-446655440002",
         "battery_level": 85,
         "last_seen": "2024-01-01T12:00:00Z",
         "asset_metadata": {"model": "CAT 320", "year": 2020}
@@ -154,7 +164,7 @@ def sample_alert_data():
     return {
         "alert_type": "battery_low",
         "severity": "warning",
-        "asset_id": "test-asset-1",
+        "asset_id": "550e8400-e29b-41d4-a716-446655440000",
         "asset_name": "Test Asset",
         "message": "Battery level is low",
         "description": "Asset battery has dropped below 20%",
