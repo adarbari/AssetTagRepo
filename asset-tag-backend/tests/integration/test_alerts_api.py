@@ -13,6 +13,7 @@ class TestAlertsAPI:
 
         assert response.status_code == 201
         data = response.json()
+        
 
         assert data["alert_type"] == sample_alert_data["alert_type"]
         assert data["severity"] == sample_alert_data["severity"]
