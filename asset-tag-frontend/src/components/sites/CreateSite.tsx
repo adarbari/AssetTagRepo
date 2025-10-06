@@ -55,7 +55,7 @@ export function CreateSite({ onBack }: CreateSiteProps) {
     }
 
     // Handle form submission
-// // // // // // console.log({
+// // // // // // // console.log({
       siteName,
       address,
       city,

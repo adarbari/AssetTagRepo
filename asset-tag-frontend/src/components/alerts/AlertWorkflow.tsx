@@ -408,7 +408,7 @@ export function AlertWorkflow({
       setIsProcessing(false);
       onActionComplete?.();
     } catch (error) {
-// // // // // // console.error(&apos;Failed to execute workflow action:&apos;, error);
+// // // // // // // console.error(&apos;Failed to execute workflow action:&apos;, error);
       toast.error(&apos;Failed to execute action. Please try again.&apos;);
       setIsProcessing(false);
     }
@@ -425,7 +425,7 @@ export function AlertWorkflow({
       setIsProcessing(false);
       onActionComplete?.();
     } catch (error) {
-// // // // // // console.error(&apos;Failed to acknowledge alert:&apos;, error);
+// // // // // // // console.error(&apos;Failed to acknowledge alert:&apos;, error);
       toast.error(&apos;Failed to acknowledge alert. Please try again.&apos;);
       setIsProcessing(false);
     }
@@ -442,7 +442,7 @@ export function AlertWorkflow({
       setIsProcessing(false);
       onActionComplete?.();
     } catch (error) {
-// // // // // // console.error(&apos;Failed to resolve alert:&apos;, error);
+// // // // // // // console.error(&apos;Failed to resolve alert:&apos;, error);
       toast.error(&apos;Failed to resolve alert. Please try again.&apos;);
       setIsProcessing(false);
     }

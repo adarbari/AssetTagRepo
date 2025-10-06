@@ -46,14 +46,14 @@ class TestRunner {
   private startTime: number = 0;
 
   async runAllTests(): Promise<void> {
-// // // // // // console.log(
+// // // // // // // console.log(
       '🚀 Starting comprehensive test suite for AssetTag Application\n'
     );
     this.startTime = Date.now();
 
     // Check if test directory exists
     if (!existsSync(TEST_DIR)) {
-// // // // // // console.error(`❌ Test directory not found: ${TEST_DIR}`);
+// // // // // // // console.error(`❌ Test directory not found: ${TEST_DIR}`);
       process.exit(1);
     }
 
@@ -69,7 +69,7 @@ class TestRunner {
     const testPath = path.join(TEST_DIR, testFile);
 
     if (!existsSync(testPath)) {
-// // // // // // console.log(`⏭️  Skipping ${testFile} - file not found`);
+// // // // // // // console.log(`⏭️  Skipping ${testFile} - file not found`);
       this.results.push({
         file: testFile,
         status: 'skipped',
@@ -77,7 +77,7 @@ class TestRunner {
       return;
     }
 
-// // // // // // console.log(`🧪 Running ${testFile}...`);
+// // // // // // // console.log(`🧪 Running ${testFile}...`);
     const startTime = Date.now();
 
     try {
@@ -88,7 +88,7 @@ class TestRunner {
       });
 
       const duration = Date.now() - startTime;
-// // // // // // console.log(`✅ ${testFile} passed (${duration}ms)\n`);
+// // // // // // // console.log(`✅ ${testFile} passed (${duration}ms)\n`);
 
       this.results.push({
         file: testFile,
@@ -97,7 +97,7 @@ class TestRunner {
       });
     } catch (error) {
       const duration = Date.now() - startTime;
-// // // // // // console.log(`❌ ${testFile} failed (${duration}ms)\n`);
+// // // // // // // console.log(`❌ ${testFile} failed (${duration}ms)\n`);
 
       this.results.push({
         file: testFile,
@@ -115,35 +115,35 @@ class TestRunner {
     const skipped = this.results.filter(r => r.status === 'skipped').length;
     const total = this.results.length;
 
-// // // // // // console.log('📊 Test Summary');
-// // // // // // console.log('='.repeat(50));
-// // // // // // console.log(`Total Tests: ${total}`);
-// // // // // // console.log(`✅ Passed: ${passed}`);
-// // // // // // console.log(`❌ Failed: ${failed}`);
-// // // // // // console.log(`⏭️  Skipped: ${skipped}`);
-// // // // // // console.log(`⏱️  Total Duration: ${totalDuration}ms`);
-// // // // // // console.log('='.repeat(50));
+// // // // // // // console.log('📊 Test Summary');
+// // // // // // // console.log('='.repeat(50));
+// // // // // // // console.log(`Total Tests: ${total}`);
+// // // // // // // console.log(`✅ Passed: ${passed}`);
+// // // // // // // console.log(`❌ Failed: ${failed}`);
+// // // // // // // console.log(`⏭️  Skipped: ${skipped}`);
+// // // // // // // console.log(`⏱️  Total Duration: ${totalDuration}ms`);
+// // // // // // // console.log('='.repeat(50));
 
     if (failed > 0) {
-// // // // // // console.log('\n❌ Failed Tests:');
+// // // // // // // console.log('\n❌ Failed Tests:');
       this.results
         .filter(r => r.status === 'failed')
         .forEach(result => {
-// // // // // // console.log(`  - ${result.file}: ${result.error}`);
+// // // // // // // console.log(`  - ${result.file}: ${result.error}`);
         });
     }
 
     if (skipped > 0) {
-// // // // // // console.log('\n⏭️  Skipped Tests:');
+// // // // // // // console.log('\n⏭️  Skipped Tests:');
       this.results
         .filter(r => r.status === 'skipped')
         .forEach(result => {
-// // // // // // console.log(`  - ${result.file}`);
+// // // // // // // console.log(`  - ${result.file}`);
         });
     }
 
-// // // // // // console.log('\n📋 Test Coverage by Component:');
-// // // // // // console.log('='.repeat(50));
+// // // // // // // console.log('\n📋 Test Coverage by Component:');
+// // // // // // // console.log('='.repeat(50));
 
     const componentTests = {
       Sites: ['Sites.test.tsx', 'SiteDetails.test.tsx', 'CreateSite.test.tsx'],
@@ -168,24 +168,24 @@ class TestRunner {
             ? '✅'
             : '❌';
 
-// // // // // // console.log(
+// // // // // // // console.log(
         `${status} ${component}: ${componentPassed}/${componentTotal} tests passed`
       );
     });
 
-// // // // // // console.log('\n🎯 Test Quality Metrics:');
-// // // // // // console.log('='.repeat(50));
-// // // // // // console.log(`Success Rate: ${((passed / total) * 100).toFixed(1)}%`);
-// // // // // // console.log(
+// // // // // // // console.log('\n🎯 Test Quality Metrics:');
+// // // // // // // console.log('='.repeat(50));
+// // // // // // // console.log(`Success Rate: ${((passed / total) * 100).toFixed(1)}%`);
+// // // // // // // console.log(
       `Average Test Duration: ${(this.results.reduce((sum, r) => sum + (r.duration || 0), 0) / total).toFixed(0)}ms`
     );
 
     if (failed === 0) {
-// // // // // // console.log(
+// // // // // // // console.log(
         '\n🎉 All tests passed! The application components are working correctly.'
       );
     } else {
-// // // // // // console.log(
+// // // // // // // console.log(
         `\n⚠️  ${failed} test(s) failed. Please review and fix the issues.`
       );
       process.exit(1);
@@ -201,19 +201,19 @@ async function main() {
 
 // Handle uncaught errors
 process.on('uncaughtException', error => {
-// // // // // // console.error('❌ Uncaught Exception:', error.message);
+// // // // // // // console.error('❌ Uncaught Exception:', error.message);
   process.exit(1);
 });
 
 process.on('unhandledRejection', reason => {
-// // // // // // console.error('❌ Unhandled Rejection:', reason);
+// // // // // // // console.error('❌ Unhandled Rejection:', reason);
   process.exit(1);
 });
 
 // Run if this file is executed directly
 if (require.main === module) {
   main().catch(error => {
-// // // // // // console.error('❌ Test runner failed:', error.message);
+// // // // // // // console.error('❌ Test runner failed:', error.message);
     process.exit(1);
   });
 }

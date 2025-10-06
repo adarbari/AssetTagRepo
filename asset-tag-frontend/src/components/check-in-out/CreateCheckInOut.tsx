@@ -107,7 +107,7 @@ export function CreateCheckInOut({
     try {
       updateAsset(assetId, updates);
     } catch (error) {
-// // // // // // console.error(&apos;Error updating asset in mock data:&apos;, error);
+// // // // // // // console.error(&apos;Error updating asset in mock data:&apos;, error);
     }
 
     // Navigate back

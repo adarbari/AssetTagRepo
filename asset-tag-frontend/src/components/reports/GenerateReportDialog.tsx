@@ -51,7 +51,7 @@ export function GenerateReportDialog({
   };
 
   const handleGenerate = () => {
-// // // // // // console.log(&apos;Generating report:&apos;, {
+// // // // // // // console.log(&apos;Generating report:&apos;, {
       type: reportType,
       dateRange,
       startDate,

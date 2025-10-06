@@ -112,7 +112,7 @@ export function EditMaintenance({
         notes: taskData.notes || &apos;&apos;,
       });
     } catch (err) {
-// // // // // // console.error(&apos;Error loading maintenance task:&apos;, err);
+// // // // // // // console.error(&apos;Error loading maintenance task:&apos;, err);
       setError(
         err instanceof Error ? err.message : &apos;Failed to load maintenance task&apos;
       );
@@ -229,7 +229,7 @@ export function EditMaintenance({
         }, 1000);
       }
     } catch (err) {
-// // // // // // console.error(&apos;Error saving maintenance task:&apos;, err);
+// // // // // // // console.error(&apos;Error saving maintenance task:&apos;, err);
       toast.error(&apos;Failed to save&apos;, {
         description: err instanceof Error ? err.message : &apos;An error occurred&apos;,
       });

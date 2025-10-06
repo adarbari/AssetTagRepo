@@ -30,7 +30,7 @@ def test_debug_alert_creation() -> None:
             print(f"Could not parse error response as JSON: {e}")
 
     # Don't assert anything, just print the response
-    # # assert True
+    # # # assert True
 
 
 if __name__ == "__main__":

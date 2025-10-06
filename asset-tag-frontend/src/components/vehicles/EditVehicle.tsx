@@ -97,7 +97,7 @@ export function EditVehicle({
 
       onBack();
     } catch (error) {
-// // // // // // console.error(&apos;Error updating vehicle:&apos;, error);
+// // // // // // // console.error(&apos;Error updating vehicle:&apos;, error);
       toast.error(&apos;Failed to update vehicle&apos;, {
         description: &apos;Please try again&apos;,
       });

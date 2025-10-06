@@ -101,7 +101,7 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
       setLostItemMechanisms(mechanismsData);
       setAvailabilityOptions(availabilityData);
     } catch (error) {
-// // // // // // console.error(&apos;Error loading configuration data:&apos;, error);
+// // // // // // // console.error(&apos;Error loading configuration data:&apos;, error);
       toast.error(&apos;Failed to load configuration data&apos;);
     } finally {
       setLoading(false);
@@ -185,7 +185,7 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
       });
 
       // Log backend-ready object for reference
-// // // // // // console.log(&apos;Backend-ready asset object:&apos;, backendAsset);
+// // // // // // // console.log(&apos;Backend-ready asset object:&apos;, backendAsset);
 
       if (onAssetCreated) {
         onAssetCreated(newAsset);
@@ -193,7 +193,7 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
 
       onBack();
     } catch (error) {
-// // // // // // console.error(&apos;Error creating asset:&apos;, error);
+// // // // // // // console.error(&apos;Error creating asset:&apos;, error);
       toast.error(&apos;Failed to create asset&apos;, {
         description: &apos;Please try again&apos;,
       });
