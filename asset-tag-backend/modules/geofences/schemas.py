@@ -54,9 +54,9 @@ class GeofenceBase(BaseModel):
 
     @validator("coordinates")
     @classmethod
-    def validate_coordinates(cls, v, info):
+    def validate_coordinates(cls, v, values):
         """Validate coordinates based on geofence type"""
-        if v is not None and info.data.get("geofence_type") == "polygon":
+        if v is not None and values.get("geofence_type") == "polygon":
             if len(v) < 3:
                 raise ValueError(
                     "Polygon geofences must have at least 3 coordinate pairs"
@@ -70,18 +70,28 @@ class GeofenceBase(BaseModel):
                     raise ValueError("Longitude must be between -180 and 180")
         return v
 
-    @validator("center_latitude", "center_longitude", "radius")
+    @validator("center_latitude")
     @classmethod
-    def validate_circular_geofence(cls, v, info):
-        """Validate circular geofence parameters"""
-        if info.data.get("geofence_type") == "circular":
-            field_name = info.field_name
-            if field_name == "center_latitude" and v is None:
-                raise ValueError("Center latitude is required for circular geofences")
-            if field_name == "center_longitude" and v is None:
-                raise ValueError("Center longitude is required for circular geofences")
-            if field_name == "radius" and v is None:
-                raise ValueError("Radius is required for circular geofences")
+    def validate_center_latitude(cls, v, values):
+        """Validate center latitude for circular geofences"""
+        if values.get("geofence_type") == "circular" and v is None:
+            raise ValueError("Center latitude is required for circular geofences")
+        return v
+
+    @validator("center_longitude")
+    @classmethod
+    def validate_center_longitude(cls, v, values):
+        """Validate center longitude for circular geofences"""
+        if values.get("geofence_type") == "circular" and v is None:
+            raise ValueError("Center longitude is required for circular geofences")
+        return v
+
+    @validator("radius")
+    @classmethod
+    def validate_radius(cls, v, values):
+        """Validate radius for circular geofences"""
+        if values.get("geofence_type") == "circular" and v is None:
+            raise ValueError("Radius is required for circular geofences")
         return v
 
 
