@@ -7,7 +7,7 @@ import {
   MapPin,
   Wrench,
 } from 'lucide-react';
-import { AlertTypeConfig, AlertConfigField } from '../types/alertConfig';
+import { AlertTypeConfig } from '../types/alertConfig';
 import { AlertType } from '../types';
 
 // Field configurations reusable across alert types
@@ -166,7 +166,7 @@ const batteryAlertConfig: AlertTypeConfig = {
       max: 25,
       unit: '%',
       required: true,
-      validation: value => {
+      validation: _value => {
         // This will be validated against lowBatteryThreshold in the component
         return null;
       },

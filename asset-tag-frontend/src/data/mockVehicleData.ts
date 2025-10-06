@@ -225,7 +225,7 @@ export async function createPairing(
   return newPairing;
 }
 
-export async function unpairAssets(pairingId: string): Promise<void> {
+export async function unpairAssets(_pairingId: string): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, 200));
   // In production, this would call the API to unpair
 }

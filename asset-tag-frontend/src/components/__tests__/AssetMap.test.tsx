@@ -292,7 +292,8 @@ describe('AssetMap Component', () => {
     });
 
     it('should not render back button when onBack prop is not provided', () => {
-      const { onBack, ...propsWithoutBack } = defaultProps;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { onBack: _onBack, ...propsWithoutBack } = defaultProps;
       render(<AssetMap {...propsWithoutBack} />);
 
       const backButtons = screen.queryAllByRole('button', { name: '' });

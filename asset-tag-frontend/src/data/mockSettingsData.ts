@@ -361,7 +361,7 @@ export async function inviteTeamMember(
   return newMember;
 }
 
-export async function removeTeamMember(memberId: string): Promise<void> {
+export async function removeTeamMember(_memberId: string): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, 200));
 }
 

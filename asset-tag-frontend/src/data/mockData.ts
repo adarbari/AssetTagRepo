@@ -823,7 +823,7 @@ export function deleteGeofence(geofenceId: string): boolean {
 // Helper function to generate activity events for assets and personnel
 function generateActivityHistory(
   entityId: string,
-  currentSiteId?: string
+  _currentSiteId?: string
 ): ActivityEvent[] {
   const events: ActivityEvent[] = [];
   const now = new Date();
