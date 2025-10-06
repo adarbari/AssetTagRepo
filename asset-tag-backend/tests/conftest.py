@@ -17,14 +17,15 @@ from config.settings import settings
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
 
-# Test database URL
-TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+# Test database URL - use in-memory SQLite for better isolation
+TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
-# Create test engine
+# Create test engine with SQLite-specific configuration
 test_engine = create_async_engine(
     TEST_DATABASE_URL,
     echo=False,
-    future=True
+    future=True,
+    connect_args={"check_same_thread": False}
 )
 
 # Create test session factory

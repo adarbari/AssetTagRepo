@@ -106,71 +106,78 @@ async def create_alert(
 ):
     """Create a new alert"""
     try:
-        print(f"DEBUG: triggered_at type: {type(alert_data.triggered_at)}, value: {alert_data.triggered_at}")
-        print(f"DEBUG: asset_id type: {type(alert_data.asset_id)}, value: {alert_data.asset_id}")
-        print(f"DEBUG: geofence_id type: {type(alert_data.geofence_id)}, value: {alert_data.geofence_id}")
-        
         # Parse triggered_at
         if isinstance(alert_data.triggered_at, datetime):
             triggered_at = alert_data.triggered_at
         else:
             triggered_at = datetime.fromisoformat(str(alert_data.triggered_at).replace('Z', '+00:00'))
         
-        try:
-            alert = Alert(
-                organization_id=uuid.UUID("00000000-0000-0000-0000-000000000000"),  # Default org for now
-                alert_type=alert_data.alert_type,
-                severity=alert_data.severity,
-                status=alert_data.status or "active",
-                asset_id=uuid.UUID(alert_data.asset_id),
-                asset_name=alert_data.asset_name,
-                message=alert_data.message,
-                description=alert_data.description,
-                reason=alert_data.reason,
-                suggested_action=alert_data.suggested_action,
-                location_description=alert_data.location_description,
-                latitude=alert_data.latitude,
-                longitude=alert_data.longitude,
-                geofence_id=uuid.UUID(alert_data.geofence_id) if alert_data.geofence_id else None,
-                geofence_name=alert_data.geofence_name,
-                triggered_at=triggered_at,
-                auto_resolvable=alert_data.auto_resolvable or False,
-                alert_metadata=alert_data.metadata or {}
-            )
-            print("DEBUG: Alert object created successfully")
-        except Exception as e:
-            print(f"DEBUG: Error creating Alert object: {e}")
-            raise
+        alert = Alert(
+            organization_id=uuid.UUID("00000000-0000-0000-0000-000000000000"),  # Default org for now
+            alert_type=alert_data.alert_type,
+            severity=alert_data.severity,
+            status=alert_data.status or "active",
+            asset_id=uuid.UUID(alert_data.asset_id),
+            asset_name=alert_data.asset_name,
+            message=alert_data.message,
+            description=alert_data.description,
+            reason=alert_data.reason,
+            suggested_action=alert_data.suggested_action,
+            location_description=alert_data.location_description,
+            latitude=alert_data.latitude,
+            longitude=alert_data.longitude,
+            geofence_id=uuid.UUID(alert_data.geofence_id) if alert_data.geofence_id else None,
+            geofence_name=alert_data.geofence_name,
+            triggered_at=triggered_at,
+            auto_resolvable=alert_data.auto_resolvable or False,
+            alert_metadata=alert_data.metadata or {}
+        )
         
-        print("DEBUG: Adding alert to database...")
         db.add(alert)
-        print("DEBUG: Committing to database...")
         await db.commit()
-        print("DEBUG: Skipping refresh for now...")
+        # Skip refresh for now due to SQLite UUID compatibility issues
         # await db.refresh(alert)
-        print("DEBUG: Database operations completed successfully")
         
-        # Send real-time update via WebSocket
-        print("DEBUG: Creating AlertResponse...")
-        try:
-            alert_response = AlertResponse.from_orm(alert)
-            print("DEBUG: AlertResponse created successfully")
-        except Exception as e:
-            print(f"DEBUG: Error creating AlertResponse: {e}")
-            raise
+        # Create response manually to avoid SQLAlchemy serialization issues
+        alert_response = AlertResponse(
+            id=str(alert.id),
+            organization_id=str(alert.organization_id),
+            alert_type=alert.alert_type,
+            severity=alert.severity,
+            status=alert.status,
+            asset_id=str(alert.asset_id),
+            asset_name=alert.asset_name,
+            message=alert.message,
+            description=alert.description,
+            reason=alert.reason,
+            suggested_action=alert.suggested_action,
+            location_description=alert.location_description,
+            latitude=alert.latitude,
+            longitude=alert.longitude,
+            geofence_id=str(alert.geofence_id) if alert.geofence_id else None,
+            geofence_name=alert.geofence_name,
+            triggered_at=alert.triggered_at.isoformat(),
+            auto_resolvable=alert.auto_resolvable,
+            metadata=alert.alert_metadata or {},
+            acknowledged_at=alert.acknowledged_at,
+            resolved_at=alert.resolved_at,
+            resolution_notes=alert.resolution_notes,
+            resolved_by_user_id=str(alert.resolved_by_user_id) if alert.resolved_by_user_id else None,
+            auto_resolved=alert.auto_resolved,
+            workflow_actions=alert.workflow_actions,
+            created_at=alert.created_at,
+            updated_at=alert.updated_at
+        )
         
-        print("DEBUG: Sending WebSocket update...")
         try:
             await alert_manager.send_alert_update({
                 "type": "new_alert",
-                "alert": alert_response.dict()
+                "alert": alert_response.model_dump()
             })
-            print("DEBUG: WebSocket update sent successfully")
         except Exception as e:
-            print(f"DEBUG: Error sending WebSocket update: {e}")
             # Don't raise here, just log the error
+            pass
         
-        print("DEBUG: Returning response...")
         return alert_response
         
     except Exception as e:

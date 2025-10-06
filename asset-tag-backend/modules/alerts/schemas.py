@@ -1,9 +1,10 @@
 """
 Alert Pydantic schemas
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Dict, Any
 from datetime import datetime
+import uuid
 
 
 class AlertBase(BaseModel):
@@ -55,8 +56,49 @@ class AlertResponse(AlertBase):
     created_at: datetime
     updated_at: datetime
     
-    class Config:
-        from_attributes = True
+    @field_validator('id', mode='before')
+    @classmethod
+    def convert_id_to_str(cls, v):
+        if isinstance(v, uuid.UUID):
+            return str(v)
+        return v
+    
+    @field_validator('organization_id', mode='before')
+    @classmethod
+    def convert_organization_id_to_str(cls, v):
+        if isinstance(v, uuid.UUID):
+            return str(v)
+        return v
+    
+    @field_validator('asset_id', mode='before')
+    @classmethod
+    def convert_asset_id_to_str(cls, v):
+        if isinstance(v, uuid.UUID):
+            return str(v)
+        return v
+    
+    @field_validator('geofence_id', mode='before')
+    @classmethod
+    def convert_geofence_id_to_str(cls, v):
+        if isinstance(v, uuid.UUID):
+            return str(v)
+        return v
+    
+    @field_validator('triggered_at', mode='before')
+    @classmethod
+    def convert_triggered_at_to_str(cls, v):
+        if isinstance(v, datetime):
+            return v.isoformat()
+        return v
+    
+    @field_validator('metadata', mode='before')
+    @classmethod
+    def convert_metadata_to_dict(cls, v):
+        if hasattr(v, '__dict__'):
+            return v.__dict__
+        return v
+    
+    model_config = {"from_attributes": True}
 
 
 class AlertStats(BaseModel):
