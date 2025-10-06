@@ -25,21 +25,41 @@ jobs:
         cache: 'npm'
         cache-dependency-path: asset-tag-frontend/package-lock.json
 
+    - name: Debug directory structure
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Contents of current directory:"
+        ls -la
+        echo "Contents of asset-tag-frontend directory:"
+        ls -la asset-tag-frontend/ || echo "asset-tag-frontend directory not found"
+
     - name: Verify package-lock.json exists
       run: |
         cd asset-tag-frontend
+        echo "Current directory: $(pwd)"
+        echo "Contents of asset-tag-frontend:"
+        ls -la
         if [ ! -f "package-lock.json" ]; then
           echo "❌ package-lock.json not found!"
+          echo "Looking for package-lock.json in parent directories..."
+          find .. -name "package-lock.json" -type f 2>/dev/null || echo "No package-lock.json found anywhere"
           exit 1
         fi
         echo "✅ package-lock.json found"
+        echo "File size: $(wc -c < package-lock.json) bytes"
         echo "Lockfile version: $(node -p "require('./package-lock.json').lockfileVersion")"
 
     - name: Install dependencies
       run: |
         cd asset-tag-frontend
         npm --version
-        npm ci --verbose
+        echo "Attempting npm ci..."
+        if npm ci --verbose; then
+          echo "✅ npm ci succeeded"
+        else
+          echo "❌ npm ci failed, trying npm install as fallback..."
+          npm install --verbose
+        fi
 
     - name: Run tests with coverage
       run: |
@@ -149,21 +169,41 @@ jobs:
         cache: 'npm'
         cache-dependency-path: asset-tag-frontend/package-lock.json
 
+    - name: Debug directory structure
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Contents of current directory:"
+        ls -la
+        echo "Contents of asset-tag-frontend directory:"
+        ls -la asset-tag-frontend/ || echo "asset-tag-frontend directory not found"
+
     - name: Verify package-lock.json exists
       run: |
         cd asset-tag-frontend
+        echo "Current directory: $(pwd)"
+        echo "Contents of asset-tag-frontend:"
+        ls -la
         if [ ! -f "package-lock.json" ]; then
           echo "❌ package-lock.json not found!"
+          echo "Looking for package-lock.json in parent directories..."
+          find .. -name "package-lock.json" -type f 2>/dev/null || echo "No package-lock.json found anywhere"
           exit 1
         fi
         echo "✅ package-lock.json found"
+        echo "File size: $(wc -c < package-lock.json) bytes"
         echo "Lockfile version: $(node -p "require('./package-lock.json').lockfileVersion")"
 
     - name: Install dependencies
       run: |
         cd asset-tag-frontend
         npm --version
-        npm ci --verbose
+        echo "Attempting npm ci..."
+        if npm ci --verbose; then
+          echo "✅ npm ci succeeded"
+        else
+          echo "❌ npm ci failed, trying npm install as fallback..."
+          npm install --verbose
+        fi
 
     - name: Run tests with coverage
       run: |
