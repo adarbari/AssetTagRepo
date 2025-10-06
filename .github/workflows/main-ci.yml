@@ -283,8 +283,14 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org'
-        cache: 'npm'
-        cache-dependency-path: 'package-lock.json'
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
 
     - name: Verify npm compatibility
       run: |
@@ -327,8 +333,14 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org'
-        cache: 'npm'
-        cache-dependency-path: 'package-lock.json'
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
 
     - name: Install dependencies
       run: |
@@ -359,8 +371,14 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org'
-        cache: 'npm'
-        cache-dependency-path: 'package-lock.json'
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
 
     - name: Install dependencies
       run: |
