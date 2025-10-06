@@ -62,9 +62,9 @@ class TestAssetModel:
         await db_session.commit()
         await db_session.refresh(asset)
 
-        assert asset.metadata == sample_asset_data["metadata"]
-        assert asset.metadata["model"] == "CAT 320"
-        assert asset.metadata["year"] == 2020
+        assert asset.asset_metadata == sample_asset_data["asset_metadata"]
+        assert asset.asset_metadata["model"] == "CAT 320"
+        assert asset.asset_metadata["year"] == 2020
 
 
 class TestAssetSchemas:

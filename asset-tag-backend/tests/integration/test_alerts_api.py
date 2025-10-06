@@ -11,7 +11,7 @@ class TestAlertsAPI:
         """Test creating an alert via API"""
         response = client.post("/api/v1/alerts", json=sample_alert_data)
 
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
 
         assert data["alert_type"] == sample_alert_data["alert_type"]
@@ -173,7 +173,7 @@ class TestAlertsAPI:
         """Test complete alert workflow: create -> acknowledge -> resolve"""
         # Create alert
         create_response = client.post("/api/v1/alerts", json=sample_alert_data)
-        assert create_response.status_code == 200
+        assert create_response.status_code == 201
         alert_id = create_response.json()["id"]
 
         # Verify alert is active

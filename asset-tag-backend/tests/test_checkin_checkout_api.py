@@ -15,11 +15,14 @@ class TestCheckInCheckOutAPI:
         response = client.post(
             "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
         )
+        if response.status_code != 201:
+            print(f"Response status: {response.status_code}")
+            print(f"Response body: {response.text}")
         assert response.status_code == 201
         data = response.json()
         assert data["asset_id"] == sample_checkin_data["asset_id"]
-        assert data["action"] == sample_checkin_data["action"]
-        assert data["checked_out_by"] == sample_checkin_data["checked_out_by"]
+        assert data["user_id"] == sample_checkin_data["user_id"]
+        assert data["user_name"] == sample_checkin_data["user_name"]
         assert "id" in data
         assert "created_at" in data
 

@@ -13,10 +13,10 @@ class CheckInOutRecord(Base, TimestampMixin):
 
     __tablename__ = "checkin_checkout_records"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    organization_id = Column(UUID(as_uuid=True), nullable=False, index=True)
-    asset_id = Column(UUID(as_uuid=True), nullable=False, index=True)
-    user_id = Column(UUID(as_uuid=True), nullable=False, index=True)
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    organization_id = Column(String, nullable=False, index=True)
+    asset_id = Column(String, nullable=False, index=True)
+    user_id = Column(String, nullable=False, index=True)
     user_name = Column(String, nullable=False)
 
     # Check-in information

@@ -31,7 +31,7 @@ class TestGeofenceModel:
         assert geofence.name == sample_geofence_data["name"]
         assert geofence.geofence_type == sample_geofence_data["geofence_type"]
         assert geofence.status == sample_geofence_data["status"]
-        assert geofence.geometry == sample_geofence_data["geometry"]
+        assert geofence.coordinates == sample_geofence_data["coordinates"]
 
     @pytest.mark.asyncio
     async def test_geofence_soft_delete(self, db_session, sample_geofence_data):
@@ -73,14 +73,14 @@ class TestGeofenceModel:
             name="Test Geofence",
             geofence_type="authorized",
             status="active",
-            geometry=valid_geometry,
+            coordinates=valid_geometry,
         )
 
         db_session.add(geofence)
         await db_session.commit()
         await db_session.refresh(geofence)
 
-        assert geofence.geometry == valid_geometry
+        assert geofence.coordinates == valid_geometry
 
 
 class TestGeofenceSchemas:
@@ -93,7 +93,7 @@ class TestGeofenceSchemas:
         assert geofence_create.name == sample_geofence_data["name"]
         assert geofence_create.geofence_type == sample_geofence_data["geofence_type"]
         assert geofence_create.status == sample_geofence_data["status"]
-        assert geofence_create.geometry == sample_geofence_data["geometry"]
+        assert geofence_create.coordinates == sample_geofence_data["coordinates"]
 
     def test_geofence_create_validation(self):
         """Test GeofenceCreate validation rules"""

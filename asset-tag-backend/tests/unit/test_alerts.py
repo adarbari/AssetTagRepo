@@ -18,9 +18,15 @@ class TestAlertModel:
     @pytest.mark.asyncio
     async def test_create_alert(self, db_session, sample_alert_data):
         """Test creating an alert"""
+        from datetime import datetime
+        
+        # Convert string timestamp to datetime object
+        alert_data = sample_alert_data.copy()
+        alert_data["triggered_at"] = datetime.fromisoformat(alert_data["triggered_at"].replace("Z", "+00:00"))
+        
         alert = Alert(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_alert_data
+            **alert_data
         )
 
         db_session.add(alert)
@@ -30,16 +36,22 @@ class TestAlertModel:
         assert alert.id is not None
         assert alert.alert_type == sample_alert_data["alert_type"]
         assert alert.severity == sample_alert_data["severity"]
-        assert alert.asset_id == sample_alert_data["asset_id"]
+        assert alert.asset_id == uuid.UUID(sample_alert_data["asset_id"])
         assert alert.message == sample_alert_data["message"]
         assert alert.status == "active"  # Default status
 
     @pytest.mark.asyncio
     async def test_alert_status_transitions(self, db_session, sample_alert_data):
         """Test alert status transitions"""
+        from datetime import datetime
+        
+        # Convert string timestamp to datetime object
+        alert_data = sample_alert_data.copy()
+        alert_data["triggered_at"] = datetime.fromisoformat(alert_data["triggered_at"].replace("Z", "+00:00"))
+        
         alert = Alert(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_alert_data
+            **alert_data
         )
 
         db_session.add(alert)
@@ -65,10 +77,16 @@ class TestAlertModel:
     @pytest.mark.asyncio
     async def test_alert_metadata(self, db_session, sample_alert_data):
         """Test alert metadata handling"""
+        from datetime import datetime
+        
+        # Convert string timestamp to datetime object
+        alert_data = sample_alert_data.copy()
+        alert_data["triggered_at"] = datetime.fromisoformat(alert_data["triggered_at"].replace("Z", "+00:00"))
+        
         metadata = {"rule_id": "battery_low", "threshold": 20}
         alert = Alert(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_alert_data,
+            **alert_data,
             metadata=metadata
         )
 

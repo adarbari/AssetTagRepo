@@ -30,7 +30,7 @@ async def check_in_asset(
         # Check if asset is already checked in
         existing = await db.execute(
             select(CheckInOutRecord).where(
-                CheckInOutRecord.asset_id == checkin_data.asset_id,
+                CheckInOutRecord.asset_id == str(checkin_data.asset_id),
                 CheckInOutRecord.check_out_time.is_(None),
             )
         )
@@ -40,8 +40,8 @@ async def check_in_asset(
         # Create check-in record
         record = CheckInOutRecord(
             organization_id="00000000-0000-0000-0000-000000000000",  # Default org
-            asset_id=checkin_data.asset_id,
-            user_id=checkin_data.user_id,
+            asset_id=str(checkin_data.asset_id),
+            user_id=str(checkin_data.user_id),
             user_name=checkin_data.user_name,
             check_in_time=datetime.now(),
             check_in_location_lat=checkin_data.check_in_location_lat,
@@ -50,14 +50,14 @@ async def check_in_asset(
             purpose=checkin_data.purpose,
             expected_duration_hours=checkin_data.expected_duration_hours,
             notes=checkin_data.notes,
-            metadata=checkin_data.metadata or {},
+            checkout_metadata=checkin_data.checkout_metadata or {},
         )
 
         db.add(record)
         await db.commit()
         await db.refresh(record)
 
-        return CheckInOutResponse.from_orm(record)
+        return CheckInOutResponse.model_validate(record)
 
     except HTTPException:
         raise
@@ -109,7 +109,7 @@ async def check_out_asset(
         await db.commit()
         await db.refresh(record)
 
-        return CheckInOutResponse.from_orm(record)
+        return CheckInOutResponse.model_validate(record)
 
     except HTTPException:
         raise
@@ -188,7 +188,7 @@ async def get_checkin_checkout_record(
                 status_code=404, detail="Check-in/check-out record not found"
             )
 
-        return CheckInOutResponse.from_orm(record)
+        return CheckInOutResponse.model_validate(record)
 
     except HTTPException:
         raise

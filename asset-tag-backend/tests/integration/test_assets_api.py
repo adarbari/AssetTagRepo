@@ -11,7 +11,7 @@ class TestAssetsAPI:
         """Test creating an asset via API"""
         response = client.post("/api/v1/assets", json=sample_asset_data)
 
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
 
         assert data["name"] == sample_asset_data["name"]

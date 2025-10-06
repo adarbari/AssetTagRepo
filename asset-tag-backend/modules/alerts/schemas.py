@@ -29,6 +29,13 @@ class AlertBase(BaseModel):
     auto_resolvable: Optional[bool] = False
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
+    @field_validator("triggered_at", mode="before")
+    @classmethod
+    def convert_triggered_at_to_str(cls, v):
+        if isinstance(v, datetime):
+            return v.isoformat()
+        return v
+
 
 class AlertCreate(AlertBase):
     """Schema for creating an alert"""

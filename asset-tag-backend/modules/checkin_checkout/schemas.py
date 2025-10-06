@@ -19,7 +19,7 @@ class CheckInBase(BaseModel):
     purpose: Optional[str] = Field(None, max_length=255)
     expected_duration_hours: Optional[float] = Field(None, ge=0)
     notes: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    checkout_metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
 class CheckInCreate(CheckInBase):
@@ -68,12 +68,16 @@ class CheckInOutResponse(BaseModel):
     notes: Optional[str] = None
     condition_notes: Optional[str] = None
     return_notes: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    checkout_metadata: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: datetime
 
     class Config:
         from_attributes = True
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
+        str_strip_whitespace = True
 
 
 class CheckInStatus(BaseModel):

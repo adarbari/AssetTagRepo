@@ -26,10 +26,13 @@ class TestLocationModel:
         """Test creating a location estimate"""
         location = EstimatedLocation(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            asset_id="test-asset-1",
+            asset_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440000"),
             latitude=40.7128,
             longitude=-74.0060,
+            uncertainty_radius=10.0,
             confidence=0.85,
+            algorithm="TRILATERATION",
+            gateway_count=2,
             gateway_ids=["gateway-1", "gateway-2"],
             estimated_at=datetime.now(),
         )
@@ -39,10 +42,11 @@ class TestLocationModel:
         await db_session.refresh(location)
 
         assert location.id is not None
-        assert location.asset_id == "test-asset-1"
-        assert location.latitude == 40.7128
-        assert location.longitude == -74.0060
-        assert location.confidence == 0.85
+        assert location.asset_id == uuid.UUID("550e8400-e29b-41d4-a716-446655440000")
+        from decimal import Decimal
+        assert location.latitude == Decimal('40.7128')
+        assert location.longitude == Decimal('-74.0060')
+        assert location.confidence == Decimal('0.85')
         assert len(location.gateway_ids) == 2
 
     @pytest.mark.asyncio
@@ -50,10 +54,13 @@ class TestLocationModel:
         """Test location with distance calculation"""
         location = EstimatedLocation(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            asset_id="test-asset-1",
+            asset_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440000"),
             latitude=40.7128,
             longitude=-74.0060,
+            uncertainty_radius=10.0,
             confidence=0.85,
+            algorithm="TRILATERATION",
+            gateway_count=1,
             gateway_ids=["gateway-1"],
             estimated_at=datetime.now(),
             distance_from_previous=100.5,

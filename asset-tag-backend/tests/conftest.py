@@ -174,7 +174,7 @@ def sample_observation_data():
         "rssi": -65,
         "battery_level": 80,
         "temperature": 25.5,
-        "observed_at": datetime(2024, 1, 1, 12, 0, 0),
+        "observed_at": "2024-01-01T12:00:00Z",
         "metadata": {"signal_quality": "good"},
     }
 
@@ -191,7 +191,7 @@ def sample_alert_data():
         "asset_name": "Test Asset",
         "message": "Battery level is low",
         "description": "Asset battery has dropped below 20%",
-        "triggered_at": datetime(2024, 1, 1, 12, 0, 0),
+        "triggered_at": "2024-01-01T12:00:00Z",
     }
 
 
@@ -206,8 +206,8 @@ def sample_job_data():
         "job_type": "maintenance",
         "status": "pending",
         "priority": "medium",
-        "scheduled_start": datetime(2024, 1, 1, 9, 0, 0),
-        "scheduled_end": datetime(2024, 1, 1, 17, 0, 0),
+        "scheduled_start": "2024-01-01T09:00:00Z",
+        "scheduled_end": "2024-01-01T17:00:00Z",
         "assigned_to_user_id": "test-user-1",
         "site_id": "test-site-1",
     }
@@ -223,7 +223,7 @@ def sample_maintenance_data():
         "maintenance_type": "scheduled",
         "status": "pending",
         "priority": "medium",
-        "scheduled_date": datetime(2024, 1, 1, 10, 0, 0),
+        "scheduled_date": "2024-01-01T10:00:00Z",
         "assigned_to_user_id": "test-user-1",
         "description": "Regular maintenance check",
     }
@@ -243,7 +243,7 @@ def sample_geofence_data():
             [-74.0060, 40.7138],
             [-74.0060, 40.7128],
         ],
-        "site_id": "test-site-1",
+        "site_id": "550e8400-e29b-41d4-a716-446655440001",
         "geofence_classification": "authorized",
     }
 
@@ -263,5 +263,5 @@ def sample_checkin_data():
         "purpose": "Test checkin",
         "expected_duration_hours": 2.0,
         "notes": "Test checkin",
-        "metadata": {"test": True},
+        "checkout_metadata": {"test": True},
     }
