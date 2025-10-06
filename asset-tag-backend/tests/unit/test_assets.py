@@ -1,6 +1,7 @@
 """
 Unit tests for Assets module
 """
+import uuid
 from datetime import datetime
 
 import pytest
@@ -16,7 +17,7 @@ class TestAssetModel:
     @pytest.mark.asyncio
     async def test_create_asset(self, db_session, sample_asset_data):
         """Test creating an asset"""
-        asset = Asset(organization_id="test-org-1", **sample_asset_data)
+        asset = Asset(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_asset_data)
 
         db_session.add(asset)
         await db_session.commit()
@@ -31,7 +32,7 @@ class TestAssetModel:
     @pytest.mark.asyncio
     async def test_asset_soft_delete(self, db_session, sample_asset_data):
         """Test soft delete functionality"""
-        asset = Asset(organization_id="test-org-1", **sample_asset_data)
+        asset = Asset(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_asset_data)
 
         db_session.add(asset)
         await db_session.commit()
@@ -46,7 +47,7 @@ class TestAssetModel:
     @pytest.mark.asyncio
     async def test_asset_metadata(self, db_session, sample_asset_data):
         """Test asset metadata handling"""
-        asset = Asset(organization_id="test-org-1", **sample_asset_data)
+        asset = Asset(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_asset_data)
 
         db_session.add(asset)
         await db_session.commit()

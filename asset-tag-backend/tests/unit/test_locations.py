@@ -1,6 +1,7 @@
 """
 Unit tests for Locations module
 """
+import uuid
 from datetime import datetime
 from unittest.mock import Mock
 
@@ -24,7 +25,7 @@ class TestLocationModel:
     async def test_create_location(self, db_session):
         """Test creating a location estimate"""
         location = EstimatedLocation(
-            organization_id="test-org-1",
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
             asset_id="test-asset-1",
             latitude=40.7128,
             longitude=-74.0060,
@@ -48,7 +49,7 @@ class TestLocationModel:
     async def test_location_with_distance(self, db_session):
         """Test location with distance calculation"""
         location = EstimatedLocation(
-            organization_id="test-org-1",
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
             asset_id="test-asset-1",
             latitude=40.7128,
             longitude=-74.0060,

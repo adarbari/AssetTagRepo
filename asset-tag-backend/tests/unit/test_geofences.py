@@ -1,6 +1,7 @@
 """
 Unit tests for Geofences module
 """
+import uuid
 from datetime import datetime
 
 import pytest
@@ -19,7 +20,7 @@ class TestGeofenceModel:
         self, db_session, sample_geofence_data
     ):
         """Test creating a geofence"""
-        geofence = Geofence(organization_id="test-org-1", **sample_geofence_data)
+        geofence = Geofence(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_geofence_data)
 
         db_session.add(geofence)
         await db_session.commit()
@@ -36,7 +37,7 @@ class TestGeofenceModel:
         self, db_session, sample_geofence_data
     ):
         """Test soft delete functionality"""
-        geofence = Geofence(organization_id="test-org-1", **sample_geofence_data)
+        geofence = Geofence(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_geofence_data)
 
         db_session.add(geofence)
         await db_session.commit()
@@ -66,7 +67,7 @@ class TestGeofenceModel:
         }
 
         geofence = Geofence(
-            organization_id="test-org-1",
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
             name="Test Geofence",
             geofence_type="authorized",
             status="active",

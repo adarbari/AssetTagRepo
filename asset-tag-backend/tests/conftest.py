@@ -2,6 +2,7 @@
 Pytest configuration and fixtures
 """
 import asyncio
+import uuid
 from typing import AsyncGenerator, Generator
 
 import pytest
@@ -10,6 +11,10 @@ from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+
+# Set up UUID compatibility BEFORE importing models
+from config.uuid_compat import setup_uuid_compatibility
+setup_uuid_compatibility()
 
 from config.database import Base, get_db
 from config.settings import settings
@@ -29,54 +34,7 @@ test_engine = create_async_engine(
     connect_args={"check_same_thread": False},
 )
 
-# Monkey patch UUID type for SQLite compatibility
-from sqlalchemy.dialects.sqlite.base import SQLiteTypeCompiler
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.types import TypeDecorator, String
-import uuid
-
-class SQLiteUUID(TypeDecorator):
-    """UUID type for SQLite compatibility"""
-    impl = String
-    cache_ok = True
-
-    def process_bind_param(self, value, dialect):
-        if value is None:
-            return value
-        elif isinstance(value, uuid.UUID):
-            return str(value)
-        else:
-            return str(value)
-
-    def process_result_value(self, value, dialect):
-        if value is None:
-            return value
-        else:
-            return uuid.UUID(value)
-
-def visit_UUID(self, type_, **kw):
-    return "TEXT"
-
-SQLiteTypeCompiler.visit_UUID = visit_UUID
-
-# Replace UUID type with SQLiteUUID for testing
-import sqlalchemy.dialects.postgresql
-sqlalchemy.dialects.postgresql.UUID = SQLiteUUID
-
-# Also patch the base model to use String instead of UUID for testing
-import modules.shared.database.base
-original_uuid_mixin = modules.shared.database.base.UUIDMixin
-
-class TestUUIDMixin:
-    """Test UUID mixin that uses String instead of UUID"""
-    from sqlalchemy import Column, String
-    import uuid
-    
-    @property
-    def id(cls):
-        return Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-
-modules.shared.database.base.UUIDMixin = TestUUIDMixin
+# UUID compatibility is now handled by config/uuid_compat.py
 
 # Create test session factory
 TestSessionLocal = sessionmaker(
@@ -175,13 +133,14 @@ def sync_client() -> TestClient:
 @pytest.fixture
 def sample_asset_data():
     """Sample asset data for testing."""
+    from datetime import datetime
     return {
         "name": "Test Excavator",
         "serial_number": "EXC-001",
         "asset_type": "excavator",
         "status": "active",
-        "current_site_id": "550e8400-e29b-41d4-a716-446655440001",
-        "assigned_to_user_id": "550e8400-e29b-41d4-a716-446655440002",
+        "current_site_id": uuid.UUID("550e8400-e29b-41d4-a716-446655440001"),
+        "assigned_to_user_id": uuid.UUID("550e8400-e29b-41d4-a716-446655440002"),
         "battery_level": 85,
         "last_seen": "2024-01-01T12:00:00Z",
         "asset_metadata": {"model": "CAT 320", "year": 2020},
@@ -205,13 +164,14 @@ def sample_site_data():
 @pytest.fixture
 def sample_observation_data():
     """Sample observation data for testing."""
+    from datetime import datetime
     return {
         "asset_id": "test-asset-1",
         "gateway_id": "test-gateway-1",
         "rssi": -65,
         "battery_level": 80,
         "temperature": 25.5,
-        "observed_at": "2024-01-01T12:00:00Z",
+        "observed_at": datetime(2024, 1, 1, 12, 0, 0),
         "metadata": {"signal_quality": "good"},
     }
 
@@ -219,28 +179,30 @@ def sample_observation_data():
 @pytest.fixture
 def sample_alert_data():
     """Sample alert data for testing."""
+    from datetime import datetime
     return {
         "alert_type": "battery_low",
         "severity": "warning",
-        "asset_id": "550e8400-e29b-41d4-a716-446655440000",
+        "asset_id": uuid.UUID("550e8400-e29b-41d4-a716-446655440000"),
         "asset_name": "Test Asset",
         "message": "Battery level is low",
         "description": "Asset battery has dropped below 20%",
-        "triggered_at": "2024-01-01T12:00:00Z",
+        "triggered_at": datetime(2024, 1, 1, 12, 0, 0),
     }
 
 
 @pytest.fixture
 def sample_job_data():
     """Sample job data for testing."""
+    from datetime import datetime
     return {
         "name": "Test Job",
         "description": "Test job description",
         "job_type": "maintenance",
         "status": "pending",
         "priority": "medium",
-        "scheduled_start": "2024-01-01T09:00:00Z",
-        "scheduled_end": "2024-01-01T17:00:00Z",
+        "scheduled_start": datetime(2024, 1, 1, 9, 0, 0),
+        "scheduled_end": datetime(2024, 1, 1, 17, 0, 0),
         "assigned_to_user_id": "test-user-1",
         "site_id": "test-site-1",
     }
@@ -249,12 +211,13 @@ def sample_job_data():
 @pytest.fixture
 def sample_maintenance_data():
     """Sample maintenance data for testing."""
+    from datetime import datetime
     return {
         "asset_id": "test-asset-1",
         "maintenance_type": "scheduled",
         "status": "pending",
         "priority": "medium",
-        "scheduled_date": "2024-01-01T10:00:00Z",
+        "scheduled_date": datetime(2024, 1, 1, 10, 0, 0),
         "assigned_to_user_id": "test-user-1",
         "description": "Regular maintenance check",
     }

@@ -1,6 +1,7 @@
 """
 Unit tests for Alerts module
 """
+import uuid
 from datetime import datetime
 
 import pytest
@@ -17,7 +18,7 @@ class TestAlertModel:
     @pytest.mark.asyncio
     async def test_create_alert(self, db_session, sample_alert_data):
         """Test creating an alert"""
-        alert = Alert(organization_id="test-org-1", **sample_alert_data)
+        alert = Alert(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_alert_data)
 
         db_session.add(alert)
         await db_session.commit()
@@ -35,7 +36,7 @@ class TestAlertModel:
         self, db_session, sample_alert_data
     ):
         """Test alert status transitions"""
-        alert = Alert(organization_id="test-org-1", **sample_alert_data)
+        alert = Alert(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_alert_data)
 
         db_session.add(alert)
         await db_session.commit()
@@ -62,7 +63,7 @@ class TestAlertModel:
         """Test alert metadata handling"""
         metadata = {"rule_id": "battery_low", "threshold": 20}
         alert = Alert(
-            organization_id="test-org-1", **sample_alert_data, metadata=metadata
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_alert_data, metadata=metadata
         )
 
         db_session.add(alert)
