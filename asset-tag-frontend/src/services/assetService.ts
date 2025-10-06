@@ -27,26 +27,45 @@ export class AssetService {
     assetId: string,
     includes?: string[]
   ): Promise<AssetDetailsResponse> {
-    // In production, this would be:
-    // const params = includes ? `?include=${includes.join(',')}` : '';
-    // return apiClient.get(`/assets/${assetId}/details${params}`);
+    if (shouldUseMockData()) {
+      return this.getMockAssetDetails(assetId);
+    }
     
-    // For now, return mock data
-    return this.getMockAssetDetails(assetId);
+    try {
+      const params = includes ? `?include=${includes.join(',')}` : '';
+      const response = await apiClient.get(`/assets/${assetId}/details${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching asset details:', error);
+      // Fallback to mock data on error
+      return this.getMockAssetDetails(assetId);
+    }
   }
 
   /**
    * Get basic asset information
    */
   static async getAssetById(assetId: string): Promise<Asset> {
-    // In production:
-    // return apiClient.get(`/assets/${assetId}`);
-    
-    const asset = mockAssets.find(a => a.id === assetId);
-    if (!asset) {
-      throw new Error(`Asset ${assetId} not found`);
+    if (shouldUseMockData()) {
+      const asset = mockAssets.find(a => a.id === assetId);
+      if (!asset) {
+        throw new Error(`Asset ${assetId} not found`);
+      }
+      return asset;
     }
-    return asset;
+    
+    try {
+      const response = await apiClient.get(`/assets/${assetId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching asset:', error);
+      // Fallback to mock data on error
+      const asset = mockAssets.find(a => a.id === assetId);
+      if (!asset) {
+        throw new Error(`Asset ${assetId} not found`);
+      }
+      return asset;
+    }
   }
 
   /**
@@ -56,15 +75,22 @@ export class AssetService {
     assetId: string,
     updates: Partial<Asset>
   ): Promise<Asset> {
-    // In production:
-    // return apiClient.put(`/assets/${assetId}`, updates);
-    
-    const assetIndex = mockAssets.findIndex(a => a.id === assetId);
-    if (assetIndex !== -1) {
-      Object.assign(mockAssets[assetIndex], updates);
-      return mockAssets[assetIndex];
+    if (shouldUseMockData()) {
+      const assetIndex = mockAssets.findIndex(a => a.id === assetId);
+      if (assetIndex !== -1) {
+        Object.assign(mockAssets[assetIndex], updates);
+        return mockAssets[assetIndex];
+      }
+      throw new Error(`Asset ${assetId} not found`);
     }
-    throw new Error(`Asset ${assetId} not found`);
+    
+    try {
+      const response = await apiClient.put(`/assets/${assetId}`, updates);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating asset:', error);
+      throw error;
+    }
   }
 
   /**
@@ -74,28 +100,47 @@ export class AssetService {
     assetId: string,
     params?: DateRangeParams
   ): Promise<BatteryHistory> {
-    // In production:
-    // return apiClient.get(`/assets/${assetId}/battery-history`, { params });
+    if (shouldUseMockData()) {
+      return {
+        assetId,
+        startDate: params?.startDate || new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+        endDate: params?.endDate || new Date().toISOString(),
+        dataPoints: [
+          { time: "00:00", battery: 92 },
+          { time: "04:00", battery: 90 },
+          { time: "08:00", battery: 88 },
+          { time: "12:00", battery: 85 },
+          { time: "16:00", battery: 83 },
+          { time: "20:00", battery: 87 },
+        ],
+        statistics: {
+          average: 87.5,
+          min: 83,
+          max: 92,
+          currentLevel: 87,
+        },
+      };
+    }
     
-    return {
-      assetId,
-      startDate: params?.startDate || new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      endDate: params?.endDate || new Date().toISOString(),
-      dataPoints: [
-        { time: "00:00", battery: 92 },
-        { time: "04:00", battery: 90 },
-        { time: "08:00", battery: 88 },
-        { time: "12:00", battery: 85 },
-        { time: "16:00", battery: 83 },
-        { time: "20:00", battery: 87 },
-      ],
-      statistics: {
-        average: 87.5,
-        min: 83,
-        max: 92,
-        currentLevel: 87,
-      },
-    };
+    try {
+      const response = await apiClient.get(`/assets/${assetId}/battery-history`, { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching battery history:', error);
+      // Return mock data as fallback
+      return {
+        assetId,
+        startDate: params?.startDate || new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+        endDate: params?.endDate || new Date().toISOString(),
+        dataPoints: [],
+        statistics: {
+          average: 0,
+          min: 0,
+          max: 0,
+          currentLevel: 0,
+        },
+      };
+    }
   }
 
   /**
@@ -105,25 +150,41 @@ export class AssetService {
     assetId: string,
     params?: DateRangeParams & PaginationParams
   ): Promise<LocationHistory> {
-    // In production:
-    // return apiClient.get(`/assets/${assetId}/location-history`, { params });
+    if (shouldUseMockData()) {
+      return {
+        assetId,
+        startDate: params?.startDate || new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        endDate: params?.endDate || new Date().toISOString(),
+        trackingPoints: [
+          { timestamp: "2024-01-04 14:30", location: "Main Warehouse", lat: 37.7849, lng: -122.4194, event: "arrived", speed: 0, distance: 24.3 },
+          { timestamp: "2024-01-04 12:15", location: "In Transit", lat: 37.7799, lng: -122.4244, event: "moving", speed: 22, distance: 23.1 },
+          { timestamp: "2024-01-04 09:00", location: "Construction Site B", lat: 37.7649, lng: -122.4194, event: "departed", speed: 5, distance: 14.2 },
+          { timestamp: "2024-01-04 06:00", location: "Construction Site B", lat: 37.7649, lng: -122.4194, event: "arrived", speed: 0, distance: 14.2 },
+          { timestamp: "2024-01-03 18:30", location: "In Transit", lat: 37.7699, lng: -122.4344, event: "moving", speed: 28, distance: 12.8 },
+          { timestamp: "2024-01-03 08:00", location: "Main Warehouse", lat: 37.7849, lng: -122.4194, event: "departed", speed: 8, distance: 2.1 },
+        ],
+        totalDistance: 24.3,
+        averageSpeed: 18.5,
+        maxSpeed: 28,
+      };
+    }
     
-    return {
-      assetId,
-      startDate: params?.startDate || new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      endDate: params?.endDate || new Date().toISOString(),
-      trackingPoints: [
-        { timestamp: "2024-01-04 14:30", location: "Main Warehouse", lat: 37.7849, lng: -122.4194, event: "arrived", speed: 0, distance: 24.3 },
-        { timestamp: "2024-01-04 12:15", location: "In Transit", lat: 37.7799, lng: -122.4244, event: "moving", speed: 22, distance: 23.1 },
-        { timestamp: "2024-01-04 09:00", location: "Construction Site B", lat: 37.7649, lng: -122.4194, event: "departed", speed: 5, distance: 14.2 },
-        { timestamp: "2024-01-04 06:00", location: "Construction Site B", lat: 37.7649, lng: -122.4194, event: "arrived", speed: 0, distance: 14.2 },
-        { timestamp: "2024-01-03 18:30", location: "In Transit", lat: 37.7699, lng: -122.4344, event: "moving", speed: 28, distance: 12.8 },
-        { timestamp: "2024-01-03 08:00", location: "Main Warehouse", lat: 37.7849, lng: -122.4194, event: "departed", speed: 8, distance: 2.1 },
-      ],
-      totalDistance: 24.3,
-      averageSpeed: 18.5,
-      maxSpeed: 28,
-    };
+    try {
+      const response = await apiClient.get(`/locations/${assetId}/history`, { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching location history:', error);
+      // Return mock data as fallback
+      return {
+        assetId,
+        startDate: params?.startDate || new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        endDate: params?.endDate || new Date().toISOString(),
+        trackingPoints: [],
+        totalDistance: 0,
+        averageSpeed: 0,
+        maxSpeed: 0,
+      };
+    }
   }
 
   /**
@@ -159,30 +220,43 @@ export class AssetService {
    * Get maintenance schedule for an asset
    */
   static async getMaintenanceSchedule(assetId: string): Promise<MaintenanceSchedule> {
-    // In production:
-    // return apiClient.get(`/assets/${assetId}/maintenance`);
+    if (shouldUseMockData()) {
+      return {
+        assetId,
+        upcoming: [
+          { id: "MAINT-001", date: "2024-01-10", type: "Scheduled", description: "50-hour service inspection", technician: "Sarah Wilson", priority: "High", assignedTo: "Sarah Wilson", status: "scheduled" },
+          { id: "MAINT-002", date: "2024-03-15", type: "Scheduled", description: "Hydraulic system inspection", technician: "David Lee", priority: "Medium", assignedTo: "David Lee", status: "scheduled" },
+          { id: "MAINT-003", date: "2024-04-04", type: "Scheduled", description: "Oil change and filter replacement", technician: "Mike Chen", priority: "Medium", assignedTo: "Mike Chen", status: "scheduled" },
+        ],
+        history: [
+          { id: 1, date: "2024-01-04", type: "Scheduled", description: "Oil change and filter replacement", technician: "Mike Chen", status: "completed", nextDue: "2024-04-04" },
+          { id: 2, date: "2023-12-15", type: "Scheduled", description: "Hydraulic system inspection", technician: "David Lee", status: "completed", nextDue: "2024-03-15" },
+          { id: 3, date: "2023-11-20", type: "Repair", description: "Replaced worn track pads", technician: "Mike Chen", status: "completed", nextDue: "-" },
+          { id: 4, date: "2023-10-10", type: "Scheduled", description: "50-hour service inspection", technician: "Sarah Wilson", status: "completed", nextDue: "2024-01-10" },
+        ],
+        nextMaintenance: {
+          id: "MAINT-001",
+          date: "2024-01-10",
+          type: "Scheduled",
+          description: "50-hour service inspection",
+          daysUntil: 6,
+        },
+      };
+    }
     
-    return {
-      assetId,
-      upcoming: [
-        { id: "MAINT-001", date: "2024-01-10", type: "Scheduled", description: "50-hour service inspection", technician: "Sarah Wilson", priority: "High", assignedTo: "Sarah Wilson", status: "scheduled" },
-        { id: "MAINT-002", date: "2024-03-15", type: "Scheduled", description: "Hydraulic system inspection", technician: "David Lee", priority: "Medium", assignedTo: "David Lee", status: "scheduled" },
-        { id: "MAINT-003", date: "2024-04-04", type: "Scheduled", description: "Oil change and filter replacement", technician: "Mike Chen", priority: "Medium", assignedTo: "Mike Chen", status: "scheduled" },
-      ],
-      history: [
-        { id: 1, date: "2024-01-04", type: "Scheduled", description: "Oil change and filter replacement", technician: "Mike Chen", status: "completed", nextDue: "2024-04-04" },
-        { id: 2, date: "2023-12-15", type: "Scheduled", description: "Hydraulic system inspection", technician: "David Lee", status: "completed", nextDue: "2024-03-15" },
-        { id: 3, date: "2023-11-20", type: "Repair", description: "Replaced worn track pads", technician: "Mike Chen", status: "completed", nextDue: "-" },
-        { id: 4, date: "2023-10-10", type: "Scheduled", description: "50-hour service inspection", technician: "Sarah Wilson", status: "completed", nextDue: "2024-01-10" },
-      ],
-      nextMaintenance: {
-        id: "MAINT-001",
-        date: "2024-01-10",
-        type: "Scheduled",
-        description: "50-hour service inspection",
-        daysUntil: 6,
-      },
-    };
+    try {
+      const response = await apiClient.get(`/maintenance/asset/${assetId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching maintenance schedule:', error);
+      // Return mock data as fallback
+      return {
+        assetId,
+        upcoming: [],
+        history: [],
+        nextMaintenance: null,
+      };
+    }
   }
 
   /**
@@ -192,60 +266,100 @@ export class AssetService {
     assetId: string,
     filters?: AlertFilters
   ): Promise<AssetAlertHistory> {
-    // In production:
-    // return apiClient.get(`/assets/${assetId}/alerts`, { params: filters });
+    if (shouldUseMockData()) {
+      return {
+        assetId,
+        alerts: [
+          { id: 1, date: "2024-01-03 16:30", severity: "medium", category: "Battery", message: "Battery level below 20%", status: "resolved" },
+          { id: 2, date: "2024-01-02 14:20", severity: "low", category: "Maintenance", message: "Upcoming scheduled maintenance", status: "acknowledged" },
+          { id: 3, date: "2023-12-28 10:15", severity: "high", category: "Geofence", message: "Asset left authorized zone", status: "resolved" },
+        ],
+        statistics: {
+          total: 3,
+          active: 0,
+          resolved: 2,
+          byType: {
+            Battery: 1,
+            Maintenance: 1,
+            Geofence: 1,
+          },
+          bySeverity: {
+            high: 1,
+            medium: 1,
+            low: 1,
+          },
+        },
+      };
+    }
     
-    return {
-      assetId,
-      alerts: [
-        { id: 1, date: "2024-01-03 16:30", severity: "medium", category: "Battery", message: "Battery level below 20%", status: "resolved" },
-        { id: 2, date: "2024-01-02 14:20", severity: "low", category: "Maintenance", message: "Upcoming scheduled maintenance", status: "acknowledged" },
-        { id: 3, date: "2023-12-28 10:15", severity: "high", category: "Geofence", message: "Asset left authorized zone", status: "resolved" },
-      ],
-      statistics: {
-        total: 3,
-        active: 0,
-        resolved: 2,
-        byType: {
-          Battery: 1,
-          Maintenance: 1,
-          Geofence: 1,
+    try {
+      const response = await apiClient.get(`/alerts`, { 
+        params: { asset_id: assetId, ...filters } 
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching alerts:', error);
+      // Return mock data as fallback
+      return {
+        assetId,
+        alerts: [],
+        statistics: {
+          total: 0,
+          active: 0,
+          resolved: 0,
+          byType: {},
+          bySeverity: {},
         },
-        bySeverity: {
-          high: 1,
-          medium: 1,
-          low: 1,
-        },
-      },
-    };
+      };
+    }
   }
 
   /**
    * Check in an asset
    */
   static async checkIn(assetId: string, data: CheckInData) {
-    // In production:
-    // return apiClient.post(`/assets/${assetId}/check-in`, data);
+    if (shouldUseMockData()) {
+      console.log("Check in asset:", assetId, data);
+      return {
+        success: true,
+        message: "Asset checked in successfully",
+      };
+    }
     
-    console.log("Check in asset:", assetId, data);
-    return {
-      success: true,
-      message: "Asset checked in successfully",
-    };
+    try {
+      const response = await apiClient.post(`/checkin`, {
+        asset_id: assetId,
+        ...data
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error checking in asset:', error);
+      throw error;
+    }
   }
 
   /**
    * Check out an asset
    */
   static async checkOut(assetId: string, data: CheckOutData) {
-    // In production:
-    // return apiClient.post(`/assets/${assetId}/check-out`, data);
+    if (shouldUseMockData()) {
+      console.log("Check out asset:", assetId, data);
+      return {
+        success: true,
+        message: "Asset checked out successfully",
+      };
+    }
     
-    console.log("Check out asset:", assetId, data);
-    return {
-      success: true,
-      message: "Asset checked out successfully",
-    };
+    try {
+      const response = await apiClient.post(`/checkout`, {
+        asset_id: assetId,
+        ...data
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error checking out asset:', error);
+      throw error;
+    }
   }
 
   /**

@@ -1,20 +1,15 @@
 import { Alert } from "../types";
 import { mockAlerts } from "../data/mockData";
+import { apiClient, shouldUseMockData } from "./api";
 
 /**
  * Alert Service
  * 
  * This service handles all alert-related operations.
- * Currently uses mock data, but can be easily switched to backend API calls.
- * 
- * To integrate with backend:
- * 1. Replace mock data operations with API client calls
- * 2. Add authentication headers
- * 3. Handle async operations
- * 4. Add error handling and retry logic
+ * Uses backend APIs when available, falls back to mock data.
  */
 
-// In-memory storage (will be replaced by backend)
+// In-memory storage (fallback for mock data)
 let alerts = [...mockAlerts];
 
 /**
@@ -23,15 +18,16 @@ let alerts = [...mockAlerts];
  */
 export async function getAllAlerts(): Promise<Alert[]> {
   try {
-    // Current: return mock data
-    return alerts;
+    if (shouldUseMockData()) {
+      return alerts;
+    }
 
-    // Backend implementation would be:
-    // const response = await apiClient.get('/api/alerts');
-    // return response.data;
+    const response = await apiClient.get('/alerts');
+    return response.data;
   } catch (error) {
     console.error('Failed to fetch alerts:', error);
-    throw error;
+    // Fallback to mock data on error
+    return alerts;
   }
 }
 
@@ -41,16 +37,18 @@ export async function getAllAlerts(): Promise<Alert[]> {
  */
 export async function getAlertById(alertId: string): Promise<Alert | null> {
   try {
-    // Current: find in mock data
-    const alert = alerts.find(a => a.id === alertId);
-    return alert || null;
+    if (shouldUseMockData()) {
+      const alert = alerts.find(a => a.id === alertId);
+      return alert || null;
+    }
 
-    // Backend implementation would be:
-    // const response = await apiClient.get(`/api/alerts/${alertId}`);
-    // return response.data;
+    const response = await apiClient.get(`/alerts/${alertId}`);
+    return response.data;
   } catch (error) {
     console.error('Failed to fetch alert:', error);
-    throw error;
+    // Fallback to mock data on error
+    const alert = alerts.find(a => a.id === alertId);
+    return alert || null;
   }
 }
 
@@ -64,34 +62,33 @@ export async function updateAlertStatus(
   notes?: string
 ): Promise<Alert> {
   try {
-    // Current: update mock data
-    const alertIndex = alerts.findIndex(a => a.id === alertId);
-    if (alertIndex === -1) {
-      throw new Error(`Alert ${alertId} not found`);
+    if (shouldUseMockData()) {
+      const alertIndex = alerts.findIndex(a => a.id === alertId);
+      if (alertIndex === -1) {
+        throw new Error(`Alert ${alertId} not found`);
+      }
+
+      const updatedAlert = {
+        ...alerts[alertIndex],
+        status,
+        // Add resolution timestamp if resolving
+        ...(status === "resolved" && { resolvedAt: new Date().toISOString() }),
+        // Add acknowledgment timestamp if acknowledging
+        ...(status === "acknowledged" && { acknowledgedAt: new Date().toISOString() }),
+        // Add notes if provided
+        ...(notes && { resolutionNotes: notes }),
+      };
+
+      alerts[alertIndex] = updatedAlert;
+      return updatedAlert;
     }
 
-    const updatedAlert = {
-      ...alerts[alertIndex],
+    const response = await apiClient.patch(`/alerts/${alertId}/status`, {
       status,
-      // Add resolution timestamp if resolving
-      ...(status === "resolved" && { resolvedAt: new Date().toISOString() }),
-      // Add acknowledgment timestamp if acknowledging
-      ...(status === "acknowledged" && { acknowledgedAt: new Date().toISOString() }),
-      // Add notes if provided
-      ...(notes && { resolutionNotes: notes }),
-    };
-
-    alerts[alertIndex] = updatedAlert;
-
-    // Backend implementation would be:
-    // const response = await apiClient.patch(`/api/alerts/${alertId}/status`, {
-    //   status,
-    //   notes,
-    //   timestamp: new Date().toISOString(),
-    // });
-    // return response.data;
-
-    return updatedAlert;
+      notes,
+      timestamp: new Date().toISOString(),
+    });
+    return response.data;
   } catch (error) {
     console.error('Failed to update alert status:', error);
     throw error;
@@ -173,15 +170,16 @@ export async function executeWorkflowAction(
  */
 export async function getAlertsByStatus(status: "active" | "acknowledged" | "resolved"): Promise<Alert[]> {
   try {
-    // Current: filter mock data
-    return alerts.filter(a => a.status === status);
+    if (shouldUseMockData()) {
+      return alerts.filter(a => a.status === status);
+    }
 
-    // Backend implementation would be:
-    // const response = await apiClient.get('/api/alerts', { params: { status } });
-    // return response.data;
+    const response = await apiClient.get('/alerts', { params: { status } });
+    return response.data;
   } catch (error) {
     console.error('Failed to fetch alerts by status:', error);
-    throw error;
+    // Fallback to mock data on error
+    return alerts.filter(a => a.status === status);
   }
 }
 
@@ -191,15 +189,16 @@ export async function getAlertsByStatus(status: "active" | "acknowledged" | "res
  */
 export async function getAlertsByAsset(assetId: string): Promise<Alert[]> {
   try {
-    // Current: filter mock data
-    return alerts.filter(a => a.assetId === assetId);
+    if (shouldUseMockData()) {
+      return alerts.filter(a => a.assetId === assetId);
+    }
 
-    // Backend implementation would be:
-    // const response = await apiClient.get(`/api/assets/${assetId}/alerts`);
-    // return response.data;
+    const response = await apiClient.get('/alerts', { params: { asset_id: assetId } });
+    return response.data;
   } catch (error) {
     console.error('Failed to fetch alerts by asset:', error);
-    throw error;
+    // Fallback to mock data on error
+    return alerts.filter(a => a.assetId === assetId);
   }
 }
 
@@ -209,19 +208,18 @@ export async function getAlertsByAsset(assetId: string): Promise<Alert[]> {
  */
 export async function createAlert(alertData: Omit<Alert, 'id'>): Promise<Alert> {
   try {
-    // Current: add to mock data
-    const newAlert: Alert = {
-      id: `ALT-${Date.now()}`,
-      ...alertData,
-    };
+    if (shouldUseMockData()) {
+      const newAlert: Alert = {
+        id: `ALT-${Date.now()}`,
+        ...alertData,
+      };
 
-    alerts.push(newAlert);
+      alerts.push(newAlert);
+      return newAlert;
+    }
 
-    // Backend implementation would be:
-    // const response = await apiClient.post('/api/alerts', alertData);
-    // return response.data;
-
-    return newAlert;
+    const response = await apiClient.post('/alerts', alertData);
+    return response.data;
   } catch (error) {
     console.error('Failed to create alert:', error);
     throw error;
@@ -266,7 +264,34 @@ export async function getAlertStatistics(): Promise<{
   bySeverity: Record<string, number>;
 }> {
   try {
-    // Current: calculate from mock data
+    if (shouldUseMockData()) {
+      const stats = {
+        total: alerts.length,
+        active: alerts.filter(a => a.status === "active").length,
+        acknowledged: alerts.filter(a => a.status === "acknowledged").length,
+        resolved: alerts.filter(a => a.status === "resolved").length,
+        byType: {} as Record<string, number>,
+        bySeverity: {} as Record<string, number>,
+      };
+
+      // Count by type
+      alerts.forEach(alert => {
+        stats.byType[alert.type] = (stats.byType[alert.type] || 0) + 1;
+      });
+
+      // Count by severity
+      alerts.forEach(alert => {
+        stats.bySeverity[alert.severity] = (stats.bySeverity[alert.severity] || 0) + 1;
+      });
+
+      return stats;
+    }
+
+    const response = await apiClient.get('/alerts/stats');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch alert statistics:', error);
+    // Fallback to mock data calculation
     const stats = {
       total: alerts.length,
       active: alerts.filter(a => a.status === "active").length,
@@ -276,23 +301,11 @@ export async function getAlertStatistics(): Promise<{
       bySeverity: {} as Record<string, number>,
     };
 
-    // Count by type
     alerts.forEach(alert => {
       stats.byType[alert.type] = (stats.byType[alert.type] || 0) + 1;
-    });
-
-    // Count by severity
-    alerts.forEach(alert => {
       stats.bySeverity[alert.severity] = (stats.bySeverity[alert.severity] || 0) + 1;
     });
 
-    // Backend implementation would be:
-    // const response = await apiClient.get('/api/alerts/stats');
-    // return response.data;
-
     return stats;
-  } catch (error) {
-    console.error('Failed to fetch alert statistics:', error);
-    throw error;
   }
 }
