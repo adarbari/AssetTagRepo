@@ -48,6 +48,7 @@ jobs:
         path: |
           asset-tag-backend/server.log
         retention-days: 7
+        if-no-files-found: ignore
 
   frontend-tests:
     runs-on: ubuntu-latest
@@ -117,3 +118,18 @@ jobs:
       run: |
         echo "Downloaded artifacts:"
         find ./artifacts -type f -name "*" | head -20
+
+  # Auto-fix integration - call the reusable workflow
+  auto-fix:
+    needs: [backend-tests, frontend-tests, download-artifacts]
+    if: always() && (needs.backend-tests.result == 'failure' || needs.frontend-tests.result == 'failure')
+    uses: ./.github/workflows/auto-fix-reusable.yml
+    with:
+      workflow-name: "CI/CD Pipeline"
+      workflow-conclusion: "failure"
+      logs-content: |
+        Backend Tests: ${{ needs.backend-tests.result }}
+        Frontend Tests: ${{ needs.frontend-tests.result }}
+        Download Artifacts: ${{ needs.download-artifacts.result }}
+      error-context: "Main CI/CD pipeline failed - check individual job results"
+    secrets: inherit

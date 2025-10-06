@@ -1,0 +1,89 @@
+name: Auto-Fix Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      workflow-name:
+        description: 'Name of the calling workflow'
+        required: true
+        type: string
+      workflow-conclusion:
+        description: 'Conclusion of the workflow (success, failure, etc.)'
+        required: true
+        type: string
+      logs-content:
+        description: 'Log content to analyze'
+        required: false
+        type: string
+      error-context:
+        description: 'Additional error context'
+        required: false
+        type: string
+    outputs:
+      fix-applied:
+        description: 'Whether a fix was applied'
+        value: ${{ jobs.analyze-and-fix.outputs.fix-applied }}
+      issue-created:
+        description: 'Whether an issue was created'
+        value: ${{ jobs.analyze-and-fix.outputs.issue-created }}
+
+jobs:
+  analyze-and-fix:
+    runs-on: ubuntu-latest
+    if: inputs.workflow-conclusion == 'failure'
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    
+    outputs:
+      fix-applied: ${{ steps.analyze.outputs.fix-applied }}
+      issue-created: ${{ steps.analyze.outputs.issue-created }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Analyze logs and apply fixes
+      id: analyze
+      run: |
+        echo "Analyzing workflow failure: ${{ inputs.workflow-name }}"
+        
+        # Initialize outputs
+        echo "fix-applied=false" >> $GITHUB_OUTPUT
+        echo "issue-created=false" >> $GITHUB_OUTPUT
+        
+        # Get logs content
+        LOGS_CONTENT="${{ inputs.logs-content }}"
+        ERROR_CONTEXT="${{ inputs.error-context }}"
+        
+        # Check for common dependency issues
+        if echo "$LOGS_CONTENT" | grep -q "email-validator is not installed"; then
+          echo "🔧 Detected email-validator error - applying fix"
+          ./scripts/apply-email-validator-fix.sh
+          echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "ModuleNotFoundError"; then
+          echo "🔧 Detected missing module error - creating issue"
+          ./scripts/create-dependency-issue.sh "missing_module" "$ERROR_CONTEXT"
+          echo "issue-created=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "ImportError"; then
+          echo "🔧 Detected import error - creating issue"
+          ./scripts/create-dependency-issue.sh "import_error" "$ERROR_CONTEXT"
+          echo "issue-created=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "npm ERR"; then
+          echo "🔧 Detected npm error - creating issue"
+          ./scripts/create-dependency-issue.sh "npm_error" "$ERROR_CONTEXT"
+          echo "issue-created=true" >> $GITHUB_OUTPUT
+        else
+          echo "🔧 No auto-fixable errors detected - creating generic issue"
+          ./scripts/create-dependency-issue.sh "unknown_error" "$ERROR_CONTEXT"
+          echo "issue-created=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Create Pull Request if fix was applied
+      if: steps.analyze.outputs.fix-applied == 'true'
+      run: |
+        ./scripts/create-fix-pr.sh "${{ inputs.workflow-name }}"

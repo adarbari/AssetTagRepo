@@ -67,6 +67,7 @@ jobs:
         path: |
           asset-tag-backend/server.log
         retention-days: 7
+        if-no-files-found: ignore
 
   test-fast:
     runs-on: ubuntu-latest
@@ -112,6 +113,7 @@ jobs:
         path: |
           asset-tag-backend/server.log
         retention-days: 7
+        if-no-files-found: ignore
 
   test-comprehensive:
     runs-on: ubuntu-latest
@@ -163,6 +165,7 @@ jobs:
         path: |
           asset-tag-backend/server.log
         retention-days: 7
+        if-no-files-found: ignore
 
   security-scan:
     runs-on: ubuntu-latest
@@ -207,6 +210,7 @@ jobs:
         path: |
           asset-tag-backend/server.log
         retention-days: 7
+        if-no-files-found: ignore
 
   coverage-report:
     runs-on: ubuntu-latest
@@ -256,6 +260,7 @@ jobs:
         path: |
           asset-tag-backend/server.log
         retention-days: 7
+        if-no-files-found: ignore
 
     - name: Comment backend coverage on PR
       if: github.event_name == 'pull_request'
@@ -302,3 +307,20 @@ jobs:
           } catch (error) {
             console.log('Could not read backend coverage summary:', error.message);
           }
+
+  # Auto-fix integration - call the reusable workflow
+  auto-fix:
+    needs: [lint-and-format, test-fast, test-comprehensive, test-integration, security-scan]
+    if: always() && (needs.lint-and-format.result == 'failure' || needs.test-fast.result == 'failure' || needs.test-comprehensive.result == 'failure' || needs.test-integration.result == 'failure' || needs.security-scan.result == 'failure')
+    uses: ./.github/workflows/auto-fix-reusable.yml
+    with:
+      workflow-name: "Backend CI"
+      workflow-conclusion: "failure"
+      logs-content: |
+        Lint and Format: ${{ needs.lint-and-format.result }}
+        Test Fast: ${{ needs.test-fast.result }}
+        Test Comprehensive: ${{ needs.test-comprehensive.result }}
+        Test Integration: ${{ needs.test-integration.result }}
+        Security Scan: ${{ needs.security-scan.result }}
+      error-context: "Backend CI workflow failed - check individual job results"
+    secrets: inherit

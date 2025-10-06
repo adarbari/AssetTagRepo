@@ -20,7 +20,16 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     
+    - name: Debug workflow information
+      run: |
+        echo "Workflow run ID: ${{ github.event.workflow_run.id }}"
+        echo "Workflow run name: ${{ github.event.workflow_run.name }}"
+        echo "Workflow run conclusion: ${{ github.event.workflow_run.conclusion }}"
+        echo "Workflow run logs URL: ${{ github.event.workflow_run.logs_url }}"
+        echo "Workflow run HTML URL: ${{ github.event.workflow_run.html_url }}"
+    
     - name: Download workflow logs
+      id: download-artifact
       uses: actions/download-artifact@v4
       with:
         name: workflow-logs
@@ -34,28 +43,41 @@ jobs:
         echo "Artifact download failed, fetching logs via API..."
         
         # Get the workflow run logs via GitHub API
-        curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-             -H "Accept: application/vnd.github.v3+json" \
-             "${{ github.event.workflow_run.logs_url }}" \
-             -o ./workflow-logs.txt
-        
-        echo "LOGS_AVAILABLE=true" >> $GITHUB_OUTPUT
+        if curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                "${{ github.event.workflow_run.logs_url }}" \
+                -o ./workflow-logs.txt; then
+          echo "Successfully downloaded logs via API"
+          echo "LOGS_AVAILABLE=true" >> $GITHUB_OUTPUT
+        else
+          echo "Failed to download logs via API as well"
+          echo "LOGS_AVAILABLE=false" >> $GITHUB_OUTPUT
+        fi
     
     - name: Analyze common errors
       run: |
         echo "Analyzing workflow failure..."
         
+        # Initialize error tracking
+        echo "ERROR_TYPE=no_logs" >> $GITHUB_ENV
+        echo "DEPENDENCY_ERROR=workflow_failure" >> $GITHUB_ENV
+        
         # Check if we have logs from artifacts
         if [ -d "./logs" ] && [ "$(ls -A ./logs 2>/dev/null)" ]; then
           echo "Analyzing logs from artifacts..."
           LOG_PATH="./logs"
-        elif [ -f "./workflow-logs.txt" ]; then
+          # Reset error type since we have logs
+          echo "ERROR_TYPE=unknown" >> $GITHUB_ENV
+        elif [ -f "./workflow-logs.txt" ] && [ -s "./workflow-logs.txt" ]; then
           echo "Analyzing logs from API..."
           LOG_PATH="./workflow-logs.txt"
+          # Reset error type since we have logs
+          echo "ERROR_TYPE=unknown" >> $GITHUB_ENV
         else
-          echo "No logs available for analysis"
+          echo "No logs available for analysis - will create generic issue"
           echo "ERROR_TYPE=no_logs" >> $GITHUB_ENV
           echo "DEPENDENCY_ERROR=workflow_failure" >> $GITHUB_ENV
+          exit 0
         fi
         
         # Check for common dependency issues

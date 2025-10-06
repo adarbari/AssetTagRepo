@@ -46,3 +46,17 @@ jobs:
       run: |
         echo "Downloaded logs:"
         cat ./downloaded-logs/test.log
+
+  # Auto-fix integration - call the reusable workflow
+  auto-fix:
+    needs: [test, download]
+    if: always() && (needs.test.result == 'failure' || needs.download.result == 'failure')
+    uses: ./.github/workflows/auto-fix-reusable.yml
+    with:
+      workflow-name: "Simple CI"
+      workflow-conclusion: "failure"
+      logs-content: |
+        Test: ${{ needs.test.result }}
+        Download: ${{ needs.download.result }}
+      error-context: "Simple CI workflow failed - check individual job results"
+    secrets: inherit
