@@ -58,13 +58,9 @@ import {
   User,
   Link as LinkIcon,
   Unlink,
-  TrendingUp,
   Clock,
   AlertCircle,
-  History,
   Settings,
-  X,
-  Calendar,
   Shield,
   Edit,
 } from 'lucide-react';
@@ -72,7 +68,6 @@ import { toast } from 'sonner';
 import { format, formatDistanceToNow } from 'date-fns';
 import { mockAssets, getAvailableGeofences } from '../../data/mockData';
 import { expirationMechanisms } from '../../data/dropdownOptions';
-import type { Asset } from '../../types';
 import { useNavigation } from '../../contexts/NavigationContext';
 
 // Expiration mechanism types - pulled from dropdown config
@@ -115,7 +110,7 @@ interface VehicleAssetPairingProps {
   onBack?: () => void;
 }
 
-export function VehicleAssetPairing({ onBack }: VehicleAssetPairingProps) {
+export function VehicleAssetPairing({ onBack: _onBack }: VehicleAssetPairingProps) {
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
 
