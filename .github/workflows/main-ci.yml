@@ -284,7 +284,7 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org'
         cache: 'npm'
-        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
+        cache-dependency-path: 'package-lock.json'
 
     - name: Verify npm compatibility
       run: |
@@ -328,7 +328,7 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org'
         cache: 'npm'
-        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
+        cache-dependency-path: 'package-lock.json'
 
     - name: Install dependencies
       run: |
@@ -360,7 +360,7 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org'
         cache: 'npm'
-        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
+        cache-dependency-path: 'package-lock.json'
 
     - name: Install dependencies
       run: |
