@@ -65,6 +65,17 @@ jobs:
           echo "🔧 Detected email-validator error - applying fix"
           ./scripts/apply-email-validator-fix.sh
           echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "would reformat"; then
+          echo "🔧 Detected Black formatting errors - applying fix"
+          cd asset-tag-backend
+          python3 -m black modules tests
+          echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "loadVirtual requires existing shrinkwrap file"; then
+          echo "🔧 Detected npm workspace error - applying fix"
+          cd asset-tag-frontend
+          rm -f package-lock.json
+          npm install
+          echo "fix-applied=true" >> $GITHUB_OUTPUT
         elif echo "$LOGS_CONTENT" | grep -q "ModuleNotFoundError"; then
           echo "🔧 Detected missing module error - creating issue"
           ./scripts/create-dependency-issue.sh "missing_module" "$ERROR_CONTEXT"

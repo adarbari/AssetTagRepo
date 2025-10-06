@@ -97,12 +97,12 @@ jobs:
 
     - name: Install dependencies
       run: |
-        npm ci --verbose
-      working-directory: asset-tag-frontend
+        npm ci --verbose --workspace=asset-tag-frontend
+      working-directory: .
 
     - name: Run quick frontend tests
-      run: npm run test:run
-      working-directory: asset-tag-frontend
+      run: npm run test:run --workspace=asset-tag-frontend
+      working-directory: .
 
   # Single auto-fix integration for quick tests
   auto-fix:
