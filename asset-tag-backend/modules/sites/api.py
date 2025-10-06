@@ -269,7 +269,7 @@ async def update_site(
             raise HTTPException(status_code=404, detail="Site not found")
 
         # Update fields
-        update_data = site_data.dict(exclude_unset=True)
+        update_data = site_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(site, field, value)
 
@@ -612,7 +612,7 @@ async def update_personnel(
             raise HTTPException(status_code=404, detail="Personnel not found")
 
         # Update fields
-        update_data = personnel_data.dict(exclude_unset=True)
+        update_data = personnel_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(person, field, value)
 

@@ -605,7 +605,7 @@ async def update_observation_batch(
             raise HTTPException(status_code=404, detail="Observation batch not found")
 
         # Update fields
-        update_data = batch_data.dict(exclude_unset=True)
+        update_data = batch_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(batch, field, value)
 
