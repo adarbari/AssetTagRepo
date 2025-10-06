@@ -53,7 +53,18 @@ fi
 
 # Install formatting tools if not available
 print_status "info" "Ensuring formatting tools are available..."
-python3 -m pip install --user isort==5.12.0 black==23.11.0 flake8==6.1.0 mypy==1.7.1 bandit==1.7.5 safety==2.3.5
+
+# Upgrade pip first
+python3 -m pip install --user --upgrade pip
+
+# Install formatting tools with better error handling
+print_status "info" "Installing Python linting tools..."
+if python3 -m pip install --user isort==5.13.2 black==24.1.1 flake8==7.0.0 mypy==1.8.0 bandit==1.7.5 safety==3.0.1; then
+    print_status "success" "Python linting tools installed successfully"
+else
+    print_status "error" "Failed to install Python linting tools"
+    exit 1
+fi
 
 # Backend import fixing
 echo "🐍 Fixing backend import formatting..."
@@ -72,10 +83,11 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
+skip_glob = ["*/migrations/*"]
 
 [tool.black]
 line-length = 88
-target-version = ['py39']
+target-version = ['py39', 'py310', 'py311']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -88,8 +100,16 @@ extend-exclude = '''
   | \.venv
   | build
   | dist
+  | migrations
 )/
 '''
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
 EOF
 fi
 
@@ -142,7 +162,21 @@ if [ -d "asset-tag-frontend" ]; then
         # Install dependencies if needed
         if [ ! -d "node_modules" ]; then
             print_status "info" "Installing frontend dependencies..."
-            npm ci
+            # Try workspace-aware installation from root first
+            cd ..
+            if npm ci --workspace=asset-tag-frontend; then
+                print_status "success" "Frontend dependencies installed via workspace"
+                cd asset-tag-frontend
+            else
+                print_status "warning" "Workspace install failed, trying local install..."
+                cd asset-tag-frontend
+                if npm ci; then
+                    print_status "success" "Frontend dependencies installed locally"
+                else
+                    print_status "warning" "npm ci failed, trying npm install..."
+                    npm install
+                fi
+            fi
         fi
         
         # Run Prettier to fix formatting
