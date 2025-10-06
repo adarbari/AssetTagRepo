@@ -305,7 +305,7 @@ async def get_alert(alert_id: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error fetching alert: {str(e)}")
 
 
-@router.post("/alerts", response_model=AlertResponse)
+@router.post("/alerts", response_model=AlertResponse, status_code=201)
 async def create_alert(alert_data: AlertCreate, db: AsyncSession = Depends(get_db)):
     """Create a new alert"""
     try:

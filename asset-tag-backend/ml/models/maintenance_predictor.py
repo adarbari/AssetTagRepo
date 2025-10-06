@@ -184,12 +184,7 @@ class MaintenancePredictor:
             
         except Exception as e:
             logger.error(f"Error predicting maintenance: {e}")
-            return {
-                'maintenance_type': 'scheduled',
-                'confidence': 0.5,
-                'urgency': 'low',
-                'predicted_date': (datetime.now() + timedelta(days=30)).isoformat()
-            }
+            raise
     
     def _determine_urgency(self, features: pd.Series) -> str:
         """Determine maintenance urgency based on features"""

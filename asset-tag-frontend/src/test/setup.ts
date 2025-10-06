@@ -91,6 +91,23 @@ Object.defineProperty(window, 'getComputedStyle', {
   }),
 })
 
+// Mock scrollIntoView
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
+  writable: true,
+  value: vi.fn(),
+})
+
+// Mock console methods for testing - but allow individual tests to override
+const originalConsole = global.console
+global.console = {
+  ...originalConsole,
+  error: vi.fn(),
+  warn: vi.fn(),
+  log: vi.fn(),
+  info: vi.fn(),
+  debug: vi.fn(),
+}
+
 // Mock NavigationContext
 vi.mock('../contexts/NavigationContext', () => ({
   useNavigation: () => ({

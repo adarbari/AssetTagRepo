@@ -156,7 +156,7 @@ class LocationPredictor:
             
         except Exception as e:
             logger.error(f"Error predicting locations: {e}")
-            return []
+            raise
     
     def save_model(self, filepath: str):
         """Save the trained model"""

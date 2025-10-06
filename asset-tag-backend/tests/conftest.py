@@ -83,8 +83,15 @@ def client():
         async with test_engine.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)
 
-    # Create a new test app instance
-    test_app = FastAPI(lifespan=test_lifespan)
+    # Create a new test app instance with same configuration as main app
+    test_app = FastAPI(
+        title=app.title,
+        description=app.description,
+        version=app.version,
+        docs_url=app.docs_url,
+        redoc_url=app.redoc_url,
+        lifespan=test_lifespan
+    )
 
     # Copy all routes from the main app
     for route in app.routes:

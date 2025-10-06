@@ -17,7 +17,7 @@ from modules.checkin_checkout.schemas import (CheckInCreate,
 router = APIRouter()
 
 
-@router.post("/checkin", response_model=CheckInOutResponse)
+@router.post("/checkin-checkout/checkin", response_model=CheckInOutResponse, status_code=201)
 async def check_in_asset(checkin_data: CheckInCreate, db: AsyncSession = Depends(get_db)):
     """Check in an asset"""
     try:
@@ -59,7 +59,7 @@ async def check_in_asset(checkin_data: CheckInCreate, db: AsyncSession = Depends
         raise HTTPException(status_code=500, detail=f"Error checking in asset: {str(e)}")
 
 
-@router.post("/checkout", response_model=CheckInOutResponse)
+@router.post("/checkin-checkout/checkout", response_model=CheckInOutResponse, status_code=201)
 async def check_out_asset(checkout_data: CheckOutCreate, db: AsyncSession = Depends(get_db)):
     """Check out an asset"""
     try:
@@ -100,7 +100,7 @@ async def check_out_asset(checkout_data: CheckOutCreate, db: AsyncSession = Depe
         raise HTTPException(status_code=500, detail=f"Error checking out asset: {str(e)}")
 
 
-@router.get("/checkin-checkout", response_model=List[CheckInOutResponse])
+@router.get("/checkin-checkout/records", response_model=List[CheckInOutResponse])
 async def get_checkin_checkout_records(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
@@ -145,7 +145,7 @@ async def get_checkin_checkout_records(
         raise HTTPException(status_code=500, detail=f"Error fetching check-in/check-out records: {str(e)}")
 
 
-@router.get("/checkin-checkout/{record_id}", response_model=CheckInOutResponse)
+@router.get("/checkin-checkout/records/{record_id}", response_model=CheckInOutResponse)
 async def get_checkin_checkout_record(record_id: str, db: AsyncSession = Depends(get_db)):
     """Get check-in/check-out record by ID"""
     try:
@@ -163,7 +163,26 @@ async def get_checkin_checkout_record(record_id: str, db: AsyncSession = Depends
         raise HTTPException(status_code=500, detail=f"Error fetching check-in/check-out record: {str(e)}")
 
 
-@router.get("/checkin-checkout/asset/{asset_id}/current")
+@router.get("/checkin-checkout/status")
+async def get_checkin_checkout_status(db: AsyncSession = Depends(get_db)):
+    """Get overall check-in/check-out status"""
+    try:
+        # Get counts of checked in and checked out assets
+        checked_in_count = await db.execute(
+            select(CheckInOutRecord).where(CheckInOutRecord.check_out_time.is_(None))
+        )
+        checked_in_records = checked_in_count.scalars().all()
+        
+        return {
+            "total_checked_in": len(checked_in_records),
+            "checked_in_assets": [record.asset_id for record in checked_in_records],
+            "status": "operational"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching status: {str(e)}")
+
+
+@router.get("/checkin-checkout/status/{asset_id}")
 async def get_current_checkin_status(asset_id: str, db: AsyncSession = Depends(get_db)):
     """Get current check-in status for an asset"""
     try:
@@ -233,7 +252,7 @@ async def get_overdue_checkins(db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error fetching overdue check-ins: {str(e)}")
 
 
-@router.get("/checkin-checkout/stats/summary")
+@router.get("/checkin-checkout/stats")
 async def get_checkin_checkout_stats(db: AsyncSession = Depends(get_db)):
     """Get check-in/check-out statistics summary"""
     try:

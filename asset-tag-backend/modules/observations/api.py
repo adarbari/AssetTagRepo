@@ -89,7 +89,7 @@ async def get_observation(observation_id: str, db: AsyncSession = Depends(get_db
         raise HTTPException(status_code=500, detail=f"Error fetching observation: {str(e)}")
 
 
-@router.post("/observations", response_model=ObservationResponse)
+@router.post("/observations", response_model=ObservationResponse, status_code=201)
 async def create_observation(observation_data: ObservationCreate, db: AsyncSession = Depends(get_db)):
     """Create a new observation"""
     try:
@@ -125,7 +125,7 @@ async def create_observation(observation_data: ObservationCreate, db: AsyncSessi
         raise HTTPException(status_code=500, detail=f"Error creating observation: {str(e)}")
 
 
-@router.post("/observations/bulk", response_model=ObservationBulkResponse)
+@router.post("/observations/bulk", response_model=ObservationBulkResponse, status_code=201)
 async def create_observations_bulk(bulk_data: ObservationBulkCreate, db: AsyncSession = Depends(get_db)):
     """Create multiple observations in bulk"""
     try:

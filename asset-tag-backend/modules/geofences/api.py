@@ -117,7 +117,7 @@ async def get_geofence(geofence_id: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error fetching geofence: {str(e)}")
 
 
-@router.post("/geofences", response_model=GeofenceResponse)
+@router.post("/geofences", response_model=GeofenceResponse, status_code=201)
 async def create_geofence(geofence_data: GeofenceCreate, db: AsyncSession = Depends(get_db)):
     """Create a new geofence"""
     try:

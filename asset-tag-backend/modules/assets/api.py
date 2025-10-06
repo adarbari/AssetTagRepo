@@ -304,7 +304,7 @@ async def get_asset(asset_id: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error fetching asset: {str(e)}")
 
 
-@router.post("/assets", response_model=AssetResponse)
+@router.post("/assets", response_model=AssetResponse, status_code=201)
 async def create_asset(asset_data: AssetCreate, db: AsyncSession = Depends(get_db)):
     """Create a new asset"""
     try:

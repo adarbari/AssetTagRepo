@@ -41,6 +41,12 @@ vi.mock('../../data/mockData', () => ({
   getGeofenceViolatingAssets: vi.fn().mockReturnValue([]),
   getGeofenceExpectedAssets: vi.fn().mockReturnValue([]),
   getGeofenceActualAssets: vi.fn().mockReturnValue([]),
+  getGeofenceComplianceStats: vi.fn().mockReturnValue({
+    expected: 5,
+    inside: 4,
+    outside: 1,
+    complianceRate: 80,
+  }),
 }))
 
 // Mock toast

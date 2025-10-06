@@ -59,7 +59,7 @@ describe('API Service', () => {
         writable: true,
       })
       
-      expect(shouldUseMockData).toBe(true)
+      expect(shouldUseMockData()).toBe(true)
     })
 
     it('should return true when VITE_USE_MOCK_DATA is "true"', () => {
@@ -68,7 +68,7 @@ describe('API Service', () => {
         writable: true,
       })
       
-      expect(shouldUseMockData).toBe(true)
+      expect(shouldUseMockData()).toBe(true)
     })
 
     it('should return false when VITE_USE_MOCK_DATA is "false"', () => {
@@ -77,7 +77,7 @@ describe('API Service', () => {
         writable: true,
       })
       
-      expect(shouldUseMockData).toBe(false)
+      expect(shouldUseMockData()).toBe(false)
     })
   })
 

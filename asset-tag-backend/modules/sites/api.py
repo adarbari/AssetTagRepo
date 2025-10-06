@@ -126,7 +126,7 @@ async def get_site(site_id: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error fetching site: {str(e)}")
 
 
-@router.post("/sites", response_model=SiteResponse)
+@router.post("/sites", response_model=SiteResponse, status_code=201)
 async def create_site(site_data: SiteCreate, db: AsyncSession = Depends(get_db)):
     """Create a new site"""
     try:
