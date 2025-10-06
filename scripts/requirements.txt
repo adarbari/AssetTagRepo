@@ -1,0 +1,2 @@
+# Requirements for the CI monitoring script
+requests>=2.31.0

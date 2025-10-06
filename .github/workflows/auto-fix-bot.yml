@@ -1,0 +1,162 @@
+name: Auto-Fix Bot
+
+on:
+  issues:
+    types: [opened, labeled]
+  issue_comment:
+    types: [created]
+
+jobs:
+  auto-fix:
+    if: |
+      (github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'auto-detected')) ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '/auto-fix'))
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Analyze issue
+      id: analyze
+      run: |
+        if [ "${{ github.event_name }}" = "issues" ]; then
+          ISSUE_BODY="${{ github.event.issue.body }}"
+        else
+          ISSUE_BODY="${{ github.event.issue.body }}"
+        fi
+        
+        echo "ISSUE_BODY<<EOF" >> $GITHUB_OUTPUT
+        echo "$ISSUE_BODY" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        
+        # Extract error type
+        if echo "$ISSUE_BODY" | grep -q "email-validator"; then
+          echo "FIX_TYPE=add_email_validator" >> $GITHUB_OUTPUT
+        elif echo "$ISSUE_BODY" | grep -q "ModuleNotFoundError"; then
+          echo "FIX_TYPE=missing_dependency" >> $GITHUB_OUTPUT
+        else
+          echo "FIX_TYPE=unknown" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Create fix branch
+      if: steps.analyze.outputs.FIX_TYPE != 'unknown'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        BRANCH_NAME="auto-fix/$(date +%Y%m%d-%H%M%S)"
+        git checkout -b "$BRANCH_NAME"
+        echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+    
+    - name: Apply email-validator fix
+      if: steps.analyze.outputs.FIX_TYPE == 'add_email_validator'
+      run: |
+        # Add email-validator to requirements.txt
+        if ! grep -q "email-validator" asset-tag-backend/requirements.txt; then
+          sed -i '/^pydantic==/a email-validator==2.1.0' asset-tag-backend/requirements.txt
+        fi
+        
+        # Add to minimal requirements
+        if ! grep -q "email-validator" asset-tag-backend/requirements-minimal.txt; then
+          echo "email-validator>=2.0.0" >> asset-tag-backend/requirements-minimal.txt
+        fi
+        
+        git add asset-tag-backend/requirements*.txt
+        git commit -m "fix: add email-validator dependency
+
+        - Add email-validator==2.1.0 to requirements.txt
+        - Add email-validator>=2.0.0 to requirements-minimal.txt
+        - Fixes ImportError when using Pydantic EmailStr
+
+        Auto-generated fix for issue #${{ github.event.issue.number }}"
+    
+    - name: Apply generic dependency fix
+      if: steps.analyze.outputs.FIX_TYPE == 'missing_dependency'
+      run: |
+        # This would need more sophisticated parsing
+        echo "Generic dependency fix not implemented yet"
+        echo "FIX_APPLIED=false" >> $GITHUB_ENV
+    
+    - name: Push fix branch
+      if: steps.analyze.outputs.FIX_TYPE != 'unknown' && env.FIX_APPLIED != 'false'
+      run: |
+        git push origin "$BRANCH_NAME"
+    
+    - name: Create pull request
+      if: steps.analyze.outputs.FIX_TYPE != 'unknown' && env.FIX_APPLIED != 'false'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fixType = '${{ steps.analyze.outputs.FIX_TYPE }}';
+          const branchName = '${{ env.BRANCH_NAME }}';
+          const issueNumber = ${{ github.event.issue.number }};
+          
+          let title, body;
+          
+          if (fixType === 'add_email_validator') {
+            title = '🤖 Auto-fix: Add email-validator dependency';
+            body = `
+            ## Automated Fix for CI Failure
+            
+            This PR automatically fixes the email-validator import error detected in the CI pipeline.
+            
+            **Changes:**
+            - ✅ Added \`email-validator==2.1.0\` to \`requirements.txt\`
+            - ✅ Added \`email-validator>=2.0.0\` to \`requirements-minimal.txt\`
+            
+            **Fixes:** #${issueNumber}
+            
+            **Testing:**
+            - [ ] Verify CI passes after merge
+            - [ ] Test email validation functionality
+            
+            ---
+            *This PR was automatically created by the Auto-Fix Bot*
+            `;
+          }
+          
+          const pr = await github.rest.pulls.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: title,
+            head: branchName,
+            base: 'main',
+            body: body
+          });
+          
+          // Add labels
+          await github.rest.issues.addLabels({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: pr.data.number,
+            labels: ['auto-generated', 'ci-fix', 'dependencies']
+          });
+          
+          // Comment on original issue
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issueNumber,
+            body: `🤖 **Auto-fix created!** I've created PR #${pr.data.number} to fix this issue.`
+          });
+    
+    - name: Comment on issue if no fix available
+      if: steps.analyze.outputs.FIX_TYPE == 'unknown'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: ${{ github.event.issue.number }},
+            body: `🤖 **Auto-fix not available** for this error type. Manual intervention required.`
+          });

@@ -1,0 +1,73 @@
+# Auto-Fix Configuration
+# This file configures the automated CI monitoring and fixing system
+
+monitoring:
+  # Enable/disable auto-monitoring
+  enabled: true
+  
+  # Workflows to monitor
+  workflows:
+    - "Backend CI"
+    - "Frontend CI"
+  
+  # Check interval (in minutes)
+  check_interval: 5
+  
+  # Maximum number of fixes per day
+  max_fixes_per_day: 10
+
+# Auto-fix rules
+fixes:
+  # Email validator fix
+  email_validator:
+    enabled: true
+    pattern: "email-validator is not installed"
+    action: "add_dependency"
+    dependency: "email-validator==2.1.0"
+    files:
+      - "asset-tag-backend/requirements.txt"
+      - "asset-tag-backend/requirements-minimal.txt"
+  
+  # Generic missing dependency
+  missing_dependency:
+    enabled: true
+    pattern: "ModuleNotFoundError"
+    action: "analyze_and_suggest"
+    requires_manual_review: true
+  
+  # Import errors
+  import_error:
+    enabled: true
+    pattern: "ImportError"
+    action: "analyze_and_suggest"
+    requires_manual_review: true
+
+# Notification settings
+notifications:
+  # Create issues for failures
+  create_issues: true
+  
+  # Comment on PRs
+  comment_on_prs: true
+  
+  # Create pull requests for fixes
+  create_pull_requests: true
+  
+  # Labels to add
+  labels:
+    - "auto-detected"
+    - "ci-failure"
+    - "auto-generated"
+
+# Security settings
+security:
+  # Require manual approval for certain fixes
+  require_approval_for:
+    - "security_updates"
+    - "major_version_changes"
+  
+  # Allowed file patterns for auto-modification
+  allowed_files:
+    - "**/requirements*.txt"
+    - "**/package.json"
+    - "**/package-lock.json"
