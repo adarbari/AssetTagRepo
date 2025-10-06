@@ -15,18 +15,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config.database import get_db
 from config.settings import settings
 from modules.shared.database.models import User
-from modules.users.schemas import (
-    LoginRequest,
-    LoginResponse,
-    TokenRefreshRequest,
-    TokenRefreshResponse,
-    UserCreate,
-    UserPasswordUpdate,
-    UserProfileUpdate,
-    UserResponse,
-    UserStats,
-    UserUpdate,
-)
+from modules.users.schemas import (LoginRequest, LoginResponse,
+                                   TokenRefreshRequest, TokenRefreshResponse,
+                                   UserCreate, UserPasswordUpdate,
+                                   UserProfileUpdate, UserResponse, UserStats,
+                                   UserUpdate)
 
 router = APIRouter()
 

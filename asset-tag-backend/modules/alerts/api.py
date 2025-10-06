@@ -6,14 +6,8 @@ import uuid
 from datetime import datetime
 from typing import List, Optional
 
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    Query,
-    WebSocket,
-    WebSocketDisconnect,
-)
+from fastapi import (APIRouter, Depends, HTTPException, Query, WebSocket,
+                     WebSocketDisconnect)
 from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 

@@ -10,11 +10,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.maintenance.models import MaintenanceRecord
-from modules.maintenance.schemas import (
-    MaintenanceCreate,
-    MaintenanceResponse,
-    MaintenanceUpdate,
-)
+from modules.maintenance.schemas import (MaintenanceCreate,
+                                         MaintenanceResponse,
+                                         MaintenanceUpdate)
 
 router = APIRouter()
 

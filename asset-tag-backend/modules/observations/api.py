@@ -11,17 +11,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.observations.models import Observation, ObservationBatch
-from modules.observations.schemas import (
-    ObservationBatchCreate,
-    ObservationBatchResponse,
-    ObservationBatchUpdate,
-    ObservationBulkCreate,
-    ObservationBulkResponse,
-    ObservationCreate,
-    ObservationResponse,
-    ObservationStatsResponse,
-    ObservationUpdate,
-)
+from modules.observations.schemas import (ObservationBatchCreate,
+                                          ObservationBatchResponse,
+                                          ObservationBatchUpdate,
+                                          ObservationBulkCreate,
+                                          ObservationBulkResponse,
+                                          ObservationCreate,
+                                          ObservationResponse,
+                                          ObservationStatsResponse,
+                                          ObservationUpdate)
 
 router = APIRouter()
 

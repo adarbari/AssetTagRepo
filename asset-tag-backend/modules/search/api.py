@@ -7,7 +7,8 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from config.cache import get_cache
-from config.elasticsearch import ElasticsearchManager, get_elasticsearch_manager
+from config.elasticsearch import (ElasticsearchManager,
+                                  get_elasticsearch_manager)
 
 router = APIRouter()
 

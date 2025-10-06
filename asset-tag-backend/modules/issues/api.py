@@ -5,24 +5,19 @@ import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
+from fastapi import (APIRouter, Depends, File, Form, HTTPException, Query,
+                     UploadFile)
 from sqlalchemy import and_, delete, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.issues.models import Issue, IssueAttachment, IssueComment
-from modules.issues.schemas import (
-    IssueAttachmentCreate,
-    IssueAttachmentResponse,
-    IssueCommentCreate,
-    IssueCommentResponse,
-    IssueCreate,
-    IssueResponse,
-    IssueStats,
-    IssueStatusUpdate,
-    IssueUpdate,
-    IssueWithDetails,
-)
+from modules.issues.schemas import (IssueAttachmentCreate,
+                                    IssueAttachmentResponse,
+                                    IssueCommentCreate, IssueCommentResponse,
+                                    IssueCreate, IssueResponse, IssueStats,
+                                    IssueStatusUpdate, IssueUpdate,
+                                    IssueWithDetails)
 
 router = APIRouter()
 

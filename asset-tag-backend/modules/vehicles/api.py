@@ -11,15 +11,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.vehicles.models import Vehicle, VehicleAssetPairing
-from modules.vehicles.schemas import (
-    VehicleAssetPairingCreate,
-    VehicleAssetPairingResponse,
-    VehicleCreate,
-    VehicleResponse,
-    VehicleStats,
-    VehicleUpdate,
-    VehicleWithAssets,
-)
+from modules.vehicles.schemas import (VehicleAssetPairingCreate,
+                                      VehicleAssetPairingResponse,
+                                      VehicleCreate, VehicleResponse,
+                                      VehicleStats, VehicleUpdate,
+                                      VehicleWithAssets)
 
 router = APIRouter()
 

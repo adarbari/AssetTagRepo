@@ -15,17 +15,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.reports.generators import ReportGenerator
-from modules.reports.schemas import (
-    ExportRequest,
-    ExportResponse,
-    ReportDownloadResponse,
-    ReportGenerationRequest,
-    ReportGenerationResponse,
-    ReportStatus,
-    ReportTemplate,
-    ScheduledReportRequest,
-    ScheduledReportResponse,
-)
+from modules.reports.schemas import (ExportRequest, ExportResponse,
+                                     ReportDownloadResponse,
+                                     ReportGenerationRequest,
+                                     ReportGenerationResponse, ReportStatus,
+                                     ReportTemplate, ScheduledReportRequest,
+                                     ScheduledReportResponse)
 
 router = APIRouter()
 

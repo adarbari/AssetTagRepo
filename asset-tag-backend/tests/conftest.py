@@ -25,11 +25,9 @@ setup_uuid_compatibility()
 
 from config.database import Base, get_db
 from config.settings import settings
-
 # Import test database configuration from separate module
 from config.test_database import TestSessionLocal, test_engine
 from main import app
-
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
 

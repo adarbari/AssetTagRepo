@@ -14,19 +14,51 @@ on:
       - '*.md'
       - '.gitignore'
 
+# Cancel outdated workflow runs to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '20.x'
+
 jobs:
+  # Detect which components have changed
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Detect changes
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          backend:
+            - 'asset-tag-backend/**'
+          frontend:
+            - 'asset-tag-frontend/**'
+
   quick-backend-test:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'asset-tag-backend/') || contains(github.event.head_commit.added, 'asset-tag-backend/') || github.event_name == 'pull_request'
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Set up Python 3.11
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: ${{ env.PYTHON_VERSION }}
     
     - name: Cache pip dependencies
       uses: actions/cache@v3
@@ -41,23 +73,24 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r asset-tag-backend/requirements-dev.txt
     
-    - name: Run quick backend tests
+    - name: Run quick backend tests (unit only)
       run: |
         cd asset-tag-backend
         python tests/run_tests.py unit
 
   quick-frontend-test:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'asset-tag-frontend/') || contains(github.event.head_commit.added, 'asset-tag-frontend/') || github.event_name == 'pull_request'
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js 20.x
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: ${{ env.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org'
         cache: 'npm'
         cache-dependency-path: 'asset-tag-frontend/package-lock.json'
@@ -71,9 +104,9 @@ jobs:
       run: npm run test:run
       working-directory: asset-tag-frontend
 
-  # Auto-fix integration for quick tests
+  # Single auto-fix integration for quick tests
   auto-fix:
-    needs: [quick-backend-test, quick-frontend-test]
+    needs: [changes, quick-backend-test, quick-frontend-test]
     if: always() && (needs.quick-backend-test.result == 'failure' || needs.quick-frontend-test.result == 'failure')
     uses: ./.github/workflows/auto-fix-reusable.yml
     with:
