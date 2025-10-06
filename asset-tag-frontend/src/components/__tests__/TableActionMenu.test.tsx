@@ -1,29 +1,29 @@
-// import React from &apos;react&apos;;
-import { render, screen, waitFor } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
-import { TableActionMenu, type TableAction } from &apos;../common/TableActionMenu&apos;;
-import { Edit, Trash2, Eye, Download } from &apos;lucide-react&apos;;
+// import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { TableActionMenu, type TableAction } from '../common/TableActionMenu';
+import { Edit, Trash2, Eye, Download } from 'lucide-react';
 
-describe(&apos;TableActionMenu Component&apos;, () => {
+describe('TableActionMenu Component', () => {
   const mockActions: TableAction[] = [
     {
-      label: &apos;View&apos;,
+      label: 'View',
       onClick: vi.fn(),
       icon: Eye,
     },
     {
-      label: &apos;Edit&apos;,
+      label: 'Edit',
       onClick: vi.fn(),
       icon: Edit,
     },
     {
-      label: &apos;Download&apos;,
+      label: 'Download',
       onClick: vi.fn(),
       icon: Download,
     },
     {
-      label: &apos;Delete&apos;,
+      label: 'Delete',
       onClick: vi.fn(),
       icon: Trash2,
       isDestructive: true,
@@ -34,73 +34,73 @@ describe(&apos;TableActionMenu Component&apos;, () => {
     vi.clearAllMocks();
   });
 
-  describe(&apos;Basic Rendering&apos;, () => {
-    it(&apos;should render trigger button&apos;, () => {
+  describe('Basic Rendering', () => {
+    it('should render trigger button', () => {
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       expect(triggerButton).toBeInTheDocument();
     });
 
-    it(&apos;should render with default label&apos;, async () => {
+    it('should render with default label', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      expect(screen.getByText(&apos;Actions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Actions')).toBeInTheDocument();
     });
 
-    it(&apos;should render with custom label&apos;, async () => {
+    it('should render with custom label', async () => {
       const user = userEvent.setup();
-      render(<TableActionMenu actions={mockActions} label=&apos;Row Actions&apos; />);
+      render(<TableActionMenu actions={mockActions} label='Row Actions' />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      expect(screen.getByText(&apos;Row Actions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Row Actions')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Menu Items&apos;, () => {
-    it(&apos;should render all action items&apos;, async () => {
+  describe('Menu Items', () => {
+    it('should render all action items', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      expect(screen.getByText(&apos;View&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Edit&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Download&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Delete&apos;)).toBeInTheDocument();
+      expect(screen.getByText('View')).toBeInTheDocument();
+      expect(screen.getByText('Edit')).toBeInTheDocument();
+      expect(screen.getByText('Download')).toBeInTheDocument();
+      expect(screen.getByText('Delete')).toBeInTheDocument();
     });
 
-    it(&apos;should render icons for actions that have them&apos;, async () => {
+    it('should render icons for actions that have them', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
       // Check that icons are rendered (they should be SVG elements)
       const viewIcon = screen
-        .getByText(&apos;View&apos;)
-        .closest(&apos;[role=&quot;menuitem&quot;]&apos;)
-        ?.querySelector(&apos;svg&apos;);
+        .getByText('View')
+        .closest('[role="menuitem"]')
+        ?.querySelector('svg');
       const editIcon = screen
-        .getByText(&apos;Edit&apos;)
-        .closest(&apos;[role=&quot;menuitem&quot;]&apos;)
-        ?.querySelector(&apos;svg&apos;);
+        .getByText('Edit')
+        .closest('[role="menuitem"]')
+        ?.querySelector('svg');
       const downloadIcon = screen
-        .getByText(&apos;Download&apos;)
-        .closest(&apos;[role=&quot;menuitem&quot;]&apos;)
-        ?.querySelector(&apos;svg&apos;);
+        .getByText('Download')
+        .closest('[role="menuitem"]')
+        ?.querySelector('svg');
       const deleteIcon = screen
-        .getByText(&apos;Delete&apos;)
-        .closest(&apos;[role=&quot;menuitem&quot;]&apos;)
-        ?.querySelector(&apos;svg&apos;);
+        .getByText('Delete')
+        .closest('[role="menuitem"]')
+        ?.querySelector('svg');
 
       expect(viewIcon).toBeInTheDocument();
       expect(editIcon).toBeInTheDocument();
@@ -108,103 +108,103 @@ describe(&apos;TableActionMenu Component&apos;, () => {
       expect(deleteIcon).toBeInTheDocument();
     });
 
-    it(&apos;should render actions without icons&apos;, async () => {
+    it('should render actions without icons', async () => {
       const user = userEvent.setup();
       const actionsWithoutIcons: TableAction[] = [
         {
-          label: &apos;View Details&apos;,
+          label: 'View Details',
           onClick: vi.fn(),
         },
         {
-          label: &apos;Archive&apos;,
+          label: 'Archive',
           onClick: vi.fn(),
         },
       ];
 
       render(<TableActionMenu actions={actionsWithoutIcons} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      expect(screen.getByText(&apos;View Details&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Archive&apos;)).toBeInTheDocument();
+      expect(screen.getByText('View Details')).toBeInTheDocument();
+      expect(screen.getByText('Archive')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Action Interactions&apos;, () => {
-    it(&apos;should call onClick when action is clicked&apos;, async () => {
+  describe('Action Interactions', () => {
+    it('should call onClick when action is clicked', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      const editAction = screen.getByText(&apos;Edit&apos;);
+      const editAction = screen.getByText('Edit');
       await user.click(editAction);
 
       expect(mockActions[1].onClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should call correct onClick for each action&apos;, async () => {
+    it('should call correct onClick for each action', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
       // Click View action
-      const viewAction = screen.getByText(&apos;View&apos;);
+      const viewAction = screen.getByText('View');
       await user.click(viewAction);
       expect(mockActions[0].onClick).toHaveBeenCalledTimes(1);
 
       // Reopen menu and click Download action
       await user.click(triggerButton);
-      const downloadAction = screen.getByText(&apos;Download&apos;);
+      const downloadAction = screen.getByText('Download');
       await user.click(downloadAction);
       expect(mockActions[2].onClick).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Destructive Actions&apos;, () => {
-    it(&apos;should apply destructive styling to destructive actions&apos;, async () => {
+  describe('Destructive Actions', () => {
+    it('should apply destructive styling to destructive actions', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      const deleteAction = screen.getByText(&apos;Delete&apos;);
+      const deleteAction = screen.getByText('Delete');
       expect(deleteAction).toHaveClass(
-        &apos;data-[variant=destructive]:text-destructive&apos;
+        'data-[variant=destructive]:text-destructive'
       );
     });
 
-    it(&apos;should not apply destructive styling to non-destructive actions&apos;, async () => {
+    it('should not apply destructive styling to non-destructive actions', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      const viewAction = screen.getByText(&apos;View&apos;);
-      expect(viewAction).not.toHaveClass(&apos;text-destructive&apos;);
+      const viewAction = screen.getByText('View');
+      expect(viewAction).not.toHaveClass('text-destructive');
     });
   });
 
-  describe(&apos;Separators&apos;, () => {
-    it(&apos;should render separator before action when specified&apos;, async () => {
+  describe('Separators', () => {
+    it('should render separator before action when specified', async () => {
       const user = userEvent.setup();
       const actionsWithSeparator: TableAction[] = [
         {
-          label: &apos;View&apos;,
+          label: 'View',
           onClick: vi.fn(),
         },
         {
-          label: &apos;Edit&apos;,
+          label: 'Edit',
           onClick: vi.fn(),
         },
         {
-          label: &apos;Delete&apos;,
+          label: 'Delete',
           onClick: vi.fn(),
           isDestructive: true,
           separatorBefore: true,
@@ -213,149 +213,149 @@ describe(&apos;TableActionMenu Component&apos;, () => {
 
       render(<TableActionMenu actions={actionsWithSeparator} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
       // Check that separators are rendered (they should be hr elements or similar)
-      const menuContent = screen.getByRole(&apos;menu&apos;);
+      const menuContent = screen.getByRole('menu');
       expect(menuContent).toBeInTheDocument();
     });
 
-    it(&apos;should not render separator when not specified&apos;, async () => {
+    it('should not render separator when not specified', async () => {
       const user = userEvent.setup();
       const actionsWithoutSeparator: TableAction[] = [
         {
-          label: &apos;View&apos;,
+          label: 'View',
           onClick: vi.fn(),
         },
         {
-          label: &apos;Edit&apos;,
+          label: 'Edit',
           onClick: vi.fn(),
         },
       ];
 
       render(<TableActionMenu actions={actionsWithoutSeparator} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      expect(screen.getByText(&apos;View&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Edit&apos;)).toBeInTheDocument();
+      expect(screen.getByText('View')).toBeInTheDocument();
+      expect(screen.getByText('Edit')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Edge Cases&apos;, () => {
-    it(&apos;should handle empty actions array&apos;, async () => {
+  describe('Edge Cases', () => {
+    it('should handle empty actions array', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={[]} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       expect(triggerButton).toBeInTheDocument();
 
       await user.click(triggerButton);
-      expect(screen.getByText(&apos;Actions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Actions')).toBeInTheDocument();
     });
 
-    it(&apos;should handle single action&apos;, async () => {
+    it('should handle single action', async () => {
       const user = userEvent.setup();
       const singleAction: TableAction[] = [
         {
-          label: &apos;View Only&apos;,
+          label: 'View Only',
           onClick: vi.fn(),
         },
       ];
 
       render(<TableActionMenu actions={singleAction} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      expect(screen.getByText(&apos;View Only&apos;)).toBeInTheDocument();
+      expect(screen.getByText('View Only')).toBeInTheDocument();
     });
 
-    it(&apos;should handle actions with long labels&apos;, async () => {
+    it('should handle actions with long labels', async () => {
       const user = userEvent.setup();
       const actionsWithLongLabels: TableAction[] = [
         {
-          label: &apos;This is a very long action label that might wrap&apos;,
+          label: 'This is a very long action label that might wrap',
           onClick: vi.fn(),
         },
       ];
 
       render(<TableActionMenu actions={actionsWithLongLabels} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
       expect(
-        screen.getByText(&apos;This is a very long action label that might wrap&apos;)
+        screen.getByText('This is a very long action label that might wrap')
       ).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper button role for trigger&apos;, () => {
+  describe('Accessibility', () => {
+    it('should have proper button role for trigger', () => {
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       expect(triggerButton).toBeInTheDocument();
     });
 
-    it(&apos;should have proper menu structure when opened&apos;, async () => {
+    it('should have proper menu structure when opened', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
       // Check that menu items have proper roles
-      const menuItems = screen.getAllByRole(&apos;menuitem&apos;);
+      const menuItems = screen.getAllByRole('menuitem');
       expect(menuItems).toHaveLength(4);
     });
 
-    it(&apos;should have proper labels for screen readers&apos;, async () => {
+    it('should have proper labels for screen readers', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      expect(screen.getByText(&apos;View&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Edit&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Download&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Delete&apos;)).toBeInTheDocument();
+      expect(screen.getByText('View')).toBeInTheDocument();
+      expect(screen.getByText('Edit')).toBeInTheDocument();
+      expect(screen.getByText('Download')).toBeInTheDocument();
+      expect(screen.getByText('Delete')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Menu Behavior&apos;, () => {
-    it(&apos;should close menu after action is clicked&apos;, async () => {
+  describe('Menu Behavior', () => {
+    it('should close menu after action is clicked', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
-      expect(screen.getByText(&apos;View&apos;)).toBeInTheDocument();
+      expect(screen.getByText('View')).toBeInTheDocument();
 
-      const viewAction = screen.getByText(&apos;View&apos;);
+      const viewAction = screen.getByText('View');
       await user.click(viewAction);
 
       // Menu should close after action is clicked
       await waitFor(() => {
-        expect(screen.queryByText(&apos;View&apos;)).not.toBeInTheDocument();
+        expect(screen.queryByText('View')).not.toBeInTheDocument();
       });
     });
 
-    it(&apos;should align menu to end&apos;, async () => {
+    it('should align menu to end', async () => {
       const user = userEvent.setup();
       render(<TableActionMenu actions={mockActions} />);
 
-      const triggerButton = screen.getByRole(&apos;button&apos;);
+      const triggerButton = screen.getByRole('button');
       await user.click(triggerButton);
 
       // The menu should be aligned to the end (right side)
       // This is tested by checking that the menu content is rendered
-      expect(screen.getByText(&apos;Actions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Actions')).toBeInTheDocument();
     });
   });
 });

@@ -1,27 +1,27 @@
-import React, { useState } from &apos;react&apos;;
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &apos;../ui/card&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Textarea } from &apos;../ui/textarea&apos;;
+} from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Save, Upload, Camera } from &apos;lucide-react&apos;;
-import { toast } from &apos;sonner&apos;;
-import { SeverityBadge, StatusBadge } from &apos;../common&apos;;
-import { issueTypes, issueSeverities } from &apos;../../data/dropdownOptions&apos;;
-import type { IssueType, IssueSeverity, IssueStatus } from &apos;../../types/issue&apos;;
+} from '../ui/select';
+import { Save, Upload, Camera } from 'lucide-react';
+import { toast } from 'sonner';
+import { SeverityBadge, StatusBadge } from '../common';
+import { issueTypes, issueSeverities } from '../../data/dropdownOptions';
+import type { IssueType, IssueSeverity, IssueStatus } from '../../types/issue';
 
 export interface IssueFormData {
   type: IssueType;
@@ -35,7 +35,7 @@ export interface IssueFormData {
 }
 
 interface IssueFormProps {
-  mode: &apos;create&apos; | &apos;edit&apos;;
+  mode: 'create' | 'edit';
   initialData?: Partial<IssueFormData>;
   assetId?: string;
   assetName?: string;
@@ -62,18 +62,18 @@ export function IssueForm({
   showAdvancedFields = false,
 }: IssueFormProps) {
   const [formData, setFormData] = useState<IssueFormData>({
-    type: initialData.type || &apos;&apos;,
-    severity: initialData.severity || &apos;medium&apos;,
-    status: initialData.status || &apos;open&apos;,
-    title: initialData.title || &apos;&apos;,
-    description: initialData.description || &apos;&apos;,
-    assignedTo: initialData.assignedTo || &apos;&apos;,
-    notes: initialData.notes || &apos;&apos;,
+    type: initialData.type || '',
+    severity: initialData.severity || 'medium',
+    status: initialData.status || 'open',
+    title: initialData.title || '',
+    description: initialData.description || '',
+    assignedTo: initialData.assignedTo || '',
+    notes: initialData.notes || '',
     tags: initialData.tags || [],
   });
 
   const [tagsInput, setTagsInput] = useState(
-    initialData.tags ? initialData.tags.join(&apos;, &apos;) : &apos;&apos;
+    initialData.tags ? initialData.tags.join(', ') : ''
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,19 +81,19 @@ export function IssueForm({
 
     // Validation
     if (!formData.type || !formData.description.trim()) {
-      toast.error(&apos;Please fill in all required fields&apos;);
+      toast.error('Please fill in all required fields');
       return;
     }
 
-    if (mode === &apos;edit&apos; && !formData.title.trim()) {
-      toast.error(&apos;Please provide a title for the issue&apos;);
+    if (mode === 'edit' && !formData.title.trim()) {
+      toast.error('Please provide a title for the issue');
       return;
     }
 
     // Process tags
     const processedData = {
       ...formData,
-      tags: tagsInput.trim() ? tagsInput.split(&apos;,&apos;).map(tag => tag.trim()) : [],
+      tags: tagsInput.trim() ? tagsInput.split(',').map(tag => tag.trim()) : [],
     };
 
     await onSubmit(processedData);
@@ -102,7 +102,7 @@ export function IssueForm({
   // Using generic SeverityBadge component
 
   return (
-    <div className=&apos;space-y-6&apos;>
+    <div className='space-y-6'>
       {/* Asset Info Card */}
       {showAssetInfo && assetId && assetName && (
         <Card>
@@ -110,29 +110,29 @@ export function IssueForm({
             <CardTitle>Asset Information</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className=&apos;p-4 bg-muted rounded-lg&apos;>
-              <div className=&apos;flex items-center justify-between&apos;>
+            <div className='p-4 bg-muted rounded-lg'>
+              <div className='flex items-center justify-between'>
                 <div>
                   <h4>{assetName}</h4>
-                  <p className=&apos;text-sm text-muted-foreground&apos;>{assetId}</p>
+                  <p className='text-sm text-muted-foreground'>{assetId}</p>
                   {assetContext && (
-                    <div className=&apos;mt-2 text-sm space-y-1&apos;>
+                    <div className='mt-2 text-sm space-y-1'>
                       <p>
-                        <span className=&apos;text-muted-foreground&apos;>Type:</span>{&apos; &apos;}
+                        <span className='text-muted-foreground'>Type:</span>{' '}
                         {assetContext.type}
                       </p>
                       <p>
-                        <span className=&apos;text-muted-foreground&apos;>Status:</span>{&apos; &apos;}
+                        <span className='text-muted-foreground'>Status:</span>{' '}
                         {assetContext.status}
                       </p>
                       <p>
-                        <span className=&apos;text-muted-foreground&apos;>Location:</span>{&apos; &apos;}
+                        <span className='text-muted-foreground'>Location:</span>{' '}
                         {assetContext.location}
                       </p>
                     </div>
                   )}
                 </div>
-                <div className=&apos;flex gap-2&apos;>
+                <div className='flex gap-2'>
                   {formData.status && <StatusBadge status={formData.status} />}
                   <SeverityBadge severity={formData.severity} />
                 </div>
@@ -148,37 +148,37 @@ export function IssueForm({
           <CardHeader>
             <CardTitle>Issue Details</CardTitle>
             <CardDescription>
-              {mode === &apos;create&apos;
-                ? &quot;Provide detailed information about the issue you&apos;re reporting&quot;
-                : &apos;Update the issue information&apos;}
+              {mode === 'create'
+                ? "Provide detailed information about the issue you're reporting"
+                : 'Update the issue information'}
             </CardDescription>
           </CardHeader>
-          <CardContent className=&apos;space-y-6&apos;>
+          <CardContent className='space-y-6'>
             {/* Title field for edit mode */}
-            {mode === &apos;edit&apos; && (
-              <div className=&apos;grid gap-2&apos;>
-                <Label htmlFor=&apos;title&apos;>Title *</Label>
+            {mode === 'edit' && (
+              <div className='grid gap-2'>
+                <Label htmlFor='title'>Title *</Label>
                 <Input
-                  id=&apos;title&apos;
+                  id='title'
                   value={formData.title}
                   onChange={e =>
                     setFormData(prev => ({ ...prev, title: e.target.value }))
                   }
-                  placeholder=&apos;Issue title&apos;
+                  placeholder='Issue title'
                 />
               </div>
             )}
 
-            <div className=&apos;grid gap-2&apos;>
-              <Label htmlFor=&apos;issue-type&apos;>Issue Type *</Label>
+            <div className='grid gap-2'>
+              <Label htmlFor='issue-type'>Issue Type *</Label>
               <Select
                 value={formData.type}
                 onValueChange={value =>
                   setFormData(prev => ({ ...prev, type: value as IssueType }))
                 }
               >
-                <SelectTrigger id=&apos;issue-type&apos;>
-                  <SelectValue placeholder=&apos;Select issue type&apos; />
+                <SelectTrigger id='issue-type'>
+                  <SelectValue placeholder='Select issue type' />
                 </SelectTrigger>
                 <SelectContent>
                   {issueTypes.map(type => (
@@ -190,8 +190,8 @@ export function IssueForm({
               </Select>
             </div>
 
-            <div className=&apos;grid gap-2&apos;>
-              <Label htmlFor=&apos;severity&apos;>Severity</Label>
+            <div className='grid gap-2'>
+              <Label htmlFor='severity'>Severity</Label>
               <Select
                 value={formData.severity}
                 onValueChange={value =>
@@ -201,20 +201,20 @@ export function IssueForm({
                   }))
                 }
               >
-                <SelectTrigger id=&apos;severity&apos;>
+                <SelectTrigger id='severity'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {issueSeverities.map(sev => {
                     const colorMap: Record<string, string> = {
-                      low: &apos;bg-yellow-500&apos;,
-                      medium: &apos;bg-orange-500&apos;,
-                      high: &apos;bg-red-500&apos;,
-                      critical: &apos;bg-red-700&apos;,
+                      low: 'bg-yellow-500',
+                      medium: 'bg-orange-500',
+                      high: 'bg-red-500',
+                      critical: 'bg-red-700',
                     };
                     return (
                       <SelectItem key={sev.value} value={sev.value}>
-                        <div className=&apos;flex items-center gap-2&apos;>
+                        <div className='flex items-center gap-2'>
                           <div
                             className={`h-2 w-2 rounded-full ${colorMap[sev.value]}`}
                           />
@@ -229,8 +229,8 @@ export function IssueForm({
 
             {/* Status field for edit mode */}
             {showStatusField && (
-              <div className=&apos;grid gap-2&apos;>
-                <Label htmlFor=&apos;status&apos;>Status</Label>
+              <div className='grid gap-2'>
+                <Label htmlFor='status'>Status</Label>
                 <Select
                   value={formData.status}
                   onValueChange={value =>
@@ -240,26 +240,26 @@ export function IssueForm({
                     }))
                   }
                 >
-                  <SelectTrigger id=&apos;status&apos;>
-                    <SelectValue placeholder=&apos;Select status&apos; />
+                  <SelectTrigger id='status'>
+                    <SelectValue placeholder='Select status' />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value=&apos;open&apos;>Open</SelectItem>
-                    <SelectItem value=&apos;acknowledged&apos;>Acknowledged</SelectItem>
-                    <SelectItem value=&apos;in-progress&apos;>In Progress</SelectItem>
-                    <SelectItem value=&apos;resolved&apos;>Resolved</SelectItem>
-                    <SelectItem value=&apos;closed&apos;>Closed</SelectItem>
-                    <SelectItem value=&apos;cancelled&apos;>Cancelled</SelectItem>
+                    <SelectItem value='open'>Open</SelectItem>
+                    <SelectItem value='acknowledged'>Acknowledged</SelectItem>
+                    <SelectItem value='in-progress'>In Progress</SelectItem>
+                    <SelectItem value='resolved'>Resolved</SelectItem>
+                    <SelectItem value='closed'>Closed</SelectItem>
+                    <SelectItem value='cancelled'>Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             )}
 
-            <div className=&apos;grid gap-2&apos;>
-              <Label htmlFor=&apos;description&apos;>Description *</Label>
+            <div className='grid gap-2'>
+              <Label htmlFor='description'>Description *</Label>
               <Textarea
-                id=&apos;description&apos;
-                placeholder=&apos;Describe the issue in detail...&apos;
+                id='description'
+                placeholder='Describe the issue in detail...'
                 value={formData.description}
                 onChange={e =>
                   setFormData(prev => ({
@@ -268,9 +268,9 @@ export function IssueForm({
                   }))
                 }
                 rows={8}
-                className=&apos;resize-none&apos;
+                className='resize-none'
               />
-              <p className=&apos;text-xs text-muted-foreground&apos;>
+              <p className='text-xs text-muted-foreground'>
                 Please include relevant details such as when the issue occurred,
                 what you were doing, and any error messages.
               </p>
@@ -279,10 +279,10 @@ export function IssueForm({
             {/* Advanced fields for edit mode */}
             {showAdvancedFields && (
               <>
-                <div className=&apos;grid gap-2&apos;>
-                  <Label htmlFor=&apos;assignedTo&apos;>Assigned To</Label>
+                <div className='grid gap-2'>
+                  <Label htmlFor='assignedTo'>Assigned To</Label>
                   <Input
-                    id=&apos;assignedTo&apos;
+                    id='assignedTo'
                     value={formData.assignedTo}
                     onChange={e =>
                       setFormData(prev => ({
@@ -290,54 +290,54 @@ export function IssueForm({
                         assignedTo: e.target.value,
                       }))
                     }
-                    placeholder=&apos;Technician or team member&apos;
+                    placeholder='Technician or team member'
                   />
                 </div>
 
-                <div className=&apos;grid gap-2&apos;>
-                  <Label htmlFor=&apos;notes&apos;>Notes</Label>
+                <div className='grid gap-2'>
+                  <Label htmlFor='notes'>Notes</Label>
                   <Textarea
-                    id=&apos;notes&apos;
+                    id='notes'
                     value={formData.notes}
                     onChange={e =>
                       setFormData(prev => ({ ...prev, notes: e.target.value }))
                     }
-                    placeholder=&apos;Additional notes or comments&apos;
+                    placeholder='Additional notes or comments'
                     rows={3}
                   />
                 </div>
 
-                <div className=&apos;grid gap-2&apos;>
-                  <Label htmlFor=&apos;tags&apos;>Tags</Label>
+                <div className='grid gap-2'>
+                  <Label htmlFor='tags'>Tags</Label>
                   <Input
-                    id=&apos;tags&apos;
+                    id='tags'
                     value={tagsInput}
                     onChange={e => setTagsInput(e.target.value)}
-                    placeholder=&apos;Comma-separated tags&apos;
+                    placeholder='Comma-separated tags'
                   />
                 </div>
               </>
             )}
 
             {/* Attachments section for create mode */}
-            {mode === &apos;create&apos; && (
-              <div className=&apos;grid gap-2&apos;>
-                <Label htmlFor=&apos;attachments&apos;>Attachments (Optional)</Label>
-                <div className=&apos;border-2 border-dashed rounded-lg p-6 text-center&apos;>
-                  <div className=&apos;flex flex-col items-center gap-2&apos;>
-                    <div className=&apos;flex gap-2&apos;>
-                      <Upload className=&apos;h-8 w-8 text-muted-foreground&apos; />
-                      <Camera className=&apos;h-8 w-8 text-muted-foreground&apos; />
+            {mode === 'create' && (
+              <div className='grid gap-2'>
+                <Label htmlFor='attachments'>Attachments (Optional)</Label>
+                <div className='border-2 border-dashed rounded-lg p-6 text-center'>
+                  <div className='flex flex-col items-center gap-2'>
+                    <div className='flex gap-2'>
+                      <Upload className='h-8 w-8 text-muted-foreground' />
+                      <Camera className='h-8 w-8 text-muted-foreground' />
                     </div>
                     <div>
-                      <p className=&apos;text-sm font-medium&apos;>
+                      <p className='text-sm font-medium'>
                         Upload files or take photos
                       </p>
-                      <p className=&apos;text-xs text-muted-foreground&apos;>
+                      <p className='text-xs text-muted-foreground'>
                         Drag and drop files here, or click to browse
                       </p>
                     </div>
-                    <Button type=&apos;button&apos; variant=&apos;outline&apos; size=&apos;sm&apos;>
+                    <Button type='button' variant='outline' size='sm'>
                       Choose Files
                     </Button>
                   </div>
@@ -346,21 +346,21 @@ export function IssueForm({
             )}
 
             {/* Action buttons */}
-            <div className=&apos;flex gap-2 pt-4&apos;>
-              <Button type=&apos;submit&apos; disabled={isSubmitting}>
+            <div className='flex gap-2 pt-4'>
+              <Button type='submit' disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
-                    <div className=&apos;animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2&apos;></div>
-                    {mode === &apos;create&apos; ? &apos;Creating...&apos; : &apos;Saving...&apos;}
+                    <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2'></div>
+                    {mode === 'create' ? 'Creating...' : 'Saving...'}
                   </>
                 ) : (
                   <>
-                    <Save className=&apos;h-4 w-4 mr-2&apos; />
-                    {mode === &apos;create&apos; ? &apos;Create Issue&apos; : &apos;Save Changes&apos;}
+                    <Save className='h-4 w-4 mr-2' />
+                    {mode === 'create' ? 'Create Issue' : 'Save Changes'}
                   </>
                 )}
               </Button>
-              <Button type=&apos;button&apos; variant=&apos;outline&apos; onClick={onCancel}>
+              <Button type='button' variant='outline' onClick={onCancel}>
                 Cancel
               </Button>
             </div>

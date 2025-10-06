@@ -1,20 +1,19 @@
-import React from &apos;react&apos;;
-import { useState, useEffect } from &apos;react&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Label } from &apos;../ui/label&apos;;
+import { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Card, CardContent } from &apos;../ui/card&apos;;
-import { PageHeader, LoadingState, PageLayout } from &apos;../common&apos;;
-import { ArrowLeft, Save } from &apos;lucide-react&apos;;
-import { toast } from &apos;sonner&apos;;
-import { vehicleTypes, drivers } from &apos;../../data/dropdownOptions&apos;;
+} from '../ui/select';
+import { Card, CardContent } from '../ui/card';
+import { PageHeader, LoadingState, PageLayout } from '../common';
+import { ArrowLeft, Save } from 'lucide-react';
+import { toast } from 'sonner';
+import { vehicleTypes, drivers } from '../../data/dropdownOptions';
 
 interface EditVehicleProps {
   vehicleId: string;
@@ -28,13 +27,13 @@ export function EditVehicle({
   onVehicleUpdated,
 }: EditVehicleProps) {
   const [loading, setLoading] = useState(true);
-  const [vehicleName, setVehicleName] = useState(&apos;&apos;);
-  const [vehicleType, setVehicleType] = useState(&apos;&apos;);
-  const [licensePlate, setLicensePlate] = useState(&apos;&apos;);
-  const [driver, setDriver] = useState(&apos;&apos;);
-  const [capacity, setCapacity] = useState(&apos;&apos;);
-  const [location, setLocation] = useState(&apos;&apos;);
-  const [status, setStatus] = useState(&apos;active&apos;);
+  const [vehicleName, setVehicleName] = useState('');
+  const [vehicleType, setVehicleType] = useState('');
+  const [licensePlate, setLicensePlate] = useState('');
+  const [driver, setDriver] = useState('');
+  const [capacity, setCapacity] = useState('');
+  const [location, setLocation] = useState('');
+  const [status, setStatus] = useState('active');
 
   useEffect(() => {
     // Load vehicle data
@@ -44,13 +43,13 @@ export function EditVehicle({
     // Mock data loading
     const mockVehicle = {
       id: vehicleId,
-      name: &apos;Truck Alpha&apos;,
-      type: &apos;pickup-truck&apos;,
-      licensePlate: &apos;ABC-123&apos;,
-      driver: &apos;mike-wilson&apos;,
+      name: 'Truck Alpha',
+      type: 'pickup-truck',
+      licensePlate: 'ABC-123',
+      driver: 'mike-wilson',
       capacity: 10,
-      location: &apos;Office Parking&apos;,
-      status: &apos;active&apos;,
+      location: 'Office Parking',
+      status: 'active',
     };
 
     setVehicleName(mockVehicle.name);
@@ -67,7 +66,7 @@ export function EditVehicle({
     e.preventDefault();
 
     if (!vehicleName || !vehicleType || !licensePlate) {
-      toast.error(&apos;Please fill in all required fields&apos;);
+      toast.error('Please fill in all required fields');
       return;
     }
 
@@ -78,16 +77,16 @@ export function EditVehicle({
         type:
           vehicleTypes.find(t => t.value === vehicleType)?.label || vehicleType,
         licensePlate,
-        driver: drivers.find(d => d.value === driver)?.label || &apos;Unassigned&apos;,
-        status: status as &apos;active&apos; | &apos;inactive&apos; | &apos;maintenance&apos;,
-        location: location || &apos;Unknown&apos;,
+        driver: drivers.find(d => d.value === driver)?.label || 'Unassigned',
+        status: status as 'active' | 'inactive' | 'maintenance',
+        location: location || 'Unknown',
         capacity: parseInt(capacity) || 10,
       };
 
       // TODO: Backend integration
       // await api.updateVehicle(vehicleId, updatedVehicle);
 
-      toast.success(&apos;Vehicle updated successfully&apos;, {
+      toast.success('Vehicle updated successfully', {
         description: `${vehicleName} has been updated`,
       });
 
@@ -97,33 +96,33 @@ export function EditVehicle({
 
       onBack();
     } catch (error) {
-// // // // // // // console.error(&apos;Error updating vehicle:&apos;, error);
-      toast.error(&apos;Failed to update vehicle&apos;, {
-        description: &apos;Please try again&apos;,
+// // // // // // // console.error('Error updating vehicle:', error);
+      toast.error('Failed to update vehicle', {
+        description: 'Please try again',
       });
     }
   };
 
   if (loading) {
-    return <LoadingState message=&apos;Loading vehicle details...&apos; fullScreen />;
+    return <LoadingState message='Loading vehicle details...' fullScreen />;
   }
 
   return (
     <PageLayout
-      variant=&apos;narrow&apos;
-      padding=&apos;md&apos;
+      variant='narrow'
+      padding='md'
       header={
         <PageHeader
-          title=&apos;Edit Vehicle&apos;
-          description=&apos;Update vehicle information and settings&apos;
+          title='Edit Vehicle'
+          description='Update vehicle information and settings'
           actions={
-            <div className=&apos;flex items-center gap-2&apos;>
-              <Button variant=&apos;outline&apos; onClick={onBack}>
-                <ArrowLeft className=&apos;h-4 w-4 mr-2&apos; />
+            <div className='flex items-center gap-2'>
+              <Button variant='outline' onClick={onBack}>
+                <ArrowLeft className='h-4 w-4 mr-2' />
                 Cancel
               </Button>
-              <Button type=&apos;submit&apos; form=&apos;edit-vehicle-form&apos;>
-                <Save className=&apos;h-4 w-4 mr-2&apos; />
+              <Button type='submit' form='edit-vehicle-form'>
+                <Save className='h-4 w-4 mr-2' />
                 Save Changes
               </Button>
             </div>
@@ -132,36 +131,36 @@ export function EditVehicle({
       }
     >
       <Card>
-        <CardContent className=&apos;pt-6&apos;>
+        <CardContent className='pt-6'>
           <form
-            id=&apos;edit-vehicle-form&apos;
+            id='edit-vehicle-form'
             onSubmit={handleSubmit}
-            className=&apos;space-y-6&apos;
+            className='space-y-6'
           >
-            <div className=&apos;space-y-2&apos;>
-              <Label htmlFor=&apos;vehicle-name&apos;>Vehicle Name *</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='vehicle-name'>Vehicle Name *</Label>
               <Input
-                id=&apos;vehicle-name&apos;
-                placeholder=&apos;e.g., Truck Alpha&apos;
+                id='vehicle-name'
+                placeholder='e.g., Truck Alpha'
                 value={vehicleName}
                 onChange={e => setVehicleName(e.target.value)}
                 required
               />
-              <p className=&apos;text-sm text-muted-foreground&apos;>
+              <p className='text-sm text-muted-foreground'>
                 A descriptive name to identify this vehicle
               </p>
             </div>
 
-            <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;vehicle-type&apos;>Vehicle Type *</Label>
+            <div className='grid gap-4 md:grid-cols-2'>
+              <div className='space-y-2'>
+                <Label htmlFor='vehicle-type'>Vehicle Type *</Label>
                 <Select
                   value={vehicleType}
                   onValueChange={setVehicleType}
                   required
                 >
-                  <SelectTrigger id=&apos;vehicle-type&apos;>
-                    <SelectValue placeholder=&apos;Select type&apos; />
+                  <SelectTrigger id='vehicle-type'>
+                    <SelectValue placeholder='Select type' />
                   </SelectTrigger>
                   <SelectContent>
                     {vehicleTypes.map(type => (
@@ -173,11 +172,11 @@ export function EditVehicle({
                 </Select>
               </div>
 
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;license-plate&apos;>License Plate *</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='license-plate'>License Plate *</Label>
                 <Input
-                  id=&apos;license-plate&apos;
-                  placeholder=&apos;e.g., ABC-123&apos;
+                  id='license-plate'
+                  placeholder='e.g., ABC-123'
                   value={licensePlate}
                   onChange={e => setLicensePlate(e.target.value.toUpperCase())}
                   required
@@ -185,12 +184,12 @@ export function EditVehicle({
               </div>
             </div>
 
-            <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;driver&apos;>Assigned Driver</Label>
+            <div className='grid gap-4 md:grid-cols-2'>
+              <div className='space-y-2'>
+                <Label htmlFor='driver'>Assigned Driver</Label>
                 <Select value={driver} onValueChange={setDriver}>
-                  <SelectTrigger id=&apos;driver&apos;>
-                    <SelectValue placeholder=&apos;Select driver (optional)&apos; />
+                  <SelectTrigger id='driver'>
+                    <SelectValue placeholder='Select driver (optional)' />
                   </SelectTrigger>
                   <SelectContent>
                     {drivers.map(driverOption => (
@@ -203,54 +202,54 @@ export function EditVehicle({
                     ))}
                   </SelectContent>
                 </Select>
-                <p className=&apos;text-sm text-muted-foreground&apos;>
+                <p className='text-sm text-muted-foreground'>
                   Default driver assigned to this vehicle
                 </p>
               </div>
 
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;status&apos;>Status</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='status'>Status</Label>
                 <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger id=&apos;status&apos;>
+                  <SelectTrigger id='status'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value=&apos;active&apos;>Active</SelectItem>
-                    <SelectItem value=&apos;inactive&apos;>Inactive</SelectItem>
-                    <SelectItem value=&apos;maintenance&apos;>Maintenance</SelectItem>
+                    <SelectItem value='active'>Active</SelectItem>
+                    <SelectItem value='inactive'>Inactive</SelectItem>
+                    <SelectItem value='maintenance'>Maintenance</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className=&apos;text-sm text-muted-foreground&apos;>
+                <p className='text-sm text-muted-foreground'>
                   Current operational status
                 </p>
               </div>
             </div>
 
-            <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;capacity&apos;>Asset Capacity</Label>
+            <div className='grid gap-4 md:grid-cols-2'>
+              <div className='space-y-2'>
+                <Label htmlFor='capacity'>Asset Capacity</Label>
                 <Input
-                  id=&apos;capacity&apos;
-                  type=&apos;number&apos;
-                  placeholder=&apos;10&apos;
+                  id='capacity'
+                  type='number'
+                  placeholder='10'
                   value={capacity}
                   onChange={e => setCapacity(e.target.value)}
-                  min=&apos;1&apos;
+                  min='1'
                 />
-                <p className=&apos;text-sm text-muted-foreground&apos;>
+                <p className='text-sm text-muted-foreground'>
                   Maximum number of assets this vehicle can carry
                 </p>
               </div>
 
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;location&apos;>Current Location</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='location'>Current Location</Label>
                 <Input
-                  id=&apos;location&apos;
-                  placeholder=&apos;e.g., Office Parking&apos;
+                  id='location'
+                  placeholder='e.g., Office Parking'
                   value={location}
                   onChange={e => setLocation(e.target.value)}
                 />
-                <p className=&apos;text-sm text-muted-foreground&apos;>
+                <p className='text-sm text-muted-foreground'>
                   Where this vehicle is currently located
                 </p>
               </div>

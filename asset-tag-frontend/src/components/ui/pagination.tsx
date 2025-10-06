@@ -1,21 +1,20 @@
-import React from &apos;react&apos;;
-import * as React from &apos;react&apos;;
+import * as React from 'react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   MoreHorizontalIcon,
-} from &apos;lucide-react&apos;;
+} from 'lucide-react';
 
-import { cn } from &apos;./utils&apos;;
-import { Button, buttonVariants } from &apos;./button&apos;;
+import { cn } from './utils';
+import { Button, buttonVariants } from './button';
 
-function Pagination({ className, ...props }: React.ComponentProps<&apos;nav&apos;>) {
+function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (
     <nav
-      role=&apos;navigation&apos;
-      aria-label=&apos;pagination&apos;
-      data-slot=&apos;pagination&apos;
-      className={cn(&apos;mx-auto flex w-full justify-center&apos;, className)}
+      role='navigation'
+      aria-label='pagination'
+      data-slot='pagination'
+      className={cn('mx-auto flex w-full justify-center', className)}
       {...props}
     />
   );
@@ -24,39 +23,39 @@ function Pagination({ className, ...props }: React.ComponentProps<&apos;nav&apos
 function PaginationContent({
   className,
   ...props
-}: React.ComponentProps<&apos;ul&apos;>) {
+}: React.ComponentProps<'ul'>) {
   return (
     <ul
-      data-slot=&apos;pagination-content&apos;
-      className={cn(&apos;flex flex-row items-center gap-1&apos;, className)}
+      data-slot='pagination-content'
+      className={cn('flex flex-row items-center gap-1', className)}
       {...props}
     />
   );
 }
 
-function PaginationItem({ ...props }: React.ComponentProps<&apos;li&apos;>) {
-  return <li data-slot=&apos;pagination-item&apos; {...props} />;
+function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
+  return <li data-slot='pagination-item' {...props} />;
 }
 
 type PaginationLinkProps = {
   isActive?: boolean;
-} & Pick<React.ComponentProps<typeof Button>, &apos;size&apos;> &
-  React.ComponentProps<&apos;a&apos;>;
+} & Pick<React.ComponentProps<typeof Button>, 'size'> &
+  React.ComponentProps<'a'>;
 
 function PaginationLink({
   className,
   isActive,
-  size = &apos;icon&apos;,
+  size = 'icon',
   ...props
 }: PaginationLinkProps) {
   return (
     <a
-      aria-current={isActive ? &apos;page&apos; : undefined}
-      data-slot=&apos;pagination-link&apos;
+      aria-current={isActive ? 'page' : undefined}
+      data-slot='pagination-link'
       data-active={isActive}
       className={cn(
         buttonVariants({
-          variant: isActive ? &apos;outline&apos; : &apos;ghost&apos;,
+          variant: isActive ? 'outline' : 'ghost',
           size,
         }),
         className
@@ -72,13 +71,13 @@ function PaginationPrevious({
 }: React.ComponentProps<typeof PaginationLink>) {
   return (
     <PaginationLink
-      aria-label=&apos;Go to previous page&apos;
-      size=&apos;default&apos;
-      className={cn(&apos;gap-1 px-2.5 sm:pl-2.5&apos;, className)}
+      aria-label='Go to previous page'
+      size='default'
+      className={cn('gap-1 px-2.5 sm:pl-2.5', className)}
       {...props}
     >
       <ChevronLeftIcon />
-      <span className=&apos;hidden sm:block&apos;>Previous</span>
+      <span className='hidden sm:block'>Previous</span>
     </PaginationLink>
   );
 }
@@ -89,12 +88,12 @@ function PaginationNext({
 }: React.ComponentProps<typeof PaginationLink>) {
   return (
     <PaginationLink
-      aria-label=&apos;Go to next page&apos;
-      size=&apos;default&apos;
-      className={cn(&apos;gap-1 px-2.5 sm:pr-2.5&apos;, className)}
+      aria-label='Go to next page'
+      size='default'
+      className={cn('gap-1 px-2.5 sm:pr-2.5', className)}
       {...props}
     >
-      <span className=&apos;hidden sm:block&apos;>Next</span>
+      <span className='hidden sm:block'>Next</span>
       <ChevronRightIcon />
     </PaginationLink>
   );
@@ -103,16 +102,16 @@ function PaginationNext({
 function PaginationEllipsis({
   className,
   ...props
-}: React.ComponentProps<&apos;span&apos;>) {
+}: React.ComponentProps<'span'>) {
   return (
     <span
       aria-hidden
-      data-slot=&apos;pagination-ellipsis&apos;
-      className={cn(&apos;flex size-9 items-center justify-center&apos;, className)}
+      data-slot='pagination-ellipsis'
+      className={cn('flex size-9 items-center justify-center', className)}
       {...props}
     >
-      <MoreHorizontalIcon className=&apos;size-4&apos; />
-      <span className=&apos;sr-only&apos;>More pages</span>
+      <MoreHorizontalIcon className='size-4' />
+      <span className='sr-only'>More pages</span>
     </span>
   );
 }

@@ -1,24 +1,24 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach, afterEach } from &apos;vitest&apos;;
-import { render, screen, fireEvent, waitFor } from &apos;../../test/test-utils&apos;;
-import { ComplianceTracking } from &apos;../compliance/ComplianceTracking&apos;;
-import { useAsyncDataAll } from &apos;../../hooks/useAsyncData&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
+import { ComplianceTracking } from '../compliance/ComplianceTracking';
+import { useAsyncDataAll } from '../../hooks/useAsyncData';
 import {
   getComplianceRecords,
   getComplianceSummary,
-} from &apos;../../data/mockReportsData&apos;;
+} from '../../data/mockReportsData';
 
 // Mock the hooks and data functions
-vi.mock(&apos;../../hooks/useAsyncData&apos;);
-vi.mock(&apos;../../data/mockReportsData&apos;);
-vi.mock(&apos;../../contexts/NavigationContext&apos;, () => ({
+vi.mock('../../hooks/useAsyncData');
+vi.mock('../../data/mockReportsData');
+vi.mock('../../contexts/NavigationContext', () => ({
   useNavigation: () => ({
     navigateToCreateCompliance: vi.fn(),
   }),
 }));
 
 // Mock toast
-vi.mock(&apos;sonner&apos;, () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -34,41 +34,41 @@ const mockComplianceSummary = {
 
 const mockComplianceRecords = [
   {
-    id: &apos;COMP-001&apos;,
-    assetId: &apos;AST-001&apos;,
-    assetName: &apos;Generator-001&apos;,
-    certificationType: &apos;Safety Inspection&apos;,
-    status: &apos;valid&apos;,
-    issueDate: &apos;2024-01-15T00:00:00Z&apos;,
-    expiryDate: &apos;2025-01-15T00:00:00Z&apos;,
+    id: 'COMP-001',
+    assetId: 'AST-001',
+    assetName: 'Generator-001',
+    certificationType: 'Safety Inspection',
+    status: 'valid',
+    issueDate: '2024-01-15T00:00:00Z',
+    expiryDate: '2025-01-15T00:00:00Z',
     daysUntilExpiry: 365,
-    inspector: &apos;John Smith&apos;,
+    inspector: 'John Smith',
   },
   {
-    id: &apos;COMP-002&apos;,
-    assetId: &apos;AST-002&apos;,
-    assetName: &apos;Crane-002&apos;,
-    certificationType: &apos;Load Test&apos;,
-    status: &apos;expiring_soon&apos;,
-    issueDate: &apos;2024-01-01T00:00:00Z&apos;,
-    expiryDate: &apos;2024-12-31T00:00:00Z&apos;,
+    id: 'COMP-002',
+    assetId: 'AST-002',
+    assetName: 'Crane-002',
+    certificationType: 'Load Test',
+    status: 'expiring_soon',
+    issueDate: '2024-01-01T00:00:00Z',
+    expiryDate: '2024-12-31T00:00:00Z',
     daysUntilExpiry: 15,
-    inspector: &apos;Jane Doe&apos;,
+    inspector: 'Jane Doe',
   },
   {
-    id: &apos;COMP-003&apos;,
-    assetId: &apos;AST-003&apos;,
-    assetName: &apos;Excavator-003&apos;,
-    certificationType: &apos;Environmental Compliance&apos;,
-    status: &apos;expired&apos;,
-    issueDate: &apos;2023-01-01T00:00:00Z&apos;,
-    expiryDate: &apos;2024-01-01T00:00:00Z&apos;,
+    id: 'COMP-003',
+    assetId: 'AST-003',
+    assetName: 'Excavator-003',
+    certificationType: 'Environmental Compliance',
+    status: 'expired',
+    issueDate: '2023-01-01T00:00:00Z',
+    expiryDate: '2024-01-01T00:00:00Z',
     daysUntilExpiry: -30,
-    inspector: &apos;Bob Wilson&apos;,
+    inspector: 'Bob Wilson',
   },
 ];
 
-describe(&apos;ComplianceTracking&apos;, () => {
+describe('ComplianceTracking', () => {
   const mockUseAsyncDataAll = vi.mocked(useAsyncDataAll);
   const mockGetComplianceRecords = vi.mocked(getComplianceRecords);
   const mockGetComplianceSummary = vi.mocked(getComplianceSummary);
@@ -95,54 +95,54 @@ describe(&apos;ComplianceTracking&apos;, () => {
     vi.resetAllMocks();
   });
 
-  describe(&apos;Component Rendering&apos;, () => {
-    it(&apos;renders the compliance tracking page with correct title and description&apos;, () => {
+  describe('Component Rendering', () => {
+    it('renders the compliance tracking page with correct title and description', () => {
       render(<ComplianceTracking />);
 
-      expect(screen.getByText(&apos;Compliance Tracking&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Compliance Tracking')).toBeInTheDocument();
       expect(
         screen.getByText(
-          &apos;Manage certifications, inspections, and regulatory compliance&apos;
+          'Manage certifications, inspections, and regulatory compliance'
         )
       ).toBeInTheDocument();
     });
 
-    it(&apos;renders all summary statistics cards&apos;, () => {
+    it('renders all summary statistics cards', () => {
       render(<ComplianceTracking />);
 
-      expect(screen.getByText(&apos;Total Certifications&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;25&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Valid&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;18&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Expiring Soon&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;5&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Expired&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;2&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Total Certifications')).toBeInTheDocument();
+      expect(screen.getByText('25')).toBeInTheDocument();
+      expect(screen.getByText('Valid')).toBeInTheDocument();
+      expect(screen.getByText('18')).toBeInTheDocument();
+      expect(screen.getByText('Expiring Soon')).toBeInTheDocument();
+      expect(screen.getByText('5')).toBeInTheDocument();
+      expect(screen.getByText('Expired')).toBeInTheDocument();
+      expect(screen.getByText('2')).toBeInTheDocument();
     });
 
-    it(&apos;renders action buttons&apos;, () => {
+    it('renders action buttons', () => {
       render(<ComplianceTracking />);
 
-      expect(screen.getByText(&apos;Upload&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Add Compliance&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Upload')).toBeInTheDocument();
+      expect(screen.getByText('Add Compliance')).toBeInTheDocument();
     });
 
-    it(&apos;renders the compliance records table with correct headers&apos;, () => {
+    it('renders the compliance records table with correct headers', () => {
       render(<ComplianceTracking />);
 
-      expect(screen.getByText(&apos;Asset&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Certification Type&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Issue Date&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Expiry Date&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Days Until Expiry&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Inspector&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Actions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Asset')).toBeInTheDocument();
+      expect(screen.getByText('Certification Type')).toBeInTheDocument();
+      expect(screen.getByText('Status')).toBeInTheDocument();
+      expect(screen.getByText('Issue Date')).toBeInTheDocument();
+      expect(screen.getByText('Expiry Date')).toBeInTheDocument();
+      expect(screen.getByText('Days Until Expiry')).toBeInTheDocument();
+      expect(screen.getByText('Inspector')).toBeInTheDocument();
+      expect(screen.getByText('Actions')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Data Loading States&apos;, () => {
-    it(&apos;shows loading state when data is being fetched&apos;, () => {
+  describe('Data Loading States', () => {
+    it('shows loading state when data is being fetched', () => {
       mockUseAsyncDataAll.mockReturnValue({
         data: null,
         loading: true,
@@ -153,12 +153,12 @@ describe(&apos;ComplianceTracking&apos;, () => {
       render(<ComplianceTracking />);
 
       expect(
-        screen.getByText(&apos;Loading compliance data...&apos;)
+        screen.getByText('Loading compliance data...')
       ).toBeInTheDocument();
     });
 
-    it(&apos;shows error state when data fetching fails&apos;, () => {
-      const errorMessage = &apos;Failed to fetch compliance data&apos;;
+    it('shows error state when data fetching fails', () => {
+      const errorMessage = 'Failed to fetch compliance data';
       mockUseAsyncDataAll.mockReturnValue({
         data: null,
         loading: false,
@@ -169,191 +169,191 @@ describe(&apos;ComplianceTracking&apos;, () => {
       render(<ComplianceTracking />);
 
       expect(
-        screen.getByText(&apos;Failed to load compliance data&apos;)
+        screen.getByText('Failed to load compliance data')
       ).toBeInTheDocument();
       expect(screen.getByText(errorMessage)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Try Again&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Try Again')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Tab Navigation&apos;, () => {
-    it(&apos;renders all tab options with correct counts&apos;, () => {
+  describe('Tab Navigation', () => {
+    it('renders all tab options with correct counts', () => {
       render(<ComplianceTracking />);
 
-      expect(screen.getByText(&apos;All (25)&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Valid (18)&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Expiring Soon (5)&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Expired (2)&apos;)).toBeInTheDocument();
+      expect(screen.getByText('All (25)')).toBeInTheDocument();
+      expect(screen.getByText('Valid (18)')).toBeInTheDocument();
+      expect(screen.getByText('Expiring Soon (5)')).toBeInTheDocument();
+      expect(screen.getByText('Expired (2)')).toBeInTheDocument();
     });
 
-    it(&apos;filters records when switching tabs&apos;, async () => {
+    it('filters records when switching tabs', async () => {
       render(<ComplianceTracking />);
 
-      // Click on &quot;Expired&quot; tab
-      fireEvent.click(screen.getByText(&apos;Expired (2)&apos;));
+      // Click on "Expired" tab
+      fireEvent.click(screen.getByText('Expired (2)'));
 
       // Verify that getComplianceRecords is called with the correct filter
       await waitFor(() => {
-        expect(mockGetComplianceRecords).toHaveBeenCalledWith(&apos;expired&apos;);
+        expect(mockGetComplianceRecords).toHaveBeenCalledWith('expired');
       });
     });
   });
 
-  describe(&apos;Search Functionality&apos;, () => {
-    it(&apos;filters records based on search term&apos;, () => {
+  describe('Search Functionality', () => {
+    it('filters records based on search term', () => {
       render(<ComplianceTracking />);
 
       const searchInput = screen.getByPlaceholderText(
-        &apos;Search assets or certificates...&apos;
+        'Search assets or certificates...'
       );
-      fireEvent.change(searchInput, { target: { value: &apos;Generator&apos; } });
+      fireEvent.change(searchInput, { target: { value: 'Generator' } });
 
       // Should show only Generator-001
-      expect(screen.getByText(&apos;Generator-001&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Crane-002&apos;)).not.toBeInTheDocument();
-      expect(screen.queryByText(&apos;Excavator-003&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Generator-001')).toBeInTheDocument();
+      expect(screen.queryByText('Crane-002')).not.toBeInTheDocument();
+      expect(screen.queryByText('Excavator-003')).not.toBeInTheDocument();
     });
 
-    it(&apos;searches by asset ID&apos;, () => {
+    it('searches by asset ID', () => {
       render(<ComplianceTracking />);
 
       const searchInput = screen.getByPlaceholderText(
-        &apos;Search assets or certificates...&apos;
+        'Search assets or certificates...'
       );
-      fireEvent.change(searchInput, { target: { value: &apos;AST-002&apos; } });
+      fireEvent.change(searchInput, { target: { value: 'AST-002' } });
 
       // Should show only Crane-002
-      expect(screen.getByText(&apos;Crane-002&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Generator-001&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Crane-002')).toBeInTheDocument();
+      expect(screen.queryByText('Generator-001')).not.toBeInTheDocument();
     });
 
-    it(&apos;searches by certification type&apos;, () => {
+    it('searches by certification type', () => {
       render(<ComplianceTracking />);
 
       const searchInput = screen.getByPlaceholderText(
-        &apos;Search assets or certificates...&apos;
+        'Search assets or certificates...'
       );
-      fireEvent.change(searchInput, { target: { value: &apos;Safety&apos; } });
+      fireEvent.change(searchInput, { target: { value: 'Safety' } });
 
       // Should show only Generator-001 with Safety Inspection
-      expect(screen.getByText(&apos;Generator-001&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Safety Inspection&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Generator-001')).toBeInTheDocument();
+      expect(screen.getByText('Safety Inspection')).toBeInTheDocument();
     });
 
-    it(&apos;shows no results message when search yields no matches&apos;, () => {
+    it('shows no results message when search yields no matches', () => {
       render(<ComplianceTracking />);
 
       const searchInput = screen.getByPlaceholderText(
-        &apos;Search assets or certificates...&apos;
+        'Search assets or certificates...'
       );
-      fireEvent.change(searchInput, { target: { value: &apos;NonExistent&apos; } });
+      fireEvent.change(searchInput, { target: { value: 'NonExistent' } });
 
       expect(
-        screen.getByText(&apos;No compliance records found&apos;)
+        screen.getByText('No compliance records found')
       ).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Try adjusting your search terms&apos;)
+        screen.getByText('Try adjusting your search terms')
       ).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Status Badges&apos;, () => {
-    it(&apos;displays correct status badges for different compliance statuses&apos;, () => {
+  describe('Status Badges', () => {
+    it('displays correct status badges for different compliance statuses', () => {
       render(<ComplianceTracking />);
 
       // Valid status
-      expect(screen.getByText(&apos;Valid&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Valid')).toBeInTheDocument();
 
       // Expiring soon status
-      expect(screen.getByText(&apos;Expiring Soon&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Expiring Soon')).toBeInTheDocument();
 
       // Expired status
-      expect(screen.getByText(&apos;Expired&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Expired')).toBeInTheDocument();
     });
 
-    it(&apos;displays correct colors for days until expiry&apos;, () => {
+    it('displays correct colors for days until expiry', () => {
       render(<ComplianceTracking />);
 
       // Valid (365 days) - should be green
-      const validDays = screen.getByText(&apos;365 days&apos;);
-      expect(validDays).toHaveClass(&apos;text-green-600&apos;);
+      const validDays = screen.getByText('365 days');
+      expect(validDays).toHaveClass('text-green-600');
 
       // Expiring soon (15 days) - should be amber
-      const expiringDays = screen.getByText(&apos;15 days&apos;);
-      expect(expiringDays).toHaveClass(&apos;text-amber-600&apos;);
+      const expiringDays = screen.getByText('15 days');
+      expect(expiringDays).toHaveClass('text-amber-600');
 
       // Expired (-30 days) - should be red
-      const expiredDays = screen.getByText(&apos;30 days ago&apos;);
-      expect(expiredDays).toHaveClass(&apos;text-red-600&apos;);
+      const expiredDays = screen.getByText('30 days ago');
+      expect(expiredDays).toHaveClass('text-red-600');
     });
   });
 
-  describe(&apos;User Interactions&apos;, () => {
-    it(&apos;calls navigateToCreateCompliance when Add Compliance button is clicked&apos;, () => {
+  describe('User Interactions', () => {
+    it('calls navigateToCreateCompliance when Add Compliance button is clicked', () => {
       render(<ComplianceTracking />);
 
-      fireEvent.click(screen.getByText(&apos;Add Compliance&apos;));
+      fireEvent.click(screen.getByText('Add Compliance'));
 
       // The mock is already set up in the beforeEach, so we just verify the component renders
-      expect(screen.getByText(&apos;Add Compliance&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Add Compliance')).toBeInTheDocument();
     });
 
-    it(&apos;shows toast message when Upload button is clicked&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('shows toast message when Upload button is clicked', () => {
+      const { toast } = require('sonner');
       render(<ComplianceTracking />);
 
-      fireEvent.click(screen.getByText(&apos;Upload&apos;));
+      fireEvent.click(screen.getByText('Upload'));
 
-      expect(toast.success).toHaveBeenCalledWith(&apos;Upload feature coming soon&apos;);
+      expect(toast.success).toHaveBeenCalledWith('Upload feature coming soon');
     });
 
-    it(&apos;shows toast message when Download Certificate is clicked&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('shows toast message when Download Certificate is clicked', () => {
+      const { toast } = require('sonner');
       render(<ComplianceTracking />);
 
       // Click on the actions menu for the first record
-      const actionButtons = screen.getAllByRole(&apos;button&apos;);
+      const actionButtons = screen.getAllByRole('button');
       const moreButton = actionButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the MoreVertical icon
+        button => button.querySelector('svg') // Look for the MoreVertical icon
       );
 
       if (moreButton) {
         fireEvent.click(moreButton);
 
         // Click on Download Certificate
-        fireEvent.click(screen.getByText(&apos;Download Certificate&apos;));
+        fireEvent.click(screen.getByText('Download Certificate'));
 
         expect(toast.success).toHaveBeenCalledWith(
-          &apos;Downloading certificate for Generator-001&apos;
+          'Downloading certificate for Generator-001'
         );
       }
     });
 
-    it(&apos;shows toast message when Renew Certificate is clicked for expiring/expired records&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('shows toast message when Renew Certificate is clicked for expiring/expired records', () => {
+      const { toast } = require('sonner');
       render(<ComplianceTracking />);
 
       // Find the actions menu for an expiring record (Crane-002)
-      const actionButtons = screen.getAllByRole(&apos;button&apos;);
+      const actionButtons = screen.getAllByRole('button');
       const moreButtons = actionButtons.filter(
-        button => button.querySelector(&apos;svg&apos;) // Look for the MoreVertical icon
+        button => button.querySelector('svg') // Look for the MoreVertical icon
       );
 
       if (moreButtons.length > 1) {
-        fireEvent.click(moreButtons[1]); // Click on the second record&apos;s actions
+        fireEvent.click(moreButtons[1]); // Click on the second record's actions
 
         // Click on Renew Certificate
-        fireEvent.click(screen.getByText(&apos;Renew Certificate&apos;));
+        fireEvent.click(screen.getByText('Renew Certificate'));
 
         expect(toast.success).toHaveBeenCalledWith(
-          &apos;Renewal process initiated for Load Test&apos;
+          'Renewal process initiated for Load Test'
         );
       }
     });
   });
 
-  describe(&apos;Empty States&apos;, () => {
-    it(&apos;shows empty state when no records are found&apos;, () => {
+  describe('Empty States', () => {
+    it('shows empty state when no records are found', () => {
       mockUseAsyncDataAll.mockReturnValue({
         data: {
           summary: { total: 0, valid: 0, expiringSoon: 0, expired: 0 },
@@ -367,28 +367,28 @@ describe(&apos;ComplianceTracking&apos;, () => {
       render(<ComplianceTracking />);
 
       expect(
-        screen.getByText(&apos;No compliance records found&apos;)
+        screen.getByText('No compliance records found')
       ).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;No compliance records in this category&apos;)
+        screen.getByText('No compliance records in this category')
       ).toBeInTheDocument();
-      expect(screen.getByText(&apos;Add Compliance Record&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Add Compliance Record')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Data Refresh&apos;, () => {
-    it(&apos;calls refetch when Try Again button is clicked in error state&apos;, () => {
+  describe('Data Refresh', () => {
+    it('calls refetch when Try Again button is clicked in error state', () => {
       const mockRefetch = vi.fn();
       mockUseAsyncDataAll.mockReturnValue({
         data: null,
         loading: false,
-        error: new Error(&apos;Test error&apos;),
+        error: new Error('Test error'),
         refetch: mockRefetch,
       });
 
       render(<ComplianceTracking />);
 
-      fireEvent.click(screen.getByText(&apos;Try Again&apos;));
+      fireEvent.click(screen.getByText('Try Again'));
 
       expect(mockRefetch).toHaveBeenCalled();
     });

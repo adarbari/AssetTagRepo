@@ -1,12 +1,11 @@
-import React from &apos;react&apos;;
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from &apos;../ui/card&apos;;
-import { StatusBadge } from &apos;./StatusBadge&apos;;
+} from '../ui/card';
+import { StatusBadge } from './StatusBadge';
 
 interface AssetContextCardProps {
   assetId: string;
@@ -26,7 +25,7 @@ interface AssetContextCardProps {
   description?: string;
   showStatus?: boolean;
   showAdditionalInfo?: boolean;
-  variant?: &apos;default&apos; | &apos;compact&apos; | &apos;minimal&apos;;
+  variant?: 'default' | 'compact' | 'minimal';
   className?: string;
 }
 
@@ -38,7 +37,7 @@ export function AssetContextCard({
   description,
   showStatus = true,
   showAdditionalInfo = true,
-  variant = &apos;default&apos;,
+  variant = 'default',
   className,
 }: AssetContextCardProps) {
   // Early return if required props are missing
@@ -49,13 +48,13 @@ export function AssetContextCard({
   const displayName = assetContext?.name || assetName;
   const displayId = assetContext?.id || assetId;
 
-  if (variant === &apos;minimal&apos;) {
+  if (variant === 'minimal') {
     return (
       <div className={`p-4 bg-muted rounded-lg ${className}`}>
-        <div className=&apos;flex items-center justify-between&apos;>
+        <div className='flex items-center justify-between'>
           <div>
-            <h4 className=&apos;font-medium&apos;>{displayName}</h4>
-            <p className=&apos;text-sm text-muted-foreground&apos;>{displayId}</p>
+            <h4 className='font-medium'>{displayName}</h4>
+            <p className='text-sm text-muted-foreground'>{displayId}</p>
           </div>
           {showStatus && assetContext?.status && (
             <StatusBadge status={assetContext.status} />
@@ -65,30 +64,30 @@ export function AssetContextCard({
     );
   }
 
-  if (variant === &apos;compact&apos;) {
+  if (variant === 'compact') {
     return (
       <Card className={className}>
-        <CardContent className=&apos;pt-6&apos;>
-          <p className=&apos;text-sm text-muted-foreground&apos;>
-            {description || &apos;Selected asset:&apos;}
+        <CardContent className='pt-6'>
+          <p className='text-sm text-muted-foreground'>
+            {description || 'Selected asset:'}
           </p>
-          <h4 className=&apos;mt-1 font-medium&apos;>{displayName}</h4>
-          <p className=&apos;text-sm text-muted-foreground&apos;>{displayId}</p>
+          <h4 className='mt-1 font-medium'>{displayName}</h4>
+          <p className='text-sm text-muted-foreground'>{displayId}</p>
           {showAdditionalInfo && assetContext && (
-            <div className=&apos;mt-4 text-sm space-y-1&apos;>
+            <div className='mt-4 text-sm space-y-1'>
               <p>
-                <span className=&apos;text-muted-foreground&apos;>Type:</span>{&apos; &apos;}
+                <span className='text-muted-foreground'>Type:</span>{' '}
                 {assetContext.type}
               </p>
               <p>
-                <span className=&apos;text-muted-foreground&apos;>Location:</span>{&apos; &apos;}
+                <span className='text-muted-foreground'>Location:</span>{' '}
                 {assetContext.location}
               </p>
               {assetContext.lastMaintenance && (
                 <p>
-                  <span className=&apos;text-muted-foreground&apos;>
+                  <span className='text-muted-foreground'>
                     Last Maintenance:
-                  </span>{&apos; &apos;}
+                  </span>{' '}
                   {assetContext.lastMaintenance}
                 </p>
               )}
@@ -103,48 +102,48 @@ export function AssetContextCard({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>{title || &apos;Asset Information&apos;}</CardTitle>
+        <CardTitle>{title || 'Asset Information'}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent>
-        <div className=&apos;p-4 bg-muted rounded-lg&apos;>
-          <div className=&apos;flex items-start justify-between&apos;>
-            <div className=&apos;flex-1&apos;>
-              <h4 className=&apos;font-medium&apos;>{displayName}</h4>
-              <p className=&apos;text-sm text-muted-foreground&apos;>{displayId}</p>
+        <div className='p-4 bg-muted rounded-lg'>
+          <div className='flex items-start justify-between'>
+            <div className='flex-1'>
+              <h4 className='font-medium'>{displayName}</h4>
+              <p className='text-sm text-muted-foreground'>{displayId}</p>
               {showAdditionalInfo && assetContext && (
-                <div className=&apos;mt-2 text-sm space-y-1&apos;>
+                <div className='mt-2 text-sm space-y-1'>
                   <p>
-                    <span className=&apos;text-muted-foreground&apos;>Type:</span>{&apos; &apos;}
+                    <span className='text-muted-foreground'>Type:</span>{' '}
                     {assetContext.type}
                   </p>
                   <p>
-                    <span className=&apos;text-muted-foreground&apos;>Status:</span>{&apos; &apos;}
+                    <span className='text-muted-foreground'>Status:</span>{' '}
                     {assetContext.status}
                   </p>
                   <p>
-                    <span className=&apos;text-muted-foreground&apos;>Location:</span>{&apos; &apos;}
+                    <span className='text-muted-foreground'>Location:</span>{' '}
                     {assetContext.location}
                   </p>
                   {assetContext.assignedTo && (
                     <p>
-                      <span className=&apos;text-muted-foreground&apos;>
+                      <span className='text-muted-foreground'>
                         Assigned To:
-                      </span>{&apos; &apos;}
+                      </span>{' '}
                       {assetContext.assignedTo}
                     </p>
                   )}
                   {assetContext.battery !== undefined && (
                     <p>
-                      <span className=&apos;text-muted-foreground&apos;>Battery:</span>{&apos; &apos;}
+                      <span className='text-muted-foreground'>Battery:</span>{' '}
                       {assetContext.battery}%
                     </p>
                   )}
                   {assetContext.lastMaintenance && (
                     <p>
-                      <span className=&apos;text-muted-foreground&apos;>
+                      <span className='text-muted-foreground'>
                         Last Maintenance:
-                      </span>{&apos; &apos;}
+                      </span>{' '}
                       {assetContext.lastMaintenance}
                     </p>
                   )}
@@ -152,7 +151,7 @@ export function AssetContextCard({
               )}
             </div>
             {showStatus && assetContext?.status && (
-              <div className=&apos;ml-4&apos;>
+              <div className='ml-4'>
                 <StatusBadge status={assetContext.status} />
               </div>
             )}

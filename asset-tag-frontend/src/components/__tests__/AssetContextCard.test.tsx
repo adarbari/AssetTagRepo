@@ -1,82 +1,82 @@
-// import React from &apos;react&apos;;
-import { render, screen } from &apos;@testing-library/react&apos;;
-import { describe, it, expect } from &apos;vitest&apos;;
-import { AssetContextCard } from &apos;../common/AssetContextCard&apos;;
-import type { Asset } from &apos;../../types&apos;;
+// import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { AssetContextCard } from '../common/AssetContextCard';
+import type { Asset } from '../../types';
 
-describe(&apos;AssetContextCard Component&apos;, () => {
+describe('AssetContextCard Component', () => {
   const mockAsset: Asset = {
-    id: &apos;asset-123&apos;,
-    name: &apos;Test Asset&apos;,
-    type: &apos;Equipment&apos;,
-    status: &apos;active&apos;,
-    location: &apos;Building A, Floor 2&apos;,
-    lastMaintenance: &apos;2023-10-15&apos;,
-    lastSeen: &apos;2023-10-20T10:00:00Z&apos;,
+    id: 'asset-123',
+    name: 'Test Asset',
+    type: 'Equipment',
+    status: 'active',
+    location: 'Building A, Floor 2',
+    lastMaintenance: '2023-10-15',
+    lastSeen: '2023-10-20T10:00:00Z',
     battery: 85,
   };
 
   const minimalAsset: Asset = {
-    id: &apos;asset-456&apos;,
-    name: &apos;Minimal Asset&apos;,
-    type: &apos;Vehicle&apos;,
-    status: &apos;inactive&apos;,
-    location: &apos;Garage&apos;,
-    lastSeen: &apos;2023-10-19T15:30:00Z&apos;,
+    id: 'asset-456',
+    name: 'Minimal Asset',
+    type: 'Vehicle',
+    status: 'inactive',
+    location: 'Garage',
+    lastSeen: '2023-10-19T15:30:00Z',
     battery: 45,
   };
 
-  describe(&apos;Rendering&apos;, () => {
-    it(&apos;should render nothing if assetId or assetName are missing&apos;, () => {
+  describe('Rendering', () => {
+    it('should render nothing if assetId or assetName are missing', () => {
       const { container } = render(
-        <AssetContextCard assetId=&apos;&apos; assetName=&apos;&apos; />
+        <AssetContextCard assetId='' assetName='' />
       );
       expect(container).toBeEmptyDOMElement();
     });
 
-    it(&apos;should render default variant with basic info&apos;, () => {
+    it('should render default variant with basic info', () => {
       render(
         <AssetContextCard assetId={mockAsset.id} assetName={mockAsset.name} />
       );
 
-      expect(screen.getByText(&apos;Asset Information&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Test Asset&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;asset-123&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Asset Information')).toBeInTheDocument();
+      expect(screen.getByText('Test Asset')).toBeInTheDocument();
+      expect(screen.getByText('asset-123')).toBeInTheDocument();
     });
 
-    it(&apos;should render compact variant with basic info&apos;, () => {
+    it('should render compact variant with basic info', () => {
       render(
         <AssetContextCard
           assetId={mockAsset.id}
           assetName={mockAsset.name}
-          variant=&apos;compact&apos;
+          variant='compact'
         />
       );
 
-      expect(screen.getByText(&apos;Test Asset&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;asset-123&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Asset Information&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Test Asset')).toBeInTheDocument();
+      expect(screen.getByText('asset-123')).toBeInTheDocument();
+      expect(screen.queryByText('Asset Information')).not.toBeInTheDocument();
     });
 
-    it(&apos;should render with custom title and description&apos;, () => {
+    it('should render with custom title and description', () => {
       render(
         <AssetContextCard
           assetId={mockAsset.id}
           assetName={mockAsset.name}
-          title=&apos;Selected Asset&apos;
-          description=&apos;This asset has been pre-selected for the operation&apos;
+          title='Selected Asset'
+          description='This asset has been pre-selected for the operation'
         />
       );
 
-      expect(screen.getByText(&apos;Selected Asset&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Selected Asset')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;This asset has been pre-selected for the operation&apos;)
+        screen.getByText('This asset has been pre-selected for the operation')
       ).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Data Display&apos;, () => {
-    it(&apos;should display all available asset context fields&apos;, () => {
+  describe('Data Display', () => {
+    it('should display all available asset context fields', () => {
       render(
         <AssetContextCard
           assetId={mockAsset.id}
@@ -86,43 +86,43 @@ describe(&apos;AssetContextCard Component&apos;, () => {
       );
 
       // Check all displayed fields
-      expect(screen.getByText(&apos;Type:&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Equipment&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Status:&apos;)).toBeInTheDocument();
-      expect(screen.getAllByText(&apos;active&apos;)).toHaveLength(2); // One in text, one in badge
-      expect(screen.getByText(&apos;Location:&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Building A, Floor 2&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Type:')).toBeInTheDocument();
+      expect(screen.getByText('Equipment')).toBeInTheDocument();
+      expect(screen.getByText('Status:')).toBeInTheDocument();
+      expect(screen.getAllByText('active')).toHaveLength(2); // One in text, one in badge
+      expect(screen.getByText('Location:')).toBeInTheDocument();
+      expect(screen.getByText('Building A, Floor 2')).toBeInTheDocument();
     });
 
-    it(&apos;should display last maintenance in compact variant&apos;, () => {
+    it('should display last maintenance in compact variant', () => {
       render(
         <AssetContextCard
           assetId={mockAsset.id}
           assetName={mockAsset.name}
           assetContext={mockAsset}
-          variant=&apos;compact&apos;
-          description=&apos;Selected asset:&apos;
+          variant='compact'
+          description='Selected asset:'
         />
       );
 
-      expect(screen.getByText(&apos;Last Maintenance:&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;2023-10-15&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Last Maintenance:')).toBeInTheDocument();
+      expect(screen.getByText('2023-10-15')).toBeInTheDocument();
     });
 
-    it(&apos;should not display last maintenance if not provided in compact variant&apos;, () => {
+    it('should not display last maintenance if not provided in compact variant', () => {
       render(
         <AssetContextCard
           assetId={minimalAsset.id}
           assetName={minimalAsset.name}
           assetContext={minimalAsset}
-          variant=&apos;compact&apos;
+          variant='compact'
         />
       );
 
       expect(screen.queryByText(/Last Maintenance/)).not.toBeInTheDocument();
     });
 
-    it(&apos;should display StatusBadge for default variant if status is present&apos;, () => {
+    it('should display StatusBadge for default variant if status is present', () => {
       render(
         <AssetContextCard
           assetId={mockAsset.id}
@@ -130,30 +130,30 @@ describe(&apos;AssetContextCard Component&apos;, () => {
           assetContext={mockAsset}
         />
       );
-      expect(screen.getAllByText(&apos;active&apos;)).toHaveLength(2); // One in text, one in badge
+      expect(screen.getAllByText('active')).toHaveLength(2); // One in text, one in badge
       // Check that the badge has the correct styling
-      const badges = screen.getAllByText(&apos;active&apos;);
-      const badge = badges.find(el => el.closest(&apos;[data-slot=&quot;badge&quot;]&apos;));
-      expect(badge).toHaveClass(&apos;bg-green-100&apos;);
+      const badges = screen.getAllByText('active');
+      const badge = badges.find(el => el.closest('[data-slot="badge"]'));
+      expect(badge).toHaveClass('bg-green-100');
     });
 
-    it(&apos;should not display StatusBadge for compact variant&apos;, () => {
+    it('should not display StatusBadge for compact variant', () => {
       render(
         <AssetContextCard
           assetId={mockAsset.id}
           assetName={mockAsset.name}
           assetContext={mockAsset}
-          variant=&apos;compact&apos;
+          variant='compact'
         />
       );
       // In compact variant, status should not be displayed at all
-      expect(screen.queryByText(&apos;active&apos;)).not.toBeInTheDocument();
-      expect(screen.queryByText(&apos;Status:&apos;)).not.toBeInTheDocument();
+      expect(screen.queryByText('active')).not.toBeInTheDocument();
+      expect(screen.queryByText('Status:')).not.toBeInTheDocument();
     });
   });
 
-  describe(&apos;Styling and Layout&apos;, () => {
-    it(&apos;should apply correct CSS classes for default variant&apos;, () => {
+  describe('Styling and Layout', () => {
+    it('should apply correct CSS classes for default variant', () => {
       const { container } = render(
         <AssetContextCard
           assetId={mockAsset.id}
@@ -161,26 +161,26 @@ describe(&apos;AssetContextCard Component&apos;, () => {
           assetContext={mockAsset}
         />
       );
-      const cardContent = container.querySelector(&apos;.p-4.bg-muted.rounded-lg&apos;);
+      const cardContent = container.querySelector('.p-4.bg-muted.rounded-lg');
       expect(cardContent).toBeInTheDocument();
     });
 
-    it(&apos;should apply correct CSS classes for compact variant&apos;, () => {
+    it('should apply correct CSS classes for compact variant', () => {
       const { container } = render(
         <AssetContextCard
           assetId={mockAsset.id}
           assetName={mockAsset.name}
           assetContext={mockAsset}
-          variant=&apos;compact&apos;
+          variant='compact'
         />
       );
-      const cardContent = container.querySelector(&apos;.pt-6&apos;);
+      const cardContent = container.querySelector('.pt-6');
       expect(cardContent).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Edge Cases&apos;, () => {
-    it(&apos;should handle asset context with minimal data&apos;, () => {
+  describe('Edge Cases', () => {
+    it('should handle asset context with minimal data', () => {
       render(
         <AssetContextCard
           assetId={minimalAsset.id}
@@ -189,28 +189,28 @@ describe(&apos;AssetContextCard Component&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Minimal Asset&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;asset-456&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Type:&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Vehicle&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Status:&apos;)).toBeInTheDocument();
-      expect(screen.getAllByText(&apos;inactive&apos;)).toHaveLength(2); // One in text, one in badge
-      expect(screen.getByText(&apos;Location:&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Garage&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Minimal Asset')).toBeInTheDocument();
+      expect(screen.getByText('asset-456')).toBeInTheDocument();
+      expect(screen.getByText('Type:')).toBeInTheDocument();
+      expect(screen.getByText('Vehicle')).toBeInTheDocument();
+      expect(screen.getByText('Status:')).toBeInTheDocument();
+      expect(screen.getAllByText('inactive')).toHaveLength(2); // One in text, one in badge
+      expect(screen.getByText('Location:')).toBeInTheDocument();
+      expect(screen.getByText('Garage')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper heading structure in default variant&apos;, () => {
+  describe('Accessibility', () => {
+    it('should have proper heading structure in default variant', () => {
       render(
         <AssetContextCard assetId={mockAsset.id} assetName={mockAsset.name} />
       );
       expect(
-        screen.getByRole(&apos;heading&apos;, { name: &apos;Asset Information&apos; })
+        screen.getByRole('heading', { name: 'Asset Information' })
       ).toBeInTheDocument();
     });
 
-    it(&apos;should have proper text content for screen readers&apos;, () => {
+    it('should have proper text content for screen readers', () => {
       render(
         <AssetContextCard
           assetId={mockAsset.id}
@@ -218,8 +218,8 @@ describe(&apos;AssetContextCard Component&apos;, () => {
           assetContext={mockAsset}
         />
       );
-      expect(screen.getByText(&apos;Type:&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Equipment&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Type:')).toBeInTheDocument();
+      expect(screen.getByText('Equipment')).toBeInTheDocument();
     });
   });
 });

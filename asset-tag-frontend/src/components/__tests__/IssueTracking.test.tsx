@@ -1,8 +1,8 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
-import { screen, waitFor } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { IssueTracking } from &apos;../issues/IssueTracking&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { IssueTracking } from '../issues/IssueTracking';
 import {
   render,
   mockIssues,
@@ -10,10 +10,10 @@ import {
   mockOnUpdateStatus,
   mockOnDeleteIssue,
   createMockNavigation,
-} from &apos;../../test/test-utils&apos;;
+} from '../../test/test-utils';
 
 // Mock the toast function
-vi.mock(&apos;sonner&apos;, () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -21,11 +21,11 @@ vi.mock(&apos;sonner&apos;, () => ({
 }));
 
 // Mock the navigation context
-vi.mock(&apos;../../contexts/NavigationContext&apos;, () => ({
+vi.mock('../../contexts/NavigationContext', () => ({
   useNavigation: () => createMockNavigation(),
 }));
 
-describe(&apos;IssueTracking Component - Button Click Tests&apos;, () => {
+describe('IssueTracking Component - Button Click Tests', () => {
   const defaultProps = {
     issues: mockIssues,
     onUpdateIssue: mockOnUpdateIssue,
@@ -37,13 +37,13 @@ describe(&apos;IssueTracking Component - Button Click Tests&apos;, () => {
     vi.clearAllMocks();
   });
 
-  describe(&apos;Search and Filter Buttons&apos;, () => {
-    it(&apos;should filter issues when search input changes&apos;, async () => {
+  describe('Search and Filter Buttons', () => {
+    it('should filter issues when search input changes', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Find search input
@@ -51,342 +51,342 @@ describe(&apos;IssueTracking Component - Button Click Tests&apos;, () => {
       expect(searchInput).toBeInTheDocument();
 
       // Type in search
-      await user.type(searchInput, &apos;Test&apos;);
+      await user.type(searchInput, 'Test');
 
       // Should still show the test issue
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001')).toBeInTheDocument();
       });
     });
 
-    it(&apos;should filter by status when status dropdown changes&apos;, async () => {
+    it('should filter by status when status dropdown changes', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Find status filter dropdown
-      const statusFilter = screen.getByRole(&apos;combobox&apos;, { name: /status/i });
+      const statusFilter = screen.getByRole('combobox', { name: /status/i });
       await user.click(statusFilter);
 
-      // Select &quot;Open&quot; status
-      const openOption = screen.getByText(&apos;Open&apos;);
+      // Select "Open" status
+      const openOption = screen.getByText('Open');
       await user.click(openOption);
 
-      // Should show the issue (since it&apos;s open)
+      // Should show the issue (since it's open)
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001')).toBeInTheDocument();
       });
     });
 
-    it(&apos;should filter by severity when severity dropdown changes&apos;, async () => {
+    it('should filter by severity when severity dropdown changes', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Find severity filter dropdown
-      const severityFilter = screen.getByRole(&apos;combobox&apos;, {
+      const severityFilter = screen.getByRole('combobox', {
         name: /severity/i,
       });
       await user.click(severityFilter);
 
-      // Select &quot;Medium&quot; severity
-      const mediumOption = screen.getByText(&apos;Medium&apos;);
+      // Select "Medium" severity
+      const mediumOption = screen.getByText('Medium');
       await user.click(mediumOption);
 
-      // Should show the issue (since it&apos;s medium severity)
+      // Should show the issue (since it's medium severity)
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001')).toBeInTheDocument();
       });
     });
   });
 
-  describe(&apos;Tab Navigation Buttons&apos;, () => {
-    it(&apos;should switch to Active tab when clicked&apos;, async () => {
+  describe('Tab Navigation Buttons', () => {
+    it('should switch to Active tab when clicked', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Click Active tab
-      const activeTab = screen.getByRole(&apos;tab&apos;, { name: /active/i });
+      const activeTab = screen.getByRole('tab', { name: /active/i });
       await user.click(activeTab);
 
-      // Should show the issue (since it&apos;s open/active)
+      // Should show the issue (since it's open/active)
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001')).toBeInTheDocument();
       });
     });
 
-    it(&apos;should switch to Resolved tab when clicked&apos;, async () => {
+    it('should switch to Resolved tab when clicked', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Click Resolved tab
-      const resolvedTab = screen.getByRole(&apos;tab&apos;, { name: /resolved/i });
+      const resolvedTab = screen.getByRole('tab', { name: /resolved/i });
       await user.click(resolvedTab);
 
       // Should show empty state since no resolved issues
       await waitFor(() => {
-        expect(screen.getByText(&apos;No issues found&apos;)).toBeInTheDocument();
+        expect(screen.getByText('No issues found')).toBeInTheDocument();
       });
     });
 
-    it(&apos;should switch back to All Issues tab when clicked&apos;, async () => {
+    it('should switch back to All Issues tab when clicked', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // First go to Active tab
-      const activeTab = screen.getByRole(&apos;tab&apos;, { name: /active/i });
+      const activeTab = screen.getByRole('tab', { name: /active/i });
       await user.click(activeTab);
 
       // Then go back to All Issues tab
-      const allIssuesTab = screen.getByRole(&apos;tab&apos;, { name: /all issues/i });
+      const allIssuesTab = screen.getByRole('tab', { name: /all issues/i });
       await user.click(allIssuesTab);
 
       // Should show the issue
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001')).toBeInTheDocument();
       });
     });
   });
 
-  describe(&apos;Table Row Click Actions&apos;, () => {
-    it(&apos;should navigate to issue details when table row is clicked&apos;, async () => {
+  describe('Table Row Click Actions', () => {
+    it('should navigate to issue details when table row is clicked', async () => {
       const user = userEvent.setup();
       const mockNavigation = createMockNavigation();
 
       vi.mocked(
-        require(&apos;../../contexts/NavigationContext&apos;).useNavigation
+        require('../../contexts/NavigationContext').useNavigation
       ).mockReturnValue(mockNavigation);
 
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Click on the table row
-      const tableRow = screen.getByText(&apos;ISS-001&apos;).closest(&apos;tr&apos;);
+      const tableRow = screen.getByText('ISS-001').closest('tr');
       expect(tableRow).toBeInTheDocument();
 
       if (tableRow) {
         await user.click(tableRow);
         expect(mockNavigation.navigateToEditIssue).toHaveBeenCalledWith(
-          &apos;ISS-001&apos;
+          'ISS-001'
         );
       }
     });
   });
 
-  describe(&apos;Dropdown Menu Actions&apos;, () => {
-    it(&apos;should open dropdown menu when more actions button is clicked&apos;, async () => {
+  describe('Dropdown Menu Actions', () => {
+    it('should open dropdown menu when more actions button is clicked', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Find and click the more actions button
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       await user.click(moreActionsButton);
 
       // Should show dropdown menu items
       await waitFor(() => {
-        expect(screen.getByText(&apos;View Details&apos;)).toBeInTheDocument();
-        expect(screen.getByText(&apos;Acknowledge&apos;)).toBeInTheDocument();
-        expect(screen.getByText(&apos;Start Work&apos;)).toBeInTheDocument();
-        expect(screen.getByText(&apos;Edit Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('View Details')).toBeInTheDocument();
+        expect(screen.getByText('Acknowledge')).toBeInTheDocument();
+        expect(screen.getByText('Start Work')).toBeInTheDocument();
+        expect(screen.getByText('Edit Issue')).toBeInTheDocument();
       });
     });
 
-    it(&apos;should call onUpdateStatus when Acknowledge is clicked&apos;, async () => {
+    it('should call onUpdateStatus when Acknowledge is clicked', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click Acknowledge
-      const acknowledgeButton = screen.getByText(&apos;Acknowledge&apos;);
+      const acknowledgeButton = screen.getByText('Acknowledge');
       await user.click(acknowledgeButton);
 
       // Should call onUpdateStatus
       await waitFor(() => {
         expect(mockOnUpdateStatus).toHaveBeenCalledWith(
-          &apos;ISS-001&apos;,
-          &apos;acknowledged&apos;
+          'ISS-001',
+          'acknowledged'
         );
       });
     });
 
-    it(&apos;should call onUpdateStatus when Start Work is clicked&apos;, async () => {
+    it('should call onUpdateStatus when Start Work is clicked', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click Start Work
-      const startWorkButton = screen.getByText(&apos;Start Work&apos;);
+      const startWorkButton = screen.getByText('Start Work');
       await user.click(startWorkButton);
 
       // Should call onUpdateStatus
       await waitFor(() => {
         expect(mockOnUpdateStatus).toHaveBeenCalledWith(
-          &apos;ISS-001&apos;,
-          &apos;in-progress&apos;
+          'ISS-001',
+          'in-progress'
         );
       });
     });
 
-    it(&apos;should navigate to edit issue when Edit Issue is clicked&apos;, async () => {
+    it('should navigate to edit issue when Edit Issue is clicked', async () => {
       const user = userEvent.setup();
       const mockNavigation = createMockNavigation();
 
       vi.mocked(
-        require(&apos;../../contexts/NavigationContext&apos;).useNavigation
+        require('../../contexts/NavigationContext').useNavigation
       ).mockReturnValue(mockNavigation);
 
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click Edit Issue
-      const editIssueButton = screen.getByText(&apos;Edit Issue&apos;);
+      const editIssueButton = screen.getByText('Edit Issue');
       await user.click(editIssueButton);
 
       // Should navigate to edit issue
       expect(mockNavigation.navigateToEditIssue).toHaveBeenCalledWith(
-        &apos;ISS-001&apos;
+        'ISS-001'
       );
     });
 
-    it(&apos;should navigate to view details when View Details is clicked&apos;, async () => {
+    it('should navigate to view details when View Details is clicked', async () => {
       const user = userEvent.setup();
       const mockNavigation = createMockNavigation();
 
       vi.mocked(
-        require(&apos;../../contexts/NavigationContext&apos;).useNavigation
+        require('../../contexts/NavigationContext').useNavigation
       ).mockReturnValue(mockNavigation);
 
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click View Details
-      const viewDetailsButton = screen.getByText(&apos;View Details&apos;);
+      const viewDetailsButton = screen.getByText('View Details');
       await user.click(viewDetailsButton);
 
       // Should navigate to edit issue (same as edit in this case)
       expect(mockNavigation.navigateToEditIssue).toHaveBeenCalledWith(
-        &apos;ISS-001&apos;
+        'ISS-001'
       );
     });
   });
 
-  describe(&apos;Status Update Actions&apos;, () => {
-    it(&apos;should show Mark Resolved option for in-progress issues&apos;, async () => {
+  describe('Status Update Actions', () => {
+    it('should show Mark Resolved option for in-progress issues', async () => {
       const user = userEvent.setup();
       const inProgressIssue = {
         ...mockIssues[0],
-        status: &apos;in-progress&apos; as const,
+        status: 'in-progress' as const,
       };
 
       render(<IssueTracking {...defaultProps} issues={[inProgressIssue]} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       await user.click(moreActionsButton);
 
       // Should show Mark Resolved option
       await waitFor(() => {
-        expect(screen.getByText(&apos;Mark Resolved&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Mark Resolved')).toBeInTheDocument();
       });
 
       // Click Mark Resolved
-      const markResolvedButton = screen.getByText(&apos;Mark Resolved&apos;);
+      const markResolvedButton = screen.getByText('Mark Resolved');
       await user.click(markResolvedButton);
 
       // Should call onUpdateStatus
       await waitFor(() => {
-        expect(mockOnUpdateStatus).toHaveBeenCalledWith(&apos;ISS-001&apos;, &apos;resolved&apos;);
+        expect(mockOnUpdateStatus).toHaveBeenCalledWith('ISS-001', 'resolved');
       });
     });
 
-    it(&apos;should not show Acknowledge for already acknowledged issues&apos;, async () => {
+    it('should not show Acknowledge for already acknowledged issues', async () => {
       const user = userEvent.setup();
       const acknowledgedIssue = {
         ...mockIssues[0],
-        status: &apos;acknowledged&apos; as const,
+        status: 'acknowledged' as const,
       };
 
       render(<IssueTracking {...defaultProps} issues={[acknowledgedIssue]} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       await user.click(moreActionsButton);
 
       // Should not show Acknowledge option
-      expect(screen.queryByText(&apos;Acknowledge&apos;)).not.toBeInTheDocument();
+      expect(screen.queryByText('Acknowledge')).not.toBeInTheDocument();
 
       // Should show Start Work option
-      expect(screen.getByText(&apos;Start Work&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Start Work')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Error Handling&apos;, () => {
-    it(&apos;should handle status update errors gracefully&apos;, async () => {
+  describe('Error Handling', () => {
+    it('should handle status update errors gracefully', async () => {
       const user = userEvent.setup();
       const mockOnUpdateStatusError = vi.fn().mockResolvedValue({
         success: false,
-        error: &apos;Update failed&apos;,
+        error: 'Update failed',
       });
 
       render(
@@ -397,33 +397,33 @@ describe(&apos;IssueTracking Component - Button Click Tests&apos;, () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click Acknowledge
-      const acknowledgeButton = screen.getByText(&apos;Acknowledge&apos;);
+      const acknowledgeButton = screen.getByText('Acknowledge');
       await user.click(acknowledgeButton);
 
       // Should call onUpdateStatus but handle error
       await waitFor(() => {
         expect(mockOnUpdateStatusError).toHaveBeenCalledWith(
-          &apos;ISS-001&apos;,
-          &apos;acknowledged&apos;
+          'ISS-001',
+          'acknowledged'
         );
       });
     });
   });
 
-  describe(&apos;Button Accessibility&apos;, () => {
-    it(&apos;should have proper ARIA labels and roles for all interactive elements&apos;, async () => {
+  describe('Button Accessibility', () => {
+    it('should have proper ARIA labels and roles for all interactive elements', async () => {
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Check search input
@@ -431,32 +431,32 @@ describe(&apos;IssueTracking Component - Button Click Tests&apos;, () => {
       expect(searchInput).toBeInTheDocument();
 
       // Check filter dropdowns
-      const statusFilter = screen.getByRole(&apos;combobox&apos;, { name: /status/i });
-      const severityFilter = screen.getByRole(&apos;combobox&apos;, {
+      const statusFilter = screen.getByRole('combobox', { name: /status/i });
+      const severityFilter = screen.getByRole('combobox', {
         name: /severity/i,
       });
       expect(statusFilter).toBeInTheDocument();
       expect(severityFilter).toBeInTheDocument();
 
       // Check tabs
-      const tabs = screen.getAllByRole(&apos;tab&apos;);
+      const tabs = screen.getAllByRole('tab');
       expect(tabs.length).toBeGreaterThan(0);
 
       // Check table
-      const table = screen.getByRole(&apos;table&apos;);
+      const table = screen.getByRole('table');
       expect(table).toBeInTheDocument();
 
       // Check action buttons
-      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
+      const moreActionsButton = screen.getByRole('button', { name: /more/i });
       expect(moreActionsButton).toBeInTheDocument();
     });
 
-    it(&apos;should support keyboard navigation for all buttons&apos;, async () => {
+    it('should support keyboard navigation for all buttons', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Tab through interactive elements
@@ -471,49 +471,49 @@ describe(&apos;IssueTracking Component - Button Click Tests&apos;, () => {
       await user.tab();
 
       // Should be able to focus on tabs
-      const allIssuesTab = screen.getByRole(&apos;tab&apos;, { name: /all issues/i });
+      const allIssuesTab = screen.getByRole('tab', { name: /all issues/i });
       allIssuesTab.focus();
       expect(document.activeElement).toBe(allIssuesTab);
     });
   });
 
-  describe(&apos;Empty State Handling&apos;, () => {
-    it(&apos;should show empty state when no issues match filters&apos;, async () => {
+  describe('Empty State Handling', () => {
+    it('should show empty state when no issues match filters', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
       // Switch to Resolved tab (which should be empty)
-      const resolvedTab = screen.getByRole(&apos;tab&apos;, { name: /resolved/i });
+      const resolvedTab = screen.getByRole('tab', { name: /resolved/i });
       await user.click(resolvedTab);
 
       // Should show empty state
       await waitFor(() => {
-        expect(screen.getByText(&apos;No issues found&apos;)).toBeInTheDocument();
+        expect(screen.getByText('No issues found')).toBeInTheDocument();
         expect(
-          screen.getByText(&apos;No issues match your current filters&apos;)
+          screen.getByText('No issues match your current filters')
         ).toBeInTheDocument();
       });
     });
 
-    it(&apos;should show empty state when search returns no results&apos;, async () => {
+    it('should show empty state when search returns no results', async () => {
       const user = userEvent.setup();
       render(<IssueTracking {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Tracking&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Tracking')).toBeInTheDocument();
       });
 
-      // Search for something that doesn&apos;t exist
+      // Search for something that doesn't exist
       const searchInput = screen.getByPlaceholderText(/search issues/i);
-      await user.type(searchInput, &apos;nonexistent&apos;);
+      await user.type(searchInput, 'nonexistent');
 
       // Should show empty state
       await waitFor(() => {
-        expect(screen.getByText(&apos;No issues found&apos;)).toBeInTheDocument();
+        expect(screen.getByText('No issues found')).toBeInTheDocument();
       });
     });
   });

@@ -1,15 +1,14 @@
-import React from &apos;react&apos;;
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Separator } from &apos;../ui/separator&apos;;
-import { History, User, Clock, FileText } from &apos;lucide-react&apos;;
-import { EmptyState } from &apos;./EmptyState&apos;;
+} from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Separator } from '../ui/separator';
+import { History, User, Clock, FileText } from 'lucide-react';
+import { EmptyState } from './EmptyState';
 
 export interface AuditLogEntry {
   id: string;
@@ -32,7 +31,7 @@ interface AuditLogListProps {
   entries: AuditLogEntry[];
   title?: string;
   description?: string;
-  variant?: &apos;card&apos; | &apos;dialog&apos; | &apos;inline&apos;;
+  variant?: 'card' | 'dialog' | 'inline';
   showEmptyState?: boolean;
   emptyStateTitle?: string;
   emptyStateDescription?: string;
@@ -46,56 +45,56 @@ const defaultFormatDate = (dateString: string) => {
 
 export function AuditLogList({
   entries,
-  title = &apos;Audit Log&apos;,
-  description = &apos;Complete history of all changes&apos;,
-  variant = &apos;card&apos;,
+  title = 'Audit Log',
+  description = 'Complete history of all changes',
+  variant = 'card',
   showEmptyState = true,
-  emptyStateTitle = &apos;No Audit Log Entries&apos;,
-  emptyStateDescription = &apos;No changes have been recorded yet.&apos;,
+  emptyStateTitle = 'No Audit Log Entries',
+  emptyStateDescription = 'No changes have been recorded yet.',
   formatDate = defaultFormatDate,
   className,
 }: AuditLogListProps) {
   const renderEntry = (entry: AuditLogEntry, index: number) => {
-    const user = entry.changedBy || entry.user || &apos;Unknown User&apos;;
+    const user = entry.changedBy || entry.user || 'Unknown User';
     const isLast = index === entries.length - 1;
 
-    if (variant === &apos;dialog&apos;) {
+    if (variant === 'dialog') {
       return (
         <div key={entry.id || index}>
-          <div className=&apos;flex items-start gap-4&apos;>
-            <div className=&apos;flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-primary&apos; />
-            <div className=&apos;flex-1 space-y-2&apos;>
-              <div className=&apos;flex items-start justify-between&apos;>
+          <div className='flex items-start gap-4'>
+            <div className='flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-primary' />
+            <div className='flex-1 space-y-2'>
+              <div className='flex items-start justify-between'>
                 <div>
-                  <div className=&apos;flex items-center gap-2&apos;>
-                    <Badge variant=&apos;outline&apos; className=&apos;bg-primary/10&apos;>
+                  <div className='flex items-center gap-2'>
+                    <Badge variant='outline' className='bg-primary/10'>
                       {entry.action}
                     </Badge>
-                    <div className=&apos;flex items-center gap-1 text-sm text-muted-foreground&apos;>
-                      <User className=&apos;h-3 w-3&apos; />
+                    <div className='flex items-center gap-1 text-sm text-muted-foreground'>
+                      <User className='h-3 w-3' />
                       {user}
                     </div>
                   </div>
                 </div>
-                <div className=&apos;flex items-center gap-1 text-sm text-muted-foreground&apos;>
-                  <Clock className=&apos;h-3 w-3&apos; />
+                <div className='flex items-center gap-1 text-sm text-muted-foreground'>
+                  <Clock className='h-3 w-3' />
                   {formatDate(entry.timestamp)}
                 </div>
               </div>
 
               {entry.changes && entry.changes.length > 0 && (
-                <div className=&apos;space-y-1&apos;>
+                <div className='space-y-1'>
                   {entry.changes.map((change, idx) => (
                     <div
                       key={idx}
-                      className=&apos;text-sm bg-muted/50 rounded-md p-2&apos;
+                      className='text-sm bg-muted/50 rounded-md p-2'
                     >
-                      <span className=&apos;text-muted-foreground&apos;>
+                      <span className='text-muted-foreground'>
                         {change.field}:
-                      </span>{&apos; &apos;}
-                      <span className=&apos;line-through text-muted-foreground&apos;>
+                      </span>{' '}
+                      <span className='line-through text-muted-foreground'>
                         {change.from}
-                      </span>{&apos; &apos;}
+                      </span>{' '}
                       → <span>{change.to}</span>
                     </div>
                   ))}
@@ -103,24 +102,24 @@ export function AuditLogList({
               )}
 
               {entry.field && entry.oldValue && entry.newValue && (
-                <div className=&apos;text-sm bg-muted/50 rounded-md p-2&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>{entry.field}:</span>{&apos; &apos;}
-                  <span className=&apos;line-through text-muted-foreground&apos;>
+                <div className='text-sm bg-muted/50 rounded-md p-2'>
+                  <span className='text-muted-foreground'>{entry.field}:</span>{' '}
+                  <span className='line-through text-muted-foreground'>
                     {entry.oldValue}
-                  </span>{&apos; &apos;}
+                  </span>{' '}
                   → <span>{entry.newValue}</span>
                 </div>
               )}
 
               {entry.notes && (
-                <div className=&apos;flex items-start gap-2 text-sm text-muted-foreground bg-muted/30 rounded-md p-2&apos;>
-                  <FileText className=&apos;h-4 w-4 mt-0.5 flex-shrink-0&apos; />
+                <div className='flex items-start gap-2 text-sm text-muted-foreground bg-muted/30 rounded-md p-2'>
+                  <FileText className='h-4 w-4 mt-0.5 flex-shrink-0' />
                   <span>{entry.notes}</span>
                 </div>
               )}
             </div>
           </div>
-          {!isLast && <Separator className=&apos;my-4 ml-5&apos; />}
+          {!isLast && <Separator className='my-4 ml-5' />}
         </div>
       );
     }
@@ -129,32 +128,32 @@ export function AuditLogList({
     return (
       <div
         key={entry.id || index}
-        className=&apos;flex items-start gap-4 p-4 border rounded-lg&apos;
+        className='flex items-start gap-4 p-4 border rounded-lg'
       >
-        <div className=&apos;flex-shrink-0&apos;>
-          <div className=&apos;w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center&apos;>
-            <User className=&apos;h-4 w-4 text-primary&apos; />
+        <div className='flex-shrink-0'>
+          <div className='w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center'>
+            <User className='h-4 w-4 text-primary' />
           </div>
         </div>
-        <div className=&apos;flex-1 min-w-0&apos;>
-          <div className=&apos;flex items-center gap-2 mb-1&apos;>
-            <span className=&apos;font-medium text-sm&apos;>{user}</span>
-            <span className=&apos;text-xs text-muted-foreground&apos;>
+        <div className='flex-1 min-w-0'>
+          <div className='flex items-center gap-2 mb-1'>
+            <span className='font-medium text-sm'>{user}</span>
+            <span className='text-xs text-muted-foreground'>
               {formatDate(entry.timestamp)}
             </span>
           </div>
-          <p className=&apos;text-sm text-muted-foreground&apos;>
-            {entry.action === &apos;created&apos; ? &apos;Created&apos; : &apos;Updated&apos;}{&apos; &apos;}
-            {entry.field || &apos;record&apos;}
+          <p className='text-sm text-muted-foreground'>
+            {entry.action === 'created' ? 'Created' : 'Updated'}{' '}
+            {entry.field || 'record'}
             {entry.oldValue && entry.newValue && (
-              <span className=&apos;ml-1&apos;>
-                from &quot;{entry.oldValue}&quot; to &quot;{entry.newValue}
-                &quot;
+              <span className='ml-1'>
+                from "{entry.oldValue}" to "{entry.newValue}
+                "
               </span>
             )}
           </p>
           {entry.notes && (
-            <p className=&apos;text-xs text-muted-foreground mt-1 italic&apos;>
+            <p className='text-xs text-muted-foreground mt-1 italic'>
               {entry.notes}
             </p>
           )}
@@ -164,7 +163,7 @@ export function AuditLogList({
   };
 
   const content = (
-    <div className=&apos;space-y-4&apos;>
+    <div className='space-y-4'>
       {entries.map((entry, index) => renderEntry(entry, index))}
     </div>
   );
@@ -172,11 +171,11 @@ export function AuditLogList({
   if (entries.length === 0 && showEmptyState) {
     return (
       <div className={className}>
-        {variant === &apos;card&apos; ? (
+        {variant === 'card' ? (
           <Card>
             <CardHeader>
-              <CardTitle className=&apos;flex items-center gap-2&apos;>
-                <History className=&apos;h-5 w-5&apos; />
+              <CardTitle className='flex items-center gap-2'>
+                <History className='h-5 w-5' />
                 {title}
               </CardTitle>
               <CardDescription>{description}</CardDescription>
@@ -200,12 +199,12 @@ export function AuditLogList({
     );
   }
 
-  if (variant === &apos;card&apos;) {
+  if (variant === 'card') {
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle className=&apos;flex items-center gap-2&apos;>
-            <History className=&apos;h-5 w-5&apos; />
+          <CardTitle className='flex items-center gap-2'>
+            <History className='h-5 w-5' />
             {title}
           </CardTitle>
           <CardDescription>{description}</CardDescription>

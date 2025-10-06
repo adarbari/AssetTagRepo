@@ -1,18 +1,18 @@
-import React, { useState, useRef, useEffect } from &apos;react&apos;;
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
-import { Separator } from &apos;../ui/separator&apos;;
-import { ScrollArea } from &apos;../ui/scroll-area&apos;;
-import { LoadingState, AlertCard, PageLayout, StatusBadge } from &apos;../common&apos;;
+} from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Separator } from '../ui/separator';
+import { ScrollArea } from '../ui/scroll-area';
+import { LoadingState, AlertCard, PageLayout, StatusBadge } from '../common';
 import {
   Table,
   TableBody,
@@ -20,20 +20,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from &apos;../ui/table&apos;;
-import { ExportDialog } from &apos;../reports/ExportDialog&apos;;
-import { mockAssets, getAssetById } from &apos;../../data/mockData&apos;;
-import QRCode from &apos;qrcode&apos;;
-import { EditMaintenanceDialog } from &apos;../maintenance/EditMaintenanceDialog&apos;;
-import { toast } from &apos;sonner&apos;;
-import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
+} from '../ui/table';
+import { ExportDialog } from '../reports/ExportDialog';
+import { mockAssets, getAssetById } from '../../data/mockData';
+import QRCode from 'qrcode';
+import { EditMaintenanceDialog } from '../maintenance/EditMaintenanceDialog';
+import { toast } from 'sonner';
+import { useNavigation } from '../../contexts/NavigationContext';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
+} from '../ui/select';
 import {
   ArrowLeft,
   MapPin,
@@ -62,7 +62,7 @@ import {
   Mail,
   MessageSquare,
   Smartphone,
-} from &apos;lucide-react&apos;;
+} from 'lucide-react';
 import {
   AreaChart,
   Area,
@@ -71,8 +71,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from &apos;recharts&apos;;
-import type { Asset } from &apos;../types&apos;;
+} from 'recharts';
+import type { Asset } from '../types';
 import {
   useBatteryHistory,
   useLocationHistory,
@@ -80,12 +80,12 @@ import {
   useMaintenanceSchedule,
   useAssetAlerts,
   useAssetMutations,
-} from &apos;../../hooks/useAssetDetails&apos;;
+} from '../../hooks/useAssetDetails';
 import {
   assetTypes,
   assetStatuses,
   getOptionValue,
-} from &apos;../../data/dropdownOptions&apos;;
+} from '../../data/dropdownOptions';
 
 interface AssetDetailsProps {
   asset: Asset;
@@ -98,16 +98,16 @@ interface AssetDetailsProps {
 // Helper function to map alert category to AlertType
 function mapAlertCategoryToType(category: string): string {
   const mapping: Record<string, string> = {
-    Battery: &apos;battery&apos;,
-    Geofence: &apos;unauthorized-zone&apos;,
-    Maintenance: &apos;predictive-maintenance&apos;,
-    Anomaly: &apos;theft&apos;,
-    Theft: &apos;theft&apos;,
-    Temperature: &apos;predictive-maintenance&apos;,
-    Offline: &apos;offline&apos;,
-    Movement: &apos;theft&apos;,
+    Battery: 'battery',
+    Geofence: 'unauthorized-zone',
+    Maintenance: 'predictive-maintenance',
+    Anomaly: 'theft',
+    Theft: 'theft',
+    Temperature: 'predictive-maintenance',
+    Offline: 'offline',
+    Movement: 'theft',
   };
-  return mapping[category] || &apos;compliance&apos;;
+  return mapping[category] || 'compliance';
 }
 
 export function AssetDetails({
@@ -120,7 +120,7 @@ export function AssetDetails({
   // Component state
   const navigation = useNavigation();
   const [currentAsset, setCurrentAsset] = useState<Asset>(asset);
-  const [activeTab, setActiveTab] = useState(&apos;overview&apos;);
+  const [activeTab, setActiveTab] = useState('overview');
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isEditMaintenanceOpen, setIsEditMaintenanceOpen] = useState(false);
@@ -132,10 +132,10 @@ export function AssetDetails({
     name: asset.name,
     type: asset.type,
     status: asset.status,
-    manufacturer: asset.manufacturer || &apos;&apos;,
-    model: asset.model || &apos;&apos;,
-    serialNumber: asset.serialNumber || &apos;&apos;,
-    assignedTo: asset.assignedTo || &apos;&apos;,
+    manufacturer: asset.manufacturer || '',
+    model: asset.model || '',
+    serialNumber: asset.serialNumber || '',
+    assignedTo: asset.assignedTo || '',
   });
 
   // Fetch asset data using hooks
@@ -170,10 +170,10 @@ export function AssetDetails({
       name: asset.name,
       type: asset.type,
       status: asset.status,
-      manufacturer: asset.manufacturer || &apos;&apos;,
-      model: asset.model || &apos;&apos;,
-      serialNumber: asset.serialNumber || &apos;&apos;,
-      assignedTo: asset.assignedTo || &apos;&apos;,
+      manufacturer: asset.manufacturer || '',
+      model: asset.model || '',
+      serialNumber: asset.serialNumber || '',
+      assignedTo: asset.assignedTo || '',
     });
   }, [asset]);
 
@@ -184,10 +184,10 @@ export function AssetDetails({
         name: currentAsset.name,
         type: currentAsset.type,
         status: currentAsset.status,
-        manufacturer: currentAsset.manufacturer || &apos;&apos;,
-        model: currentAsset.model || &apos;&apos;,
-        serialNumber: currentAsset.serialNumber || &apos;&apos;,
-        assignedTo: currentAsset.assignedTo || &apos;&apos;,
+        manufacturer: currentAsset.manufacturer || '',
+        model: currentAsset.model || '',
+        serialNumber: currentAsset.serialNumber || '',
+        assignedTo: currentAsset.assignedTo || '',
       });
     }
     setIsEditMode(!isEditMode);
@@ -205,25 +205,25 @@ export function AssetDetails({
         Object.assign(mockAssets[assetIndex], updatedAsset);
       }
 
-      toast.success(&apos;Asset updated successfully&apos;);
+      toast.success('Asset updated successfully');
     } catch (error) {
-      toast.error(&apos;Failed to update asset&apos;);
-// // // // // // // console.error(&apos;Error updating asset:&apos;, error);
+      toast.error('Failed to update asset');
+// // // // // // // console.error('Error updating asset:', error);
     }
   };
 
   // Handler for after check-in/out completes in embedded view
   const handleCheckInOutComplete = (updates: Partial<Asset>) => {
-// // // // // // // console.log(&apos;🔄 handleCheckInOutComplete called with updates:&apos;, updates);
-// // // // // // // console.log(&apos;🔄 Current asset status before update:&apos;, currentAsset.status);
+// // // // // // // console.log('🔄 handleCheckInOutComplete called with updates:', updates);
+// // // // // // // console.log('🔄 Current asset status before update:', currentAsset.status);
 
     // Refresh the asset from the mock data layer to get the latest state
     const refreshedAsset = getAssetById(currentAsset.id);
-// // // // // // // console.log(&apos;🔄 Refreshed asset from mock data:&apos;, refreshedAsset);
+// // // // // // // console.log('🔄 Refreshed asset from mock data:', refreshedAsset);
 
     if (refreshedAsset) {
 // // // // // // // console.log(
-        &apos;✅ Updating asset state with refreshed data, new status:&apos;,
+        '✅ Updating asset state with refreshed data, new status:',
         refreshedAsset.status
       );
       setCurrentAsset(refreshedAsset);
@@ -231,26 +231,26 @@ export function AssetDetails({
       setEditForm(prev => ({
         ...prev,
         status: refreshedAsset.status,
-        assignedTo: refreshedAsset.assignedTo || &apos;&apos;,
+        assignedTo: refreshedAsset.assignedTo || '',
       }));
     } else {
-// // // // // // // console.log(&apos;⚠️ Asset not found in mock data, using fallback update&apos;);
+// // // // // // // console.log('⚠️ Asset not found in mock data, using fallback update');
       // Fallback: update local state if asset not found in mock data
       const updatedAsset = { ...currentAsset, ...updates };
 // // // // // // // console.log(
-        &apos;✅ Updating asset state with fallback data, new status:&apos;,
+        '✅ Updating asset state with fallback data, new status:',
         updatedAsset.status
       );
       setCurrentAsset(updatedAsset);
       setEditForm(prev => ({
         ...prev,
         status: updatedAsset.status,
-        assignedTo: updatedAsset.assignedTo || &apos;&apos;,
+        assignedTo: updatedAsset.assignedTo || '',
       }));
     }
   };
 
-  // Adapt the asset to the format expected by this component&apos;s UI
+  // Adapt the asset to the format expected by this component's UI
   const mockAsset = {
     id: currentAsset.id,
     name: currentAsset.name,
@@ -262,48 +262,48 @@ export function AssetDetails({
       lat: currentAsset.coordinates?.[0] || 37.7749,
       lng: currentAsset.coordinates?.[1] || -122.4194,
       address: currentAsset.location,
-      site: currentAsset.site || &apos;Unknown&apos;,
+      site: currentAsset.site || 'Unknown',
     },
     specifications: {
-      manufacturer: currentAsset.manufacturer || &apos;N/A&apos;,
-      model: currentAsset.model || &apos;N/A&apos;,
-      serialNumber: currentAsset.serialNumber || &apos;N/A&apos;,
-      yearOfManufacture: currentAsset.purchaseDate?.split(&apos;-&apos;)[0] || &apos;N/A&apos;,
-      purchaseDate: currentAsset.purchaseDate || &apos;N/A&apos;,
-      warrantyExpiry: currentAsset.warrantyExpiry || &apos;N/A&apos;,
+      manufacturer: currentAsset.manufacturer || 'N/A',
+      model: currentAsset.model || 'N/A',
+      serialNumber: currentAsset.serialNumber || 'N/A',
+      yearOfManufacture: currentAsset.purchaseDate?.split('-')[0] || 'N/A',
+      purchaseDate: currentAsset.purchaseDate || 'N/A',
+      warrantyExpiry: currentAsset.warrantyExpiry || 'N/A',
     },
-    assignedTo: currentAsset.assignedTo || &apos;Unassigned&apos;,
-    costCenter: &apos;CC-001 - Construction Division&apos;,
+    assignedTo: currentAsset.assignedTo || 'Unassigned',
+    costCenter: 'CC-001 - Construction Division',
   };
 
   const getAssetIcon = (type: string) => {
     switch (type) {
-      case &apos;equipment&apos;:
-        return <Wrench className=&apos;h-5 w-5&apos; />;
-      case &apos;vehicles&apos;:
-        return <Truck className=&apos;h-5 w-5&apos; />;
-      case &apos;tools&apos;:
-        return <PackageIcon className=&apos;h-5 w-5&apos; />;
-      case &apos;containers&apos;:
-        return <Container className=&apos;h-5 w-5&apos; />;
+      case 'equipment':
+        return <Wrench className='h-5 w-5' />;
+      case 'vehicles':
+        return <Truck className='h-5 w-5' />;
+      case 'tools':
+        return <PackageIcon className='h-5 w-5' />;
+      case 'containers':
+        return <Container className='h-5 w-5' />;
     }
   };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
-      case &apos;location&apos;:
-        return <MapPin className=&apos;h-4 w-4 text-blue-600&apos; />;
-      case &apos;status&apos;:
-        return <Activity className=&apos;h-4 w-4 text-purple-600&apos; />;
-      case &apos;checkout&apos;:
-      case &apos;checkin&apos;:
-        return <CheckCircle2 className=&apos;h-4 w-4 text-green-600&apos; />;
-      case &apos;maintenance&apos;:
-        return <Wrench className=&apos;h-4 w-4 text-orange-600&apos; />;
-      case &apos;alert&apos;:
-        return <AlertTriangle className=&apos;h-4 w-4 text-red-600&apos; />;
+      case 'location':
+        return <MapPin className='h-4 w-4 text-blue-600' />;
+      case 'status':
+        return <Activity className='h-4 w-4 text-purple-600' />;
+      case 'checkout':
+      case 'checkin':
+        return <CheckCircle2 className='h-4 w-4 text-green-600' />;
+      case 'maintenance':
+        return <Wrench className='h-4 w-4 text-orange-600' />;
+      case 'alert':
+        return <AlertTriangle className='h-4 w-4 text-red-600' />;
       default:
-        return <Circle className=&apos;h-4 w-4 text-gray-600&apos; />;
+        return <Circle className='h-4 w-4 text-gray-600' />;
     }
   };
 
@@ -329,22 +329,22 @@ export function AssetDetails({
           width: 160,
           margin: 1,
           color: {
-            dark: &apos;#000000&apos;,
-            light: &apos;#FFFFFF&apos;,
+            dark: '#000000',
+            light: '#FFFFFF',
           },
         },
         (error: Error | null | undefined) => {
-          if (error) // // // // // // console.error(&apos;QR Code generation error:&apos;, error);
+          if (error) // // // // // // console.error('QR Code generation error:', error);
         }
       );
     }, [value]);
 
     return (
-      <div className=&apos;flex flex-col items-center gap-2&apos;>
+      <div className='flex flex-col items-center gap-2'>
         <canvas ref={canvasRef} />
-        <div className=&apos;text-center&apos;>
-          <p className=&apos;text-xs font-mono&apos;>{assetId}</p>
-          <p className=&apos;text-xs text-muted-foreground&apos;>{assetName}</p>
+        <div className='text-center'>
+          <p className='text-xs font-mono'>{assetId}</p>
+          <p className='text-xs text-muted-foreground'>{assetName}</p>
         </div>
       </div>
     );
@@ -360,43 +360,43 @@ export function AssetDetails({
         width: 512,
         margin: 2,
         color: {
-          dark: &apos;#000000&apos;,
-          light: &apos;#FFFFFF&apos;,
+          dark: '#000000',
+          light: '#FFFFFF',
         },
       });
 
       // Create a temporary link and trigger download
-      const link = document.createElement(&apos;a&apos;);
-      link.download = `${assetId}_${assetName.replace(/\s+/g, &apos;_&apos;)}_QRCode.png`;
+      const link = document.createElement('a');
+      link.download = `${assetId}_${assetName.replace(/\s+/g, '_')}_QRCode.png`;
       link.href = qrDataUrl;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      toast.success(&apos;QR code downloaded successfully&apos;);
+      toast.success('QR code downloaded successfully');
     } catch (error) {
-// // // // // // // console.error(&apos;Error downloading QR code:&apos;, error);
-      toast.error(&apos;Failed to download QR code&apos;);
+// // // // // // // console.error('Error downloading QR code:', error);
+      toast.error('Failed to download QR code');
     }
   };
 
   // Show loading state while initial data is being fetched
   if (isLoading && !batteryHistory.length && !activityLog.length) {
-    return <LoadingState message=&apos;Loading asset details...&apos; fullScreen />;
+    return <LoadingState message='Loading asset details...' fullScreen />;
   }
 
   return (
     <PageLayout
-      variant=&apos;standard&apos;
-      padding=&apos;md&apos;
+      variant='standard'
+      padding='md'
       header={
-        <div className=&apos;border-b bg-background px-8 py-4&apos;>
-          <div className=&apos;flex items-center justify-between&apos;>
-            <div className=&apos;flex items-center gap-4&apos;>
-              <Button variant=&apos;ghost&apos; size=&apos;icon&apos; onClick={onBack}>
-                <ArrowLeft className=&apos;h-5 w-5&apos; />
+        <div className='border-b bg-background px-8 py-4'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-4'>
+              <Button variant='ghost' size='icon' onClick={onBack}>
+                <ArrowLeft className='h-5 w-5' />
               </Button>
-              <div className=&apos;flex items-center gap-3&apos;>
+              <div className='flex items-center gap-3'>
                 {getAssetIcon(currentAsset.type)}
                 <div>
                   {isEditMode ? (
@@ -405,45 +405,45 @@ export function AssetDetails({
                       onChange={e =>
                         setEditForm({ ...editForm, name: e.target.value })
                       }
-                      className=&apos;h-8 max-w-xs&apos;
+                      className='h-8 max-w-xs'
                     />
                   ) : (
                     <h1>{currentAsset.name}</h1>
                   )}
-                  <p className=&apos;text-muted-foreground&apos;>
+                  <p className='text-muted-foreground'>
                     Asset ID: {currentAsset.id}
                   </p>
                 </div>
               </div>
             </div>
-            <div className=&apos;flex items-center gap-2&apos;>
+            <div className='flex items-center gap-2'>
               <StatusBadge status={currentAsset.status} />
               {!isEditMode && (
                 <>
                   {/* Conditionally show Check Out button for assets that can be checked out */}
                   {(() => {
                     const canCheckOut =
-                      currentAsset.status === &apos;active&apos; ||
-                      currentAsset.status === &apos;inactive&apos; ||
-                      currentAsset.status === &apos;maintenance&apos;;
+                      currentAsset.status === 'active' ||
+                      currentAsset.status === 'inactive' ||
+                      currentAsset.status === 'maintenance';
 // // // // // // // console.log(
-                      &apos;🔴 Check Out button logic - Asset status:&apos;,
+                      '🔴 Check Out button logic - Asset status:',
                       currentAsset.status,
-                      &apos;Can check out:&apos;,
+                      'Can check out:',
                       canCheckOut
                     );
                     return canCheckOut;
                   })() && (
                     <Button
-                      variant=&apos;default&apos;
-                      size=&apos;sm&apos;
+                      variant='default'
+                      size='sm'
                       onClick={() => {
-// // // // // // // console.log(&apos;🔴 Check Out button clicked!&apos;);
+// // // // // // // console.log('🔴 Check Out button clicked!');
                         navigation.navigateToCheckInOut({
                           assetId: currentAsset.id,
                           assetName: currentAsset.name,
                           currentStatus: currentAsset.status,
-                          mode: &apos;check-out&apos;,
+                          mode: 'check-out',
                           assetContext: currentAsset,
                           onComplete: (updates: Partial<Asset>) => {
                             handleCheckInOutComplete(updates);
@@ -455,31 +455,31 @@ export function AssetDetails({
                         });
                       }}
                     >
-                      <LogOut className=&apos;h-4 w-4 mr-2&apos; />
+                      <LogOut className='h-4 w-4 mr-2' />
                       Check Out
                     </Button>
                   )}
                   {/* Conditionally show Check In button for checked-out assets */}
                   {(() => {
-                    const canCheckIn = currentAsset.status === &apos;checked-out&apos;;
+                    const canCheckIn = currentAsset.status === 'checked-out';
 // // // // // // // console.log(
-                      &apos;🟢 Check In button logic - Asset status:&apos;,
+                      '🟢 Check In button logic - Asset status:',
                       currentAsset.status,
-                      &apos;Can check in:&apos;,
+                      'Can check in:',
                       canCheckIn
                     );
                     return canCheckIn;
                   })() && (
                     <Button
-                      variant=&apos;default&apos;
-                      size=&apos;sm&apos;
+                      variant='default'
+                      size='sm'
                       onClick={() => {
-// // // // // // // console.log(&apos;🟢 Check In button clicked!&apos;);
+// // // // // // // console.log('🟢 Check In button clicked!');
                         navigation.navigateToCheckInOut({
                           assetId: currentAsset.id,
                           assetName: currentAsset.name,
                           currentStatus: currentAsset.status,
-                          mode: &apos;check-in&apos;,
+                          mode: 'check-in',
                           assetContext: currentAsset,
                           onComplete: (updates: Partial<Asset>) => {
                             handleCheckInOutComplete(updates);
@@ -491,31 +491,31 @@ export function AssetDetails({
                         });
                       }}
                     >
-                      <LogIn className=&apos;h-4 w-4 mr-2&apos; />
+                      <LogIn className='h-4 w-4 mr-2' />
                       Check In
                     </Button>
                   )}
-                  {/* Note: No check-in/out button shown for &apos;in-transit&apos; status */}
+                  {/* Note: No check-in/out button shown for 'in-transit' status */}
                 </>
               )}
               {isEditMode ? (
                 <>
                   <Button
-                    variant=&apos;outline&apos;
-                    size=&apos;sm&apos;
+                    variant='outline'
+                    size='sm'
                     onClick={handleEditModeToggle}
                     disabled={updateLoading}
                   >
                     Cancel
                   </Button>
                   <Button
-                    variant=&apos;default&apos;
-                    size=&apos;sm&apos;
+                    variant='default'
+                    size='sm'
                     onClick={handleSaveChanges}
                     disabled={updateLoading}
                   >
                     {updateLoading && (
-                      <Loader2 className=&apos;mr-2 h-4 w-4 animate-spin&apos; />
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                     )}
                     Save Changes
                   </Button>
@@ -523,19 +523,19 @@ export function AssetDetails({
               ) : (
                 <>
                   <Button
-                    variant=&apos;outline&apos;
-                    size=&apos;sm&apos;
+                    variant='outline'
+                    size='sm'
                     onClick={handleEditModeToggle}
                   >
-                    <Edit className=&apos;h-4 w-4 mr-2&apos; />
+                    <Edit className='h-4 w-4 mr-2' />
                     Edit
                   </Button>
                   <Button
-                    variant=&apos;outline&apos;
-                    size=&apos;sm&apos;
+                    variant='outline'
+                    size='sm'
                     onClick={() => setIsExportOpen(true)}
                   >
-                    <Download className=&apos;h-4 w-4 mr-2&apos; />
+                    <Download className='h-4 w-4 mr-2' />
                     Export
                   </Button>
                 </>
@@ -546,72 +546,72 @@ export function AssetDetails({
       }
     >
       {/* Quick Stats */}
-      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
+      <div className='grid gap-4 md:grid-cols-4'>
         <Card>
-          <CardContent className=&apos;pt-6&apos;>
-            <div className=&apos;flex items-center justify-between&apos;>
+          <CardContent className='pt-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className=&apos;text-sm text-muted-foreground&apos;>Battery Level</p>
-                <div className=&apos;flex items-baseline gap-2 mt-1&apos;>
-                  <span className=&apos;text-2xl&apos;>{mockAsset.battery}%</span>
+                <p className='text-sm text-muted-foreground'>Battery Level</p>
+                <div className='flex items-baseline gap-2 mt-1'>
+                  <span className='text-2xl'>{mockAsset.battery}%</span>
                 </div>
               </div>
               <Battery
-                className={`h-8 w-8 ${mockAsset.battery < 20 ? &apos;text-red-600&apos; : &apos;text-green-600&apos;}`}
+                className={`h-8 w-8 ${mockAsset.battery < 20 ? 'text-red-600' : 'text-green-600'}`}
               />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&apos;pt-6&apos;>
-            <div className=&apos;flex items-center justify-between&apos;>
+          <CardContent className='pt-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className=&apos;text-sm text-muted-foreground&apos;>Last Update</p>
-                <div className=&apos;flex items-baseline gap-2 mt-1&apos;>
-                  <span className=&apos;text-2xl&apos;>{mockAsset.lastUpdate}</span>
+                <p className='text-sm text-muted-foreground'>Last Update</p>
+                <div className='flex items-baseline gap-2 mt-1'>
+                  <span className='text-2xl'>{mockAsset.lastUpdate}</span>
                 </div>
               </div>
-              <Clock className=&apos;h-8 w-8 text-blue-600&apos; />
+              <Clock className='h-8 w-8 text-blue-600' />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&apos;pt-6&apos;>
-            <div className=&apos;flex items-center justify-between&apos;>
+          <CardContent className='pt-6'>
+            <div className='flex items-center justify-between'>
               <div>
-                <p className=&apos;text-sm text-muted-foreground&apos;>Current Site</p>
-                <div className=&apos;flex items-baseline gap-2 mt-1&apos;>
-                  <span className=&apos;text-lg&apos;>{mockAsset.location.site}</span>
+                <p className='text-sm text-muted-foreground'>Current Site</p>
+                <div className='flex items-baseline gap-2 mt-1'>
+                  <span className='text-lg'>{mockAsset.location.site}</span>
                 </div>
               </div>
-              <MapPin className=&apos;h-8 w-8 text-purple-600&apos; />
+              <MapPin className='h-8 w-8 text-purple-600' />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&apos;pt-6&apos;>
-            <div className=&apos;flex items-center justify-between&apos;>
-              <div className=&apos;flex-1&apos;>
-                <p className=&apos;text-sm text-muted-foreground&apos;>Assigned To</p>
+          <CardContent className='pt-6'>
+            <div className='flex items-center justify-between'>
+              <div className='flex-1'>
+                <p className='text-sm text-muted-foreground'>Assigned To</p>
                 {isEditMode ? (
                   <Input
                     value={editForm.assignedTo}
                     onChange={e =>
                       setEditForm({ ...editForm, assignedTo: e.target.value })
                     }
-                    className=&apos;h-8 mt-1&apos;
-                    placeholder=&apos;Assigned To&apos;
+                    className='h-8 mt-1'
+                    placeholder='Assigned To'
                   />
                 ) : (
-                  <div className=&apos;flex items-baseline gap-2 mt-1&apos;>
-                    <span className=&apos;text-lg&apos;>{mockAsset.assignedTo}</span>
+                  <div className='flex items-baseline gap-2 mt-1'>
+                    <span className='text-lg'>{mockAsset.assignedTo}</span>
                   </div>
                 )}
               </div>
-              <Activity className=&apos;h-8 w-8 text-orange-600 ml-2&apos; />
+              <Activity className='h-8 w-8 text-orange-600 ml-2' />
             </div>
           </CardContent>
         </Card>
@@ -621,28 +621,28 @@ export function AssetDetails({
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className=&apos;space-y-4&apos;
+        className='space-y-4'
       >
         <TabsList>
-          <TabsTrigger value=&apos;overview&apos;>Overview</TabsTrigger>
-          <TabsTrigger value=&apos;history&apos;>Track History</TabsTrigger>
-          <TabsTrigger value=&apos;activity&apos;>Activity Log</TabsTrigger>
-          <TabsTrigger value=&apos;maintenance&apos;>Maintenance</TabsTrigger>
-          <TabsTrigger value=&apos;alerts&apos;>Alerts</TabsTrigger>
-          <TabsTrigger value=&apos;notifications&apos;>Notifications</TabsTrigger>
+          <TabsTrigger value='overview'>Overview</TabsTrigger>
+          <TabsTrigger value='history'>Track History</TabsTrigger>
+          <TabsTrigger value='activity'>Activity Log</TabsTrigger>
+          <TabsTrigger value='maintenance'>Maintenance</TabsTrigger>
+          <TabsTrigger value='alerts'>Alerts</TabsTrigger>
+          <TabsTrigger value='notifications'>Notifications</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value=&apos;overview&apos; className=&apos;space-y-6&apos;>
-          <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+        <TabsContent value='overview' className='space-y-6'>
+          <div className='grid gap-4 md:grid-cols-2'>
             <Card>
               <CardHeader>
                 <CardTitle>Asset Information</CardTitle>
               </CardHeader>
-              <CardContent className=&apos;space-y-4&apos;>
-                <div className=&apos;space-y-3&apos;>
-                  <div className=&apos;flex justify-between items-center&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+              <CardContent className='space-y-4'>
+                <div className='space-y-3'>
+                  <div className='flex justify-between items-center'>
+                    <span className='text-sm text-muted-foreground'>
                       Status
                     </span>
                     {isEditMode ? (
@@ -655,7 +655,7 @@ export function AssetDetails({
                           setEditForm({ ...editForm, status: statusValue });
                         }}
                       >
-                        <SelectTrigger className=&apos;w-[180px] h-8&apos;>
+                        <SelectTrigger className='w-[180px] h-8'>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -674,8 +674,8 @@ export function AssetDetails({
                     )}
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between items-center&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+                  <div className='flex justify-between items-center'>
+                    <span className='text-sm text-muted-foreground'>
                       Asset Type
                     </span>
                     {isEditMode ? (
@@ -688,7 +688,7 @@ export function AssetDetails({
                           setEditForm({ ...editForm, type: typeLabel });
                         }}
                       >
-                        <SelectTrigger className=&apos;w-[180px] h-8&apos;>
+                        <SelectTrigger className='w-[180px] h-8'>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -703,14 +703,14 @@ export function AssetDetails({
                         </SelectContent>
                       </Select>
                     ) : (
-                      <span className=&apos;text-sm capitalize&apos;>
+                      <span className='text-sm capitalize'>
                         {mockAsset.type}
                       </span>
                     )}
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between items-center&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+                  <div className='flex justify-between items-center'>
+                    <span className='text-sm text-muted-foreground'>
                       Manufacturer
                     </span>
                     {isEditMode ? (
@@ -722,36 +722,36 @@ export function AssetDetails({
                             manufacturer: e.target.value,
                           })
                         }
-                        className=&apos;w-[180px] h-8&apos;
-                        placeholder=&apos;Manufacturer&apos;
+                        className='w-[180px] h-8'
+                        placeholder='Manufacturer'
                       />
                     ) : (
-                      <span className=&apos;text-sm&apos;>
+                      <span className='text-sm'>
                         {mockAsset.specifications.manufacturer}
                       </span>
                     )}
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between items-center&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>Model</span>
+                  <div className='flex justify-between items-center'>
+                    <span className='text-sm text-muted-foreground'>Model</span>
                     {isEditMode ? (
                       <Input
                         value={editForm.model}
                         onChange={e =>
                           setEditForm({ ...editForm, model: e.target.value })
                         }
-                        className=&apos;w-[180px] h-8&apos;
-                        placeholder=&apos;Model&apos;
+                        className='w-[180px] h-8'
+                        placeholder='Model'
                       />
                     ) : (
-                      <span className=&apos;text-sm&apos;>
+                      <span className='text-sm'>
                         {mockAsset.specifications.model}
                       </span>
                     )}
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between items-center&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+                  <div className='flex justify-between items-center'>
+                    <span className='text-sm text-muted-foreground'>
                       Serial Number
                     </span>
                     {isEditMode ? (
@@ -763,39 +763,39 @@ export function AssetDetails({
                             serialNumber: e.target.value,
                           })
                         }
-                        className=&apos;w-[180px] h-8 font-mono&apos;
-                        placeholder=&apos;Serial Number&apos;
+                        className='w-[180px] h-8 font-mono'
+                        placeholder='Serial Number'
                       />
                     ) : (
-                      <span className=&apos;text-sm font-mono&apos;>
+                      <span className='text-sm font-mono'>
                         {mockAsset.specifications.serialNumber}
                       </span>
                     )}
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+                  <div className='flex justify-between'>
+                    <span className='text-sm text-muted-foreground'>
                       Year of Manufacture
                     </span>
-                    <span className=&apos;text-sm&apos;>
+                    <span className='text-sm'>
                       {mockAsset.specifications.yearOfManufacture}
                     </span>
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+                  <div className='flex justify-between'>
+                    <span className='text-sm text-muted-foreground'>
                       Purchase Date
                     </span>
-                    <span className=&apos;text-sm&apos;>
+                    <span className='text-sm'>
                       {mockAsset.specifications.purchaseDate}
                     </span>
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+                  <div className='flex justify-between'>
+                    <span className='text-sm text-muted-foreground'>
                       Warranty Expiry
                     </span>
-                    <span className=&apos;text-sm&apos;>
+                    <span className='text-sm'>
                       {mockAsset.specifications.warrantyExpiry}
                     </span>
                   </div>
@@ -807,46 +807,46 @@ export function AssetDetails({
               <CardHeader>
                 <CardTitle>Current Location</CardTitle>
               </CardHeader>
-              <CardContent className=&apos;space-y-4&apos;>
-                <div className=&apos;space-y-3&apos;>
-                  <div className=&apos;flex justify-between&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+              <CardContent className='space-y-4'>
+                <div className='space-y-3'>
+                  <div className='flex justify-between'>
+                    <span className='text-sm text-muted-foreground'>
                       Address
                     </span>
-                    <span className=&apos;text-sm text-right&apos;>
+                    <span className='text-sm text-right'>
                       {mockAsset.location.address}
                     </span>
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+                  <div className='flex justify-between'>
+                    <span className='text-sm text-muted-foreground'>
                       Coordinates
                     </span>
-                    <span className=&apos;text-sm font-mono&apos;>
-                      {mockAsset.location.lat.toFixed(4)},{&apos; &apos;}
+                    <span className='text-sm font-mono'>
+                      {mockAsset.location.lat.toFixed(4)},{' '}
                       {mockAsset.location.lng.toFixed(4)}
                     </span>
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>Site</span>
-                    <span className=&apos;text-sm&apos;>{mockAsset.location.site}</span>
+                  <div className='flex justify-between'>
+                    <span className='text-sm text-muted-foreground'>Site</span>
+                    <span className='text-sm'>{mockAsset.location.site}</span>
                   </div>
                   <Separator />
-                  <div className=&apos;flex justify-between&apos;>
-                    <span className=&apos;text-sm text-muted-foreground&apos;>
+                  <div className='flex justify-between'>
+                    <span className='text-sm text-muted-foreground'>
                       Cost Center
                     </span>
-                    <span className=&apos;text-sm&apos;>{mockAsset.costCenter}</span>
+                    <span className='text-sm'>{mockAsset.costCenter}</span>
                   </div>
                 </div>
-                <div className=&apos;pt-4&apos;>
+                <div className='pt-4'>
                   <Button
-                    variant=&apos;outline&apos;
-                    className=&apos;w-full&apos;
+                    variant='outline'
+                    className='w-full'
                     onClick={() => onShowOnMap?.(asset)}
                   >
-                    <Navigation className=&apos;h-4 w-4 mr-2&apos; />
+                    <Navigation className='h-4 w-4 mr-2' />
                     View on Map
                   </Button>
                 </div>
@@ -860,15 +860,15 @@ export function AssetDetails({
                 <CardHeader>
                   <CardTitle>Pricing & Availability</CardTitle>
                 </CardHeader>
-                <CardContent className=&apos;space-y-4&apos;>
-                  <div className=&apos;space-y-3&apos;>
+                <CardContent className='space-y-4'>
+                  <div className='space-y-3'>
                     {currentAsset.hourlyRate !== undefined && (
                       <>
-                        <div className=&apos;flex justify-between&apos;>
-                          <span className=&apos;text-sm text-muted-foreground&apos;>
+                        <div className='flex justify-between'>
+                          <span className='text-sm text-muted-foreground'>
                             Hourly Rate
                           </span>
-                          <span className=&apos;text-sm&apos;>
+                          <span className='text-sm'>
                             ${currentAsset.hourlyRate.toFixed(2)} / hour
                           </span>
                         </div>
@@ -877,27 +877,27 @@ export function AssetDetails({
                     )}
                     {currentAsset.availability && (
                       <>
-                        <div className=&apos;flex justify-between items-center&apos;>
-                          <span className=&apos;text-sm text-muted-foreground&apos;>
+                        <div className='flex justify-between items-center'>
+                          <span className='text-sm text-muted-foreground'>
                             Availability
                           </span>
                           <Badge
-                            variant=&apos;outline&apos;
+                            variant='outline'
                             className={
-                              currentAsset.availability === &apos;available&apos;
-                                ? &apos;bg-green-100 text-green-700 border-green-200&apos;
-                                : currentAsset.availability === &apos;assigned&apos; ||
-                                    currentAsset.availability === &apos;in-use&apos;
-                                  ? &apos;bg-blue-100 text-blue-700 border-blue-200&apos;
-                                  : currentAsset.availability === &apos;maintenance&apos;
-                                    ? &apos;bg-orange-100 text-orange-700 border-orange-200&apos;
-                                    : &apos;bg-gray-100 text-gray-700 border-gray-200&apos;
+                              currentAsset.availability === 'available'
+                                ? 'bg-green-100 text-green-700 border-green-200'
+                                : currentAsset.availability === 'assigned' ||
+                                    currentAsset.availability === 'in-use'
+                                  ? 'bg-blue-100 text-blue-700 border-blue-200'
+                                  : currentAsset.availability === 'maintenance'
+                                    ? 'bg-orange-100 text-orange-700 border-orange-200'
+                                    : 'bg-gray-100 text-gray-700 border-gray-200'
                             }
                           >
-                            {currentAsset.availability === &apos;in-use&apos;
-                              ? &apos;In Use&apos;
-                              : currentAsset.availability === &apos;assigned&apos;
-                                ? &apos;Assigned to Job&apos;
+                            {currentAsset.availability === 'in-use'
+                              ? 'In Use'
+                              : currentAsset.availability === 'assigned'
+                                ? 'Assigned to Job'
                                 : currentAsset.availability
                                     .charAt(0)
                                     .toUpperCase() +
@@ -909,11 +909,11 @@ export function AssetDetails({
                     )}
                     {currentAsset.assignedJobId && (
                       <>
-                        <div className=&apos;flex justify-between&apos;>
-                          <span className=&apos;text-sm text-muted-foreground&apos;>
+                        <div className='flex justify-between'>
+                          <span className='text-sm text-muted-foreground'>
                             Assigned Job
                           </span>
-                          <span className=&apos;text-sm&apos;>
+                          <span className='text-sm'>
                             {currentAsset.assignedJobName ||
                               currentAsset.assignedJobId}
                           </span>
@@ -922,45 +922,45 @@ export function AssetDetails({
                           currentAsset.assignmentEndDate) && (
                           <>
                             <Separator />
-                            <div className=&apos;space-y-2&apos;>
-                              <span className=&apos;text-sm text-muted-foreground&apos;>
+                            <div className='space-y-2'>
+                              <span className='text-sm text-muted-foreground'>
                                 Assignment Period
                               </span>
-                              <div className=&apos;flex flex-col gap-1&apos;>
+                              <div className='flex flex-col gap-1'>
                                 {currentAsset.assignmentStartDate && (
-                                  <div className=&apos;flex items-center gap-2 text-sm&apos;>
-                                    <Clock className=&apos;h-3.5 w-3.5 text-muted-foreground&apos; />
-                                    <span className=&apos;text-muted-foreground&apos;>
+                                  <div className='flex items-center gap-2 text-sm'>
+                                    <Clock className='h-3.5 w-3.5 text-muted-foreground' />
+                                    <span className='text-muted-foreground'>
                                       From:
                                     </span>
                                     <span>
                                       {new Date(
                                         currentAsset.assignmentStartDate
-                                      ).toLocaleDateString()}{&apos; &apos;}
+                                      ).toLocaleDateString()}{' '}
                                       {new Date(
                                         currentAsset.assignmentStartDate
                                       ).toLocaleTimeString([], {
-                                        hour: &apos;2-digit&apos;,
-                                        minute: &apos;2-digit&apos;,
+                                        hour: '2-digit',
+                                        minute: '2-digit',
                                       })}
                                     </span>
                                   </div>
                                 )}
                                 {currentAsset.assignmentEndDate && (
-                                  <div className=&apos;flex items-center gap-2 text-sm&apos;>
-                                    <Clock className=&apos;h-3.5 w-3.5 text-muted-foreground&apos; />
-                                    <span className=&apos;text-muted-foreground&apos;>
+                                  <div className='flex items-center gap-2 text-sm'>
+                                    <Clock className='h-3.5 w-3.5 text-muted-foreground' />
+                                    <span className='text-muted-foreground'>
                                       To:
                                     </span>
                                     <span>
                                       {new Date(
                                         currentAsset.assignmentEndDate
-                                      ).toLocaleDateString()}{&apos; &apos;}
+                                      ).toLocaleDateString()}{' '}
                                       {new Date(
                                         currentAsset.assignmentEndDate
                                       ).toLocaleTimeString([], {
-                                        hour: &apos;2-digit&apos;,
-                                        minute: &apos;2-digit&apos;,
+                                        hour: '2-digit',
+                                        minute: '2-digit',
                                       })}
                                     </span>
                                   </div>
@@ -982,48 +982,48 @@ export function AssetDetails({
               <CardTitle>Battery History (24h)</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width=&apos;100%&apos; height={200}>
+              <ResponsiveContainer width='100%' height={200}>
                 <AreaChart data={batteryHistory}>
                   <CartesianGrid
-                    strokeDasharray=&apos;3 3&apos;
-                    className=&apos;stroke-muted&apos;
+                    strokeDasharray='3 3'
+                    className='stroke-muted'
                   />
-                  <XAxis dataKey=&apos;time&apos; className=&apos;text-xs&apos; />
-                  <YAxis className=&apos;text-xs&apos; domain={[0, 100]} />
+                  <XAxis dataKey='time' className='text-xs' />
+                  <YAxis className='text-xs' domain={[0, 100]} />
                   <Tooltip />
                   <Area
-                    type=&apos;monotone&apos;
-                    dataKey=&apos;battery&apos;
-                    stroke=&apos;hsl(var(--chart-2))&apos;
-                    fill=&apos;hsl(var(--chart-2))&apos;
+                    type='monotone'
+                    dataKey='battery'
+                    stroke='hsl(var(--chart-2))'
+                    fill='hsl(var(--chart-2))'
                     fillOpacity={0.6}
-                    name=&apos;Battery %&apos;
+                    name='Battery %'
                   />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+          <div className='grid gap-4 md:grid-cols-2'>
             <Card>
               <CardHeader>
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent className=&apos;space-y-2&apos;>
+              <CardContent className='space-y-2'>
                 {/* Show Check Out button only for active, inactive, or maintenance status */}
-                {(currentAsset.status === &apos;active&apos; ||
-                  currentAsset.status === &apos;inactive&apos; ||
-                  currentAsset.status === &apos;maintenance&apos;) && (
+                {(currentAsset.status === 'active' ||
+                  currentAsset.status === 'inactive' ||
+                  currentAsset.status === 'maintenance') && (
                   <Button
-                    variant=&apos;outline&apos;
-                    className=&apos;w-full justify-start&apos;
+                    variant='outline'
+                    className='w-full justify-start'
                     onClick={() => {
-// // // // // // // console.log(&apos;🔴 Quick Actions Check Out button clicked!&apos;);
+// // // // // // // console.log('🔴 Quick Actions Check Out button clicked!');
                       navigation.navigateToCheckInOut({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,
                         currentStatus: currentAsset.status,
-                        mode: &apos;check-out&apos;,
+                        mode: 'check-out',
                         assetContext: currentAsset,
                         onComplete: (updates: Partial<Asset>) => {
                           handleCheckInOutComplete(updates);
@@ -1035,22 +1035,22 @@ export function AssetDetails({
                       });
                     }}
                   >
-                    <LogOut className=&apos;h-4 w-4 mr-2&apos; />
+                    <LogOut className='h-4 w-4 mr-2' />
                     Check Out Asset
                   </Button>
                 )}
                 {/* Show Check In button only for checked-out status */}
-                {currentAsset.status === &apos;checked-out&apos; && (
+                {currentAsset.status === 'checked-out' && (
                   <Button
-                    variant=&apos;outline&apos;
-                    className=&apos;w-full justify-start&apos;
+                    variant='outline'
+                    className='w-full justify-start'
                     onClick={() => {
-// // // // // // // console.log(&apos;🟢 Quick Actions Check In button clicked!&apos;);
+// // // // // // // console.log('🟢 Quick Actions Check In button clicked!');
                       navigation.navigateToCheckInOut({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,
                         currentStatus: currentAsset.status,
-                        mode: &apos;check-in&apos;,
+                        mode: 'check-in',
                         assetContext: currentAsset,
                         onComplete: (updates: Partial<Asset>) => {
                           handleCheckInOutComplete(updates);
@@ -1062,15 +1062,15 @@ export function AssetDetails({
                       });
                     }}
                   >
-                    <LogIn className=&apos;h-4 w-4 mr-2&apos; />
+                    <LogIn className='h-4 w-4 mr-2' />
                     Check In Asset
                   </Button>
                 )}
                 {/* Show Schedule Maintenance for all statuses except maintenance */}
-                {currentAsset.status !== &apos;maintenance&apos; && (
+                {currentAsset.status !== 'maintenance' && (
                   <Button
-                    variant=&apos;outline&apos;
-                    className=&apos;w-full justify-start&apos;
+                    variant='outline'
+                    className='w-full justify-start'
                     onClick={() => {
                       navigation.navigateToCreateMaintenance({
                         preSelectedAsset: currentAsset.id,
@@ -1079,14 +1079,14 @@ export function AssetDetails({
                       });
                     }}
                   >
-                    <Wrench className=&apos;h-4 w-4 mr-2&apos; />
+                    <Wrench className='h-4 w-4 mr-2' />
                     Schedule Maintenance
                   </Button>
                 )}
                 {/* Report Issue is available for all statuses */}
                 <Button
-                  variant=&apos;outline&apos;
-                  className=&apos;w-full justify-start&apos;
+                  variant='outline'
+                  className='w-full justify-start'
                   onClick={() => {
                     navigation.navigateToReportIssue({
                       assetId: currentAsset.id,
@@ -1095,7 +1095,7 @@ export function AssetDetails({
                     });
                   }}
                 >
-                  <AlertTriangle className=&apos;h-4 w-4 mr-2&apos; />
+                  <AlertTriangle className='h-4 w-4 mr-2' />
                   Report Issue
                 </Button>
               </CardContent>
@@ -1105,10 +1105,10 @@ export function AssetDetails({
               <CardHeader>
                 <CardTitle>Asset QR Code</CardTitle>
               </CardHeader>
-              <CardContent className=&apos;flex flex-col items-center justify-center py-4&apos;>
+              <CardContent className='flex flex-col items-center justify-center py-4'>
                 <div
                   ref={qrCodeRef}
-                  className=&apos;w-48 h-48 bg-white p-4 flex items-center justify-center rounded-lg mb-4 border-2 border-border&apos;
+                  className='w-48 h-48 bg-white p-4 flex items-center justify-center rounded-lg mb-4 border-2 border-border'
                 >
                   <QRCodeComponent
                     value={`https://assettrack.example.com/assets/${mockAsset.id}`}
@@ -1116,26 +1116,26 @@ export function AssetDetails({
                     assetName={mockAsset.name}
                   />
                 </div>
-                <p className=&apos;text-sm text-muted-foreground mb-3&apos;>
+                <p className='text-sm text-muted-foreground mb-3'>
                   Scan to view asset details
                 </p>
-                <div className=&apos;flex gap-2&apos;>
+                <div className='flex gap-2'>
                   <Button
-                    variant=&apos;outline&apos;
-                    size=&apos;sm&apos;
+                    variant='outline'
+                    size='sm'
                     onClick={() => downloadQRCode(mockAsset.id, mockAsset.name)}
                   >
-                    <Download className=&apos;h-4 w-4 mr-2&apos; />
+                    <Download className='h-4 w-4 mr-2' />
                     Download QR Code
                   </Button>
                   <Button
-                    variant=&apos;outline&apos;
-                    size=&apos;sm&apos;
+                    variant='outline'
+                    size='sm'
                     onClick={() => {
                       navigator.clipboard.writeText(
                         `https://assettrack.example.com/assets/${mockAsset.id}`
                       );
-                      toast.success(&apos;QR code link copied to clipboard&apos;);
+                      toast.success('QR code link copied to clipboard');
                     }}
                   >
                     Copy Link
@@ -1147,88 +1147,88 @@ export function AssetDetails({
         </TabsContent>
 
         {/* Track History Tab */}
-        <TabsContent value=&apos;history&apos; className=&apos;space-y-6&apos;>
+        <TabsContent value='history' className='space-y-6'>
           {/* Quick Stats */}
-          <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
+          <div className='grid gap-4 md:grid-cols-4'>
             <Card>
-              <CardContent className=&apos;pt-6&apos;>
-                <div className=&apos;flex items-center justify-between&apos;>
-                  <div className=&apos;flex-1&apos;>
-                    <p className=&apos;text-sm text-muted-foreground&apos;>
+              <CardContent className='pt-6'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <p className='text-sm text-muted-foreground'>
                       Distance (24h)
                     </p>
-                    <div className=&apos;text-2xl mt-1&apos;>15.8 mi</div>
+                    <div className='text-2xl mt-1'>15.8 mi</div>
                   </div>
-                  <Route className=&apos;h-8 w-8 text-blue-600&apos; />
+                  <Route className='h-8 w-8 text-blue-600' />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className=&apos;pt-6&apos;>
-                <div className=&apos;flex items-center justify-between&apos;>
-                  <div className=&apos;flex-1&apos;>
-                    <p className=&apos;text-sm text-muted-foreground&apos;>
+              <CardContent className='pt-6'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <p className='text-sm text-muted-foreground'>
                       Sites Visited
                     </p>
-                    <div className=&apos;text-2xl mt-1&apos;>4</div>
+                    <div className='text-2xl mt-1'>4</div>
                   </div>
-                  <MapPin className=&apos;h-8 w-8 text-purple-600&apos; />
+                  <MapPin className='h-8 w-8 text-purple-600' />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className=&apos;pt-6&apos;>
-                <div className=&apos;flex items-center justify-between&apos;>
-                  <div className=&apos;flex-1&apos;>
-                    <p className=&apos;text-sm text-muted-foreground&apos;>Total Stops</p>
-                    <div className=&apos;text-2xl mt-1&apos;>12</div>
+              <CardContent className='pt-6'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <p className='text-sm text-muted-foreground'>Total Stops</p>
+                    <div className='text-2xl mt-1'>12</div>
                   </div>
-                  <Navigation className=&apos;h-8 w-8 text-orange-600&apos; />
+                  <Navigation className='h-8 w-8 text-orange-600' />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className=&apos;pt-6&apos;>
-                <div className=&apos;flex items-center justify-between&apos;>
-                  <div className=&apos;flex-1&apos;>
-                    <p className=&apos;text-sm text-muted-foreground&apos;>
+              <CardContent className='pt-6'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex-1'>
+                    <p className='text-sm text-muted-foreground'>
                       Movement Time
                     </p>
-                    <div className=&apos;text-2xl mt-1&apos;>6.5h</div>
+                    <div className='text-2xl mt-1'>6.5h</div>
                   </div>
-                  <TrendingUp className=&apos;h-8 w-8 text-green-600&apos; />
+                  <TrendingUp className='h-8 w-8 text-green-600' />
                 </div>
               </CardContent>
             </Card>
           </div>
 
           {/* View Full History CTA */}
-          <Card className=&apos;border-2 border-dashed border-primary/20 bg-primary/5&apos;>
-            <CardContent className=&apos;pt-6&apos;>
-              <div className=&apos;flex items-center justify-between&apos;>
-                <div className=&apos;flex items-center gap-4&apos;>
-                  <div className=&apos;h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center&apos;>
-                    <History className=&apos;h-6 w-6 text-primary&apos; />
+          <Card className='border-2 border-dashed border-primary/20 bg-primary/5'>
+            <CardContent className='pt-6'>
+              <div className='flex items-center justify-between'>
+                <div className='flex items-center gap-4'>
+                  <div className='h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center'>
+                    <History className='h-6 w-6 text-primary' />
                   </div>
                   <div>
-                    <h3 className=&apos;font-medium mb-1&apos;>
+                    <h3 className='font-medium mb-1'>
                       Advanced Historical Playback
                     </h3>
-                    <p className=&apos;text-sm text-muted-foreground&apos;>
+                    <p className='text-sm text-muted-foreground'>
                       View interactive maps with playback controls, custom date
                       ranges, and detailed route analysis
                     </p>
                   </div>
                 </div>
                 <Button
-                  size=&apos;lg&apos;
+                  size='lg'
                   onClick={() => onViewHistoricalPlayback?.(asset)}
                 >
                   View Full History
-                  <ArrowRight className=&apos;h-4 w-4 ml-2&apos; />
+                  <ArrowRight className='h-4 w-4 ml-2' />
                 </Button>
               </div>
             </CardContent>
@@ -1237,9 +1237,9 @@ export function AssetDetails({
           {/* Recent Location Pings */}
           <Card>
             <CardHeader>
-              <div className=&apos;flex items-center justify-between&apos;>
+              <div className='flex items-center justify-between'>
                 <CardTitle>Recent Location Pings (Last 24 Hours)</CardTitle>
-                <Badge variant=&apos;outline&apos;>{locationHistory.length} pings</Badge>
+                <Badge variant='outline'>{locationHistory.length} pings</Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -1257,30 +1257,30 @@ export function AssetDetails({
                   {locationHistory.map((item, index) => (
                     <TableRow key={index}>
                       <TableCell>
-                        <div className=&apos;flex items-center gap-2&apos;>
-                          <Clock className=&apos;h-4 w-4 text-muted-foreground&apos; />
-                          <span className=&apos;text-sm&apos;>{item.timestamp}</span>
+                        <div className='flex items-center gap-2'>
+                          <Clock className='h-4 w-4 text-muted-foreground' />
+                          <span className='text-sm'>{item.timestamp}</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className=&apos;flex items-center gap-2&apos;>
-                          <MapPin className=&apos;h-4 w-4 text-blue-600&apos; />
+                        <div className='flex items-center gap-2'>
+                          <MapPin className='h-4 w-4 text-blue-600' />
                           <span>{item.location}</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <code className=&apos;text-xs bg-muted px-2 py-1 rounded&apos;>
+                        <code className='text-xs bg-muted px-2 py-1 rounded'>
                           {item.lat.toFixed(4)}, {item.lng.toFixed(4)}
                         </code>
                       </TableCell>
                       <TableCell>
-                        <Badge variant=&apos;outline&apos; className=&apos;capitalize text-xs&apos;>
+                        <Badge variant='outline' className='capitalize text-xs'>
                           {item.event}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         {index === 0 && (
-                          <Badge className=&apos;bg-green-100 text-green-700 border-green-200&apos;>
+                          <Badge className='bg-green-100 text-green-700 border-green-200'>
                             Current
                           </Badge>
                         )}
@@ -1298,35 +1298,35 @@ export function AssetDetails({
               <CardTitle>Location Timeline</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className=&apos;h-[300px] pr-4&apos;>
-                <div className=&apos;space-y-4&apos;>
+              <ScrollArea className='h-[300px] pr-4'>
+                <div className='space-y-4'>
                   {locationHistory.map((item, index) => (
-                    <div key={index} className=&apos;flex gap-4&apos;>
-                      <div className=&apos;flex flex-col items-center&apos;>
+                    <div key={index} className='flex gap-4'>
+                      <div className='flex flex-col items-center'>
                         <div
                           className={`w-3 h-3 rounded-full ${
                             index === 0
-                              ? &apos;bg-green-500&apos;
+                              ? 'bg-green-500'
                               : index === locationHistory.length - 1
-                                ? &apos;bg-blue-500&apos;
-                                : &apos;bg-gray-300&apos;
+                                ? 'bg-blue-500'
+                                : 'bg-gray-300'
                           }`}
                         />
                         {index !== locationHistory.length - 1 && (
-                          <div className=&apos;w-0.5 h-full bg-gray-200 my-1&apos; />
+                          <div className='w-0.5 h-full bg-gray-200 my-1' />
                         )}
                       </div>
-                      <div className=&apos;flex-1 pb-4&apos;>
-                        <div className=&apos;flex items-center justify-between mb-1&apos;>
-                          <span className=&apos;font-medium&apos;>{item.location}</span>
+                      <div className='flex-1 pb-4'>
+                        <div className='flex items-center justify-between mb-1'>
+                          <span className='font-medium'>{item.location}</span>
                           <Badge
-                            variant=&apos;outline&apos;
-                            className=&apos;text-xs capitalize&apos;
+                            variant='outline'
+                            className='text-xs capitalize'
                           >
                             {item.event}
                           </Badge>
                         </div>
-                        <p className=&apos;text-sm text-muted-foreground&apos;>
+                        <p className='text-sm text-muted-foreground'>
                           {item.timestamp}
                         </p>
                       </div>
@@ -1339,30 +1339,30 @@ export function AssetDetails({
         </TabsContent>
 
         {/* Activity Log Tab */}
-        <TabsContent value=&apos;activity&apos; className=&apos;space-y-6&apos;>
+        <TabsContent value='activity' className='space-y-6'>
           <Card>
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className=&apos;h-[500px] pr-4&apos;>
-                <div className=&apos;space-y-4&apos;>
+              <ScrollArea className='h-[500px] pr-4'>
+                <div className='space-y-4'>
                   {activityLog.map(item => (
                     <div
                       key={item.id}
-                      className=&apos;flex gap-4 pb-4 border-b last:border-0&apos;
+                      className='flex gap-4 pb-4 border-b last:border-0'
                     >
-                      <div className=&apos;mt-1&apos;>{getActivityIcon(item.type)}</div>
-                      <div className=&apos;flex-1&apos;>
-                        <p className=&apos;text-sm&apos;>{item.description}</p>
-                        <div className=&apos;flex items-center gap-2 mt-1&apos;>
-                          <p className=&apos;text-xs text-muted-foreground&apos;>
+                      <div className='mt-1'>{getActivityIcon(item.type)}</div>
+                      <div className='flex-1'>
+                        <p className='text-sm'>{item.description}</p>
+                        <div className='flex items-center gap-2 mt-1'>
+                          <p className='text-xs text-muted-foreground'>
                             {item.timestamp}
                           </p>
-                          <span className=&apos;text-xs text-muted-foreground&apos;>
+                          <span className='text-xs text-muted-foreground'>
                             •
                           </span>
-                          <p className=&apos;text-xs text-muted-foreground&apos;>
+                          <p className='text-xs text-muted-foreground'>
                             {item.user}
                           </p>
                         </div>
@@ -1376,14 +1376,14 @@ export function AssetDetails({
         </TabsContent>
 
         {/* Maintenance Tab */}
-        <TabsContent value=&apos;maintenance&apos; className=&apos;space-y-6&apos;>
+        <TabsContent value='maintenance' className='space-y-6'>
           {/* Upcoming Maintenance */}
           <Card>
             <CardHeader>
-              <div className=&apos;flex items-center justify-between&apos;>
+              <div className='flex items-center justify-between'>
                 <CardTitle>Upcoming Maintenance</CardTitle>
                 <Button
-                  size=&apos;sm&apos;
+                  size='sm'
                   onClick={() => {
                     navigation.navigateToCreateMaintenance({
                       preSelectedAsset: currentAsset.id,
@@ -1392,42 +1392,42 @@ export function AssetDetails({
                     });
                   }}
                 >
-                  <Calendar className=&apos;h-4 w-4 mr-2&apos; />
+                  <Calendar className='h-4 w-4 mr-2' />
                   Schedule Maintenance
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <div className=&apos;space-y-4&apos;>
+              <div className='space-y-4'>
                 {upcomingMaintenance.map(maintenance => (
-                  <div key={maintenance.id} className=&apos;border rounded-lg p-4&apos;>
-                    <div className=&apos;flex items-start justify-between mb-2&apos;>
-                      <div className=&apos;flex-1&apos;>
-                        <div className=&apos;flex items-center gap-2 mb-1&apos;>
+                  <div key={maintenance.id} className='border rounded-lg p-4'>
+                    <div className='flex items-start justify-between mb-2'>
+                      <div className='flex-1'>
+                        <div className='flex items-center gap-2 mb-1'>
                           <h4>{maintenance.description}</h4>
-                          <Badge variant=&apos;outline&apos; className=&apos;text-xs&apos;>
+                          <Badge variant='outline' className='text-xs'>
                             {maintenance.type}
                           </Badge>
                           <Badge
-                            variant=&apos;outline&apos;
+                            variant='outline'
                             className={
-                              maintenance.priority === &apos;High&apos;
-                                ? &apos;bg-red-50 text-red-700 border-red-200 text-xs&apos;
-                                : maintenance.priority === &apos;Medium&apos;
-                                  ? &apos;bg-yellow-50 text-yellow-700 border-yellow-200 text-xs&apos;
-                                  : &apos;bg-blue-50 text-blue-700 border-blue-200 text-xs&apos;
+                              maintenance.priority === 'High'
+                                ? 'bg-red-50 text-red-700 border-red-200 text-xs'
+                                : maintenance.priority === 'Medium'
+                                  ? 'bg-yellow-50 text-yellow-700 border-yellow-200 text-xs'
+                                  : 'bg-blue-50 text-blue-700 border-blue-200 text-xs'
                             }
                           >
                             {maintenance.priority}
                           </Badge>
                         </div>
-                        <p className=&apos;text-sm text-muted-foreground&apos;>
+                        <p className='text-sm text-muted-foreground'>
                           Due Date: {maintenance.date}
                         </p>
                       </div>
                       <Button
-                        variant=&apos;outline&apos;
-                        size=&apos;sm&apos;
+                        variant='outline'
+                        size='sm'
                         onClick={() => {
                           setSelectedMaintenance({
                             id: maintenance.id,
@@ -1437,26 +1437,26 @@ export function AssetDetails({
                             task: maintenance.description,
                             dueDate: maintenance.date,
                             priority: maintenance.priority,
-                            status: &apos;scheduled&apos;,
+                            status: 'scheduled',
                             assignedTo: maintenance.assignedTo,
                           });
                           setIsEditMaintenanceOpen(true);
                         }}
                       >
-                        <Edit className=&apos;h-4 w-4 mr-2&apos; />
+                        <Edit className='h-4 w-4 mr-2' />
                         Edit
                       </Button>
                     </div>
-                    <Separator className=&apos;my-3&apos; />
-                    <div className=&apos;grid grid-cols-2 gap-4 text-sm&apos;>
+                    <Separator className='my-3' />
+                    <div className='grid grid-cols-2 gap-4 text-sm'>
                       <div>
-                        <span className=&apos;text-muted-foreground&apos;>
+                        <span className='text-muted-foreground'>
                           Assigned To:
                         </span>
                         <p>{maintenance.assignedTo}</p>
                       </div>
                       <div>
-                        <span className=&apos;text-muted-foreground&apos;>
+                        <span className='text-muted-foreground'>
                           Technician:
                         </span>
                         <p>{maintenance.technician}</p>
@@ -1474,38 +1474,38 @@ export function AssetDetails({
               <CardTitle>Maintenance History</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&apos;space-y-4&apos;>
+              <div className='space-y-4'>
                 {maintenanceRecords.map(record => (
-                  <div key={record.id} className=&apos;border rounded-lg p-4&apos;>
-                    <div className=&apos;flex items-start justify-between mb-2&apos;>
+                  <div key={record.id} className='border rounded-lg p-4'>
+                    <div className='flex items-start justify-between mb-2'>
                       <div>
-                        <div className=&apos;flex items-center gap-2 mb-1&apos;>
+                        <div className='flex items-center gap-2 mb-1'>
                           <h4>{record.description}</h4>
-                          <Badge variant=&apos;outline&apos; className=&apos;text-xs&apos;>
+                          <Badge variant='outline' className='text-xs'>
                             {record.type}
                           </Badge>
                         </div>
-                        <p className=&apos;text-sm text-muted-foreground&apos;>
+                        <p className='text-sm text-muted-foreground'>
                           Date: {record.date}
                         </p>
                       </div>
                       <Badge
-                        variant=&apos;outline&apos;
-                        className=&apos;bg-green-50 text-green-700 border-green-200&apos;
+                        variant='outline'
+                        className='bg-green-50 text-green-700 border-green-200'
                       >
                         {record.status}
                       </Badge>
                     </div>
-                    <Separator className=&apos;my-3&apos; />
-                    <div className=&apos;grid grid-cols-2 gap-4 text-sm&apos;>
+                    <Separator className='my-3' />
+                    <div className='grid grid-cols-2 gap-4 text-sm'>
                       <div>
-                        <span className=&apos;text-muted-foreground&apos;>
+                        <span className='text-muted-foreground'>
                           Technician:
                         </span>
                         <p>{record.technician}</p>
                       </div>
                       <div>
-                        <span className=&apos;text-muted-foreground&apos;>Next Due:</span>
+                        <span className='text-muted-foreground'>Next Due:</span>
                         <p>{record.nextDue}</p>
                       </div>
                     </div>
@@ -1517,13 +1517,13 @@ export function AssetDetails({
         </TabsContent>
 
         {/* Alerts Tab */}
-        <TabsContent value=&apos;alerts&apos; className=&apos;space-y-6&apos;>
+        <TabsContent value='alerts' className='space-y-6'>
           <Card>
             <CardHeader>
               <CardTitle>Alert History</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className=&apos;space-y-3&apos;>
+              <div className='space-y-3'>
                 {alerts.map((alert, index) => {
                   // Convert AssetAlert to Alert type for the AlertCard component
                   const alertForCard: any = {
@@ -1557,13 +1557,13 @@ export function AssetDetails({
                       }}
                       onQuickAcknowledge={(alertId, e) => {
                         e.stopPropagation();
-                        toast.success(&apos;Alert acknowledged&apos;);
+                        toast.success('Alert acknowledged');
                         // In a real app, this would update the alert via API
                         // For now, just show the toast
                       }}
                       onQuickResolve={(alertId, e) => {
                         e.stopPropagation();
-                        toast.success(&apos;Alert resolved&apos;);
+                        toast.success('Alert resolved');
                         // In a real app, this would update the alert via API
                         // For now, just show the toast
                       }}
@@ -1577,31 +1577,31 @@ export function AssetDetails({
         </TabsContent>
 
         {/* Notifications Tab */}
-        <TabsContent value=&apos;notifications&apos; className=&apos;space-y-6&apos;>
-          <Card className=&apos;border-2 border-dashed border-primary/20 bg-primary/5&apos;>
-            <CardContent className=&apos;pt-6&apos;>
-              <div className=&apos;flex items-center justify-between&apos;>
-                <div className=&apos;flex items-center gap-4&apos;>
-                  <div className=&apos;h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center&apos;>
-                    <Bell className=&apos;h-6 w-6 text-primary&apos; />
+        <TabsContent value='notifications' className='space-y-6'>
+          <Card className='border-2 border-dashed border-primary/20 bg-primary/5'>
+            <CardContent className='pt-6'>
+              <div className='flex items-center justify-between'>
+                <div className='flex items-center gap-4'>
+                  <div className='h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center'>
+                    <Bell className='h-6 w-6 text-primary' />
                   </div>
                   <div>
-                    <h3 className=&apos;font-medium mb-1&apos;>
+                    <h3 className='font-medium mb-1'>
                       Notification Preferences
                     </h3>
-                    <p className=&apos;text-sm text-muted-foreground&apos;>
+                    <p className='text-sm text-muted-foreground'>
                       Configure how you receive notifications for this asset in
                       the main notification settings
                     </p>
                   </div>
                 </div>
                 <Button
-                  size=&apos;lg&apos;
+                  size='lg'
                   onClick={() => {
-                    navigation.handleViewChange(&apos;notifications&apos;);
+                    navigation.handleViewChange('notifications');
                     // Store asset context for filtering if needed
                     sessionStorage.setItem(
-                      &apos;notification-asset-context&apos;,
+                      'notification-asset-context',
                       JSON.stringify({
                         assetId: currentAsset.id,
                         assetName: currentAsset.name,
@@ -1610,7 +1610,7 @@ export function AssetDetails({
                   }}
                 >
                   Configure Notifications
-                  <ArrowRight className=&apos;h-4 w-4 ml-2&apos; />
+                  <ArrowRight className='h-4 w-4 ml-2' />
                 </Button>
               </div>
             </CardContent>
@@ -1624,31 +1624,31 @@ export function AssetDetails({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className=&apos;space-y-3&apos;>
+              <div className='space-y-3'>
                 {/* Show a preview of recent notifications */}
-                <div className=&apos;flex items-start gap-3 p-3 border rounded-lg&apos;>
-                  <Mail className=&apos;h-5 w-5 mt-0.5 text-blue-600&apos; />
-                  <div className=&apos;flex-1&apos;>
-                    <p className=&apos;text-sm&apos;>Low battery alert sent</p>
-                    <p className=&apos;text-xs text-muted-foreground mt-1&apos;>
+                <div className='flex items-start gap-3 p-3 border rounded-lg'>
+                  <Mail className='h-5 w-5 mt-0.5 text-blue-600' />
+                  <div className='flex-1'>
+                    <p className='text-sm'>Low battery alert sent</p>
+                    <p className='text-xs text-muted-foreground mt-1'>
                       2 hours ago • Via Email
                     </p>
                   </div>
                 </div>
-                <div className=&apos;flex items-start gap-3 p-3 border rounded-lg&apos;>
-                  <MessageSquare className=&apos;h-5 w-5 mt-0.5 text-green-600&apos; />
-                  <div className=&apos;flex-1&apos;>
-                    <p className=&apos;text-sm&apos;>Maintenance reminder sent</p>
-                    <p className=&apos;text-xs text-muted-foreground mt-1&apos;>
+                <div className='flex items-start gap-3 p-3 border rounded-lg'>
+                  <MessageSquare className='h-5 w-5 mt-0.5 text-green-600' />
+                  <div className='flex-1'>
+                    <p className='text-sm'>Maintenance reminder sent</p>
+                    <p className='text-xs text-muted-foreground mt-1'>
                       1 day ago • Via SMS
                     </p>
                   </div>
                 </div>
-                <div className=&apos;flex items-start gap-3 p-3 border rounded-lg&apos;>
-                  <Smartphone className=&apos;h-5 w-5 mt-0.5 text-purple-600&apos; />
-                  <div className=&apos;flex-1&apos;>
-                    <p className=&apos;text-sm&apos;>Asset check-in notification sent</p>
-                    <p className=&apos;text-xs text-muted-foreground mt-1&apos;>
+                <div className='flex items-start gap-3 p-3 border rounded-lg'>
+                  <Smartphone className='h-5 w-5 mt-0.5 text-purple-600' />
+                  <div className='flex-1'>
+                    <p className='text-sm'>Asset check-in notification sent</p>
+                    <p className='text-xs text-muted-foreground mt-1'>
                       3 days ago • Via Push
                     </p>
                   </div>
@@ -1663,8 +1663,8 @@ export function AssetDetails({
       <ExportDialog
         open={isExportOpen}
         onOpenChange={setIsExportOpen}
-        title=&apos;Export Asset Details&apos;
-        description=&apos;Export asset information and history&apos;
+        title='Export Asset Details'
+        description='Export asset information and history'
       />
 
       {/* Edit Maintenance Dialog */}

@@ -1,11 +1,11 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach, afterEach } from &apos;vitest&apos;;
-import { render, screen, fireEvent, waitFor } from &apos;../../test/test-utils&apos;;
-import { HierarchicalAlertConfiguration } from &apos;../alerts/HierarchicalAlertConfiguration&apos;;
-import type { AlertConfig } from &apos;../../types/alertConfig&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
+import { HierarchicalAlertConfiguration } from '../alerts/HierarchicalAlertConfiguration';
+import type { AlertConfig } from '../../types/alertConfig';
 
 // Mock toast
-vi.mock(&apos;sonner&apos;, () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -13,18 +13,18 @@ vi.mock(&apos;sonner&apos;, () => ({
 }));
 
 const mockAlertConfigs: Record<string, AlertConfig> = {
-  &apos;global:theft&apos;: {
-    id: &apos;global:theft&apos;,
-    level: &apos;global&apos;,
-    entityId: &apos;global&apos;,
-    entityName: &apos;Global&apos;,
-    alertType: &apos;theft&apos;,
+  'global:theft': {
+    id: 'global:theft',
+    level: 'global',
+    entityId: 'global',
+    entityName: 'Global',
+    alertType: 'theft',
     enabled: true,
     thresholds: {
       movementDistance: 100,
       timeThreshold: 300,
     },
-    severity: &apos;critical&apos;,
+    severity: 'critical',
     suppression: {
       enabled: true,
       duration: 3600,
@@ -33,20 +33,20 @@ const mockAlertConfigs: Record<string, AlertConfig> = {
     escalation: {
       enabled: true,
       delay: 1800,
-      recipients: [&apos;admin@example.com&apos;],
+      recipients: ['admin@example.com'],
     },
   },
-  &apos;site:SITE-001:battery&apos;: {
-    id: &apos;site:SITE-001:battery&apos;,
-    level: &apos;site&apos;,
-    entityId: &apos;SITE-001&apos;,
-    entityName: &apos;Construction Site A&apos;,
-    alertType: &apos;battery&apos;,
+  'site:SITE-001:battery': {
+    id: 'site:SITE-001:battery',
+    level: 'site',
+    entityId: 'SITE-001',
+    entityName: 'Construction Site A',
+    alertType: 'battery',
     enabled: true,
     thresholds: {
       batteryLevel: 20,
     },
-    severity: &apos;warning&apos;,
+    severity: 'warning',
     suppression: {
       enabled: false,
       duration: 0,
@@ -58,17 +58,17 @@ const mockAlertConfigs: Record<string, AlertConfig> = {
       recipients: [],
     },
   },
-  &apos;asset:AST-001:compliance&apos;: {
-    id: &apos;asset:AST-001:compliance&apos;,
-    level: &apos;asset&apos;,
-    entityId: &apos;AST-001&apos;,
-    entityName: &apos;Generator-001&apos;,
-    alertType: &apos;compliance&apos;,
+  'asset:AST-001:compliance': {
+    id: 'asset:AST-001:compliance',
+    level: 'asset',
+    entityId: 'AST-001',
+    entityName: 'Generator-001',
+    alertType: 'compliance',
     enabled: true,
     thresholds: {
       daysUntilExpiry: 30,
     },
-    severity: &apos;info&apos;,
+    severity: 'info',
     suppression: {
       enabled: true,
       duration: 86400,
@@ -77,21 +77,21 @@ const mockAlertConfigs: Record<string, AlertConfig> = {
     escalation: {
       enabled: true,
       delay: 0,
-      recipients: [&apos;compliance@example.com&apos;],
+      recipients: ['compliance@example.com'],
     },
   },
 };
 
 const mockJobs = {
-  &apos;JOB-001&apos;: {
-    id: &apos;JOB-001&apos;,
-    name: &apos;Construction Project A&apos;,
-    status: &apos;active&apos;,
-    priority: &apos;high&apos;,
-    startDate: &apos;2024-01-01T00:00:00Z&apos;,
-    endDate: &apos;2024-12-31T00:00:00Z&apos;,
-    projectManager: &apos;John Doe&apos;,
-    siteName: &apos;Construction Site A&apos;,
+  'JOB-001': {
+    id: 'JOB-001',
+    name: 'Construction Project A',
+    status: 'active',
+    priority: 'high',
+    startDate: '2024-01-01T00:00:00Z',
+    endDate: '2024-12-31T00:00:00Z',
+    projectManager: 'John Doe',
+    siteName: 'Construction Site A',
     budget: {
       total: 100000,
       labor: 50000,
@@ -112,7 +112,7 @@ const mockJobs = {
   },
 };
 
-describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
+describe('HierarchicalAlertConfiguration', () => {
   const mockOnSaveConfig = vi.fn();
   const mockOnDeleteConfig = vi.fn();
   const mockOnBack = vi.fn();
@@ -129,8 +129,8 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
     vi.resetAllMocks();
   });
 
-  describe(&apos;Component Rendering&apos;, () => {
-    it(&apos;renders the alert configuration page with correct title&apos;, () => {
+  describe('Component Rendering', () => {
+    it('renders the alert configuration page with correct title', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -141,10 +141,10 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Alert Configuration&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Alert Configuration')).toBeInTheDocument();
     });
 
-    it(&apos;renders the back button&apos;, () => {
+    it('renders the back button', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -155,10 +155,10 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Back&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Back')).toBeInTheDocument();
     });
 
-    it(&apos;renders the three-level tab selector&apos;, () => {
+    it('renders the three-level tab selector', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -169,12 +169,12 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Global&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Site Level&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Asset Level&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Global')).toBeInTheDocument();
+      expect(screen.getByText('Site Level')).toBeInTheDocument();
+      expect(screen.getByText('Asset Level')).toBeInTheDocument();
     });
 
-    it(&apos;renders the add configuration button&apos;, () => {
+    it('renders the add configuration button', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -185,63 +185,12 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Add Configuration&apos;)).toBeInTheDocument();
-    });
-  });
-
-  describe(&apos;Tab Navigation&apos;, () => {
-    it(&apos;starts with Global tab selected by default&apos;, () => {
-      render(
-        <HierarchicalAlertConfiguration
-          alertConfigs={mockAlertConfigs}
-          jobs={mockJobs}
-          onSaveConfig={mockOnSaveConfig}
-          onDeleteConfig={mockOnDeleteConfig}
-          onBack={mockOnBack}
-        />
-      );
-
-      const globalTab = screen.getByText(&apos;Global&apos;);
-      expect(globalTab).toHaveClass(&apos;data-[state=active]&apos;);
-    });
-
-    it(&apos;switches to Site Level tab when clicked&apos;, () => {
-      render(
-        <HierarchicalAlertConfiguration
-          alertConfigs={mockAlertConfigs}
-          jobs={mockJobs}
-          onSaveConfig={mockOnSaveConfig}
-          onDeleteConfig={mockOnDeleteConfig}
-          onBack={mockOnBack}
-        />
-      );
-
-      fireEvent.click(screen.getByText(&apos;Site Level&apos;));
-
-      const siteTab = screen.getByText(&apos;Site Level&apos;);
-      expect(siteTab).toHaveClass(&apos;data-[state=active]&apos;);
-    });
-
-    it(&apos;switches to Asset Level tab when clicked&apos;, () => {
-      render(
-        <HierarchicalAlertConfiguration
-          alertConfigs={mockAlertConfigs}
-          jobs={mockJobs}
-          onSaveConfig={mockOnSaveConfig}
-          onDeleteConfig={mockOnDeleteConfig}
-          onBack={mockOnBack}
-        />
-      );
-
-      fireEvent.click(screen.getByText(&apos;Asset Level&apos;));
-
-      const assetTab = screen.getByText(&apos;Asset Level&apos;);
-      expect(assetTab).toHaveClass(&apos;data-[state=active]&apos;);
+      expect(screen.getByText('Add Configuration')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Configuration Display&apos;, () => {
-    it(&apos;displays global configurations in Global tab&apos;, () => {
+  describe('Tab Navigation', () => {
+    it('starts with Global tab selected by default', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -252,11 +201,11 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Theft Alert&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Global&apos;)).toBeInTheDocument();
+      const globalTab = screen.getByText('Global');
+      expect(globalTab).toHaveClass('data-[state=active]');
     });
 
-    it(&apos;displays site configurations in Site Level tab&apos;, () => {
+    it('switches to Site Level tab when clicked', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -267,13 +216,13 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Site Level&apos;));
+      fireEvent.click(screen.getByText('Site Level'));
 
-      expect(screen.getByText(&apos;Battery Alert&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Construction Site A&apos;)).toBeInTheDocument();
+      const siteTab = screen.getByText('Site Level');
+      expect(siteTab).toHaveClass('data-[state=active]');
     });
 
-    it(&apos;displays asset configurations in Asset Level tab&apos;, () => {
+    it('switches to Asset Level tab when clicked', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -284,15 +233,15 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Asset Level&apos;));
+      fireEvent.click(screen.getByText('Asset Level'));
 
-      expect(screen.getByText(&apos;Compliance Alert&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Generator-001&apos;)).toBeInTheDocument();
+      const assetTab = screen.getByText('Asset Level');
+      expect(assetTab).toHaveClass('data-[state=active]');
     });
   });
 
-  describe(&apos;Configuration Details&apos;, () => {
-    it(&apos;displays configuration status badges&apos;, () => {
+  describe('Configuration Display', () => {
+    it('displays global configurations in Global tab', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -303,10 +252,11 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Enabled&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Theft Alert')).toBeInTheDocument();
+      expect(screen.getByText('Global')).toBeInTheDocument();
     });
 
-    it(&apos;displays severity levels&apos;, () => {
+    it('displays site configurations in Site Level tab', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -317,10 +267,13 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Critical&apos;)).toBeInTheDocument();
+      fireEvent.click(screen.getByText('Site Level'));
+
+      expect(screen.getByText('Battery Alert')).toBeInTheDocument();
+      expect(screen.getByText('Construction Site A')).toBeInTheDocument();
     });
 
-    it(&apos;displays threshold values&apos;, () => {
+    it('displays asset configurations in Asset Level tab', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -331,11 +284,58 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Movement Distance: 100m&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Time Threshold: 5min&apos;)).toBeInTheDocument();
+      fireEvent.click(screen.getByText('Asset Level'));
+
+      expect(screen.getByText('Compliance Alert')).toBeInTheDocument();
+      expect(screen.getByText('Generator-001')).toBeInTheDocument();
+    });
+  });
+
+  describe('Configuration Details', () => {
+    it('displays configuration status badges', () => {
+      render(
+        <HierarchicalAlertConfiguration
+          alertConfigs={mockAlertConfigs}
+          jobs={mockJobs}
+          onSaveConfig={mockOnSaveConfig}
+          onDeleteConfig={mockOnDeleteConfig}
+          onBack={mockOnBack}
+        />
+      );
+
+      expect(screen.getByText('Enabled')).toBeInTheDocument();
     });
 
-    it(&apos;displays suppression settings&apos;, () => {
+    it('displays severity levels', () => {
+      render(
+        <HierarchicalAlertConfiguration
+          alertConfigs={mockAlertConfigs}
+          jobs={mockJobs}
+          onSaveConfig={mockOnSaveConfig}
+          onDeleteConfig={mockOnDeleteConfig}
+          onBack={mockOnBack}
+        />
+      );
+
+      expect(screen.getByText('Critical')).toBeInTheDocument();
+    });
+
+    it('displays threshold values', () => {
+      render(
+        <HierarchicalAlertConfiguration
+          alertConfigs={mockAlertConfigs}
+          jobs={mockJobs}
+          onSaveConfig={mockOnSaveConfig}
+          onDeleteConfig={mockOnDeleteConfig}
+          onBack={mockOnBack}
+        />
+      );
+
+      expect(screen.getByText('Movement Distance: 100m')).toBeInTheDocument();
+      expect(screen.getByText('Time Threshold: 5min')).toBeInTheDocument();
+    });
+
+    it('displays suppression settings', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -347,11 +347,11 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
       );
 
       expect(
-        screen.getByText(&apos;Suppression: 1h, max 5 alerts&apos;)
+        screen.getByText('Suppression: 1h, max 5 alerts')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays escalation settings&apos;, () => {
+    it('displays escalation settings', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -362,12 +362,12 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      expect(screen.getByText(&apos;Escalation: 30min delay&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Escalation: 30min delay')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Configuration Actions&apos;, () => {
-    it(&apos;renders edit and delete buttons for each configuration&apos;, () => {
+  describe('Configuration Actions', () => {
+    it('renders edit and delete buttons for each configuration', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -378,14 +378,14 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      const editButtons = screen.getAllByText(&apos;Edit&apos;);
-      const deleteButtons = screen.getAllByText(&apos;Delete&apos;);
+      const editButtons = screen.getAllByText('Edit');
+      const deleteButtons = screen.getAllByText('Delete');
 
       expect(editButtons.length).toBeGreaterThan(0);
       expect(deleteButtons.length).toBeGreaterThan(0);
     });
 
-    it(&apos;opens edit dialog when Edit button is clicked&apos;, () => {
+    it('opens edit dialog when Edit button is clicked', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -396,13 +396,13 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      const editButtons = screen.getAllByText(&apos;Edit&apos;);
+      const editButtons = screen.getAllByText('Edit');
       fireEvent.click(editButtons[0]);
 
-      expect(screen.getByText(&apos;Edit Alert Configuration&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Edit Alert Configuration')).toBeInTheDocument();
     });
 
-    it(&apos;shows delete confirmation when Delete button is clicked&apos;, () => {
+    it('shows delete confirmation when Delete button is clicked', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -413,18 +413,18 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      const deleteButtons = screen.getAllByText(&apos;Delete&apos;);
+      const deleteButtons = screen.getAllByText('Delete');
       fireEvent.click(deleteButtons[0]);
 
-      expect(screen.getByText(&apos;Are you sure?&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Are you sure?')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;This will permanently delete the alert configuration&apos;)
+        screen.getByText('This will permanently delete the alert configuration')
       ).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Add Configuration&apos;, () => {
-    it(&apos;opens add configuration dialog when Add Configuration button is clicked&apos;, () => {
+  describe('Add Configuration', () => {
+    it('opens add configuration dialog when Add Configuration button is clicked', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -435,12 +435,12 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Add Configuration&apos;));
+      fireEvent.click(screen.getByText('Add Configuration'));
 
-      expect(screen.getByText(&apos;Add Alert Configuration&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Add Alert Configuration')).toBeInTheDocument();
     });
 
-    it(&apos;shows alert type selector in add dialog&apos;, () => {
+    it('shows alert type selector in add dialog', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -451,12 +451,12 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Add Configuration&apos;));
+      fireEvent.click(screen.getByText('Add Configuration'));
 
-      expect(screen.getByText(&apos;Alert Type&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Alert Type')).toBeInTheDocument();
     });
 
-    it(&apos;shows entity selector for site and asset levels&apos;, () => {
+    it('shows entity selector for site and asset levels', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -467,15 +467,15 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Site Level&apos;));
-      fireEvent.click(screen.getByText(&apos;Add Configuration&apos;));
+      fireEvent.click(screen.getByText('Site Level'));
+      fireEvent.click(screen.getByText('Add Configuration'));
 
-      expect(screen.getByText(&apos;Site&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Site')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Form Validation&apos;, () => {
-    it(&apos;validates required fields in add configuration form&apos;, async () => {
+  describe('Form Validation', () => {
+    it('validates required fields in add configuration form', async () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -486,19 +486,19 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Add Configuration&apos;));
+      fireEvent.click(screen.getByText('Add Configuration'));
 
-      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
+      const saveButton = screen.getByText('Save Configuration');
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(
-          screen.getByText(&apos;Please select an alert type&apos;)
+          screen.getByText('Please select an alert type')
         ).toBeInTheDocument();
       });
     });
 
-    it(&apos;validates threshold values&apos;, async () => {
+    it('validates threshold values', async () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -509,30 +509,30 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Add Configuration&apos;));
+      fireEvent.click(screen.getByText('Add Configuration'));
 
       // Select alert type
-      const alertTypeSelect = screen.getByDisplayValue(&apos;Select alert type&apos;);
+      const alertTypeSelect = screen.getByDisplayValue('Select alert type');
       fireEvent.click(alertTypeSelect);
-      fireEvent.click(screen.getByText(&apos;Battery Alert&apos;));
+      fireEvent.click(screen.getByText('Battery Alert'));
 
       // Enter invalid threshold
-      const thresholdInput = screen.getByLabelText(&apos;Battery Level (%)&apos;);
-      fireEvent.change(thresholdInput, { target: { value: &apos;150&apos; } });
+      const thresholdInput = screen.getByLabelText('Battery Level (%)');
+      fireEvent.change(thresholdInput, { target: { value: '150' } });
 
-      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
+      const saveButton = screen.getByText('Save Configuration');
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(
-          screen.getByText(&apos;Battery level must be between 0 and 100&apos;)
+          screen.getByText('Battery level must be between 0 and 100')
         ).toBeInTheDocument();
       });
     });
   });
 
-  describe(&apos;Save and Delete Operations&apos;, () => {
-    it(&apos;calls onSaveConfig when saving new configuration&apos;, async () => {
+  describe('Save and Delete Operations', () => {
+    it('calls onSaveConfig when saving new configuration', async () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -543,17 +543,17 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Add Configuration&apos;));
+      fireEvent.click(screen.getByText('Add Configuration'));
 
       // Fill out form
-      const alertTypeSelect = screen.getByDisplayValue(&apos;Select alert type&apos;);
+      const alertTypeSelect = screen.getByDisplayValue('Select alert type');
       fireEvent.click(alertTypeSelect);
-      fireEvent.click(screen.getByText(&apos;Battery Alert&apos;));
+      fireEvent.click(screen.getByText('Battery Alert'));
 
-      const thresholdInput = screen.getByLabelText(&apos;Battery Level (%)&apos;);
-      fireEvent.change(thresholdInput, { target: { value: &apos;20&apos; } });
+      const thresholdInput = screen.getByLabelText('Battery Level (%)');
+      fireEvent.change(thresholdInput, { target: { value: '20' } });
 
-      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
+      const saveButton = screen.getByText('Save Configuration');
       fireEvent.click(saveButton);
 
       await waitFor(() => {
@@ -561,8 +561,8 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
       });
     });
 
-    it(&apos;shows success toast when save is successful&apos;, async () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('shows success toast when save is successful', async () => {
+      const { toast } = require('sonner');
 
       render(
         <HierarchicalAlertConfiguration
@@ -574,27 +574,27 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Add Configuration&apos;));
+      fireEvent.click(screen.getByText('Add Configuration'));
 
       // Fill out form
-      const alertTypeSelect = screen.getByDisplayValue(&apos;Select alert type&apos;);
+      const alertTypeSelect = screen.getByDisplayValue('Select alert type');
       fireEvent.click(alertTypeSelect);
-      fireEvent.click(screen.getByText(&apos;Battery Alert&apos;));
+      fireEvent.click(screen.getByText('Battery Alert'));
 
-      const thresholdInput = screen.getByLabelText(&apos;Battery Level (%)&apos;);
-      fireEvent.change(thresholdInput, { target: { value: &apos;20&apos; } });
+      const thresholdInput = screen.getByLabelText('Battery Level (%)');
+      fireEvent.change(thresholdInput, { target: { value: '20' } });
 
-      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
+      const saveButton = screen.getByText('Save Configuration');
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(toast.success).toHaveBeenCalledWith(
-          &apos;Alert configuration saved successfully&apos;
+          'Alert configuration saved successfully'
         );
       });
     });
 
-    it(&apos;calls onDeleteConfig when confirming deletion&apos;, async () => {
+    it('calls onDeleteConfig when confirming deletion', async () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -605,10 +605,10 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      const deleteButtons = screen.getAllByText(&apos;Delete&apos;);
+      const deleteButtons = screen.getAllByText('Delete');
       fireEvent.click(deleteButtons[0]);
 
-      const confirmButton = screen.getByText(&apos;Delete&apos;);
+      const confirmButton = screen.getByText('Delete');
       fireEvent.click(confirmButton);
 
       await waitFor(() => {
@@ -616,8 +616,8 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
       });
     });
 
-    it(&apos;shows success toast when deletion is successful&apos;, async () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('shows success toast when deletion is successful', async () => {
+      const { toast } = require('sonner');
 
       render(
         <HierarchicalAlertConfiguration
@@ -629,22 +629,22 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      const deleteButtons = screen.getAllByText(&apos;Delete&apos;);
+      const deleteButtons = screen.getAllByText('Delete');
       fireEvent.click(deleteButtons[0]);
 
-      const confirmButton = screen.getByText(&apos;Delete&apos;);
+      const confirmButton = screen.getByText('Delete');
       fireEvent.click(confirmButton);
 
       await waitFor(() => {
         expect(toast.success).toHaveBeenCalledWith(
-          &apos;Alert configuration deleted successfully&apos;
+          'Alert configuration deleted successfully'
         );
       });
     });
   });
 
-  describe(&apos;Empty States&apos;, () => {
-    it(&apos;shows empty state when no configurations exist for a level&apos;, () => {
+  describe('Empty States', () => {
+    it('shows empty state when no configurations exist for a level', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={{}}
@@ -656,18 +656,18 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
       );
 
       expect(
-        screen.getByText(&apos;No alert configurations found&apos;)
+        screen.getByText('No alert configurations found')
       ).toBeInTheDocument();
       expect(
         screen.getByText(
-          &apos;Get started by creating your first alert configuration&apos;
+          'Get started by creating your first alert configuration'
         )
       ).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Back Navigation&apos;, () => {
-    it(&apos;calls onBack when Back button is clicked&apos;, () => {
+  describe('Back Navigation', () => {
+    it('calls onBack when Back button is clicked', () => {
       render(
         <HierarchicalAlertConfiguration
           alertConfigs={mockAlertConfigs}
@@ -678,7 +678,7 @@ describe(&apos;HierarchicalAlertConfiguration&apos;, () => {
         />
       );
 
-      fireEvent.click(screen.getByText(&apos;Back&apos;));
+      fireEvent.click(screen.getByText('Back'));
 
       expect(mockOnBack).toHaveBeenCalled();
     });

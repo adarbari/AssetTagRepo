@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from &apos;react&apos;;
-import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
-import { Separator } from &apos;../ui/separator&apos;;
-import { ScrollArea } from &apos;../ui/scroll-area&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Calendar } from &apos;../ui/calendar&apos;;
-import { Popover, PopoverContent, PopoverTrigger } from &apos;../ui/popover&apos;;
-import { Skeleton } from &apos;../ui/skeleton&apos;;
-import { PageLayout, PageHeader, StatsCard } from &apos;../common&apos;;
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Separator } from '../ui/separator';
+import { ScrollArea } from '../ui/scroll-area';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Calendar } from '../ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Skeleton } from '../ui/skeleton';
+import { PageLayout, PageHeader, StatsCard } from '../common';
 import {
   fetchSiteActivity,
   getPresetDateRange,
   type SiteActivityData,
-} from &apos;../../services/api&apos;;
-import { GeofenceMapEditor } from &apos;../geofences/GeofenceMapEditor&apos;;
+} from '../../services/api';
+import { GeofenceMapEditor } from '../geofences/GeofenceMapEditor';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
+} from '../ui/select';
 import {
   Table,
   TableBody,
@@ -31,7 +31,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from &apos;../ui/table&apos;;
+} from '../ui/table';
 import {
   Building2,
   Users,
@@ -50,7 +50,7 @@ import {
   Calendar as CalendarIcon,
   Shield,
   Plus,
-} from &apos;lucide-react&apos;;
+} from 'lucide-react';
 import {
   AreaChart,
   Area,
@@ -62,10 +62,10 @@ import {
   PieChart,
   Pie,
   Cell,
-} from &apos;recharts&apos;;
-import type { Site as SharedSite, Geofence } from &apos;../../types&apos;;
+} from 'recharts';
+import type { Site as SharedSite, Geofence } from '../../types';
 
-type SiteStatus = &apos;active&apos; | &apos;maintenance&apos; | &apos;inactive&apos;;
+type SiteStatus = 'active' | 'maintenance' | 'inactive';
 
 interface Site {
   id: string;
@@ -128,53 +128,53 @@ interface SiteDetailsProps {
 
 // Mock asset types distribution
 const assetTypeData = [
-  { name: &apos;Equipment&apos;, value: 95, count: 95, color: &apos;#3b82f6&apos; },
-  { name: &apos;Vehicles&apos;, value: 52, count: 52, color: &apos;#22c55e&apos; },
-  { name: &apos;Tools&apos;, value: 67, count: 67, color: &apos;#f59e0b&apos; },
-  { name: &apos;Containers&apos;, value: 20, count: 20, color: &apos;#8b5cf6&apos; },
+  { name: 'Equipment', value: 95, count: 95, color: '#3b82f6' },
+  { name: 'Vehicles', value: 52, count: 52, color: '#22c55e' },
+  { name: 'Tools', value: 67, count: 67, color: '#f59e0b' },
+  { name: 'Containers', value: 20, count: 20, color: '#8b5cf6' },
 ];
 
 // Mock recent events
 const recentEvents = [
   {
     id: 1,
-    type: &apos;arrival&apos;,
-    asset: &apos;Excavator CAT 320&apos;,
-    assetId: &apos;AT-42891&apos;,
-    timestamp: &apos;2 min ago&apos;,
+    type: 'arrival',
+    asset: 'Excavator CAT 320',
+    assetId: 'AT-42891',
+    timestamp: '2 min ago',
     icon: Wrench,
   },
   {
     id: 2,
-    type: &apos;departure&apos;,
-    asset: &apos;Delivery Truck F-350&apos;,
-    assetId: &apos;AT-78234&apos;,
-    timestamp: &apos;15 min ago&apos;,
+    type: 'departure',
+    asset: 'Delivery Truck F-350',
+    assetId: 'AT-78234',
+    timestamp: '15 min ago',
     icon: Truck,
   },
   {
     id: 3,
-    type: &apos;arrival&apos;,
-    asset: &apos;Tool Container #5&apos;,
-    assetId: &apos;AT-33421&apos;,
-    timestamp: &apos;32 min ago&apos;,
+    type: 'arrival',
+    asset: 'Tool Container #5',
+    assetId: 'AT-33421',
+    timestamp: '32 min ago',
     icon: Container,
   },
   {
     id: 4,
-    type: &apos;alert&apos;,
-    asset: &apos;Forklift Toyota 8FG&apos;,
-    assetId: &apos;AT-55678&apos;,
-    timestamp: &apos;1 hour ago&apos;,
+    type: 'alert',
+    asset: 'Forklift Toyota 8FG',
+    assetId: 'AT-55678',
+    timestamp: '1 hour ago',
     icon: AlertTriangle,
-    message: &apos;Low battery warning&apos;,
+    message: 'Low battery warning',
   },
   {
     id: 5,
-    type: &apos;departure&apos;,
-    asset: &apos;Service Van Mercedes&apos;,
-    assetId: &apos;AT-98765&apos;,
-    timestamp: &apos;2 hours ago&apos;,
+    type: 'departure',
+    asset: 'Service Van Mercedes',
+    assetId: 'AT-98765',
+    timestamp: '2 hours ago',
     icon: Truck,
   },
 ];
@@ -182,44 +182,44 @@ const recentEvents = [
 // Mock assets at site
 const assetsAtSite = [
   {
-    id: &apos;AT-42891&apos;,
-    name: &apos;Excavator CAT 320&apos;,
-    type: &apos;equipment&apos;,
+    id: 'AT-42891',
+    name: 'Excavator CAT 320',
+    type: 'equipment',
     battery: 87,
-    status: &apos;active&apos;,
-    duration: &apos;2 days 4 hrs&apos;,
+    status: 'active',
+    duration: '2 days 4 hrs',
   },
   {
-    id: &apos;AT-78234&apos;,
-    name: &apos;Delivery Truck F-350&apos;,
-    type: &apos;vehicles&apos;,
+    id: 'AT-78234',
+    name: 'Delivery Truck F-350',
+    type: 'vehicles',
     battery: 92,
-    status: &apos;idle&apos;,
-    duration: &apos;5 hrs 23 min&apos;,
+    status: 'idle',
+    duration: '5 hrs 23 min',
   },
   {
-    id: &apos;AT-33421&apos;,
-    name: &apos;Tool Container #5&apos;,
-    type: &apos;containers&apos;,
+    id: 'AT-33421',
+    name: 'Tool Container #5',
+    type: 'containers',
     battery: 78,
-    status: &apos;active&apos;,
-    duration: &apos;1 day 18 hrs&apos;,
+    status: 'active',
+    duration: '1 day 18 hrs',
   },
   {
-    id: &apos;AT-55678&apos;,
-    name: &apos;Forklift Toyota 8FG&apos;,
-    type: &apos;equipment&apos;,
+    id: 'AT-55678',
+    name: 'Forklift Toyota 8FG',
+    type: 'equipment',
     battery: 34,
-    status: &apos;active&apos;,
-    duration: &apos;8 hrs 12 min&apos;,
+    status: 'active',
+    duration: '8 hrs 12 min',
   },
   {
-    id: &apos;AT-11223&apos;,
-    name: &apos;Compressor Atlas 225&apos;,
-    type: &apos;equipment&apos;,
+    id: 'AT-11223',
+    name: 'Compressor Atlas 225',
+    type: 'equipment',
     battery: 65,
-    status: &apos;idle&apos;,
-    duration: &apos;3 days 2 hrs&apos;,
+    status: 'idle',
+    duration: '3 days 2 hrs',
   },
 ];
 
@@ -229,7 +229,7 @@ export function SiteDetails({
   onCreateGeofence,
   onEditGeofence,
   onSiteUpdate,
-  initialTab = &apos;overview&apos;,
+  initialTab = 'overview',
   onTabChange,
 }: SiteDetailsProps) {
   // Convert shared site to local format
@@ -237,13 +237,13 @@ export function SiteDetails({
     id: sharedSite.id,
     name: sharedSite.name,
     address:
-      sharedSite.address || sharedSite.location || &apos;Address not available&apos;,
-    boundary: sharedSite.area || &apos;Boundary not defined&apos;,
+      sharedSite.address || sharedSite.location || 'Address not available',
+    boundary: sharedSite.area || 'Boundary not defined',
     tolerance: sharedSite.tolerance || 50,
     assets: sharedSite.assets || 0,
     personnel: 0, // Not in shared type
-    status: sharedSite.status === &apos;active&apos; ? &apos;active&apos; : &apos;inactive&apos;,
-    lastActivity: &apos;Unknown&apos;, // Not in shared type
+    status: sharedSite.status === 'active' ? 'active' : 'inactive',
+    lastActivity: 'Unknown', // Not in shared type
     coordinates: sharedSite.coordinates
       ? {
           lat: sharedSite.coordinates.lat,
@@ -255,9 +255,9 @@ export function SiteDetails({
       contactPerson: sharedSite.manager,
       phone: sharedSite.phone,
       email: sharedSite.email,
-      operatingHours: &apos;24/7&apos;,
-      timezone: &apos;UTC&apos;,
-      established: &apos;2024&apos;,
+      operatingHours: '24/7',
+      timezone: 'UTC',
+      established: '2024',
     },
   };
 
@@ -266,8 +266,8 @@ export function SiteDetails({
   const [editedSite, setEditedSite] = useState(siteData);
   const [isBoundaryEditing, setIsBoundaryEditing] = useState(false);
   const [activityTimeRange, setActivityTimeRange] = useState<
-    &apos;24h&apos; | &apos;7d&apos; | &apos;30d&apos; | &apos;custom&apos;
-  >(&apos;24h&apos;);
+    '24h' | '7d' | '30d' | 'custom'
+  >('24h');
   const [customStartDate, setCustomStartDate] = useState<Date | undefined>(
     undefined
   );
@@ -287,7 +287,7 @@ export function SiteDetails({
     // Load associated geofence if it exists
     if (sharedSite.geofenceId) {
       // Fetch geofence from mock data
-      import(&apos;../../data/mockData&apos;).then(({ getGeofenceById }) => {
+      import('../../data/mockData').then(({ getGeofenceById }) => {
         if (sharedSite.geofenceId) {
           const geofence = getGeofenceById(sharedSite.geofenceId);
           if (geofence) {
@@ -312,9 +312,9 @@ export function SiteDetails({
       try {
         let startDate: Date;
         let endDate: Date;
-        let granularity: &apos;hourly&apos; | &apos;daily&apos; = &apos;daily&apos;;
+        let granularity: 'hourly' | 'daily' = 'daily';
 
-        if (activityTimeRange === &apos;custom&apos;) {
+        if (activityTimeRange === 'custom') {
           if (!customStartDate || !customEndDate) {
             setActivityData([]);
             setLoadingActivity(false);
@@ -327,7 +327,7 @@ export function SiteDetails({
           const daysDiff = Math.ceil(
             (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
           );
-          granularity = daysDiff <= 2 ? &apos;hourly&apos; : &apos;daily&apos;;
+          granularity = daysDiff <= 2 ? 'hourly' : 'daily';
         } else {
           const range = getPresetDateRange(activityTimeRange);
           startDate = range.start;
@@ -344,8 +344,8 @@ export function SiteDetails({
 
         setActivityData(response.data);
       } catch (error) {
-// // // // // // // console.error(&apos;Error fetching activity data:&apos;, error);
-        setActivityError(&apos;Failed to load activity data. Please try again.&apos;);
+// // // // // // // console.error('Error fetching activity data:', error);
+        setActivityError('Failed to load activity data. Please try again.');
         setActivityData([]);
       } finally {
         setLoadingActivity(false);
@@ -367,48 +367,48 @@ export function SiteDetails({
 
   const getEventIcon = (type: string) => {
     switch (type) {
-      case &apos;arrival&apos;:
-        return <CheckCircle2 className=&apos;h-4 w-4 text-green-600&apos; />;
-      case &apos;departure&apos;:
-        return <Navigation className=&apos;h-4 w-4 text-blue-600&apos; />;
-      case &apos;alert&apos;:
-        return <AlertTriangle className=&apos;h-4 w-4 text-yellow-600&apos; />;
+      case 'arrival':
+        return <CheckCircle2 className='h-4 w-4 text-green-600' />;
+      case 'departure':
+        return <Navigation className='h-4 w-4 text-blue-600' />;
+      case 'alert':
+        return <AlertTriangle className='h-4 w-4 text-yellow-600' />;
       default:
-        return <Activity className=&apos;h-4 w-4 text-muted-foreground&apos; />;
+        return <Activity className='h-4 w-4 text-muted-foreground' />;
     }
   };
 
   return (
     <PageLayout
-      variant=&apos;standard&apos;
-      padding=&apos;lg&apos;
+      variant='standard'
+      padding='lg'
       header={
-        <div className=&apos;border-b bg-background px-8 py-6&apos;>
+        <div className='border-b bg-background px-8 py-6'>
           <PageHeader
             title={editedSite.name}
             description={editedSite.id}
             icon={Building2}
             badge={{
               label: editedSite.status,
-              variant: editedSite.status === &apos;active&apos; ? &apos;default&apos; : &apos;secondary&apos;,
+              variant: editedSite.status === 'active' ? 'default' : 'secondary',
             }}
             onBack={onBack}
             actions={
-              <div className=&apos;flex items-center gap-2&apos;>
+              <div className='flex items-center gap-2'>
                 {isEditing ? (
                   <>
-                    <Button variant=&apos;outline&apos; onClick={handleCancel}>
-                      <X className=&apos;h-4 w-4 mr-2&apos; />
+                    <Button variant='outline' onClick={handleCancel}>
+                      <X className='h-4 w-4 mr-2' />
                       Cancel
                     </Button>
                     <Button onClick={handleSave}>
-                      <Save className=&apos;h-4 w-4 mr-2&apos; />
+                      <Save className='h-4 w-4 mr-2' />
                       Save Changes
                     </Button>
                   </>
                 ) : (
                   <Button onClick={() => setIsEditing(true)}>
-                    <Edit className=&apos;h-4 w-4 mr-2&apos; />
+                    <Edit className='h-4 w-4 mr-2' />
                     Edit Site
                   </Button>
                 )}
@@ -419,30 +419,30 @@ export function SiteDetails({
       }
     >
       {/* Stats Cards */}
-      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
+      <div className='grid gap-4 md:grid-cols-4'>
         <StatsCard
-          title=&apos;Assets On-Site&apos;
+          title='Assets On-Site'
           value={editedSite.assets.toString()}
           icon={Package}
-          variant=&apos;info&apos;
+          variant='info'
         />
         <StatsCard
-          title=&apos;Personnel&apos;
+          title='Personnel'
           value={editedSite.personnel.toString()}
           icon={Users}
-          variant=&apos;info&apos;
+          variant='info'
         />
         <StatsCard
-          title=&apos;Active Assets&apos;
-          value=&apos;178&apos;
+          title='Active Assets'
+          value='178'
           icon={Activity}
-          variant=&apos;success&apos;
+          variant='success'
         />
         <StatsCard
-          title=&apos;Utilization&apos;
-          value=&apos;76%&apos;
+          title='Utilization'
+          value='76%'
           icon={TrendingUp}
-          variant=&apos;warning&apos;
+          variant='warning'
         />
       </div>
 
@@ -455,24 +455,24 @@ export function SiteDetails({
         }}
       >
         <TabsList>
-          <TabsTrigger value=&apos;overview&apos;>Overview</TabsTrigger>
-          <TabsTrigger value=&apos;assets&apos;>Assets</TabsTrigger>
-          <TabsTrigger value=&apos;location&apos;>Location & Boundary</TabsTrigger>
-          <TabsTrigger value=&apos;activity&apos;>Activity</TabsTrigger>
+          <TabsTrigger value='overview'>Overview</TabsTrigger>
+          <TabsTrigger value='assets'>Assets</TabsTrigger>
+          <TabsTrigger value='location'>Location & Boundary</TabsTrigger>
+          <TabsTrigger value='activity'>Activity</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value=&apos;overview&apos; className=&apos;space-y-6&apos;>
-          <div className=&apos;grid gap-6 md:grid-cols-2&apos;>
+        <TabsContent value='overview' className='space-y-6'>
+          <div className='grid gap-6 md:grid-cols-2'>
             {/* Site Information */}
             <Card>
               <CardHeader>
                 <CardTitle>Site Information</CardTitle>
               </CardHeader>
-              <CardContent className=&apos;space-y-4&apos;>
+              <CardContent className='space-y-4'>
                 {isEditing ? (
                   <>
-                    <div className=&apos;space-y-2&apos;>
+                    <div className='space-y-2'>
                       <Label>Site Name</Label>
                       <Input
                         value={editedSite.name}
@@ -481,7 +481,7 @@ export function SiteDetails({
                         }
                       />
                     </div>
-                    <div className=&apos;space-y-2&apos;>
+                    <div className='space-y-2'>
                       <Label>Address</Label>
                       <Input
                         value={editedSite.address}
@@ -493,10 +493,10 @@ export function SiteDetails({
                         }
                       />
                     </div>
-                    <div className=&apos;space-y-2&apos;>
+                    <div className='space-y-2'>
                       <Label>Tolerance (feet)</Label>
                       <Input
-                        type=&apos;number&apos;
+                        type='number'
                         value={editedSite.tolerance}
                         onChange={e =>
                           setEditedSite({
@@ -506,7 +506,7 @@ export function SiteDetails({
                         }
                       />
                     </div>
-                    <div className=&apos;space-y-2&apos;>
+                    <div className='space-y-2'>
                       <Label>Status</Label>
                       <Select
                         value={editedSite.status}
@@ -518,11 +518,11 @@ export function SiteDetails({
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value=&apos;active&apos;>Active</SelectItem>
-                          <SelectItem value=&apos;maintenance&apos;>
+                          <SelectItem value='active'>Active</SelectItem>
+                          <SelectItem value='maintenance'>
                             Maintenance
                           </SelectItem>
-                          <SelectItem value=&apos;inactive&apos;>Inactive</SelectItem>
+                          <SelectItem value='inactive'>Inactive</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -530,46 +530,46 @@ export function SiteDetails({
                 ) : (
                   <>
                     <div>
-                      <p className=&apos;text-sm text-muted-foreground&apos;>Address</p>
+                      <p className='text-sm text-muted-foreground'>Address</p>
                       <p>{editedSite.address}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className=&apos;text-sm text-muted-foreground&apos;>Boundary</p>
+                      <p className='text-sm text-muted-foreground'>Boundary</p>
                       <p>{editedSite.boundary}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className=&apos;text-sm text-muted-foreground&apos;>Tolerance</p>
+                      <p className='text-sm text-muted-foreground'>Tolerance</p>
                       <p>±{editedSite.tolerance} feet</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className=&apos;text-sm text-muted-foreground&apos;>
+                      <p className='text-sm text-muted-foreground'>
                         Contact Person
                       </p>
                       <p>{editedSite.details.contactPerson}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className=&apos;text-sm text-muted-foreground&apos;>Phone</p>
+                      <p className='text-sm text-muted-foreground'>Phone</p>
                       <p>{editedSite.details.phone}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className=&apos;text-sm text-muted-foreground&apos;>Email</p>
+                      <p className='text-sm text-muted-foreground'>Email</p>
                       <p>{editedSite.details.email}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className=&apos;text-sm text-muted-foreground&apos;>
+                      <p className='text-sm text-muted-foreground'>
                         Operating Hours
                       </p>
                       <p>{editedSite.details.operatingHours}</p>
                     </div>
                     <Separator />
                     <div>
-                      <p className=&apos;text-sm text-muted-foreground&apos;>
+                      <p className='text-sm text-muted-foreground'>
                         Established
                       </p>
                       <p>{editedSite.details.established}</p>
@@ -585,17 +585,17 @@ export function SiteDetails({
                 <CardTitle>Asset Distribution</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className=&apos;h-64&apos;>
-                  <ResponsiveContainer width=&apos;100%&apos; height=&apos;100%&apos;>
+                <div className='h-64'>
+                  <ResponsiveContainer width='100%' height='100%'>
                     <PieChart>
                       <Pie
                         data={assetTypeData}
-                        cx=&apos;50%&apos;
-                        cy=&apos;50%&apos;
+                        cx='50%'
+                        cy='50%'
                         innerRadius={60}
                         outerRadius={80}
                         paddingAngle={2}
-                        dataKey=&apos;value&apos;
+                        dataKey='value'
                       >
                         {assetTypeData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
@@ -605,9 +605,9 @@ export function SiteDetails({
                         content={({ active, payload }) => {
                           if (active && payload && payload.length) {
                             return (
-                              <div className=&apos;bg-background border rounded-lg p-2 shadow-lg&apos;>
-                                <p className=&apos;font-medium&apos;>{payload[0].name}</p>
-                                <p className=&apos;text-sm text-muted-foreground&apos;>
+                              <div className='bg-background border rounded-lg p-2 shadow-lg'>
+                                <p className='font-medium'>{payload[0].name}</p>
+                                <p className='text-sm text-muted-foreground'>
                                   {payload[0].value} assets
                                 </p>
                               </div>
@@ -619,16 +619,16 @@ export function SiteDetails({
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <div className=&apos;grid grid-cols-2 gap-4 mt-4&apos;>
+                <div className='grid grid-cols-2 gap-4 mt-4'>
                   {assetTypeData.map(item => (
-                    <div key={item.name} className=&apos;flex items-center gap-2&apos;>
+                    <div key={item.name} className='flex items-center gap-2'>
                       <div
-                        className=&apos;w-3 h-3 rounded-full&apos;
+                        className='w-3 h-3 rounded-full'
                         style={{ backgroundColor: item.color }}
                       />
-                      <div className=&apos;flex-1&apos;>
-                        <p className=&apos;text-sm&apos;>{item.name}</p>
-                        <p className=&apos;text-sm text-muted-foreground&apos;>
+                      <div className='flex-1'>
+                        <p className='text-sm'>{item.name}</p>
+                        <p className='text-sm text-muted-foreground'>
                           {item.count}
                         </p>
                       </div>
@@ -645,23 +645,23 @@ export function SiteDetails({
               <CardTitle>Recent Events</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className=&apos;h-64&apos;>
-                <div className=&apos;space-y-4&apos;>
+              <ScrollArea className='h-64'>
+                <div className='space-y-4'>
                   {recentEvents.map(event => (
-                    <div key={event.id} className=&apos;flex items-start gap-4&apos;>
-                      <div className=&apos;mt-1&apos;>{getEventIcon(event.type)}</div>
-                      <div className=&apos;flex-1&apos;>
-                        <div className=&apos;flex items-center justify-between&apos;>
+                    <div key={event.id} className='flex items-start gap-4'>
+                      <div className='mt-1'>{getEventIcon(event.type)}</div>
+                      <div className='flex-1'>
+                        <div className='flex items-center justify-between'>
                           <p>{event.asset}</p>
-                          <p className=&apos;text-sm text-muted-foreground&apos;>
+                          <p className='text-sm text-muted-foreground'>
                             {event.timestamp}
                           </p>
                         </div>
-                        <p className=&apos;text-sm text-muted-foreground&apos;>
+                        <p className='text-sm text-muted-foreground'>
                           {event.assetId}
                         </p>
                         {event.message && (
-                          <p className=&apos;text-sm text-yellow-600 mt-1&apos;>
+                          <p className='text-sm text-yellow-600 mt-1'>
                             {event.message}
                           </p>
                         )}
@@ -675,7 +675,7 @@ export function SiteDetails({
         </TabsContent>
 
         {/* Assets Tab */}
-        <TabsContent value=&apos;assets&apos; className=&apos;space-y-6&apos;>
+        <TabsContent value='assets' className='space-y-6'>
           <Card>
             <CardHeader>
               <CardTitle>Assets Currently at Site</CardTitle>
@@ -698,32 +698,32 @@ export function SiteDetails({
                       <TableCell>{asset.id}</TableCell>
                       <TableCell>{asset.name}</TableCell>
                       <TableCell>
-                        <Badge variant=&apos;outline&apos;>{asset.type}</Badge>
+                        <Badge variant='outline'>{asset.type}</Badge>
                       </TableCell>
                       <TableCell>
-                        <div className=&apos;flex items-center gap-2&apos;>
-                          <div className=&apos;w-16 h-2 bg-muted rounded-full overflow-hidden&apos;>
+                        <div className='flex items-center gap-2'>
+                          <div className='w-16 h-2 bg-muted rounded-full overflow-hidden'>
                             <div
                               className={`h-full ${
                                 asset.battery > 50
-                                  ? &apos;bg-green-500&apos;
+                                  ? 'bg-green-500'
                                   : asset.battery > 20
-                                    ? &apos;bg-yellow-500&apos;
-                                    : &apos;bg-red-500&apos;
+                                    ? 'bg-yellow-500'
+                                    : 'bg-red-500'
                               }`}
                               style={{ width: `${asset.battery}%` }}
                             />
                           </div>
-                          <span className=&apos;text-sm&apos;>{asset.battery}%</span>
+                          <span className='text-sm'>{asset.battery}%</span>
                         </div>
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant=&apos;outline&apos;
+                          variant='outline'
                           className={
-                            asset.status === &apos;active&apos;
-                              ? &apos;bg-green-100 text-green-700 border-green-200&apos;
-                              : &apos;bg-gray-100 text-gray-700 border-gray-200&apos;
+                            asset.status === 'active'
+                              ? 'bg-green-100 text-green-700 border-green-200'
+                              : 'bg-gray-100 text-gray-700 border-gray-200'
                           }
                         >
                           {asset.status}
@@ -739,35 +739,35 @@ export function SiteDetails({
         </TabsContent>
 
         {/* Location Tab */}
-        <TabsContent value=&apos;location&apos; className=&apos;space-y-6&apos;>
+        <TabsContent value='location' className='space-y-6'>
           <Card>
             <CardHeader>
-              <div className=&apos;flex items-center justify-between&apos;>
+              <div className='flex items-center justify-between'>
                 <CardTitle>Site Location & Boundary</CardTitle>
                 {!isBoundaryEditing ? (
                   <Button
-                    size=&apos;sm&apos;
-                    variant=&apos;outline&apos;
+                    size='sm'
+                    variant='outline'
                     onClick={() => setIsBoundaryEditing(true)}
                   >
-                    <Edit className=&apos;mr-2 h-4 w-4&apos; />
+                    <Edit className='mr-2 h-4 w-4' />
                     Edit Boundary
                   </Button>
                 ) : (
-                  <div className=&apos;flex gap-2&apos;>
+                  <div className='flex gap-2'>
                     <Button
-                      size=&apos;sm&apos;
-                      variant=&apos;outline&apos;
+                      size='sm'
+                      variant='outline'
                       onClick={() => {
                         setEditedSite(siteData);
                         setIsBoundaryEditing(false);
                       }}
                     >
-                      <X className=&apos;mr-2 h-4 w-4&apos; />
+                      <X className='mr-2 h-4 w-4' />
                       Cancel
                     </Button>
                     <Button
-                      size=&apos;sm&apos;
+                      size='sm'
                       onClick={() => {
                         // Update the site with new boundary data
                         const updatedSharedSite: SharedSite = {
@@ -786,21 +786,21 @@ export function SiteDetails({
                         }
 
                         // Show success message
-                        import(&apos;sonner&apos;).then(({ toast }) => {
-                          toast.success(&apos;Site boundary updated successfully&apos;);
+                        import('sonner').then(({ toast }) => {
+                          toast.success('Site boundary updated successfully');
                         });
 
                         setIsBoundaryEditing(false);
                       }}
                     >
-                      <Save className=&apos;mr-2 h-4 w-4&apos; />
+                      <Save className='mr-2 h-4 w-4' />
                       Save Changes
                     </Button>
                   </div>
                 )}
               </div>
             </CardHeader>
-            <CardContent className=&apos;space-y-4&apos;>
+            <CardContent className='space-y-4'>
               <GeofenceMapEditor
                 coordinates={editedSite.coordinates}
                 tolerance={editedSite.tolerance}
@@ -826,14 +826,14 @@ export function SiteDetails({
           {/* Geofence Management */}
           <Card>
             <CardHeader>
-              <div className=&apos;flex items-center justify-between&apos;>
-                <div className=&apos;flex items-center gap-2&apos;>
-                  <Shield className=&apos;h-5 w-5 text-blue-600&apos; />
+              <div className='flex items-center justify-between'>
+                <div className='flex items-center gap-2'>
+                  <Shield className='h-5 w-5 text-blue-600' />
                   <CardTitle>Geofence</CardTitle>
                 </div>
                 {!siteGeofence && onCreateGeofence && (
                   <Button
-                    size=&apos;sm&apos;
+                    size='sm'
                     onClick={() =>
                       onCreateGeofence(
                         {
@@ -848,7 +848,7 @@ export function SiteDetails({
                       )
                     }
                   >
-                    <Plus className=&apos;mr-2 h-4 w-4&apos; />
+                    <Plus className='mr-2 h-4 w-4' />
                     Create Geofence
                   </Button>
                 )}
@@ -856,62 +856,62 @@ export function SiteDetails({
             </CardHeader>
             <CardContent>
               {!siteGeofence ? (
-                <div className=&apos;text-center py-6 text-muted-foreground&apos;>
-                  <Shield className=&apos;h-10 w-10 mx-auto mb-2 opacity-20&apos; />
-                  <p className=&apos;text-sm&apos;>
+                <div className='text-center py-6 text-muted-foreground'>
+                  <Shield className='h-10 w-10 mx-auto mb-2 opacity-20' />
+                  <p className='text-sm'>
                     No geofence configured for this site
                   </p>
-                  <p className=&apos;text-xs mt-1&apos;>
+                  <p className='text-xs mt-1'>
                     Create a geofence to enable entry/exit alerts
                   </p>
                 </div>
               ) : (
-                <div className=&apos;space-y-4&apos;>
-                  <div className=&apos;flex items-start justify-between&apos;>
-                    <div className=&apos;space-y-3 flex-1&apos;>
-                      <div className=&apos;flex items-center gap-3&apos;>
+                <div className='space-y-4'>
+                  <div className='flex items-start justify-between'>
+                    <div className='space-y-3 flex-1'>
+                      <div className='flex items-center gap-3'>
                         <h4>{siteGeofence.name}</h4>
                         <Badge
-                          variant=&apos;outline&apos;
+                          variant='outline'
                           className={
-                            siteGeofence.status === &apos;active&apos;
-                              ? &apos;bg-green-100 text-green-700 border-green-200&apos;
-                              : &apos;bg-gray-100 text-gray-700 border-gray-200&apos;
+                            siteGeofence.status === 'active'
+                              ? 'bg-green-100 text-green-700 border-green-200'
+                              : 'bg-gray-100 text-gray-700 border-gray-200'
                           }
                         >
                           {siteGeofence.status}
                         </Badge>
                       </div>
 
-                      <div className=&apos;grid grid-cols-3 gap-4 text-sm&apos;>
+                      <div className='grid grid-cols-3 gap-4 text-sm'>
                         <div>
-                          <p className=&apos;text-muted-foreground&apos;>Geofence ID</p>
-                          <p className=&apos;font-mono text-xs&apos;>{siteGeofence.id}</p>
+                          <p className='text-muted-foreground'>Geofence ID</p>
+                          <p className='font-mono text-xs'>{siteGeofence.id}</p>
                         </div>
                         <div>
-                          <p className=&apos;text-muted-foreground&apos;>Radius</p>
+                          <p className='text-muted-foreground'>Radius</p>
                           <p>{siteGeofence.radius} feet</p>
                         </div>
                         <div>
-                          <p className=&apos;text-muted-foreground&apos;>Tolerance</p>
+                          <p className='text-muted-foreground'>Tolerance</p>
                           <p>±{siteGeofence.tolerance} feet</p>
                         </div>
                       </div>
 
-                      <div className=&apos;flex items-center gap-4 text-sm&apos;>
-                        <div className=&apos;flex items-center gap-1&apos;>
+                      <div className='flex items-center gap-4 text-sm'>
+                        <div className='flex items-center gap-1'>
                           {siteGeofence.alertOnEntry ? (
-                            <CheckCircle2 className=&apos;h-4 w-4 text-green-600&apos; />
+                            <CheckCircle2 className='h-4 w-4 text-green-600' />
                           ) : (
-                            <X className=&apos;h-4 w-4 text-muted-foreground&apos; />
+                            <X className='h-4 w-4 text-muted-foreground' />
                           )}
                           <span>Entry alerts</span>
                         </div>
-                        <div className=&apos;flex items-center gap-1&apos;>
+                        <div className='flex items-center gap-1'>
                           {siteGeofence.alertOnExit ? (
-                            <CheckCircle2 className=&apos;h-4 w-4 text-green-600&apos; />
+                            <CheckCircle2 className='h-4 w-4 text-green-600' />
                           ) : (
-                            <X className=&apos;h-4 w-4 text-muted-foreground&apos; />
+                            <X className='h-4 w-4 text-muted-foreground' />
                           )}
                           <span>Exit alerts</span>
                         </div>
@@ -919,8 +919,8 @@ export function SiteDetails({
                     </div>
 
                     <Button
-                      size=&apos;sm&apos;
-                      variant=&apos;outline&apos;
+                      size='sm'
+                      variant='outline'
                       onClick={() => {
                         if (onEditGeofence && siteGeofence.center) {
                           onEditGeofence(
@@ -942,7 +942,7 @@ export function SiteDetails({
                         }
                       }}
                     >
-                      <Edit className=&apos;h-4 w-4 mr-2&apos; />
+                      <Edit className='h-4 w-4 mr-2' />
                       Edit
                     </Button>
                   </div>
@@ -953,55 +953,55 @@ export function SiteDetails({
         </TabsContent>
 
         {/* Activity Tab */}
-        <TabsContent value=&apos;activity&apos; className=&apos;space-y-6&apos;>
+        <TabsContent value='activity' className='space-y-6'>
           <Card>
             <CardHeader>
-              <div className=&apos;flex items-center justify-between&apos;>
+              <div className='flex items-center justify-between'>
                 <CardTitle>
-                  {activityTimeRange === &apos;24h&apos; && &apos;24-Hour Activity&apos;}
-                  {activityTimeRange === &apos;7d&apos; && &apos;7-Day Activity&apos;}
-                  {activityTimeRange === &apos;30d&apos; && &apos;30-Day Activity&apos;}
-                  {activityTimeRange === &apos;custom&apos; && &apos;Custom Range Activity&apos;}
+                  {activityTimeRange === '24h' && '24-Hour Activity'}
+                  {activityTimeRange === '7d' && '7-Day Activity'}
+                  {activityTimeRange === '30d' && '30-Day Activity'}
+                  {activityTimeRange === 'custom' && 'Custom Range Activity'}
                 </CardTitle>
-                <div className=&apos;flex items-center gap-2&apos;>
+                <div className='flex items-center gap-2'>
                   <Select
                     value={activityTimeRange}
                     onValueChange={(value: any) => setActivityTimeRange(value)}
                   >
-                    <SelectTrigger className=&apos;w-40&apos;>
+                    <SelectTrigger className='w-40'>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&apos;24h&apos;>24 Hours</SelectItem>
-                      <SelectItem value=&apos;7d&apos;>7 Days</SelectItem>
-                      <SelectItem value=&apos;30d&apos;>30 Days</SelectItem>
-                      <SelectItem value=&apos;custom&apos;>Custom Range</SelectItem>
+                      <SelectItem value='24h'>24 Hours</SelectItem>
+                      <SelectItem value='7d'>7 Days</SelectItem>
+                      <SelectItem value='30d'>30 Days</SelectItem>
+                      <SelectItem value='custom'>Custom Range</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              {activityTimeRange === &apos;custom&apos; && (
-                <div className=&apos;space-y-3 mt-4 pt-4 border-t&apos;>
-                  <div className=&apos;flex items-center gap-4&apos;>
-                    <div className=&apos;flex items-center gap-2&apos;>
-                      <Label className=&apos;text-sm&apos;>From:</Label>
+              {activityTimeRange === 'custom' && (
+                <div className='space-y-3 mt-4 pt-4 border-t'>
+                  <div className='flex items-center gap-4'>
+                    <div className='flex items-center gap-2'>
+                      <Label className='text-sm'>From:</Label>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
-                            variant=&apos;outline&apos;
-                            size=&apos;sm&apos;
-                            className=&apos;w-40 justify-start&apos;
+                            variant='outline'
+                            size='sm'
+                            className='w-40 justify-start'
                           >
-                            <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
+                            <CalendarIcon className='mr-2 h-4 w-4' />
                             {customStartDate
                               ? customStartDate.toLocaleDateString()
-                              : &apos;Start date&apos;}
+                              : 'Start date'}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
+                        <PopoverContent className='w-auto p-0' align='start'>
                           <Calendar
-                            mode=&apos;single&apos;
+                            mode='single'
                             selected={customStartDate}
                             onSelect={date => {
                               setCustomStartDate(date);
@@ -1021,24 +1021,24 @@ export function SiteDetails({
                       </Popover>
                     </div>
 
-                    <div className=&apos;flex items-center gap-2&apos;>
-                      <Label className=&apos;text-sm&apos;>To:</Label>
+                    <div className='flex items-center gap-2'>
+                      <Label className='text-sm'>To:</Label>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
-                            variant=&apos;outline&apos;
-                            size=&apos;sm&apos;
-                            className=&apos;w-40 justify-start&apos;
+                            variant='outline'
+                            size='sm'
+                            className='w-40 justify-start'
                           >
-                            <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
+                            <CalendarIcon className='mr-2 h-4 w-4' />
                             {customEndDate
                               ? customEndDate.toLocaleDateString()
-                              : &apos;End date&apos;}
+                              : 'End date'}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
+                        <PopoverContent className='w-auto p-0' align='start'>
                           <Calendar
-                            mode=&apos;single&apos;
+                            mode='single'
                             selected={customEndDate}
                             onSelect={date => setCustomEndDate(date)}
                             disabled={date => {
@@ -1055,13 +1055,13 @@ export function SiteDetails({
                   </div>
 
                   {customStartDate && customEndDate && (
-                    <div className=&apos;text-sm text-muted-foreground&apos;>
-                      Showing data from {customStartDate.toLocaleDateString()}{&apos; &apos;}
+                    <div className='text-sm text-muted-foreground'>
+                      Showing data from {customStartDate.toLocaleDateString()}{' '}
                       to {customEndDate.toLocaleDateString()}(
                       {Math.ceil(
                         (customEndDate.getTime() - customStartDate.getTime()) /
                           (1000 * 60 * 60 * 24)
-                      )}{&apos; &apos;}
+                      )}{' '}
                       days)
                     </div>
                   )}
@@ -1069,31 +1069,31 @@ export function SiteDetails({
               )}
             </CardHeader>
             <CardContent>
-              {activityTimeRange === &apos;custom&apos; &&
+              {activityTimeRange === 'custom' &&
               (!customStartDate || !customEndDate) ? (
-                <div className=&apos;h-80 flex items-center justify-center text-muted-foreground&apos;>
+                <div className='h-80 flex items-center justify-center text-muted-foreground'>
                   Please select both start and end dates to view activity data
                 </div>
               ) : isLoadingActivity ? (
-                <div className=&apos;h-80 space-y-4 p-4&apos;>
-                  <Skeleton className=&apos;h-8 w-full&apos; />
-                  <Skeleton className=&apos;h-8 w-full&apos; />
-                  <Skeleton className=&apos;h-8 w-full&apos; />
-                  <Skeleton className=&apos;h-8 w-full&apos; />
-                  <Skeleton className=&apos;h-8 w-full&apos; />
-                  <Skeleton className=&apos;h-8 w-full&apos; />
-                  <Skeleton className=&apos;h-8 w-full&apos; />
+                <div className='h-80 space-y-4 p-4'>
+                  <Skeleton className='h-8 w-full' />
+                  <Skeleton className='h-8 w-full' />
+                  <Skeleton className='h-8 w-full' />
+                  <Skeleton className='h-8 w-full' />
+                  <Skeleton className='h-8 w-full' />
+                  <Skeleton className='h-8 w-full' />
+                  <Skeleton className='h-8 w-full' />
                 </div>
               ) : activityError ? (
-                <div className=&apos;h-80 flex flex-col items-center justify-center gap-4&apos;>
-                  <AlertTriangle className=&apos;h-12 w-12 text-destructive&apos; />
-                  <p className=&apos;text-destructive&apos;>{activityError}</p>
+                <div className='h-80 flex flex-col items-center justify-center gap-4'>
+                  <AlertTriangle className='h-12 w-12 text-destructive' />
+                  <p className='text-destructive'>{activityError}</p>
                   <Button
-                    variant=&apos;outline&apos;
+                    variant='outline'
                     onClick={() => {
                       // Trigger refetch by toggling state
                       const currentRange = activityTimeRange;
-                      setActivityTimeRange(&apos;24h&apos;);
+                      setActivityTimeRange('24h');
                       setTimeout(() => setActivityTimeRange(currentRange), 0);
                     }}
                   >
@@ -1101,32 +1101,32 @@ export function SiteDetails({
                   </Button>
                 </div>
               ) : activityData.length === 0 ? (
-                <div className=&apos;h-80 flex items-center justify-center text-muted-foreground&apos;>
+                <div className='h-80 flex items-center justify-center text-muted-foreground'>
                   No activity data available for the selected period
                 </div>
               ) : (
-                <div className=&apos;h-80&apos;>
-                  <ResponsiveContainer width=&apos;100%&apos; height=&apos;100%&apos;>
+                <div className='h-80'>
+                  <ResponsiveContainer width='100%' height='100%'>
                     <AreaChart data={activityData}>
-                      <CartesianGrid strokeDasharray=&apos;3 3&apos; />
-                      <XAxis dataKey=&apos;time&apos; />
+                      <CartesianGrid strokeDasharray='3 3' />
+                      <XAxis dataKey='time' />
                       <YAxis />
                       <Tooltip />
                       <Area
-                        type=&apos;monotone&apos;
-                        dataKey=&apos;assets&apos;
-                        stroke=&apos;#3b82f6&apos;
-                        fill=&apos;#3b82f6&apos;
+                        type='monotone'
+                        dataKey='assets'
+                        stroke='#3b82f6'
+                        fill='#3b82f6'
                         fillOpacity={0.2}
-                        name=&apos;Assets&apos;
+                        name='Assets'
                       />
                       <Area
-                        type=&apos;monotone&apos;
-                        dataKey=&apos;personnel&apos;
-                        stroke=&apos;#8b5cf6&apos;
-                        fill=&apos;#8b5cf6&apos;
+                        type='monotone'
+                        dataKey='personnel'
+                        stroke='#8b5cf6'
+                        fill='#8b5cf6'
                         fillOpacity={0.2}
-                        name=&apos;Personnel&apos;
+                        name='Personnel'
                       />
                     </AreaChart>
                   </ResponsiveContainer>

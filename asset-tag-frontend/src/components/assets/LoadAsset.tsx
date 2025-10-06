@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from &apos;react&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Label } from &apos;../ui/label&apos;;
+import React, { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Card, CardContent } from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { PageHeader, LoadingState, PageLayout } from &apos;../common&apos;;
-import { Truck, Package, Plus, X, AlertCircle } from &apos;lucide-react&apos;;
-import { toast } from &apos;sonner&apos;;
+} from '../ui/select';
+import { Card, CardContent } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { PageHeader, LoadingState, PageLayout } from '../common';
+import { Truck, Package, Plus, X, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import {
   fetchAvailableVehicles,
   fetchAvailableAssets,
   type DropdownOption,
-} from &apos;../../services/configService&apos;;
-import { Alert, AlertDescription } from &apos;../ui/alert&apos;;
+} from '../../services/configService';
+import { Alert, AlertDescription } from '../ui/alert';
 
 interface LoadAssetProps {
   onBack: () => void;
@@ -32,10 +32,10 @@ export function LoadAsset({
   preselectedVehicleId,
 }: LoadAssetProps) {
   const [selectedVehicle, setSelectedVehicle] = useState(
-    preselectedVehicleId || &apos;&apos;
+    preselectedVehicleId || ''
   );
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
-  const [assetToAdd, setAssetToAdd] = useState(&apos;&apos;);
+  const [assetToAdd, setAssetToAdd] = useState('');
 
   // Configuration options
   const [vehicles, setVehicles] = useState<DropdownOption[]>([]);
@@ -70,8 +70,8 @@ export function LoadAsset({
       setVehicles(vehiclesData);
       setAssets(assetsData);
     } catch (error) {
-// // // // // // // console.error(&apos;Error loading configuration data:&apos;, error);
-      toast.error(&apos;Failed to load configuration data&apos;);
+// // // // // // // console.error('Error loading configuration data:', error);
+      toast.error('Failed to load configuration data');
     } finally {
       setLoading(false);
     }
@@ -79,40 +79,40 @@ export function LoadAsset({
 
   const handleAddAsset = () => {
     if (!assetToAdd) {
-      toast.error(&apos;Please select an asset to add&apos;);
+      toast.error('Please select an asset to add');
       return;
     }
 
     if (selectedAssets.includes(assetToAdd)) {
-      toast.error(&apos;Asset already added&apos;);
+      toast.error('Asset already added');
       return;
     }
 
     if (vehicleCapacity && selectedAssets.length >= vehicleCapacity) {
-      toast.error(&apos;Vehicle capacity reached&apos;);
+      toast.error('Vehicle capacity reached');
       return;
     }
 
     setSelectedAssets(prev => [...prev, assetToAdd]);
-    setAssetToAdd(&apos;&apos;);
-    toast.success(&apos;Asset added to load list&apos;);
+    setAssetToAdd('');
+    toast.success('Asset added to load list');
   };
 
   const handleRemoveAsset = (assetId: string) => {
     setSelectedAssets(prev => prev.filter(id => id !== assetId));
-    toast.success(&apos;Asset removed from load list&apos;);
+    toast.success('Asset removed from load list');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!selectedVehicle) {
-      toast.error(&apos;Please select a vehicle&apos;);
+      toast.error('Please select a vehicle');
       return;
     }
 
     if (selectedAssets.length === 0) {
-      toast.error(&apos;Please add at least one asset to load&apos;);
+      toast.error('Please add at least one asset to load');
       return;
     }
 
@@ -122,17 +122,17 @@ export function LoadAsset({
         vehicleId: selectedVehicle,
         assetIds: selectedAssets,
         loadedAt: new Date().toISOString(),
-        loadedBy: &apos;current-user&apos;, // Would come from auth context
+        loadedBy: 'current-user', // Would come from auth context
       };
 
       // TODO: Replace with actual API call
       // await api.loadAssets(loadData);
 
-      toast.success(&apos;Assets loaded successfully&apos;, {
+      toast.success('Assets loaded successfully', {
         description: `${selectedAssets.length} asset(s) loaded onto vehicle`,
       });
 
-// // // // // // // console.log(&apos;Backend-ready load data:&apos;, loadData);
+// // // // // // // console.log('Backend-ready load data:', loadData);
 
       if (onAssetsLoaded) {
         onAssetsLoaded({
@@ -143,9 +143,9 @@ export function LoadAsset({
 
       onBack();
     } catch (error) {
-// // // // // // // console.error(&apos;Error loading assets:&apos;, error);
-      toast.error(&apos;Failed to load assets&apos;, {
-        description: &apos;Please try again&apos;,
+// // // // // // // console.error('Error loading assets:', error);
+      toast.error('Failed to load assets', {
+        description: 'Please try again',
       });
     }
   };
@@ -164,42 +164,42 @@ export function LoadAsset({
   );
 
   if (loading) {
-    return <LoadingState message=&apos;Loading assets and vehicles...&apos; fullScreen />;
+    return <LoadingState message='Loading assets and vehicles...' fullScreen />;
   }
 
   return (
     <PageLayout
-      variant=&apos;narrow&apos;
-      padding=&apos;md&apos;
+      variant='narrow'
+      padding='md'
       header={
         <PageHeader
-          title=&apos;Load Assets&apos;
-          description=&apos;Assign assets to a vehicle for transport or deployment&apos;
+          title='Load Assets'
+          description='Assign assets to a vehicle for transport or deployment'
           onBack={onBack}
           actions={
-            <Button type=&apos;submit&apos; form=&apos;load-asset-form&apos;>
-              <Truck className=&apos;h-4 w-4 mr-2&apos; />
+            <Button type='submit' form='load-asset-form'>
+              <Truck className='h-4 w-4 mr-2' />
               Load Assets
             </Button>
           }
         />
       }
     >
-      <form id=&apos;load-asset-form&apos; onSubmit={handleSubmit} className=&apos;space-y-6&apos;>
+      <form id='load-asset-form' onSubmit={handleSubmit} className='space-y-6'>
         {/* Vehicle Selection */}
         <Card>
-          <CardContent className=&apos;pt-6 space-y-4&apos;>
+          <CardContent className='pt-6 space-y-4'>
             <h3>Select Vehicle</h3>
 
-            <div className=&apos;space-y-2&apos;>
-              <Label htmlFor=&apos;vehicle&apos;>Vehicle *</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='vehicle'>Vehicle *</Label>
               <Select
                 value={selectedVehicle}
                 onValueChange={setSelectedVehicle}
                 disabled={!!preselectedVehicleId}
               >
-                <SelectTrigger id=&apos;vehicle&apos;>
-                  <SelectValue placeholder=&apos;Select a vehicle&apos; />
+                <SelectTrigger id='vehicle'>
+                  <SelectValue placeholder='Select a vehicle' />
                 </SelectTrigger>
                 <SelectContent>
                   {vehicles.map(vehicle => (
@@ -210,17 +210,17 @@ export function LoadAsset({
                 </SelectContent>
               </Select>
               {preselectedVehicleId && (
-                <p className=&apos;text-sm text-muted-foreground&apos;>
+                <p className='text-sm text-muted-foreground'>
                   Vehicle pre-selected from previous screen
                 </p>
               )}
             </div>
 
             {selectedVehicle && vehicleCapacity && (
-              <div className=&apos;p-3 bg-blue-50 border border-blue-200 rounded-md&apos;>
-                <div className=&apos;flex items-center justify-between&apos;>
-                  <span className=&apos;text-sm&apos;>Vehicle Capacity:</span>
-                  <Badge variant=&apos;outline&apos;>
+              <div className='p-3 bg-blue-50 border border-blue-200 rounded-md'>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm'>Vehicle Capacity:</span>
+                  <Badge variant='outline'>
                     {selectedAssets.length} / {vehicleCapacity}
                   </Badge>
                 </div>
@@ -231,24 +231,24 @@ export function LoadAsset({
 
         {/* Asset Selection */}
         <Card>
-          <CardContent className=&apos;pt-6 space-y-4&apos;>
-            <div className=&apos;flex items-center justify-between&apos;>
+          <CardContent className='pt-6 space-y-4'>
+            <div className='flex items-center justify-between'>
               <h3>Add Assets</h3>
-              <Badge variant=&apos;outline&apos;>
+              <Badge variant='outline'>
                 {selectedAssets.length} asset
-                {selectedAssets.length !== 1 ? &apos;s&apos; : &apos;&apos;} selected
+                {selectedAssets.length !== 1 ? 's' : ''} selected
               </Badge>
             </div>
 
-            <div className=&apos;flex gap-2&apos;>
-              <div className=&apos;flex-1&apos;>
+            <div className='flex gap-2'>
+              <div className='flex-1'>
                 <Select value={assetToAdd} onValueChange={setAssetToAdd}>
                   <SelectTrigger>
-                    <SelectValue placeholder=&apos;Select an asset to add&apos; />
+                    <SelectValue placeholder='Select an asset to add' />
                   </SelectTrigger>
                   <SelectContent>
                     {availableAssets.length === 0 ? (
-                      <div className=&apos;p-2 text-sm text-muted-foreground text-center&apos;>
+                      <div className='p-2 text-sm text-muted-foreground text-center'>
                         No more assets available
                       </div>
                     ) : (
@@ -262,7 +262,7 @@ export function LoadAsset({
                 </Select>
               </div>
               <Button
-                type=&apos;button&apos;
+                type='button'
                 onClick={handleAddAsset}
                 disabled={
                   !assetToAdd ||
@@ -270,16 +270,16 @@ export function LoadAsset({
                     selectedAssets.length >= vehicleCapacity)
                 }
               >
-                <Plus className=&apos;h-4 w-4 mr-2&apos; />
+                <Plus className='h-4 w-4 mr-2' />
                 Add
               </Button>
             </div>
 
             {vehicleCapacity && selectedAssets.length >= vehicleCapacity && (
-              <Alert variant=&apos;destructive&apos;>
-                <AlertCircle className=&apos;h-4 w-4&apos; />
+              <Alert variant='destructive'>
+                <AlertCircle className='h-4 w-4' />
                 <AlertDescription>
-                  Vehicle has reached maximum capacity ({vehicleCapacity}{&apos; &apos;}
+                  Vehicle has reached maximum capacity ({vehicleCapacity}{' '}
                   assets)
                 </AlertDescription>
               </Alert>
@@ -290,31 +290,31 @@ export function LoadAsset({
         {/* Selected Assets List */}
         {selectedAssets.length > 0 && (
           <Card>
-            <CardContent className=&apos;pt-6 space-y-4&apos;>
+            <CardContent className='pt-6 space-y-4'>
               <h3>Assets to Load ({selectedAssets.length})</h3>
 
-              <div className=&apos;space-y-2&apos;>
+              <div className='space-y-2'>
                 {selectedAssets.map((assetId, index) => (
                   <div
                     key={assetId}
-                    className=&apos;flex items-center justify-between p-3 bg-muted rounded-lg&apos;
+                    className='flex items-center justify-between p-3 bg-muted rounded-lg'
                   >
-                    <div className=&apos;flex items-center gap-3&apos;>
-                      <Badge variant=&apos;outline&apos; className=&apos;w-8 justify-center&apos;>
+                    <div className='flex items-center gap-3'>
+                      <Badge variant='outline' className='w-8 justify-center'>
                         {index + 1}
                       </Badge>
-                      <div className=&apos;flex items-center gap-2&apos;>
-                        <Package className=&apos;h-4 w-4 text-muted-foreground&apos; />
+                      <div className='flex items-center gap-2'>
+                        <Package className='h-4 w-4 text-muted-foreground' />
                         <span>{getAssetLabel(assetId)}</span>
                       </div>
                     </div>
                     <Button
-                      type=&apos;button&apos;
-                      variant=&apos;ghost&apos;
-                      size=&apos;icon&apos;
+                      type='button'
+                      variant='ghost'
+                      size='icon'
                       onClick={() => handleRemoveAsset(assetId)}
                     >
-                      <X className=&apos;h-4 w-4&apos; />
+                      <X className='h-4 w-4' />
                     </Button>
                   </div>
                 ))}
@@ -325,21 +325,21 @@ export function LoadAsset({
 
         {/* Summary */}
         {selectedVehicle && selectedAssets.length > 0 && (
-          <Card className=&apos;bg-primary/5 border-primary/20&apos;>
-            <CardContent className=&apos;pt-6&apos;>
-              <h3 className=&apos;mb-4&apos;>Load Summary</h3>
-              <div className=&apos;space-y-2&apos;>
-                <div className=&apos;flex items-center justify-between&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>Vehicle:</span>
+          <Card className='bg-primary/5 border-primary/20'>
+            <CardContent className='pt-6'>
+              <h3 className='mb-4'>Load Summary</h3>
+              <div className='space-y-2'>
+                <div className='flex items-center justify-between'>
+                  <span className='text-muted-foreground'>Vehicle:</span>
                   <span>{getVehicleLabel(selectedVehicle)}</span>
                 </div>
-                <div className=&apos;flex items-center justify-between&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>Total Assets:</span>
+                <div className='flex items-center justify-between'>
+                  <span className='text-muted-foreground'>Total Assets:</span>
                   <Badge>{selectedAssets.length}</Badge>
                 </div>
                 {vehicleCapacity && (
-                  <div className=&apos;flex items-center justify-between&apos;>
-                    <span className=&apos;text-muted-foreground&apos;>
+                  <div className='flex items-center justify-between'>
+                    <span className='text-muted-foreground'>
                       Capacity Used:
                     </span>
                     <span>

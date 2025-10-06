@@ -1,5 +1,4 @@
-import React from &apos;react&apos;;
-import { useState } from &apos;react&apos;;
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -7,12 +6,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from &apos;../ui/dialog&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Textarea } from &apos;../ui/textarea&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Separator } from &apos;../ui/separator&apos;;
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { Textarea } from '../ui/textarea';
+import { Label } from '../ui/label';
+import { Separator } from '../ui/separator';
 import {
   AlertTriangle,
   Battery,
@@ -22,7 +21,7 @@ import {
   User,
   Calendar,
   Package,
-} from &apos;lucide-react&apos;;
+} from 'lucide-react';
 
 interface Alert {
   id: string;
@@ -49,126 +48,126 @@ export function AlertDetailsDialog({
   alert,
   onResolve,
 }: AlertDetailsDialogProps) {
-  const [resolutionNotes, setResolutionNotes] = useState(&apos;&apos;);
+  const [resolutionNotes, setResolutionNotes] = useState('');
 
   if (!alert) return null;
 
   const getAlertColor = (type: string) => {
     switch (type) {
-      case &apos;critical&apos;:
-        return &apos;bg-red-100 text-red-700 border-red-200&apos;;
-      case &apos;high&apos;:
-        return &apos;bg-orange-100 text-orange-700 border-orange-200&apos;;
-      case &apos;medium&apos;:
-        return &apos;bg-yellow-100 text-yellow-700 border-yellow-200&apos;;
-      case &apos;low&apos;:
-        return &apos;bg-blue-100 text-blue-700 border-blue-200&apos;;
+      case 'critical':
+        return 'bg-red-100 text-red-700 border-red-200';
+      case 'high':
+        return 'bg-orange-100 text-orange-700 border-orange-200';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+      case 'low':
+        return 'bg-blue-100 text-blue-700 border-blue-200';
       default:
-        return &apos;bg-gray-100 text-gray-700 border-gray-200&apos;;
+        return 'bg-gray-100 text-gray-700 border-gray-200';
     }
   };
 
   const getAlertIcon = (category: string) => {
     switch (category) {
-      case &apos;geofence&apos;:
-        return <MapPin className=&apos;h-5 w-5&apos; />;
-      case &apos;battery&apos;:
-        return <Battery className=&apos;h-5 w-5&apos; />;
-      case &apos;theft&apos;:
-        return <AlertTriangle className=&apos;h-5 w-5&apos; />;
+      case 'geofence':
+        return <MapPin className='h-5 w-5' />;
+      case 'battery':
+        return <Battery className='h-5 w-5' />;
+      case 'theft':
+        return <AlertTriangle className='h-5 w-5' />;
       default:
-        return <AlertTriangle className=&apos;h-5 w-5&apos; />;
+        return <AlertTriangle className='h-5 w-5' />;
     }
   };
 
   const handleResolve = () => {
     // In a real app, this would save to backend
-// // // // // // // console.log(&apos;Resolving alert:&apos;, alert.id, &apos;Notes:&apos;, resolutionNotes);
+// // // // // // // console.log('Resolving alert:', alert.id, 'Notes:', resolutionNotes);
     onResolve?.();
     onOpenChange(false);
-    setResolutionNotes(&apos;&apos;);
+    setResolutionNotes('');
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className=&apos;max-w-2xl&apos;>
+      <DialogContent className='max-w-2xl'>
         <DialogHeader>
-          <div className=&apos;flex items-start gap-4&apos;>
+          <div className='flex items-start gap-4'>
             <div
               className={`p-3 rounded-lg ${
-                alert.status === &apos;resolved&apos; ? &apos;bg-green-50&apos; : &apos;bg-muted&apos;
+                alert.status === 'resolved' ? 'bg-green-50' : 'bg-muted'
               }`}
             >
-              {alert.status === &apos;resolved&apos; ? (
-                <CheckCircle className=&apos;h-5 w-5 text-green-600&apos; />
+              {alert.status === 'resolved' ? (
+                <CheckCircle className='h-5 w-5 text-green-600' />
               ) : (
                 getAlertIcon(alert.category)
               )}
             </div>
-            <div className=&apos;flex-1&apos;>
-              <div className=&apos;flex items-center gap-2 mb-2&apos;>
+            <div className='flex-1'>
+              <div className='flex items-center gap-2 mb-2'>
                 <DialogTitle>{alert.title}</DialogTitle>
                 <Badge
-                  variant=&apos;outline&apos;
+                  variant='outline'
                   className={
-                    alert.status === &apos;resolved&apos;
-                      ? &apos;bg-green-50 text-green-700&apos;
+                    alert.status === 'resolved'
+                      ? 'bg-green-50 text-green-700'
                       : getAlertColor(alert.type)
                   }
                 >
-                  {alert.status === &apos;resolved&apos; ? &apos;resolved&apos; : alert.type}
+                  {alert.status === 'resolved' ? 'resolved' : alert.type}
                 </Badge>
-                <Badge variant=&apos;outline&apos;>{alert.category}</Badge>
+                <Badge variant='outline'>{alert.category}</Badge>
               </div>
               <DialogDescription>{alert.description}</DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
-        <div className=&apos;space-y-4&apos;>
+        <div className='space-y-4'>
           <Separator />
 
           {/* Alert Details */}
-          <div className=&apos;grid grid-cols-2 gap-4&apos;>
-            <div className=&apos;space-y-2&apos;>
-              <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground&apos;>
-                <Package className=&apos;h-4 w-4&apos; />
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                <Package className='h-4 w-4' />
                 <span>Asset ID</span>
               </div>
-              <p className=&apos;font-mono&apos;>{alert.asset}</p>
+              <p className='font-mono'>{alert.asset}</p>
             </div>
 
-            <div className=&apos;space-y-2&apos;>
-              <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground&apos;>
-                <Clock className=&apos;h-4 w-4&apos; />
+            <div className='space-y-2'>
+              <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                <Clock className='h-4 w-4' />
                 <span>Triggered</span>
               </div>
               <p>{alert.time}</p>
             </div>
 
-            <div className=&apos;space-y-2&apos;>
-              <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground&apos;>
-                <AlertTriangle className=&apos;h-4 w-4&apos; />
+            <div className='space-y-2'>
+              <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                <AlertTriangle className='h-4 w-4' />
                 <span>Alert ID</span>
               </div>
-              <p className=&apos;font-mono text-sm&apos;>{alert.id}</p>
+              <p className='font-mono text-sm'>{alert.id}</p>
             </div>
 
-            <div className=&apos;space-y-2&apos;>
-              <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground&apos;>
-                <Calendar className=&apos;h-4 w-4&apos; />
+            <div className='space-y-2'>
+              <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                <Calendar className='h-4 w-4' />
                 <span>Status</span>
               </div>
-              <p className=&apos;capitalize&apos;>{alert.status}</p>
+              <p className='capitalize'>{alert.status}</p>
             </div>
           </div>
 
-          {alert.status === &apos;resolved&apos; && alert.resolvedBy && (
+          {alert.status === 'resolved' && alert.resolvedBy && (
             <>
               <Separator />
-              <div className=&apos;space-y-2&apos;>
-                <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground&apos;>
-                  <User className=&apos;h-4 w-4&apos; />
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                  <User className='h-4 w-4' />
                   <span>Resolved By</span>
                 </div>
                 <p>{alert.resolvedBy}</p>
@@ -176,14 +175,14 @@ export function AlertDetailsDialog({
             </>
           )}
 
-          {alert.status === &apos;active&apos; && (
+          {alert.status === 'active' && (
             <>
               <Separator />
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;notes&apos;>Resolution Notes (Optional)</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='notes'>Resolution Notes (Optional)</Label>
                 <Textarea
-                  id=&apos;notes&apos;
-                  placeholder=&apos;Add notes about how this alert was resolved...&apos;
+                  id='notes'
+                  placeholder='Add notes about how this alert was resolved...'
                   value={resolutionNotes}
                   onChange={e => setResolutionNotes(e.target.value)}
                   rows={4}
@@ -193,14 +192,14 @@ export function AlertDetailsDialog({
           )}
 
           {/* Recommended Actions */}
-          {alert.status === &apos;active&apos; && (
+          {alert.status === 'active' && (
             <>
               <Separator />
-              <div className=&apos;space-y-2&apos;>
+              <div className='space-y-2'>
                 <h4>Recommended Actions</h4>
-                <div className=&apos;space-y-2 text-sm&apos;>
-                  {alert.category === &apos;battery&apos; && (
-                    <ul className=&apos;list-disc list-inside space-y-1 text-muted-foreground&apos;>
+                <div className='space-y-2 text-sm'>
+                  {alert.category === 'battery' && (
+                    <ul className='list-disc list-inside space-y-1 text-muted-foreground'>
                       <li>Replace or recharge the battery immediately</li>
                       <li>
                         Check battery health and consider replacement if
@@ -209,15 +208,15 @@ export function AlertDetailsDialog({
                       <li>Review battery maintenance schedule</li>
                     </ul>
                   )}
-                  {alert.category === &apos;geofence&apos; && (
-                    <ul className=&apos;list-disc list-inside space-y-1 text-muted-foreground&apos;>
+                  {alert.category === 'geofence' && (
+                    <ul className='list-disc list-inside space-y-1 text-muted-foreground'>
                       <li>Verify asset location on map</li>
                       <li>Contact site manager or asset operator</li>
                       <li>Check if asset has proper authorization</li>
                     </ul>
                   )}
-                  {alert.category === &apos;theft&apos; && (
-                    <ul className=&apos;list-disc list-inside space-y-1 text-muted-foreground&apos;>
+                  {alert.category === 'theft' && (
+                    <ul className='list-disc list-inside space-y-1 text-muted-foreground'>
                       <li>Immediately verify asset location</li>
                       <li>
                         Contact security and local authorities if necessary
@@ -225,8 +224,8 @@ export function AlertDetailsDialog({
                       <li>Review surveillance footage if available</li>
                     </ul>
                   )}
-                  {alert.category === &apos;offline&apos; && (
-                    <ul className=&apos;list-disc list-inside space-y-1 text-muted-foreground&apos;>
+                  {alert.category === 'offline' && (
+                    <ul className='list-disc list-inside space-y-1 text-muted-foreground'>
                       <li>Check if asset is in a known signal dead zone</li>
                       <li>Inspect tracker for damage or battery issues</li>
                       <li>Verify last known location</li>
@@ -239,14 +238,14 @@ export function AlertDetailsDialog({
         </div>
 
         <DialogFooter>
-          <Button variant=&apos;outline&apos; onClick={() => onOpenChange(false)}>
+          <Button variant='outline' onClick={() => onOpenChange(false)}>
             Close
           </Button>
-          {alert.status === &apos;active&apos; && (
+          {alert.status === 'active' && (
             <>
-              <Button variant=&apos;outline&apos;>View Asset</Button>
+              <Button variant='outline'>View Asset</Button>
               <Button onClick={handleResolve}>
-                <CheckCircle className=&apos;h-4 w-4 mr-2&apos; />
+                <CheckCircle className='h-4 w-4 mr-2' />
                 Mark as Resolved
               </Button>
             </>

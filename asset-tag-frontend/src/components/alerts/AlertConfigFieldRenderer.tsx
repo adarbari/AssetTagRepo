@@ -1,16 +1,15 @@
-import React from &apos;react&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Switch } from &apos;../ui/switch&apos;;
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Switch } from '../ui/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { InfoIcon } from &apos;lucide-react&apos;;
+} from '../ui/select';
+import { Badge } from '../ui/badge';
+import { InfoIcon } from 'lucide-react';
 
 interface anyRendererProps {
   field: any;
@@ -39,13 +38,13 @@ export function anyRenderer({
 
   const renderField = () => {
     switch (field.type) {
-      case &apos;toggle&apos;:
+      case 'toggle':
         return (
-          <div className=&apos;flex items-center justify-between&apos;>
-            <div className=&apos;flex-1&apos;>
+          <div className='flex items-center justify-between'>
+            <div className='flex-1'>
               <Label htmlFor={field.key}>{field.label}</Label>
               {field.description && (
-                <p className=&apos;text-sm text-muted-foreground mt-1&apos;>
+                <p className='text-sm text-muted-foreground mt-1'>
                   {field.description}
                 </p>
               )}
@@ -58,95 +57,95 @@ export function anyRenderer({
           </div>
         );
 
-      case &apos;number&apos;:
-      case &apos;duration&apos;:
-      case &apos;percentage&apos;:
-      case &apos;threshold&apos;:
+      case 'number':
+      case 'duration':
+      case 'percentage':
+      case 'threshold':
         return (
-          <div className=&apos;space-y-2&apos;>
+          <div className='space-y-2'>
             <Label htmlFor={field.key}>
               {field.label}
               {field.required && (
-                <span className=&apos;text-destructive ml-1&apos;>*</span>
+                <span className='text-destructive ml-1'>*</span>
               )}
             </Label>
             {field.description && (
-              <p className=&apos;text-sm text-muted-foreground&apos;>
+              <p className='text-sm text-muted-foreground'>
                 {field.description}
               </p>
             )}
-            <div className=&apos;flex items-center gap-2&apos;>
+            <div className='flex items-center gap-2'>
               <Input
                 id={field.key}
-                type=&apos;number&apos;
+                type='number'
                 value={currentValue}
                 onChange={e => onChange(parseFloat(e.target.value))}
                 min={field.min}
                 max={field.max}
                 step={field.step || 1}
                 placeholder={field.placeholder}
-                className={error ? &apos;border-destructive&apos; : &apos;&apos;}
+                className={error ? 'border-destructive' : ''}
               />
               {field.unit && (
-                <Badge variant=&apos;outline&apos; className=&apos;shrink-0&apos;>
+                <Badge variant='outline' className='shrink-0'>
                   {field.unit}
                 </Badge>
               )}
             </div>
             {field.min !== undefined && field.max !== undefined && (
-              <p className=&apos;text-xs text-muted-foreground&apos;>
+              <p className='text-xs text-muted-foreground'>
                 Range: {field.min} - {field.max} {field.unit}
               </p>
             )}
           </div>
         );
 
-      case &apos;text&apos;:
+      case 'text':
         return (
-          <div className=&apos;space-y-2&apos;>
+          <div className='space-y-2'>
             <Label htmlFor={field.key}>
               {field.label}
               {field.required && (
-                <span className=&apos;text-destructive ml-1&apos;>*</span>
+                <span className='text-destructive ml-1'>*</span>
               )}
             </Label>
             {field.description && (
-              <p className=&apos;text-sm text-muted-foreground&apos;>
+              <p className='text-sm text-muted-foreground'>
                 {field.description}
               </p>
             )}
             <Input
               id={field.key}
-              type=&apos;text&apos;
+              type='text'
               value={currentValue}
               onChange={e => onChange(e.target.value)}
               placeholder={field.placeholder}
-              className={error ? &apos;border-destructive&apos; : &apos;&apos;}
+              className={error ? 'border-destructive' : ''}
             />
           </div>
         );
 
-      case &apos;select&apos;:
+      case 'select':
         return (
-          <div className=&apos;space-y-2&apos;>
+          <div className='space-y-2'>
             <Label htmlFor={field.key}>
               {field.label}
               {field.required && (
-                <span className=&apos;text-destructive ml-1&apos;>*</span>
+                <span className='text-destructive ml-1'>*</span>
               )}
             </Label>
             {field.description && (
-              <p className=&apos;text-sm text-muted-foreground&apos;>
+              <p className='text-sm text-muted-foreground'>
                 {field.description}
               </p>
             )}
             <Select value={currentValue} onValueChange={onChange}>
               <SelectTrigger
                 id={field.key}
-                className={error ? &apos;border-destructive&apos; : &apos;&apos;}
+                className={error ? 'border-destructive' : ''}
               >
                 <SelectValue
-                  placeholder={field.placeholder || &apos;Select an option&apos;}
+                  placeholder={field.placeholder || 'Select an option'}
                 />
               </SelectTrigger>
               <SelectContent>
@@ -160,49 +159,49 @@ export function anyRenderer({
           </div>
         );
 
-      case &apos;multiselect&apos;: {
+      case 'multiselect': {
         const selectedValues = Array.isArray(currentValue)
           ? currentValue
           : [currentValue];
-        const hasAll = selectedValues.includes(&apos;all&apos;);
+        const hasAll = selectedValues.includes('all');
 
         return (
-          <div className=&apos;space-y-2&apos;>
+          <div className='space-y-2'>
             <Label>
               {field.label}
               {field.required && (
-                <span className=&apos;text-destructive ml-1&apos;>*</span>
+                <span className='text-destructive ml-1'>*</span>
               )}
             </Label>
             {field.description && (
-              <p className=&apos;text-sm text-muted-foreground&apos;>
+              <p className='text-sm text-muted-foreground'>
                 {field.description}
               </p>
             )}
-            <div className=&apos;flex flex-wrap gap-2&apos;>
+            <div className='flex flex-wrap gap-2'>
               {field.options?.map(option => {
                 const isSelected = hasAll
-                  ? option.value === &apos;all&apos;
+                  ? option.value === 'all'
                   : selectedValues.includes(option.value);
 
                 return (
                   <Badge
                     key={option.value}
-                    variant={isSelected ? &apos;default&apos; : &apos;outline&apos;}
-                    className=&apos;cursor-pointer&apos;
+                    variant={isSelected ? 'default' : 'outline'}
+                    className='cursor-pointer'
                     onClick={() => {
-                      if (option.value === &apos;all&apos;) {
-                        onChange([&apos;all&apos;]);
+                      if (option.value === 'all') {
+                        onChange(['all']);
                       } else {
                         let newValues = [
-                          ...selectedValues.filter(v => v !== &apos;all&apos;),
+                          ...selectedValues.filter(v => v !== 'all'),
                         ];
                         if (isSelected) {
                           newValues = newValues.filter(v => v !== option.value);
                         } else {
                           newValues.push(option.value);
                         }
-                        onChange(newValues.length === 0 ? [&apos;all&apos;] : newValues);
+                        onChange(newValues.length === 0 ? ['all'] : newValues);
                       }
                     }}
                   >
@@ -217,10 +216,10 @@ export function anyRenderer({
 
       default:
         return (
-          <div className=&apos;space-y-2&apos;>
+          <div className='space-y-2'>
             <Label htmlFor={field.key}>{field.label}</Label>
-            <p className=&apos;text-sm text-muted-foreground&apos;>
-              Field type &apos;{field.type}&apos; not yet implemented
+            <p className='text-sm text-muted-foreground'>
+              Field type '{field.type}' not yet implemented
             </p>
           </div>
         );
@@ -228,17 +227,17 @@ export function anyRenderer({
   };
 
   return (
-    <div className=&apos;space-y-2&apos;>
-      <div className=&apos;flex items-start gap-2&apos;>
-        <div className=&apos;flex-1&apos;>
+    <div className='space-y-2'>
+      <div className='flex items-start gap-2'>
+        <div className='flex-1'>
           {renderField()}
           {field.helpText && (
-            <div className=&apos;flex items-center gap-1 mt-2&apos;>
-              <InfoIcon className=&apos;h-3 w-3 text-muted-foreground&apos; />
-              <p className=&apos;text-xs text-muted-foreground&apos;>{field.helpText}</p>
+            <div className='flex items-center gap-1 mt-2'>
+              <InfoIcon className='h-3 w-3 text-muted-foreground' />
+              <p className='text-xs text-muted-foreground'>{field.helpText}</p>
             </div>
           )}
-          {error && <p className=&apos;text-sm text-destructive mt-1&apos;>{error}</p>}
+          {error && <p className='text-sm text-destructive mt-1'>{error}</p>}
         </div>
       </div>
     </div>

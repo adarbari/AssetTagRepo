@@ -1,21 +1,20 @@
-import React from &apos;react&apos;;
-import { render, screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { vi, describe, it, expect, beforeEach, afterEach } from &apos;vitest&apos;;
-import { Reports } from &apos;../reports/Reports&apos;;
-// import * as mockReportsData from &apos;../../data/mockReportsData&apos;;
-import { useAsyncDataAll } from &apos;../../hooks/useAsyncData&apos;;
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { Reports } from '../reports/Reports';
+// import * as mockReportsData from '../../data/mockReportsData';
+import { useAsyncDataAll } from '../../hooks/useAsyncData';
 
 // Mock the useAsyncDataAll hook
-vi.mock(&apos;../../hooks/useAsyncData&apos;, () => ({
+vi.mock('../../hooks/useAsyncData', () => ({
   useAsyncDataAll: vi.fn(),
 }));
 
 // Mock the GenerateReportDialog component
-vi.mock(&apos;../GenerateReportDialog&apos;, () => ({
+vi.mock('../GenerateReportDialog', () => ({
   GenerateReportDialog: ({ open, onOpenChange, reportType }: unknown) => (
     <div
-      data-testid=&apos;generate-report-dialog&apos;
+      data-testid='generate-report-dialog'
       data-open={open}
       data-report-type={reportType}
     >
@@ -25,26 +24,26 @@ vi.mock(&apos;../GenerateReportDialog&apos;, () => ({
 }));
 
 // Mock recharts components
-vi.mock(&apos;recharts&apos;, () => ({
+vi.mock('recharts', () => ({
   BarChart: ({ children }: unknown) => (
-    <div data-testid=&apos;bar-chart&apos;>{children}</div>
+    <div data-testid='bar-chart'>{children}</div>
   ),
   Bar: ({ dataKey, name }: unknown) => (
     <div data-testid={`bar-${dataKey}`} data-name={name} />
   ),
   LineChart: ({ children }: unknown) => (
-    <div data-testid=&apos;line-chart&apos;>{children}</div>
+    <div data-testid='line-chart'>{children}</div>
   ),
   Line: ({ dataKey, name }: unknown) => (
     <div data-testid={`line-${dataKey}`} data-name={name} />
   ),
   XAxis: ({ dataKey }: unknown) => <div data-testid={`x-axis-${dataKey}`} />,
-  YAxis: () => <div data-testid=&apos;y-axis&apos; />,
-  CartesianGrid: () => <div data-testid=&apos;cartesian-grid&apos; />,
-  Tooltip: () => <div data-testid=&apos;tooltip&apos; />,
-  Legend: () => <div data-testid=&apos;legend&apos; />,
+  YAxis: () => <div data-testid='y-axis' />,
+  CartesianGrid: () => <div data-testid='cartesian-grid' />,
+  Tooltip: () => <div data-testid='tooltip' />,
+  Legend: () => <div data-testid='legend' />,
   ResponsiveContainer: ({ children }: unknown) => (
-    <div data-testid=&apos;responsive-container&apos;>{children}</div>
+    <div data-testid='responsive-container'>{children}</div>
   ),
 }));
 
@@ -52,30 +51,30 @@ vi.mock(&apos;recharts&apos;, () => ({
 
 // Mock window.location.reload
 const mockReload = vi.fn();
-Object.defineProperty(window, &apos;location&apos;, {
+Object.defineProperty(window, 'location', {
   value: { reload: mockReload },
   writable: true,
 });
 
 // Mock console.log
-const mockConsoleLog = vi.spyOn(console, &apos;log&apos;).mockImplementation(() => {});
+const mockConsoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
 
-describe(&apos;Reports Component&apos;, () => {
+describe('Reports Component', () => {
   const mockData = {
     utilization: [
-      { month: &apos;Jan&apos;, utilization: 85, idle: 10, maintenance: 5 },
-      { month: &apos;Feb&apos;, utilization: 90, idle: 5, maintenance: 5 },
+      { month: 'Jan', utilization: 85, idle: 10, maintenance: 5 },
+      { month: 'Feb', utilization: 90, idle: 5, maintenance: 5 },
     ],
     costSavings: [
       {
-        month: &apos;Jan&apos;,
+        month: 'Jan',
         theftPrevention: 10000,
         laborSaved: 5000,
         insurance: 2000,
         maintenanceSavings: 3000,
       },
       {
-        month: &apos;Feb&apos;,
+        month: 'Feb',
         theftPrevention: 12000,
         laborSaved: 6000,
         insurance: 2500,
@@ -84,38 +83,38 @@ describe(&apos;Reports Component&apos;, () => {
     ],
     topAssets: [
       {
-        id: &apos;1&apos;,
-        name: &apos;Asset 1&apos;,
-        type: &apos;Equipment&apos;,
+        id: '1',
+        name: 'Asset 1',
+        type: 'Equipment',
         utilization: 95,
         hours: 200,
         revenue: 50000,
-        location: &apos;Site A&apos;,
+        location: 'Site A',
       },
       {
-        id: &apos;2&apos;,
-        name: &apos;Asset 2&apos;,
-        type: &apos;Vehicle&apos;,
+        id: '2',
+        name: 'Asset 2',
+        type: 'Vehicle',
         utilization: 88,
         hours: 180,
         revenue: 45000,
-        location: &apos;Site B&apos;,
+        location: 'Site B',
       },
     ],
     templates: [
       {
-        id: &apos;1&apos;,
-        name: &apos;Monthly Report&apos;,
-        type: &apos;monthly&apos;,
-        description: &apos;Monthly asset report&apos;,
-        lastGenerated: &apos;2024-01-01&apos;,
+        id: '1',
+        name: 'Monthly Report',
+        type: 'monthly',
+        description: 'Monthly asset report',
+        lastGenerated: '2024-01-01',
       },
       {
-        id: &apos;2&apos;,
-        name: &apos;Quarterly Report&apos;,
-        type: &apos;quarterly&apos;,
-        description: &apos;Quarterly summary&apos;,
-        lastGenerated: &apos;2024-01-01&apos;,
+        id: '2',
+        name: 'Quarterly Report',
+        type: 'quarterly',
+        description: 'Quarterly summary',
+        lastGenerated: '2024-01-01',
       },
     ],
   };
@@ -130,8 +129,8 @@ describe(&apos;Reports Component&apos;, () => {
     vi.restoreAllMocks();
   });
 
-  describe(&apos;Loading State&apos;, () => {
-    it(&apos;should show loading state when data is being fetched&apos;, () => {
+  describe('Loading State', () => {
+    it('should show loading state when data is being fetched', () => {
       (useAsyncDataAll as any).mockReturnValue({
         data: null,
         loading: true,
@@ -140,13 +139,13 @@ describe(&apos;Reports Component&apos;, () => {
 
       render(<Reports />);
 
-      expect(screen.getByText(&apos;Loading reports...&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Loading reports...')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Error State&apos;, () => {
-    it(&apos;should show error state when data fetching fails&apos;, () => {
-      const errorMessage = &apos;Failed to fetch reports&apos;;
+  describe('Error State', () => {
+    it('should show error state when data fetching fails', () => {
+      const errorMessage = 'Failed to fetch reports';
       (useAsyncDataAll as any).mockReturnValue({
         data: null,
         loading: false,
@@ -155,29 +154,29 @@ describe(&apos;Reports Component&apos;, () => {
 
       render(<Reports />);
 
-      expect(screen.getByText(&apos;Failed to load reports&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Failed to load reports')).toBeInTheDocument();
       expect(screen.getByText(errorMessage)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Try Again&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Try Again')).toBeInTheDocument();
     });
 
-    it(&apos;should reload page when Try Again is clicked&apos;, async () => {
+    it('should reload page when Try Again is clicked', async () => {
       const user = userEvent.setup();
       (useAsyncDataAll as any).mockReturnValue({
         data: null,
         loading: false,
-        error: new Error(&apos;Test error&apos;),
+        error: new Error('Test error'),
       });
 
       render(<Reports />);
 
-      const tryAgainButton = screen.getByText(&apos;Try Again&apos;);
+      const tryAgainButton = screen.getByText('Try Again');
       await user.click(tryAgainButton);
 
       expect(mockReload).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Success State&apos;, () => {
+  describe('Success State', () => {
     beforeEach(() => {
       (useAsyncDataAll as any).mockReturnValue({
         data: mockData,
@@ -186,117 +185,117 @@ describe(&apos;Reports Component&apos;, () => {
       });
     });
 
-    it(&apos;should render the reports page with all sections&apos;, () => {
+    it('should render the reports page with all sections', () => {
       render(<Reports />);
 
       // Check page header
-      expect(screen.getByText(&apos;Reports & Analytics&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Reports & Analytics')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Insights and performance metrics&apos;)
+        screen.getByText('Insights and performance metrics')
       ).toBeInTheDocument();
 
       // Check time range selector
-      expect(screen.getByDisplayValue(&apos;Last 6 months&apos;)).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Last 6 months')).toBeInTheDocument();
 
       // Check export button
-      expect(screen.getByText(&apos;Export Report&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Export Report')).toBeInTheDocument();
 
       // Check ROI summary cards
-      expect(screen.getByText(&apos;Total ROI&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Theft Prevention&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Labor Savings&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Insurance Reduction&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Total ROI')).toBeInTheDocument();
+      expect(screen.getByText('Theft Prevention')).toBeInTheDocument();
+      expect(screen.getByText('Labor Savings')).toBeInTheDocument();
+      expect(screen.getByText('Insurance Reduction')).toBeInTheDocument();
 
       // Check chart sections
-      expect(screen.getByText(&apos;Asset Utilization Trend&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Cost Savings Breakdown&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Asset Utilization Trend')).toBeInTheDocument();
+      expect(screen.getByText('Cost Savings Breakdown')).toBeInTheDocument();
 
       // Check top assets section
       expect(
-        screen.getByText(&apos;Top Performing Assets (by Utilization)&apos;)
+        screen.getByText('Top Performing Assets (by Utilization)')
       ).toBeInTheDocument();
 
       // Check report templates section
-      expect(screen.getByText(&apos;Report Templates&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Report Templates')).toBeInTheDocument();
     });
 
-    it(&apos;should display correct ROI calculations&apos;, () => {
+    it('should display correct ROI calculations', () => {
       render(<Reports />);
 
       // Total ROI should be calculated from cost savings data
       // (10000 + 5000 + 2000 + 3000) + (12000 + 6000 + 2500 + 3500) = 45000
-      expect(screen.getByText(&apos;45K&apos;)).toBeInTheDocument(); // 45000 / 1000 = 45K
+      expect(screen.getByText('45K')).toBeInTheDocument(); // 45000 / 1000 = 45K
 
       // Theft prevention total: 10000 + 12000 = 22000
-      expect(screen.getByText(&apos;22K&apos;)).toBeInTheDocument();
+      expect(screen.getByText('22K')).toBeInTheDocument();
 
       // Labor savings total: 5000 + 6000 = 11000
-      expect(screen.getByText(&apos;11.0K&apos;)).toBeInTheDocument();
+      expect(screen.getByText('11.0K')).toBeInTheDocument();
 
       // Insurance savings total: 2000 + 2500 = 4500
-      expect(screen.getByText(&apos;4.5K&apos;)).toBeInTheDocument();
+      expect(screen.getByText('4.5K')).toBeInTheDocument();
     });
 
-    it(&apos;should render charts with correct data&apos;, () => {
+    it('should render charts with correct data', () => {
       render(<Reports />);
 
       // Check that charts are rendered
-      expect(screen.getByTestId(&apos;bar-chart&apos;)).toBeInTheDocument();
-      expect(screen.getByTestId(&apos;line-chart&apos;)).toBeInTheDocument();
+      expect(screen.getByTestId('bar-chart')).toBeInTheDocument();
+      expect(screen.getByTestId('line-chart')).toBeInTheDocument();
 
       // Check bar chart components
-      expect(screen.getByTestId(&apos;bar-utilization&apos;)).toBeInTheDocument();
-      expect(screen.getByTestId(&apos;bar-idle&apos;)).toBeInTheDocument();
-      expect(screen.getByTestId(&apos;bar-maintenance&apos;)).toBeInTheDocument();
+      expect(screen.getByTestId('bar-utilization')).toBeInTheDocument();
+      expect(screen.getByTestId('bar-idle')).toBeInTheDocument();
+      expect(screen.getByTestId('bar-maintenance')).toBeInTheDocument();
 
       // Check line chart components
-      expect(screen.getByTestId(&apos;line-theftPrevention&apos;)).toBeInTheDocument();
-      expect(screen.getByTestId(&apos;line-laborSaved&apos;)).toBeInTheDocument();
-      expect(screen.getByTestId(&apos;line-insurance&apos;)).toBeInTheDocument();
-      expect(screen.getByTestId(&apos;line-maintenanceSavings&apos;)).toBeInTheDocument();
+      expect(screen.getByTestId('line-theftPrevention')).toBeInTheDocument();
+      expect(screen.getByTestId('line-laborSaved')).toBeInTheDocument();
+      expect(screen.getByTestId('line-insurance')).toBeInTheDocument();
+      expect(screen.getByTestId('line-maintenanceSavings')).toBeInTheDocument();
     });
 
-    it(&apos;should display top performing assets correctly&apos;, () => {
+    it('should display top performing assets correctly', () => {
       render(<Reports />);
 
       // Check asset names
-      expect(screen.getByText(&apos;Asset 1&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Asset 2&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Asset 1')).toBeInTheDocument();
+      expect(screen.getByText('Asset 2')).toBeInTheDocument();
 
       // Check asset types
-      expect(screen.getByText(&apos;Equipment&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Vehicle&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Equipment')).toBeInTheDocument();
+      expect(screen.getByText('Vehicle')).toBeInTheDocument();
 
       // Check utilization percentages
-      expect(screen.getByText(&apos;95%&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;88%&apos;)).toBeInTheDocument();
+      expect(screen.getByText('95%')).toBeInTheDocument();
+      expect(screen.getByText('88%')).toBeInTheDocument();
 
       // Check hours
-      expect(screen.getByText(&apos;200h&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;180h&apos;)).toBeInTheDocument();
+      expect(screen.getByText('200h')).toBeInTheDocument();
+      expect(screen.getByText('180h')).toBeInTheDocument();
 
       // Check revenue
-      expect(screen.getByText(&apos;$50K&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;$45K&apos;)).toBeInTheDocument();
+      expect(screen.getByText('$50K')).toBeInTheDocument();
+      expect(screen.getByText('$45K')).toBeInTheDocument();
     });
 
-    it(&apos;should display report templates correctly&apos;, () => {
+    it('should display report templates correctly', () => {
       render(<Reports />);
 
       // Check template names
-      expect(screen.getByText(&apos;Monthly Report&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Quarterly Report&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Monthly Report')).toBeInTheDocument();
+      expect(screen.getByText('Quarterly Report')).toBeInTheDocument();
 
       // Check template descriptions
-      expect(screen.getByText(&apos;Monthly asset report&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Quarterly summary&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Monthly asset report')).toBeInTheDocument();
+      expect(screen.getByText('Quarterly summary')).toBeInTheDocument();
 
       // Check last generated dates
-      expect(screen.getByText(&apos;Last: 1/1/2024&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Last: 1/1/2024')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;User Interactions&apos;, () => {
+  describe('User Interactions', () => {
     beforeEach(() => {
       (useAsyncDataAll as any).mockReturnValue({
         data: mockData,
@@ -305,63 +304,63 @@ describe(&apos;Reports Component&apos;, () => {
       });
     });
 
-    it(&apos;should change time range when selector is used&apos;, async () => {
+    it('should change time range when selector is used', async () => {
       const user = userEvent.setup();
       render(<Reports />);
 
-      const timeRangeSelect = screen.getByDisplayValue(&apos;Last 6 months&apos;);
+      const timeRangeSelect = screen.getByDisplayValue('Last 6 months');
       await user.click(timeRangeSelect);
 
-      const option = screen.getByText(&apos;Last 12 months&apos;);
+      const option = screen.getByText('Last 12 months');
       await user.click(option);
 
-      expect(screen.getByDisplayValue(&apos;Last 12 months&apos;)).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Last 12 months')).toBeInTheDocument();
     });
 
-    it(&apos;should open report dialog when template is clicked&apos;, async () => {
+    it('should open report dialog when template is clicked', async () => {
       const user = userEvent.setup();
       render(<Reports />);
 
-      const monthlyReportButton = screen.getByText(&apos;Monthly Report&apos;);
+      const monthlyReportButton = screen.getByText('Monthly Report');
       await user.click(monthlyReportButton);
 
-      const dialog = screen.getByTestId(&apos;generate-report-dialog&apos;);
-      expect(dialog).toHaveAttribute(&apos;data-open&apos;, &apos;true&apos;);
-      expect(dialog).toHaveAttribute(&apos;data-report-type&apos;, &apos;monthly&apos;);
+      const dialog = screen.getByTestId('generate-report-dialog');
+      expect(dialog).toHaveAttribute('data-open', 'true');
+      expect(dialog).toHaveAttribute('data-report-type', 'monthly');
     });
 
-    it(&apos;should close report dialog when close button is clicked&apos;, async () => {
+    it('should close report dialog when close button is clicked', async () => {
       const user = userEvent.setup();
       render(<Reports />);
 
       // Open dialog first
-      const monthlyReportButton = screen.getByText(&apos;Monthly Report&apos;);
+      const monthlyReportButton = screen.getByText('Monthly Report');
       await user.click(monthlyReportButton);
 
       // Close dialog
-      const closeButton = screen.getByText(&apos;Close Dialog&apos;);
+      const closeButton = screen.getByText('Close Dialog');
       await user.click(closeButton);
 
-      const dialog = screen.getByTestId(&apos;generate-report-dialog&apos;);
-      expect(dialog).toHaveAttribute(&apos;data-open&apos;, &apos;false&apos;);
+      const dialog = screen.getByTestId('generate-report-dialog');
+      expect(dialog).toHaveAttribute('data-open', 'false');
     });
 
-    it(&apos;should log export action when export button is clicked&apos;, async () => {
+    it('should log export action when export button is clicked', async () => {
       const user = userEvent.setup();
       render(<Reports />);
 
-      const exportButton = screen.getByText(&apos;Export Report&apos;);
+      const exportButton = screen.getByText('Export Report');
       await user.click(exportButton);
 
       expect(mockConsoleLog).toHaveBeenCalledWith(
-        &apos;Exporting comprehensive report for:&apos;,
-        &apos;6&apos;
+        'Exporting comprehensive report for:',
+        '6'
       );
     });
   });
 
-  describe(&apos;Empty States&apos;, () => {
-    it(&apos;should show empty state when no top assets are available&apos;, () => {
+  describe('Empty States', () => {
+    it('should show empty state when no top assets are available', () => {
       const emptyData = { ...mockData, topAssets: [] };
       (useAsyncDataAll as any).mockReturnValue({
         data: emptyData,
@@ -371,13 +370,13 @@ describe(&apos;Reports Component&apos;, () => {
 
       render(<Reports />);
 
-      expect(screen.getByText(&apos;No asset data available&apos;)).toBeInTheDocument();
+      expect(screen.getByText('No asset data available')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Asset utilization data will appear here&apos;)
+        screen.getByText('Asset utilization data will appear here')
       ).toBeInTheDocument();
     });
 
-    it(&apos;should show empty state when no report templates are available&apos;, () => {
+    it('should show empty state when no report templates are available', () => {
       const emptyData = { ...mockData, templates: [] };
       (useAsyncDataAll as any).mockReturnValue({
         data: emptyData,
@@ -387,15 +386,15 @@ describe(&apos;Reports Component&apos;, () => {
 
       render(<Reports />);
 
-      expect(screen.getByText(&apos;No report templates&apos;)).toBeInTheDocument();
+      expect(screen.getByText('No report templates')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Report templates will appear here&apos;)
+        screen.getByText('Report templates will appear here')
       ).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Data Dependencies&apos;, () => {
-    it(&apos;should call useAsyncDataAll with correct parameters&apos;, () => {
+  describe('Data Dependencies', () => {
+    it('should call useAsyncDataAll with correct parameters', () => {
       render(<Reports />);
 
       expect(useAsyncDataAll).toHaveBeenCalledWith(
@@ -405,19 +404,19 @@ describe(&apos;Reports Component&apos;, () => {
           topAssets: expect.any(Function),
           templates: expect.any(Function),
         },
-        { deps: [6] } // Default timeRange is &quot;6&quot;
+        { deps: [6] } // Default timeRange is "6"
       );
     });
 
-    it(&apos;should update dependencies when time range changes&apos;, async () => {
+    it('should update dependencies when time range changes', async () => {
       const user = userEvent.setup();
       render(<Reports />);
 
       // Change time range
-      const timeRangeSelect = screen.getByDisplayValue(&apos;Last 6 months&apos;);
+      const timeRangeSelect = screen.getByDisplayValue('Last 6 months');
       await user.click(timeRangeSelect);
 
-      const option = screen.getByText(&apos;Last 3 months&apos;);
+      const option = screen.getByText('Last 3 months');
       await user.click(option);
 
       // The hook should be called again with new dependencies
@@ -427,7 +426,7 @@ describe(&apos;Reports Component&apos;, () => {
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
+  describe('Accessibility', () => {
     beforeEach(() => {
       (useAsyncDataAll as any).mockReturnValue({
         data: mockData,
@@ -436,32 +435,32 @@ describe(&apos;Reports Component&apos;, () => {
       });
     });
 
-    it(&apos;should have proper ARIA labels and roles&apos;, () => {
+    it('should have proper ARIA labels and roles', () => {
       render(<Reports />);
 
       // Check that buttons are accessible
-      const exportButton = screen.getByRole(&apos;button&apos;, {
+      const exportButton = screen.getByRole('button', {
         name: /export report/i,
       });
       expect(exportButton).toBeInTheDocument();
 
       // Check that select is accessible
-      const timeRangeSelect = screen.getByRole(&apos;combobox&apos;);
+      const timeRangeSelect = screen.getByRole('combobox');
       expect(timeRangeSelect).toBeInTheDocument();
     });
 
-    it(&apos;should support keyboard navigation&apos;, async () => {
+    it('should support keyboard navigation', async () => {
       const user = userEvent.setup();
       render(<Reports />);
 
       // Tab to export button and press Enter
       await user.tab();
       await user.tab();
-      await user.keyboard(&apos;{Enter}&apos;);
+      await user.keyboard('{Enter}');
 
       expect(mockConsoleLog).toHaveBeenCalledWith(
-        &apos;Exporting comprehensive report for:&apos;,
-        &apos;6&apos;
+        'Exporting comprehensive report for:',
+        '6'
       );
     });
   });

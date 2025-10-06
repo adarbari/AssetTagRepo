@@ -1,16 +1,15 @@
-import React from &apos;react&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Label } from &apos;../ui/label&apos;;
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { Label } from '../ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Popover, PopoverContent, PopoverTrigger } from &apos;../ui/popover&apos;;
-import { Filter, X } from &apos;lucide-react&apos;;
+} from '../ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Filter, X } from 'lucide-react';
 
 export interface FilterOption {
   value: string;
@@ -49,25 +48,25 @@ export function FilterPanel({
     <>
       <Popover open={showFilters} onOpenChange={onShowFiltersChange}>
         <PopoverTrigger asChild>
-          <Button variant=&apos;outline&apos; size=&apos;icon&apos; className=&apos;relative&apos;>
-            <Filter className=&apos;h-4 w-4&apos; />
+          <Button variant='outline' size='icon' className='relative'>
+            <Filter className='h-4 w-4' />
             {activeFiltersCount > 0 && (
-              <span className=&apos;absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center&apos;>
+              <span className='absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center'>
                 {activeFiltersCount}
               </span>
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className=&apos;w-80&apos; align=&apos;end&apos;>
-          <div className=&apos;space-y-4&apos;>
-            <div className=&apos;flex items-center justify-between&apos;>
-              <h4 className=&apos;font-medium&apos;>Advanced Filters</h4>
+        <PopoverContent className='w-80' align='end'>
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between'>
+              <h4 className='font-medium'>Advanced Filters</h4>
               {activeFiltersCount > 0 && (
                 <Button
-                  variant=&apos;ghost&apos;
-                  size=&apos;sm&apos;
+                  variant='ghost'
+                  size='sm'
                   onClick={onClearAllFilters}
-                  className=&apos;h-auto p-1 text-xs&apos;
+                  className='h-auto p-1 text-xs'
                 >
                   Clear All
                 </Button>
@@ -75,7 +74,7 @@ export function FilterPanel({
             </div>
 
             {filters.map(filter => (
-              <div className=&apos;space-y-2&apos; key={filter.key}>
+              <div className='space-y-2' key={filter.key}>
                 <Label htmlFor={filter.key}>{filter.label}</Label>
                 <Select
                   value={filter.currentValue}
@@ -99,25 +98,25 @@ export function FilterPanel({
       </Popover>
 
       {(activeFiltersCount > 0 || searchTerm) && (
-        <div className=&apos;flex items-center gap-2 flex-wrap&apos;>
-          <span className=&apos;text-sm text-muted-foreground&apos;>Active filters:</span>
+        <div className='flex items-center gap-2 flex-wrap'>
+          <span className='text-sm text-muted-foreground'>Active filters:</span>
           {searchTerm && (
-            <Badge variant=&apos;secondary&apos; className=&apos;gap-1&apos;>
+            <Badge variant='secondary' className='gap-1'>
               Search: {searchTerm}
-              <X className=&apos;h-3 w-3 cursor-pointer&apos; onClick={onClearSearch} />
+              <X className='h-3 w-3 cursor-pointer' onClick={onClearSearch} />
             </Badge>
           )}
           {filters.map(
             filter =>
-              filter.currentValue !== (filter.defaultOptionValue || &apos;all&apos;) && (
-                <Badge variant=&apos;secondary&apos; className=&apos;gap-1&apos; key={filter.key}>
-                  {filter.label}:{&apos; &apos;}
+              filter.currentValue !== (filter.defaultOptionValue || 'all') && (
+                <Badge variant='secondary' className='gap-1' key={filter.key}>
+                  {filter.label}:{' '}
                   {filter.options.find(o => o.value === filter.currentValue)
                     ?.label || filter.currentValue}
                   <X
-                    className=&apos;h-3 w-3 cursor-pointer&apos;
+                    className='h-3 w-3 cursor-pointer'
                     onClick={() =>
-                      filter.onValueChange(filter.defaultOptionValue || &apos;all&apos;)
+                      filter.onValueChange(filter.defaultOptionValue || 'all')
                     }
                   />
                 </Badge>

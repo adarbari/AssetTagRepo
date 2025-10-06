@@ -1,45 +1,44 @@
-import React from &apos;react&apos;;
-import { describe, it, expect, vi } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { Checkbox } from &apos;../checkbox&apos;;
-import { Label } from &apos;../label&apos;;
-import { render as customRender } from &apos;../../../test/test-utils&apos;;
+import { describe, it, expect, vi } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Checkbox } from '../checkbox';
+import { Label } from '../label';
+import { render as customRender } from '../../../test/test-utils';
 
-describe(&apos;Checkbox Component - Click Tests&apos;, () => {
+describe('Checkbox Component - Click Tests', () => {
   // Basic Checkbox Functionality
-  it(&apos;should render an unchecked checkbox by default&apos;, () => {
-    customRender(<Checkbox aria-label=&apos;Test Checkbox&apos; />);
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, { name: /test checkbox/i });
+  it('should render an unchecked checkbox by default', () => {
+    customRender(<Checkbox aria-label='Test Checkbox' />);
+    const checkbox = screen.getByRole('checkbox', { name: /test checkbox/i });
     expect(checkbox).toBeInTheDocument();
     expect(checkbox).not.toBeChecked();
-    expect(checkbox).toHaveAttribute(&apos;data-state&apos;, &apos;unchecked&apos;);
+    expect(checkbox).toHaveAttribute('data-state', 'unchecked');
   });
 
-  it(&apos;should toggle checked state on click&apos;, async () => {
+  it('should toggle checked state on click', async () => {
     const user = userEvent.setup();
-    customRender(<Checkbox aria-label=&apos;Toggle Checkbox&apos; />);
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, { name: /toggle checkbox/i });
+    customRender(<Checkbox aria-label='Toggle Checkbox' />);
+    const checkbox = screen.getByRole('checkbox', { name: /toggle checkbox/i });
 
     await user.click(checkbox);
     expect(checkbox).toBeChecked();
-    expect(checkbox).toHaveAttribute(&apos;data-state&apos;, &apos;checked&apos;);
+    expect(checkbox).toHaveAttribute('data-state', 'checked');
 
     await user.click(checkbox);
     expect(checkbox).not.toBeChecked();
-    expect(checkbox).toHaveAttribute(&apos;data-state&apos;, &apos;unchecked&apos;);
+    expect(checkbox).toHaveAttribute('data-state', 'unchecked');
   });
 
-  it(&apos;should call onCheckedChange handler&apos;, async () => {
+  it('should call onCheckedChange handler', async () => {
     const user = userEvent.setup();
     const mockOnCheckedChange = vi.fn();
     customRender(
       <Checkbox
-        aria-label=&apos;Callback Checkbox&apos;
+        aria-label='Callback Checkbox'
         onCheckedChange={mockOnCheckedChange}
       />
     );
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+    const checkbox = screen.getByRole('checkbox', {
       name: /callback checkbox/i,
     });
 
@@ -53,26 +52,26 @@ describe(&apos;Checkbox Component - Click Tests&apos;, () => {
   });
 
   // Checkbox States
-  it(&apos;should render a checked checkbox&apos;, () => {
-    customRender(<Checkbox aria-label=&apos;Checked Checkbox&apos; checked />);
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+  it('should render a checked checkbox', () => {
+    customRender(<Checkbox aria-label='Checked Checkbox' checked />);
+    const checkbox = screen.getByRole('checkbox', {
       name: /checked checkbox/i,
     });
     expect(checkbox).toBeChecked();
-    expect(checkbox).toHaveAttribute(&apos;data-state&apos;, &apos;checked&apos;);
+    expect(checkbox).toHaveAttribute('data-state', 'checked');
   });
 
-  it(&apos;should render a disabled checkbox&apos;, async () => {
+  it('should render a disabled checkbox', async () => {
     const user = userEvent.setup();
     const mockOnCheckedChange = vi.fn();
     customRender(
       <Checkbox
-        aria-label=&apos;Disabled Checkbox&apos;
+        aria-label='Disabled Checkbox'
         disabled
         onCheckedChange={mockOnCheckedChange}
       />
     );
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+    const checkbox = screen.getByRole('checkbox', {
       name: /disabled checkbox/i,
     });
 
@@ -82,30 +81,30 @@ describe(&apos;Checkbox Component - Click Tests&apos;, () => {
     expect(mockOnCheckedChange).not.toHaveBeenCalled();
   });
 
-  it(&apos;should render an indeterminate checkbox&apos;, () => {
+  it('should render an indeterminate checkbox', () => {
     customRender(
-      <Checkbox aria-label=&apos;Indeterminate Checkbox&apos; checked=&apos;indeterminate&apos; />
+      <Checkbox aria-label='Indeterminate Checkbox' checked='indeterminate' />
     );
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+    const checkbox = screen.getByRole('checkbox', {
       name: /indeterminate checkbox/i,
     });
-    expect(checkbox).toHaveAttribute(&apos;data-state&apos;, &apos;indeterminate&apos;);
-    expect(checkbox).toHaveAttribute(&apos;aria-checked&apos;, &apos;mixed&apos;);
+    expect(checkbox).toHaveAttribute('data-state', 'indeterminate');
+    expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
   });
 
   // Checkbox with Label
-  it(&apos;should associate checkbox with a label&apos;, async () => {
+  it('should associate checkbox with a label', async () => {
     const user = userEvent.setup();
     const mockOnCheckedChange = vi.fn();
     customRender(
       <div>
-        <Checkbox id=&apos;my-checkbox&apos; onCheckedChange={mockOnCheckedChange} />
-        <Label htmlFor=&apos;my-checkbox&apos;>My Checkbox</Label>
+        <Checkbox id='my-checkbox' onCheckedChange={mockOnCheckedChange} />
+        <Label htmlFor='my-checkbox'>My Checkbox</Label>
       </div>
     );
 
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, { name: /my checkbox/i });
-    const label = screen.getByText(&apos;My Checkbox&apos;);
+    const checkbox = screen.getByRole('checkbox', { name: /my checkbox/i });
+    const label = screen.getByText('My Checkbox');
 
     expect(checkbox).toBeInTheDocument();
     expect(label).toBeInTheDocument();
@@ -121,75 +120,75 @@ describe(&apos;Checkbox Component - Click Tests&apos;, () => {
   });
 
   // Checkbox Accessibility
-  it(&apos;should have proper ARIA attributes for unchecked state&apos;, () => {
-    customRender(<Checkbox aria-label=&apos;Accessible Checkbox&apos; />);
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+  it('should have proper ARIA attributes for unchecked state', () => {
+    customRender(<Checkbox aria-label='Accessible Checkbox' />);
+    const checkbox = screen.getByRole('checkbox', {
       name: /accessible checkbox/i,
     });
-    expect(checkbox).toHaveAttribute(&apos;aria-checked&apos;, &apos;false&apos;);
+    expect(checkbox).toHaveAttribute('aria-checked', 'false');
   });
 
-  it(&apos;should have proper ARIA attributes for checked state&apos;, () => {
-    customRender(<Checkbox aria-label=&apos;Accessible Checkbox Checked&apos; checked />);
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+  it('should have proper ARIA attributes for checked state', () => {
+    customRender(<Checkbox aria-label='Accessible Checkbox Checked' checked />);
+    const checkbox = screen.getByRole('checkbox', {
       name: /accessible checkbox checked/i,
     });
-    expect(checkbox).toHaveAttribute(&apos;aria-checked&apos;, &apos;true&apos;);
+    expect(checkbox).toHaveAttribute('aria-checked', 'true');
   });
 
   // Checkbox Custom Styling
-  it(&apos;should apply custom className&apos;, () => {
+  it('should apply custom className', () => {
     customRender(
       <Checkbox
-        aria-label=&apos;Styled Checkbox&apos;
-        className=&apos;custom-checkbox-class&apos;
+        aria-label='Styled Checkbox'
+        className='custom-checkbox-class'
       />
     );
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, { name: /styled checkbox/i });
-    expect(checkbox).toHaveClass(&apos;custom-checkbox-class&apos;);
+    const checkbox = screen.getByRole('checkbox', { name: /styled checkbox/i });
+    expect(checkbox).toHaveClass('custom-checkbox-class');
   });
 
   // Checkbox Keyboard Interaction
-  it(&apos;should handle Space key (may not toggle in all implementations)&apos;, async () => {
+  it('should handle Space key (may not toggle in all implementations)', async () => {
     const user = userEvent.setup();
-    customRender(<Checkbox aria-label=&apos;Keyboard Checkbox&apos; />);
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+    customRender(<Checkbox aria-label='Keyboard Checkbox' />);
+    const checkbox = screen.getByRole('checkbox', {
       name: /keyboard checkbox/i,
     });
 
     checkbox.focus();
-    await user.keyboard(&apos;{Space}&apos;);
-    // Some checkbox implementations don&apos;t toggle on Space in test environment
+    await user.keyboard('{Space}');
+    // Some checkbox implementations don't toggle on Space in test environment
     // Just verify the checkbox is still functional
     expect(checkbox).toBeInTheDocument();
   });
 
-  it(&apos;should handle Enter key (may not toggle in all implementations)&apos;, async () => {
+  it('should handle Enter key (may not toggle in all implementations)', async () => {
     const user = userEvent.setup();
-    customRender(<Checkbox aria-label=&apos;Enter Checkbox&apos; />);
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, { name: /enter checkbox/i });
+    customRender(<Checkbox aria-label='Enter Checkbox' />);
+    const checkbox = screen.getByRole('checkbox', { name: /enter checkbox/i });
 
     checkbox.focus();
-    await user.keyboard(&apos;{Enter}&apos;);
-    // Some checkbox implementations don&apos;t toggle on Enter, just verify it&apos;s still functional
+    await user.keyboard('{Enter}');
+    // Some checkbox implementations don't toggle on Enter, just verify it's still functional
     expect(checkbox).toBeInTheDocument();
   });
 
   // Checkbox Edge Cases
-  it(&apos;should handle multiple checkboxes&apos;, async () => {
+  it('should handle multiple checkboxes', async () => {
     const user = userEvent.setup();
     const mockOnChange1 = vi.fn();
     const mockOnChange2 = vi.fn();
 
     customRender(
       <div>
-        <Checkbox aria-label=&apos;Checkbox 1&apos; onCheckedChange={mockOnChange1} />
-        <Checkbox aria-label=&apos;Checkbox 2&apos; onCheckedChange={mockOnChange2} />
+        <Checkbox aria-label='Checkbox 1' onCheckedChange={mockOnChange1} />
+        <Checkbox aria-label='Checkbox 2' onCheckedChange={mockOnChange2} />
       </div>
     );
 
-    const checkbox1 = screen.getByRole(&apos;checkbox&apos;, { name: /checkbox 1/i });
-    const checkbox2 = screen.getByRole(&apos;checkbox&apos;, { name: /checkbox 2/i });
+    const checkbox1 = screen.getByRole('checkbox', { name: /checkbox 1/i });
+    const checkbox2 = screen.getByRole('checkbox', { name: /checkbox 2/i });
 
     await user.click(checkbox1);
     expect(checkbox1).toBeChecked();
@@ -201,43 +200,43 @@ describe(&apos;Checkbox Component - Click Tests&apos;, () => {
     expect(mockOnChange2).toHaveBeenCalledWith(true);
   });
 
-  it(&apos;should handle checkbox with custom props&apos;, () => {
+  it('should handle checkbox with custom props', () => {
     customRender(
       <Checkbox
-        aria-label=&apos;Custom Props Checkbox&apos;
-        data-testid=&apos;custom-checkbox&apos;
-        data-custom=&apos;value&apos;
+        aria-label='Custom Props Checkbox'
+        data-testid='custom-checkbox'
+        data-custom='value'
       />
     );
 
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+    const checkbox = screen.getByRole('checkbox', {
       name: /custom props checkbox/i,
     });
-    expect(checkbox).toHaveAttribute(&apos;data-testid&apos;, &apos;custom-checkbox&apos;);
-    expect(checkbox).toHaveAttribute(&apos;data-custom&apos;, &apos;value&apos;);
+    expect(checkbox).toHaveAttribute('data-testid', 'custom-checkbox');
+    expect(checkbox).toHaveAttribute('data-custom', 'value');
   });
 
-  it(&apos;should handle checkbox with value attribute&apos;, () => {
+  it('should handle checkbox with value attribute', () => {
     customRender(
-      <Checkbox aria-label=&apos;Valued Checkbox&apos; value=&apos;checkbox-value&apos; />
+      <Checkbox aria-label='Valued Checkbox' value='checkbox-value' />
     );
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, { name: /valued checkbox/i });
-    expect(checkbox).toHaveAttribute(&apos;value&apos;, &apos;checkbox-value&apos;);
+    const checkbox = screen.getByRole('checkbox', { name: /valued checkbox/i });
+    expect(checkbox).toHaveAttribute('value', 'checkbox-value');
   });
 
   // Controlled state test without hooks
-  it(&apos;should handle controlled state with external state management&apos;, () => {
+  it('should handle controlled state with external state management', () => {
     const mockOnCheckedChange = vi.fn();
 
     customRender(
       <Checkbox
-        aria-label=&apos;Controlled Checkbox&apos;
+        aria-label='Controlled Checkbox'
         checked={true}
         onCheckedChange={mockOnCheckedChange}
       />
     );
 
-    const checkbox = screen.getByRole(&apos;checkbox&apos;, {
+    const checkbox = screen.getByRole('checkbox', {
       name: /controlled checkbox/i,
     });
     expect(checkbox).toBeChecked(); // Should be checked because controlled

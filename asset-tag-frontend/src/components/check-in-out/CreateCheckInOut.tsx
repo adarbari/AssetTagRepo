@@ -1,22 +1,21 @@
-import React from &apos;react&apos;;
-import { useState } from &apos;react&apos;;
-import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Textarea } from &apos;../ui/textarea&apos;;
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { RadioGroup, RadioGroupItem } from &apos;../ui/radio-group&apos;;
-import { Calendar } from &apos;../ui/calendar&apos;;
-import { Popover, PopoverContent, PopoverTrigger } from &apos;../ui/popover&apos;;
-import { cn } from &apos;../ui/utils&apos;;
+} from '../ui/select';
+import { Badge } from '../ui/badge';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { Calendar } from '../ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { cn } from '../ui/utils';
 import {
   LogIn,
   LogOut,
@@ -28,11 +27,11 @@ import {
   AlertCircle,
   CheckCircle,
   ArrowLeft,
-} from &apos;lucide-react&apos;;
-import { format } from &apos;date-fns&apos;;
-import { toast } from &apos;sonner&apos;;
-import { updateAsset } from &apos;../../data/mockData&apos;;
-import { PageHeader, PageLayout } from &apos;../common&apos;;
+} from 'lucide-react';
+import { format } from 'date-fns';
+import { toast } from 'sonner';
+import { updateAsset } from '../../data/mockData';
+import { PageHeader, PageLayout } from '../common';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -40,15 +39,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from &apos;../ui/breadcrumb&apos;;
-import type { Asset } from &apos;../types&apos;;
+} from '../ui/breadcrumb';
+import type { Asset } from '../types';
 
 interface CreateCheckInOutProps {
   onBack: () => void;
   assetId: string;
   assetName: string;
-  currentStatus: Asset[&apos;status&apos;];
-  mode: &apos;check-in&apos; | &apos;check-out&apos;;
+  currentStatus: Asset['status'];
+  mode: 'check-in' | 'check-out';
   assetContext?: Asset;
   onComplete?: (updates: Partial<Asset>) => void;
 }
@@ -62,19 +61,19 @@ export function CreateCheckInOut({
   assetContext,
   onComplete,
 }: CreateCheckInOutProps) {
-  const [assignedTo, setAssignedTo] = useState(&apos;&apos;);
-  const [project, setProject] = useState(&apos;&apos;);
-  const [location, setLocation] = useState(&apos;&apos;);
+  const [assignedTo, setAssignedTo] = useState('');
+  const [project, setProject] = useState('');
+  const [location, setLocation] = useState('');
   const [expectedReturn, setExpectedReturn] = useState<Date>();
-  const [condition, setCondition] = useState(&apos;good&apos;);
-  const [notes, setNotes] = useState(&apos;&apos;);
+  const [condition, setCondition] = useState('good');
+  const [notes, setNotes] = useState('');
 
   const handleSubmit = () => {
     const updates: Partial<Asset> = {};
 
-    if (mode === &apos;check-out&apos;) {
+    if (mode === 'check-out') {
       // Update status to checked-out
-      updates.status = &apos;checked-out&apos;;
+      updates.status = 'checked-out';
 
       // Update assignment if provided
       if (assignedTo) {
@@ -82,15 +81,15 @@ export function CreateCheckInOut({
       }
 
       toast.success(`${assetName} checked out successfully`, {
-        description: `Assigned to ${assignedTo || &apos;unassigned&apos;}`,
+        description: `Assigned to ${assignedTo || 'unassigned'}`,
       });
     } else {
       // Update status back to active on check-in
-      updates.status = &apos;active&apos;;
+      updates.status = 'active';
 
       // If asset is damaged or in poor condition, mark for maintenance
-      if (condition === &apos;damaged&apos; || condition === &apos;poor&apos;) {
-        updates.status = &apos;maintenance&apos;;
+      if (condition === 'damaged' || condition === 'poor') {
+        updates.status = 'maintenance';
       }
 
       toast.success(`${assetName} checked in successfully`, {
@@ -107,7 +106,7 @@ export function CreateCheckInOut({
     try {
       updateAsset(assetId, updates);
     } catch (error) {
-// // // // // // // console.error(&apos;Error updating asset in mock data:&apos;, error);
+// // // // // // // console.error('Error updating asset in mock data:', error);
     }
 
     // Navigate back
@@ -116,55 +115,55 @@ export function CreateCheckInOut({
 
   const getConditionColor = (cond: string) => {
     switch (cond) {
-      case &apos;excellent&apos;:
-        return &apos;bg-green-100 text-green-700 border-green-200&apos;;
-      case &apos;good&apos;:
-        return &apos;bg-blue-100 text-blue-700 border-blue-200&apos;;
-      case &apos;fair&apos;:
-        return &apos;bg-yellow-100 text-yellow-700 border-yellow-200&apos;;
-      case &apos;poor&apos;:
-        return &apos;bg-orange-100 text-orange-700 border-orange-200&apos;;
-      case &apos;damaged&apos;:
-        return &apos;bg-red-100 text-red-700 border-red-200&apos;;
+      case 'excellent':
+        return 'bg-green-100 text-green-700 border-green-200';
+      case 'good':
+        return 'bg-blue-100 text-blue-700 border-blue-200';
+      case 'fair':
+        return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+      case 'poor':
+        return 'bg-orange-100 text-orange-700 border-orange-200';
+      case 'damaged':
+        return 'bg-red-100 text-red-700 border-red-200';
       default:
-        return &apos;bg-gray-100 text-gray-700 border-gray-200&apos;;
+        return 'bg-gray-100 text-gray-700 border-gray-200';
     }
   };
 
   return (
     <PageLayout
-      variant=&apos;narrow&apos;
-      padding=&apos;md&apos;
+      variant='narrow'
+      padding='md'
       header={
-        <div className=&apos;border-b bg-background px-8 py-4&apos;>
-          <div className=&apos;flex items-center gap-4 mb-4&apos;>
-            <Button variant=&apos;ghost&apos; size=&apos;icon&apos; onClick={onBack}>
-              <ArrowLeft className=&apos;h-5 w-5&apos; />
+        <div className='border-b bg-background px-8 py-4'>
+          <div className='flex items-center gap-4 mb-4'>
+            <Button variant='ghost' size='icon' onClick={onBack}>
+              <ArrowLeft className='h-5 w-5' />
             </Button>
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink onClick={onBack} className=&apos;cursor-pointer&apos;>
+                  <BreadcrumbLink onClick={onBack} className='cursor-pointer'>
                     {assetName}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbPage>
-                    {mode === &apos;check-out&apos; ? &apos;Check Out&apos; : &apos;Check In&apos;}
+                    {mode === 'check-out' ? 'Check Out' : 'Check In'}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
           <PageHeader
-            title={mode === &apos;check-out&apos; ? &apos;Check Out Asset&apos; : &apos;Check In Asset&apos;}
+            title={mode === 'check-out' ? 'Check Out Asset' : 'Check In Asset'}
             description={
-              mode === &apos;check-out&apos;
-                ? &apos;Assign this asset to a user or project&apos;
-                : &apos;Return this asset and assess its condition&apos;
+              mode === 'check-out'
+                ? 'Assign this asset to a user or project'
+                : 'Return this asset and assess its condition'
             }
-            icon={mode === &apos;check-out&apos; ? LogOut : LogIn}
+            icon={mode === 'check-out' ? LogOut : LogIn}
           />
         </div>
       }
@@ -175,27 +174,27 @@ export function CreateCheckInOut({
           <CardTitle>Asset Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className=&apos;p-4 bg-muted rounded-lg&apos;>
-            <div className=&apos;flex items-center justify-between&apos;>
+          <div className='p-4 bg-muted rounded-lg'>
+            <div className='flex items-center justify-between'>
               <div>
                 <h4>{assetName}</h4>
-                <p className=&apos;text-sm text-muted-foreground&apos;>{assetId}</p>
+                <p className='text-sm text-muted-foreground'>{assetId}</p>
                 {assetContext && (
-                  <div className=&apos;mt-2 text-sm space-y-1&apos;>
+                  <div className='mt-2 text-sm space-y-1'>
                     <p>
-                      <span className=&apos;text-muted-foreground&apos;>Type:</span>{&apos; &apos;}
+                      <span className='text-muted-foreground'>Type:</span>{' '}
                       {assetContext.type}
                     </p>
                     <p>
-                      <span className=&apos;text-muted-foreground&apos;>Location:</span>{&apos; &apos;}
+                      <span className='text-muted-foreground'>Location:</span>{' '}
                       {assetContext.location}
                     </p>
                   </div>
                 )}
               </div>
               <Badge
-                variant=&apos;outline&apos;
-                className=&apos;bg-blue-100 text-blue-700 border-blue-200&apos;
+                variant='outline'
+                className='bg-blue-100 text-blue-700 border-blue-200'
               >
                 {currentStatus}
               </Badge>
@@ -208,92 +207,92 @@ export function CreateCheckInOut({
       <Card>
         <CardHeader>
           <CardTitle>
-            {mode === &apos;check-out&apos; ? &apos;Check-Out Details&apos; : &apos;Check-In Details&apos;}
+            {mode === 'check-out' ? 'Check-Out Details' : 'Check-In Details'}
           </CardTitle>
         </CardHeader>
-        <CardContent className=&apos;space-y-6&apos;>
-          {mode === &apos;check-out&apos; ? (
+        <CardContent className='space-y-6'>
+          {mode === 'check-out' ? (
             <>
               {/* Check-out Form */}
-              <div className=&apos;space-y-4&apos;>
-                <div className=&apos;space-y-2&apos;>
-                  <Label htmlFor=&apos;assigned-to&apos;>
-                    <User className=&apos;h-4 w-4 inline mr-2&apos; />
+              <div className='space-y-4'>
+                <div className='space-y-2'>
+                  <Label htmlFor='assigned-to'>
+                    <User className='h-4 w-4 inline mr-2' />
                     Assign To
                   </Label>
                   <Select value={assignedTo} onValueChange={setAssignedTo}>
-                    <SelectTrigger id=&apos;assigned-to&apos;>
-                      <SelectValue placeholder=&apos;Select user or team&apos; />
+                    <SelectTrigger id='assigned-to'>
+                      <SelectValue placeholder='Select user or team' />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&apos;john-smith&apos;>John Smith</SelectItem>
-                      <SelectItem value=&apos;sarah-johnson&apos;>
+                      <SelectItem value='john-smith'>John Smith</SelectItem>
+                      <SelectItem value='sarah-johnson'>
                         Sarah Johnson
                       </SelectItem>
-                      <SelectItem value=&apos;mike-wilson&apos;>Mike Wilson</SelectItem>
-                      <SelectItem value=&apos;team-alpha&apos;>Team Alpha</SelectItem>
-                      <SelectItem value=&apos;team-beta&apos;>Team Beta</SelectItem>
+                      <SelectItem value='mike-wilson'>Mike Wilson</SelectItem>
+                      <SelectItem value='team-alpha'>Team Alpha</SelectItem>
+                      <SelectItem value='team-beta'>Team Beta</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className=&apos;space-y-2&apos;>
-                  <Label htmlFor=&apos;project&apos;>
-                    <FileText className=&apos;h-4 w-4 inline mr-2&apos; />
+                <div className='space-y-2'>
+                  <Label htmlFor='project'>
+                    <FileText className='h-4 w-4 inline mr-2' />
                     Project / Job Site
                   </Label>
                   <Select value={project} onValueChange={setProject}>
-                    <SelectTrigger id=&apos;project&apos;>
-                      <SelectValue placeholder=&apos;Select project (optional)&apos; />
+                    <SelectTrigger id='project'>
+                      <SelectValue placeholder='Select project (optional)' />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&apos;job-alpha&apos;>Job Site Alpha</SelectItem>
-                      <SelectItem value=&apos;job-beta&apos;>Job Site Beta</SelectItem>
-                      <SelectItem value=&apos;warehouse&apos;>
+                      <SelectItem value='job-alpha'>Job Site Alpha</SelectItem>
+                      <SelectItem value='job-beta'>Job Site Beta</SelectItem>
+                      <SelectItem value='warehouse'>
                         Warehouse District
                       </SelectItem>
-                      <SelectItem value=&apos;campus&apos;>Corporate Campus</SelectItem>
+                      <SelectItem value='campus'>Corporate Campus</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className=&apos;space-y-2&apos;>
-                  <Label htmlFor=&apos;location&apos;>
-                    <MapPin className=&apos;h-4 w-4 inline mr-2&apos; />
+                <div className='space-y-2'>
+                  <Label htmlFor='location'>
+                    <MapPin className='h-4 w-4 inline mr-2' />
                     Destination Location
                   </Label>
                   <Input
-                    id=&apos;location&apos;
-                    placeholder=&apos;Enter location or address&apos;
+                    id='location'
+                    placeholder='Enter location or address'
                     value={location}
                     onChange={e => setLocation(e.target.value)}
                   />
                 </div>
 
-                <div className=&apos;space-y-2&apos;>
-                  <Label htmlFor=&apos;expected-return-date&apos;>
-                    <CalendarIcon className=&apos;h-4 w-4 inline mr-2&apos; />
+                <div className='space-y-2'>
+                  <Label htmlFor='expected-return-date'>
+                    <CalendarIcon className='h-4 w-4 inline mr-2' />
                     Expected Return Date
                   </Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
-                        id=&apos;expected-return-date&apos;
-                        variant=&apos;outline&apos;
+                        id='expected-return-date'
+                        variant='outline'
                         className={cn(
-                          &apos;w-full justify-start text-left&apos;,
-                          !expectedReturn && &apos;text-muted-foreground&apos;
+                          'w-full justify-start text-left',
+                          !expectedReturn && 'text-muted-foreground'
                         )}
                       >
-                        <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
+                        <CalendarIcon className='mr-2 h-4 w-4' />
                         {expectedReturn
-                          ? format(expectedReturn, &apos;PPP&apos;)
-                          : &apos;Pick a date&apos;}
+                          ? format(expectedReturn, 'PPP')
+                          : 'Pick a date'}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
+                    <PopoverContent className='w-auto p-0' align='start'>
                       <Calendar
-                        mode=&apos;single&apos;
+                        mode='single'
                         selected={expectedReturn}
                         onSelect={setExpectedReturn}
                         initialFocus
@@ -302,14 +301,14 @@ export function CreateCheckInOut({
                   </Popover>
                 </div>
 
-                <div className=&apos;space-y-2&apos;>
-                  <Label htmlFor=&apos;checkout-notes&apos;>
-                    <FileText className=&apos;h-4 w-4 inline mr-2&apos; />
+                <div className='space-y-2'>
+                  <Label htmlFor='checkout-notes'>
+                    <FileText className='h-4 w-4 inline mr-2' />
                     Notes (Optional)
                   </Label>
                   <Textarea
-                    id=&apos;checkout-notes&apos;
-                    placeholder=&apos;Add any notes about this checkout...&apos;
+                    id='checkout-notes'
+                    placeholder='Add any notes about this checkout...'
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
                     rows={3}
@@ -320,67 +319,67 @@ export function CreateCheckInOut({
           ) : (
             <>
               {/* Check-in Form */}
-              <div className=&apos;space-y-4&apos;>
-                <div className=&apos;space-y-2&apos;>
+              <div className='space-y-4'>
+                <div className='space-y-2'>
                   <Label>
-                    <AlertCircle className=&apos;h-4 w-4 inline mr-2&apos; />
+                    <AlertCircle className='h-4 w-4 inline mr-2' />
                     Asset Condition
                   </Label>
                   <RadioGroup value={condition} onValueChange={setCondition}>
-                    <div className=&apos;space-y-2&apos;>
+                    <div className='space-y-2'>
                       {[
                         {
-                          value: &apos;excellent&apos;,
-                          label: &apos;Excellent&apos;,
-                          desc: &apos;Perfect condition, no issues&apos;,
+                          value: 'excellent',
+                          label: 'Excellent',
+                          desc: 'Perfect condition, no issues',
                         },
                         {
-                          value: &apos;good&apos;,
-                          label: &apos;Good&apos;,
-                          desc: &apos;Normal wear, fully functional&apos;,
+                          value: 'good',
+                          label: 'Good',
+                          desc: 'Normal wear, fully functional',
                         },
                         {
-                          value: &apos;fair&apos;,
-                          label: &apos;Fair&apos;,
-                          desc: &apos;Some wear, may need minor service&apos;,
+                          value: 'fair',
+                          label: 'Fair',
+                          desc: 'Some wear, may need minor service',
                         },
                         {
-                          value: &apos;poor&apos;,
-                          label: &apos;Poor&apos;,
-                          desc: &apos;Significant wear, needs attention&apos;,
+                          value: 'poor',
+                          label: 'Poor',
+                          desc: 'Significant wear, needs attention',
                         },
                         {
-                          value: &apos;damaged&apos;,
-                          label: &apos;Damaged&apos;,
-                          desc: &apos;Requires immediate repair&apos;,
+                          value: 'damaged',
+                          label: 'Damaged',
+                          desc: 'Requires immediate repair',
                         },
                       ].map(option => (
                         <div
                           key={option.value}
                           className={cn(
-                            &apos;flex items-start space-x-3 p-3 rounded-lg border&apos;,
+                            'flex items-start space-x-3 p-3 rounded-lg border',
                             condition === option.value &&
-                              &apos;border-primary bg-accent&apos;
+                              'border-primary bg-accent'
                           )}
                         >
                           <RadioGroupItem
                             value={option.value}
                             id={option.value}
                           />
-                          <div className=&apos;flex-1&apos;>
+                          <div className='flex-1'>
                             <Label
                               htmlFor={option.value}
-                              className=&apos;flex items-center gap-2 cursor-pointer&apos;
+                              className='flex items-center gap-2 cursor-pointer'
                             >
                               {option.label}
                               <Badge
-                                variant=&apos;outline&apos;
+                                variant='outline'
                                 className={getConditionColor(option.value)}
                               >
                                 {option.label}
                               </Badge>
                             </Label>
-                            <p className=&apos;text-sm text-muted-foreground&apos;>
+                            <p className='text-sm text-muted-foreground'>
                               {option.desc}
                             </p>
                           </div>
@@ -390,34 +389,34 @@ export function CreateCheckInOut({
                   </RadioGroup>
                 </div>
 
-                <div className=&apos;space-y-2&apos;>
-                  <Label htmlFor=&apos;return-location&apos;>
-                    <MapPin className=&apos;h-4 w-4 inline mr-2&apos; />
+                <div className='space-y-2'>
+                  <Label htmlFor='return-location'>
+                    <MapPin className='h-4 w-4 inline mr-2' />
                     Return Location
                   </Label>
-                  <Select defaultValue=&apos;warehouse&apos;>
-                    <SelectTrigger id=&apos;return-location&apos;>
+                  <Select defaultValue='warehouse'>
+                    <SelectTrigger id='return-location'>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&apos;warehouse&apos;>
+                      <SelectItem value='warehouse'>
                         Warehouse District
                       </SelectItem>
-                      <SelectItem value=&apos;depot&apos;>Service Depot C</SelectItem>
-                      <SelectItem value=&apos;campus&apos;>Corporate Campus</SelectItem>
+                      <SelectItem value='depot'>Service Depot C</SelectItem>
+                      <SelectItem value='campus'>Corporate Campus</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                {condition === &apos;damaged&apos; || condition === &apos;poor&apos; ? (
-                  <div className=&apos;p-4 bg-orange-50 border border-orange-200 rounded-lg&apos;>
-                    <div className=&apos;flex items-start gap-2&apos;>
-                      <AlertCircle className=&apos;h-5 w-5 text-orange-600 mt-0.5&apos; />
-                      <div className=&apos;flex-1&apos;>
-                        <h4 className=&apos;text-orange-900&apos;>
+                {condition === 'damaged' || condition === 'poor' ? (
+                  <div className='p-4 bg-orange-50 border border-orange-200 rounded-lg'>
+                    <div className='flex items-start gap-2'>
+                      <AlertCircle className='h-5 w-5 text-orange-600 mt-0.5' />
+                      <div className='flex-1'>
+                        <h4 className='text-orange-900'>
                           Maintenance Required
                         </h4>
-                        <p className=&apos;text-sm text-orange-700&apos;>
+                        <p className='text-sm text-orange-700'>
                           This asset will be flagged for maintenance review
                         </p>
                       </div>
@@ -425,14 +424,14 @@ export function CreateCheckInOut({
                   </div>
                 ) : null}
 
-                <div className=&apos;space-y-2&apos;>
-                  <Label htmlFor=&apos;checkin-notes&apos;>
-                    <FileText className=&apos;h-4 w-4 inline mr-2&apos; />
+                <div className='space-y-2'>
+                  <Label htmlFor='checkin-notes'>
+                    <FileText className='h-4 w-4 inline mr-2' />
                     Inspection Notes
                   </Label>
                   <Textarea
-                    id=&apos;checkin-notes&apos;
-                    placeholder=&apos;Describe any issues, damage, or observations...&apos;
+                    id='checkin-notes'
+                    placeholder='Describe any issues, damage, or observations...'
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
                     rows={4}
@@ -443,30 +442,30 @@ export function CreateCheckInOut({
           )}
 
           {/* Timestamp */}
-          <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground pt-4 border-t&apos;>
-            <Clock className=&apos;h-4 w-4&apos; />
+          <div className='flex items-center gap-2 text-sm text-muted-foreground pt-4 border-t'>
+            <Clock className='h-4 w-4' />
             <span>
-              {mode === &apos;check-out&apos; ? &apos;Check-out&apos; : &apos;Check-in&apos;} time:{&apos; &apos;}
-              {format(new Date(), &apos;PPpp&apos;)}
+              {mode === 'check-out' ? 'Check-out' : 'Check-in'} time:{' '}
+              {format(new Date(), 'PPpp')}
             </span>
           </div>
         </CardContent>
       </Card>
 
       {/* Actions */}
-      <div className=&apos;flex items-center justify-end gap-2&apos;>
-        <Button variant=&apos;outline&apos; onClick={onBack}>
+      <div className='flex items-center justify-end gap-2'>
+        <Button variant='outline' onClick={onBack}>
           Cancel
         </Button>
         <Button onClick={handleSubmit}>
-          {mode === &apos;check-out&apos; ? (
+          {mode === 'check-out' ? (
             <>
-              <LogOut className=&apos;h-4 w-4 mr-2&apos; />
+              <LogOut className='h-4 w-4 mr-2' />
               Check Out
             </>
           ) : (
             <>
-              <CheckCircle className=&apos;h-4 w-4 mr-2&apos; />
+              <CheckCircle className='h-4 w-4 mr-2' />
               Check In
             </>
           )}

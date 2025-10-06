@@ -1,13 +1,13 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
-import { screen, waitFor } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { JobDetails } from &apos;../job/JobDetails&apos;;
-import { render } from &apos;../../test/test-utils&apos;;
-import { mockJobs } from &apos;../../data/mockJobData&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { JobDetails } from '../job/JobDetails';
+import { render } from '../../test/test-utils';
+import { mockJobs } from '../../data/mockJobData';
 
 // Mock toast
-vi.mock(&apos;sonner&apos;, () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock(&apos;sonner&apos;, () => ({
   },
 }));
 
-describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
+describe('JobDetails Component - Basic Tests', () => {
   const mockJob = Object.values(mockJobs)[0];
   const mockProps = {
     jobId: mockJob.id,
@@ -28,8 +28,8 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
     vi.clearAllMocks();
   });
 
-  describe(&apos;Basic Rendering&apos;, () => {
-    it(&apos;should render the component without crashing&apos;, async () => {
+  describe('Basic Rendering', () => {
+    it('should render the component without crashing', async () => {
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
@@ -37,20 +37,20 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
       });
     });
 
-    it(&apos;should render back button and handle click&apos;, async () => {
+    it('should render back button and handle click', async () => {
       const user = userEvent.setup();
       render(<JobDetails {...mockProps} />);
 
       await waitFor(async () => {
-        const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
+        const backButton = screen.getByRole('button', { name: /back/i });
         await user.click(backButton);
         expect(mockProps.onBack).toHaveBeenCalledTimes(1);
       });
     });
   });
 
-  describe(&apos;Job Information&apos;, () => {
-    it(&apos;should render job details&apos;, async () => {
+  describe('Job Information', () => {
+    it('should render job details', async () => {
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
@@ -58,7 +58,7 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
       });
     });
 
-    it(&apos;should render job status&apos;, async () => {
+    it('should render job status', async () => {
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
@@ -67,50 +67,50 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Action Buttons&apos;, () => {
-    it(&apos;should render edit button&apos;, async () => {
+  describe('Action Buttons', () => {
+    it('should render edit button', async () => {
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
-        const editButton = screen.getByRole(&apos;button&apos;, { name: /edit/i });
+        const editButton = screen.getByRole('button', { name: /edit/i });
         expect(editButton).toBeInTheDocument();
       });
     });
 
-    it(&apos;should handle edit button click&apos;, async () => {
+    it('should handle edit button click', async () => {
       const user = userEvent.setup();
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
-        const editButton = screen.getByRole(&apos;button&apos;, { name: /edit/i });
+        const editButton = screen.getByRole('button', { name: /edit/i });
         user.click(editButton);
         expect(mockProps.onEditJob).toHaveBeenCalledTimes(1);
       });
     });
 
-    it(&apos;should render delete button&apos;, async () => {
+    it('should render delete button', async () => {
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
-        const deleteButton = screen.getByRole(&apos;button&apos;, { name: /delete/i });
+        const deleteButton = screen.getByRole('button', { name: /delete/i });
         expect(deleteButton).toBeInTheDocument();
       });
     });
 
-    it(&apos;should handle delete button click&apos;, async () => {
+    it('should handle delete button click', async () => {
       const user = userEvent.setup();
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
-        const deleteButton = screen.getByRole(&apos;button&apos;, { name: /delete/i });
+        const deleteButton = screen.getByRole('button', { name: /delete/i });
         user.click(deleteButton);
         expect(mockProps.onDeleteJob).toHaveBeenCalledTimes(1);
       });
     });
   });
 
-  describe(&apos;Job Status&apos;, () => {
-    it(&apos;should display job status information&apos;, async () => {
+  describe('Job Status', () => {
+    it('should display job status information', async () => {
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
@@ -118,7 +118,7 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
       });
     });
 
-    it(&apos;should show job progress if available&apos;, async () => {
+    it('should show job progress if available', async () => {
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
@@ -127,8 +127,8 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper ARIA labels&apos;, async () => {
+  describe('Accessibility', () => {
+    it('should have proper ARIA labels', async () => {
       render(<JobDetails {...mockProps} />);
 
       await waitFor(() => {
@@ -136,7 +136,7 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
       });
     });
 
-    it(&apos;should be keyboard accessible&apos;, async () => {
+    it('should be keyboard accessible', async () => {
       const user = userEvent.setup();
       render(<JobDetails {...mockProps} />);
 
@@ -148,9 +148,9 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Error Handling&apos;, () => {
-    it(&apos;should handle missing job data gracefully&apos;, async () => {
-      render(<JobDetails {...mockProps} jobId=&apos;non-existent&apos; />);
+  describe('Error Handling', () => {
+    it('should handle missing job data gracefully', async () => {
+      render(<JobDetails {...mockProps} jobId='non-existent' />);
 
       // Should render without crashing
       await waitFor(() => {
@@ -158,7 +158,7 @@ describe(&apos;JobDetails Component - Basic Tests&apos;, () => {
       });
     });
 
-    it(&apos;should handle callback functions&apos;, () => {
+    it('should handle callback functions', () => {
       expect(mockProps.onEditJob).toBeDefined();
       expect(mockProps.onDeleteJob).toBeDefined();
     });

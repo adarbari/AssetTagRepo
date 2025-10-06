@@ -1,20 +1,19 @@
-import React from &apos;react&apos;;
-import * as React from &apos;react&apos;;
-import { Slot } from &apos;@radix-ui/react-slot&apos;;
-import { ChevronRight, MoreHorizontal } from &apos;lucide-react&apos;;
+import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { ChevronRight, MoreHorizontal } from 'lucide-react';
 
-import { cn } from &apos;./utils&apos;;
+import { cn } from './utils';
 
-function Breadcrumb({ ...props }: React.ComponentProps<&apos;nav&apos;>) {
-  return <nav aria-label=&apos;breadcrumb&apos; data-slot=&apos;breadcrumb&apos; {...props} />;
+function Breadcrumb({ ...props }: React.ComponentProps<'nav'>) {
+  return <nav aria-label='breadcrumb' data-slot='breadcrumb' {...props} />;
 }
 
-function BreadcrumbList({ className, ...props }: React.ComponentProps<&apos;ol&apos;>) {
+function BreadcrumbList({ className, ...props }: React.ComponentProps<'ol'>) {
   return (
     <ol
-      data-slot=&apos;breadcrumb-list&apos;
+      data-slot='breadcrumb-list'
       className={cn(
-        &apos;text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5&apos;,
+        'text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5',
         className
       )}
       {...props}
@@ -22,11 +21,11 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<&apos;ol&a
   );
 }
 
-function BreadcrumbItem({ className, ...props }: React.ComponentProps<&apos;li&apos;>) {
+function BreadcrumbItem({ className, ...props }: React.ComponentProps<'li'>) {
   return (
     <li
-      data-slot=&apos;breadcrumb-item&apos;
-      className={cn(&apos;inline-flex items-center gap-1.5&apos;, className)}
+      data-slot='breadcrumb-item'
+      className={cn('inline-flex items-center gap-1.5', className)}
       {...props}
     />
   );
@@ -36,28 +35,28 @@ function BreadcrumbLink({
   asChild,
   className,
   ...props
-}: React.ComponentProps<&apos;a&apos;> & {
+}: React.ComponentProps<'a'> & {
   asChild?: boolean;
 }) {
-  const Comp = asChild ? Slot : &apos;a&apos;;
+  const Comp = asChild ? Slot : 'a';
 
   return (
     <Comp
-      data-slot=&apos;breadcrumb-link&apos;
-      className={cn(&apos;hover:text-foreground transition-colors&apos;, className)}
+      data-slot='breadcrumb-link'
+      className={cn('hover:text-foreground transition-colors', className)}
       {...props}
     />
   );
 }
 
-function BreadcrumbPage({ className, ...props }: React.ComponentProps<&apos;span&apos;>) {
+function BreadcrumbPage({ className, ...props }: React.ComponentProps<'span'>) {
   return (
     <span
-      data-slot=&apos;breadcrumb-page&apos;
-      role=&apos;link&apos;
-      aria-disabled=&apos;true&apos;
-      aria-current=&apos;page&apos;
-      className={cn(&apos;text-foreground font-normal&apos;, className)}
+      data-slot='breadcrumb-page'
+      role='link'
+      aria-disabled='true'
+      aria-current='page'
+      className={cn('text-foreground font-normal', className)}
       {...props}
     />
   );
@@ -67,13 +66,13 @@ function BreadcrumbSeparator({
   children,
   className,
   ...props
-}: React.ComponentProps<&apos;li&apos;>) {
+}: React.ComponentProps<'li'>) {
   return (
     <li
-      data-slot=&apos;breadcrumb-separator&apos;
-      role=&apos;presentation&apos;
-      aria-hidden=&apos;true&apos;
-      className={cn(&apos;[&>svg]:size-3.5&apos;, className)}
+      data-slot='breadcrumb-separator'
+      role='presentation'
+      aria-hidden='true'
+      className={cn('[&>svg]:size-3.5', className)}
       {...props}
     >
       {children ?? <ChevronRight />}
@@ -84,17 +83,17 @@ function BreadcrumbSeparator({
 function BreadcrumbEllipsis({
   className,
   ...props
-}: React.ComponentProps<&apos;span&apos;>) {
+}: React.ComponentProps<'span'>) {
   return (
     <span
-      data-slot=&apos;breadcrumb-ellipsis&apos;
-      role=&apos;presentation&apos;
-      aria-hidden=&apos;true&apos;
-      className={cn(&apos;flex size-9 items-center justify-center&apos;, className)}
+      data-slot='breadcrumb-ellipsis'
+      role='presentation'
+      aria-hidden='true'
+      className={cn('flex size-9 items-center justify-center', className)}
       {...props}
     >
-      <MoreHorizontal className=&apos;size-4&apos; />
-      <span className=&apos;sr-only&apos;>More</span>
+      <MoreHorizontal className='size-4' />
+      <span className='sr-only'>More</span>
     </span>
   );
 }

@@ -1,20 +1,19 @@
-import React from &apos;react&apos;;
-import { useState, useEffect } from &apos;react&apos;;
-import { Card, CardDescription, CardHeader, CardTitle } from &apos;../ui/card&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { AlertTriangle } from &apos;lucide-react&apos;;
-import { toast } from &apos;sonner&apos;;
+import { useState, useEffect } from 'react';
+import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
 import {
   PageHeader,
   LoadingState,
   AuditLogList,
   PageLayout,
   type AuditLogEntry,
-} from &apos;../common&apos;;
-import { getIssueById } from &apos;../../data/mockIssueData&apos;;
-import { IssueForm, IssueFormData } from &apos;./IssueForm&apos;;
-import type { Issue, UpdateIssueInput } from &apos;../../types/issue&apos;;
+} from '../common';
+import { getIssueById } from '../../data/mockIssueData';
+import { IssueForm, IssueFormData } from './IssueForm';
+import type { Issue, UpdateIssueInput } from '../../types/issue';
 
 interface EditIssueProps {
   issueId: string;
@@ -44,12 +43,12 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
         // Generate mock audit log
         generateMockAuditLog(issueData);
       } else {
-        toast.error(&apos;Issue not found&apos;);
+        toast.error('Issue not found');
         onBack();
       }
     } catch (error) {
-      toast.error(&apos;Failed to load issue&apos;);
-// // // // // // // console.error(&apos;Error loading issue:&apos;, error);
+      toast.error('Failed to load issue');
+// // // // // // // console.error('Error loading issue:', error);
     } finally {
       setLoading(false);
     }
@@ -58,34 +57,34 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
   const generateMockAuditLog = (issueData: Issue) => {
     const mockAuditLog: AuditLogEntry[] = [
       {
-        id: &apos;audit-1&apos;,
+        id: 'audit-1',
         timestamp: issueData.reportedDate,
-        action: &apos;created&apos;,
-        field: &apos;issue&apos;,
-        oldValue: &apos;&apos;,
+        action: 'created',
+        field: 'issue',
+        oldValue: '',
         newValue: issueData.title,
         changedBy: issueData.reportedBy,
       },
       {
-        id: &apos;audit-2&apos;,
+        id: 'audit-2',
         timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        action: &apos;updated&apos;,
-        field: &apos;status&apos;,
-        oldValue: &apos;open&apos;,
+        action: 'updated',
+        field: 'status',
+        oldValue: 'open',
         newValue: issueData.status,
-        changedBy: issueData.assignedTo || &apos;System&apos;,
+        changedBy: issueData.assignedTo || 'System',
       },
     ];
 
     if (issueData.assignedTo) {
       mockAuditLog.push({
-        id: &apos;audit-3&apos;,
+        id: 'audit-3',
         timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-        action: &apos;updated&apos;,
-        field: &apos;assignedTo&apos;,
-        oldValue: &apos;&apos;,
+        action: 'updated',
+        field: 'assignedTo',
+        oldValue: '',
         newValue: issueData.assignedTo,
-        changedBy: &apos;System&apos;,
+        changedBy: 'System',
       });
     }
 
@@ -112,17 +111,17 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
       const result = await onUpdateIssue(issueId, updateData);
 
       if (result.success) {
-        toast.success(&apos;Issue updated successfully&apos;);
+        toast.success('Issue updated successfully');
 
         // Add audit log entry for this update
         const newAuditEntry: AuditLogEntry = {
           id: `audit-${Date.now()}`,
           timestamp: new Date().toISOString(),
-          action: &apos;updated&apos;,
-          field: &apos;multiple&apos;,
-          oldValue: &apos;previous values&apos;,
-          newValue: &apos;updated values&apos;,
-          changedBy: &apos;Current User&apos;, // In real app, this would be the actual user
+          action: 'updated',
+          field: 'multiple',
+          oldValue: 'previous values',
+          newValue: 'updated values',
+          changedBy: 'Current User', // In real app, this would be the actual user
         };
 
         setAuditLog(prev => [newAuditEntry, ...prev]);
@@ -132,11 +131,11 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
           setIssue(result.issue);
         }
       } else {
-        toast.error(&apos;Failed to update issue&apos;);
+        toast.error('Failed to update issue');
       }
     } catch (error) {
-      toast.error(&apos;Failed to update issue&apos;);
-// // // // // // // console.error(&apos;Error updating issue:&apos;, error);
+      toast.error('Failed to update issue');
+// // // // // // // console.error('Error updating issue:', error);
     } finally {
       setSaving(false);
     }
@@ -144,21 +143,21 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
 
   if (loading) {
     return (
-      <div className=&apos;p-6&apos;>
-        <PageHeader title=&apos;Edit Issue&apos; onBack={onBack} />
-        <LoadingState message=&apos;Loading issue...&apos; />
+      <div className='p-6'>
+        <PageHeader title='Edit Issue' onBack={onBack} />
+        <LoadingState message='Loading issue...' />
       </div>
     );
   }
 
   if (!issue) {
     return (
-      <div className=&apos;p-6&apos;>
-        <PageHeader title=&apos;Edit Issue&apos; onBack={onBack} />
-        <div className=&apos;text-center py-8&apos;>
-          <AlertTriangle className=&apos;h-12 w-12 text-muted-foreground mx-auto mb-4&apos; />
-          <h3 className=&apos;text-lg font-semibold mb-2&apos;>Issue Not Found</h3>
-          <p className=&apos;text-muted-foreground mb-4&apos;>
+      <div className='p-6'>
+        <PageHeader title='Edit Issue' onBack={onBack} />
+        <div className='text-center py-8'>
+          <AlertTriangle className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
+          <h3 className='text-lg font-semibold mb-2'>Issue Not Found</h3>
+          <p className='text-muted-foreground mb-4'>
             The requested issue could not be found.
           </p>
           <Button onClick={onBack}>Back to Issues</Button>
@@ -169,33 +168,33 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
 
   return (
     <PageLayout
-      variant=&apos;narrow&apos;
-      padding=&apos;md&apos;
-      header={<PageHeader title=&apos;Edit Issue&apos; onBack={onBack} />}
+      variant='narrow'
+      padding='md'
+      header={<PageHeader title='Edit Issue' onBack={onBack} />}
     >
       {/* Issue Info Header */}
       <Card>
         <CardHeader>
-          <div className=&apos;flex items-center justify-between&apos;>
+          <div className='flex items-center justify-between'>
             <div>
-              <CardTitle className=&apos;flex items-center gap-2&apos;>
-                <AlertTriangle className=&apos;h-5 w-5 text-orange-500&apos; />
+              <CardTitle className='flex items-center gap-2'>
+                <AlertTriangle className='h-5 w-5 text-orange-500' />
                 {issue.id} - {issue.title}
               </CardTitle>
               <CardDescription>
                 Asset: {issue.assetName} ({issue.assetId})
               </CardDescription>
             </div>
-            <div className=&apos;flex gap-2&apos;>
+            <div className='flex gap-2'>
               <Badge
-                variant=&apos;outline&apos;
-                className=&apos;bg-red-100 text-red-700 border-red-300&apos;
+                variant='outline'
+                className='bg-red-100 text-red-700 border-red-300'
               >
-                {issue.status.replace(&apos;-&apos;, &apos; &apos;)}
+                {issue.status.replace('-', ' ')}
               </Badge>
               <Badge
-                variant=&apos;outline&apos;
-                className=&apos;bg-orange-100 text-orange-700 border-orange-300&apos;
+                variant='outline'
+                className='bg-orange-100 text-orange-700 border-orange-300'
               >
                 {issue.severity}
               </Badge>
@@ -204,10 +203,10 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
         </CardHeader>
       </Card>
 
-      <div className=&apos;grid gap-6 lg:grid-cols-2&apos;>
+      <div className='grid gap-6 lg:grid-cols-2'>
         {/* Edit Form */}
         <IssueForm
-          mode=&apos;edit&apos;
+          mode='edit'
           initialData={{
             type: issue.type,
             severity: issue.severity,
@@ -231,9 +230,9 @@ export function EditIssue({ issueId, onBack, onUpdateIssue }: EditIssueProps) {
         {/* Audit Log */}
         <AuditLogList
           entries={auditLog}
-          title=&apos;Audit Log&apos;
-          description=&apos;Track all changes made to this issue&apos;
-          variant=&apos;card&apos;
+          title='Audit Log'
+          description='Track all changes made to this issue'
+          variant='card'
         />
       </div>
     </PageLayout>

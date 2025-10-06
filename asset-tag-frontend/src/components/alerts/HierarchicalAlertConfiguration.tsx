@@ -1,4 +1,3 @@
-import React from &apos;react&apos;;
 
 /**
  * Hierarchical Alert Configuration Component
@@ -7,27 +6,27 @@ import React from &apos;react&apos;;
  * Allows creating overrides at any level with visual inheritance indicators
  */
 
-import { useState, useEffect, useMemo } from &apos;react&apos;;
+import { useState, useEffect, useMemo } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &apos;../ui/card&apos;;
-import { Tabs, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Separator } from &apos;../ui/separator&apos;;
-import { Switch } from &apos;../ui/switch&apos;;
+} from '../ui/card';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Badge } from '../ui/badge';
+import { Separator } from '../ui/separator';
+import { Switch } from '../ui/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
+} from '../ui/select';
 import {
   Dialog,
   DialogContent,
@@ -35,7 +34,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from &apos;../ui/dialog&apos;;
+} from '../ui/dialog';
 import {
   ArrowLeft,
   Save,
@@ -49,22 +48,22 @@ import {
   TrendingDown,
   WifiOff,
   Wrench,
-} from &apos;lucide-react&apos;;
-import { toast } from &apos;sonner&apos;;
-import { PageLayout } from &apos;../common&apos;;
-import { anyRenderer } from &apos;./anyRenderer&apos;;
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { PageLayout } from '../common';
+import { anyRenderer } from './anyRenderer';
 import {
   alertTypeConfigurations,
   getAllAlertTypes,
-} from &apos;../../data/alertConfigurations&apos;;
+} from '../../data/alertConfigurations';
 import type {
   AlertConfigurationsStore,
   SavedAlertConfig,
   AlertConfigLevel,
   AlertRuleConfig,
-} from &apos;../../types/alertConfig&apos;;
-import type { AlertType } from &apos;../../types&apos;;
-import { mockAssets, mockSites } from &apos;../../data/mockData&apos;;
+} from '../../types/alertConfig';
+import type { AlertType } from '../../types';
+import { mockAssets, mockSites } from '../../data/mockData';
 
 interface HierarchicalAlertConfigurationProps {
   alertConfigs: AlertConfigurationsStore;
@@ -87,9 +86,9 @@ const alertTypeIcons: Record<AlertType, any> = {
   temperature: Thermometer,
   offline: WifiOff,
   compliance: AlertTriangle,
-  &apos;unauthorized-zone&apos;: MapPin,
+  'unauthorized-zone': MapPin,
   underutilized: TrendingDown,
-  &apos;predictive-maintenance&apos;: Wrench,
+  'predictive-maintenance': Wrench,
 };
 
 export function HierarchicalAlertConfiguration({
@@ -99,9 +98,9 @@ export function HierarchicalAlertConfiguration({
   onDeleteConfig,
   onBack,
 }: HierarchicalAlertConfigurationProps) {
-  const [selectedLevel, setSelectedLevel] = useState<AlertConfigLevel>(&apos;user&apos;);
+  const [selectedLevel, setSelectedLevel] = useState<AlertConfigLevel>('user');
   const [selectedEntityId, setSelectedEntityId] =
-    useState<string>(&apos;current-user&apos;);
+    useState<string>('current-user');
   const [selectedAlertType, setSelectedAlertType] = useState<AlertType | null>(
     null
   );
@@ -114,13 +113,13 @@ export function HierarchicalAlertConfiguration({
   // Get entities based on selected level
   const availableEntities = useMemo(() => {
     switch (selectedLevel) {
-      case &apos;user&apos;:
-        return [{ id: &apos;current-user&apos;, name: &apos;Current User&apos; }];
-      case &apos;site&apos;:
+      case 'user':
+        return [{ id: 'current-user', name: 'Current User' }];
+      case 'site':
         return mockSites.map(s => ({ id: s.id, name: s.name }));
-      case &apos;asset&apos;:
+      case 'asset':
         return mockAssets.map(a => ({ id: a.id, name: a.name }));
-      case &apos;job&apos;:
+      case 'job':
         return Object.values(jobs).map((j: any) => ({
           id: j.id,
           name: j.name,
@@ -148,10 +147,10 @@ export function HierarchicalAlertConfiguration({
   // Check if config is inherited or overridden
   const getConfigStatus = (
     alertType: AlertType
-  ): &apos;inherited&apos; | &apos;override&apos; | &apos;none&apos; => {
+  ): 'inherited' | 'override' | 'none' => {
     const config = getConfigForAlertType(alertType);
-    if (!config) return &apos;none&apos;;
-    return config.config.isOverride ? &apos;override&apos; : &apos;inherited&apos;;
+    if (!config) return 'none';
+    return config.config.isOverride ? 'override' : 'inherited';
   };
 
   // Get effective config by walking up hierarchy
@@ -173,7 +172,7 @@ export function HierarchicalAlertConfiguration({
     }
 
     // Walk up hierarchy based on current level
-    if (selectedLevel === &apos;job&apos;) {
+    if (selectedLevel === 'job') {
       // Job → Asset → Site → User
       const job = Object.values(jobs).find(
         (j: any) => j.id === selectedEntityId
@@ -184,7 +183,7 @@ export function HierarchicalAlertConfiguration({
         if (alertConfigs[assetKey]) {
           return {
             config: alertConfigs[assetKey].config,
-            level: &apos;asset&apos;,
+            level: 'asset',
             entityId: job.assets[0].assetId,
           };
         }
@@ -194,14 +193,14 @@ export function HierarchicalAlertConfiguration({
         if (alertConfigs[siteKey]) {
           return {
             config: alertConfigs[siteKey].config,
-            level: &apos;site&apos;,
+            level: 'site',
             entityId: job.siteId,
           };
         }
       }
     }
 
-    if (selectedLevel === &apos;asset&apos;) {
+    if (selectedLevel === 'asset') {
       // Asset → Site → User
       const asset = mockAssets.find(a => a.id === selectedEntityId);
       if (asset && asset.site) {
@@ -211,7 +210,7 @@ export function HierarchicalAlertConfiguration({
           if (alertConfigs[siteKey]) {
             return {
               config: alertConfigs[siteKey].config,
-              level: &apos;site&apos;,
+              level: 'site',
               entityId: site.id,
             };
           }
@@ -220,17 +219,17 @@ export function HierarchicalAlertConfiguration({
     }
 
     if (
-      selectedLevel === &apos;site&apos; ||
-      selectedLevel === &apos;asset&apos; ||
-      selectedLevel === &apos;job&apos;
+      selectedLevel === 'site' ||
+      selectedLevel === 'asset' ||
+      selectedLevel === 'job'
     ) {
       // Check user level
       const userKey = `user:current-user:${alertType}`;
       if (alertConfigs[userKey]) {
         return {
           config: alertConfigs[userKey].config,
-          level: &apos;user&apos;,
-          entityId: &apos;current-user&apos;,
+          level: 'user',
+          entityId: 'current-user',
         };
       }
     }
@@ -274,12 +273,12 @@ export function HierarchicalAlertConfiguration({
       type: selectedAlertType,
       level: selectedLevel,
       entityId: selectedEntityId,
-      version: &apos;1.0&apos;,
+      version: '1.0',
       config: {
         ...editingConfig,
         level: selectedLevel,
         entityId: selectedEntityId,
-        isOverride: selectedLevel !== &apos;user&apos;,
+        isOverride: selectedLevel !== 'user',
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -292,12 +291,12 @@ export function HierarchicalAlertConfiguration({
       setIsConfigDialogOpen(false);
       setHasUnsavedChanges(false);
     } else {
-      toast.error(&apos;Failed to save configuration&apos;);
+      toast.error('Failed to save configuration');
     }
   };
 
   const handleDeleteOverride = async () => {
-    if (!selectedAlertType || selectedLevel === &apos;user&apos;) return;
+    if (!selectedAlertType || selectedLevel === 'user') return;
 
     const result = await onDeleteConfig(
       selectedLevel,
@@ -306,10 +305,10 @@ export function HierarchicalAlertConfiguration({
     );
 
     if (result.success) {
-      toast.success(&apos;Override removed, using inherited configuration&apos;);
+      toast.success('Override removed, using inherited configuration');
       setIsConfigDialogOpen(false);
     } else {
-      toast.error(&apos;Failed to remove override&apos;);
+      toast.error('Failed to remove override');
     }
   };
 
@@ -328,19 +327,19 @@ export function HierarchicalAlertConfiguration({
   const alertTypes = getAllAlertTypes();
 
   return (
-    <PageLayout variant=&apos;standard&apos; padding=&apos;md&apos;>
+    <PageLayout variant='standard' padding='md'>
       {/* Header */}
-      <div className=&apos;flex items-center justify-between&apos;>
-        <div className=&apos;flex items-center gap-4&apos;>
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-4'>
           {onBack && (
-            <Button variant=&apos;ghost&apos; size=&apos;sm&apos; onClick={onBack}>
-              <ArrowLeft className=&apos;h-4 w-4 mr-2&apos; />
+            <Button variant='ghost' size='sm' onClick={onBack}>
+              <ArrowLeft className='h-4 w-4 mr-2' />
               Back
             </Button>
           )}
           <div>
             <h1>Hierarchical Alert Configuration</h1>
-            <p className=&apos;text-muted-foreground&apos;>
+            <p className='text-muted-foreground'>
               Configure alert rules at user, site, asset, or job level
             </p>
           </div>
@@ -348,16 +347,16 @@ export function HierarchicalAlertConfiguration({
       </div>
 
       {/* Info Card */}
-      <Card className=&apos;border-blue-200 bg-blue-50&apos;>
-        <CardContent className=&apos;pt-6&apos;>
-          <div className=&apos;flex items-start gap-3&apos;>
-            <Info className=&apos;h-5 w-5 text-blue-600 mt-0.5&apos; />
-            <div className=&apos;text-sm&apos;>
-              <p className=&apos;text-blue-900&apos;>
-                <span className=&apos;font-medium&apos;>Hierarchy:</span> User → Site →
+      <Card className='border-blue-200 bg-blue-50'>
+        <CardContent className='pt-6'>
+          <div className='flex items-start gap-3'>
+            <Info className='h-5 w-5 text-blue-600 mt-0.5' />
+            <div className='text-sm'>
+              <p className='text-blue-900'>
+                <span className='font-medium'>Hierarchy:</span> User → Site →
                 Asset → Job
               </p>
-              <p className=&apos;text-blue-700 mt-1&apos;>
+              <p className='text-blue-700 mt-1'>
                 Configs at lower levels override parent levels. If no override
                 exists, the parent config applies.
               </p>
@@ -374,23 +373,23 @@ export function HierarchicalAlertConfiguration({
             Select the level at which you want to configure alerts
           </CardDescription>
         </CardHeader>
-        <CardContent className=&apos;space-y-4&apos;>
+        <CardContent className='space-y-4'>
           <Tabs
             value={selectedLevel}
             onValueChange={value => setSelectedLevel(value as AlertConfigLevel)}
           >
-            <TabsList className=&apos;grid w-full grid-cols-4&apos;>
-              <TabsTrigger value=&apos;user&apos;>User</TabsTrigger>
-              <TabsTrigger value=&apos;site&apos;>Site</TabsTrigger>
-              <TabsTrigger value=&apos;asset&apos;>Asset</TabsTrigger>
-              <TabsTrigger value=&apos;job&apos;>Job</TabsTrigger>
+            <TabsList className='grid w-full grid-cols-4'>
+              <TabsTrigger value='user'>User</TabsTrigger>
+              <TabsTrigger value='site'>Site</TabsTrigger>
+              <TabsTrigger value='asset'>Asset</TabsTrigger>
+              <TabsTrigger value='job'>Job</TabsTrigger>
             </TabsList>
           </Tabs>
 
-          {selectedLevel !== &apos;user&apos; && (
-            <div className=&apos;space-y-2&apos;>
+          {selectedLevel !== 'user' && (
+            <div className='space-y-2'>
               <Label>
-                Select{&apos; &apos;}
+                Select{' '}
                 {selectedLevel.charAt(0).toUpperCase() + selectedLevel.slice(1)}
               </Label>
               <Select
@@ -411,9 +410,9 @@ export function HierarchicalAlertConfiguration({
             </div>
           )}
 
-          <div className=&apos;text-sm text-muted-foreground&apos;>
-            Configuring for:{&apos; &apos;}
-            <span className=&apos;font-medium&apos;>
+          <div className='text-sm text-muted-foreground'>
+            Configuring for:{' '}
+            <span className='font-medium'>
               {availableEntities.find(e => e.id === selectedEntityId)?.name}
             </span>
           </div>
@@ -429,7 +428,7 @@ export function HierarchicalAlertConfiguration({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className=&apos;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4&apos;>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
             {alertTypes.map(alertType => {
               const typeConfig = alertTypeConfigurations[alertType];
               const status = getConfigStatus(alertType);
@@ -439,61 +438,61 @@ export function HierarchicalAlertConfiguration({
               return (
                 <Card
                   key={alertType}
-                  className=&apos;cursor-pointer hover:shadow-md transition-all&apos;
+                  className='cursor-pointer hover:shadow-md transition-all'
                   onClick={() => handleOpenConfig(alertType)}
                 >
-                  <CardHeader className=&apos;pb-3&apos;>
-                    <div className=&apos;flex items-start justify-between&apos;>
-                      <div className=&apos;flex items-center gap-2&apos;>
+                  <CardHeader className='pb-3'>
+                    <div className='flex items-start justify-between'>
+                      <div className='flex items-center gap-2'>
                         <div
                           className={`p-2 rounded-md ${
-                            typeConfig.category === &apos;security&apos;
-                              ? &apos;bg-red-100&apos;
-                              : typeConfig.category === &apos;operational&apos;
-                                ? &apos;bg-blue-100&apos;
-                                : typeConfig.category === &apos;maintenance&apos;
-                                  ? &apos;bg-orange-100&apos;
-                                  : &apos;bg-purple-100&apos;
+                            typeConfig.category === 'security'
+                              ? 'bg-red-100'
+                              : typeConfig.category === 'operational'
+                                ? 'bg-blue-100'
+                                : typeConfig.category === 'maintenance'
+                                  ? 'bg-orange-100'
+                                  : 'bg-purple-100'
                           }`}
                         >
-                          <Icon className=&apos;h-4 w-4&apos; />
+                          <Icon className='h-4 w-4' />
                         </div>
                         <div>
-                          <CardTitle className=&apos;text-sm&apos;>
+                          <CardTitle className='text-sm'>
                             {typeConfig.label}
                           </CardTitle>
                         </div>
                       </div>
-                      {status === &apos;override&apos; && (
+                      {status === 'override' && (
                         <Badge
-                          variant=&apos;outline&apos;
-                          className=&apos;bg-blue-50 text-blue-700 border-blue-200&apos;
+                          variant='outline'
+                          className='bg-blue-50 text-blue-700 border-blue-200'
                         >
                           Override
                         </Badge>
                       )}
-                      {status === &apos;inherited&apos; &&
+                      {status === 'inherited' &&
                         effective.level !== selectedLevel && (
-                          <Badge variant=&apos;outline&apos; className=&apos;bg-gray-50&apos;>
+                          <Badge variant='outline' className='bg-gray-50'>
                             Inherited
                           </Badge>
                         )}
                     </div>
                   </CardHeader>
-                  <CardContent className=&apos;pt-0&apos;>
-                    <div className=&apos;text-xs text-muted-foreground&apos;>
+                  <CardContent className='pt-0'>
+                    <div className='text-xs text-muted-foreground'>
                       {effective.config?.enabled ? (
-                        <div className=&apos;flex items-center gap-1 text-green-600&apos;>
-                          <CheckCircle2 className=&apos;h-3 w-3&apos; />
+                        <div className='flex items-center gap-1 text-green-600'>
+                          <CheckCircle2 className='h-3 w-3' />
                           <span>Enabled</span>
                         </div>
                       ) : (
-                        <div className=&apos;flex items-center gap-1&apos;>
+                        <div className='flex items-center gap-1'>
                           <span>Disabled</span>
                         </div>
                       )}
                       {effective.level && effective.level !== selectedLevel && (
-                        <div className=&apos;mt-1&apos;>From: {effective.level}</div>
+                        <div className='mt-1'>From: {effective.level}</div>
                       )}
                     </div>
                   </CardContent>
@@ -507,15 +506,15 @@ export function HierarchicalAlertConfiguration({
       {/* Configuration Dialog */}
       {selectedAlertType && (
         <Dialog open={isConfigDialogOpen} onOpenChange={setIsConfigDialogOpen}>
-          <DialogContent className=&apos;max-w-2xl max-h-[90vh] overflow-y-auto&apos;>
+          <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
             <DialogHeader>
               <DialogTitle>
                 Configure {alertTypeConfigurations[selectedAlertType].label}
               </DialogTitle>
               <DialogDescription>
-                {selectedLevel !== &apos;user&apos; && (
+                {selectedLevel !== 'user' && (
                   <span>
-                    Override for{&apos; &apos;}
+                    Override for{' '}
                     {
                       availableEntities.find(e => e.id === selectedEntityId)
                         ?.name
@@ -526,23 +525,23 @@ export function HierarchicalAlertConfiguration({
             </DialogHeader>
 
             {editingConfig && (
-              <div className=&apos;space-y-4&apos;>
+              <div className='space-y-4'>
                 {/* Inheritance Info */}
                 {(() => {
                   const effective = getEffectiveConfig(selectedAlertType);
                   if (effective.level && effective.level !== selectedLevel) {
                     return (
-                      <div className=&apos;p-3 border border-blue-200 bg-blue-50 rounded-md&apos;>
-                        <div className=&apos;flex items-start gap-2 text-sm&apos;>
-                          <Info className=&apos;h-4 w-4 text-blue-600 mt-0.5&apos; />
+                      <div className='p-3 border border-blue-200 bg-blue-50 rounded-md'>
+                        <div className='flex items-start gap-2 text-sm'>
+                          <Info className='h-4 w-4 text-blue-600 mt-0.5' />
                           <div>
-                            <div className=&apos;text-blue-900&apos;>
-                              Currently inheriting from{&apos; &apos;}
-                              <span className=&apos;font-medium&apos;>
+                            <div className='text-blue-900'>
+                              Currently inheriting from{' '}
+                              <span className='font-medium'>
                                 {effective.level} level
                               </span>
                             </div>
-                            <div className=&apos;text-blue-700 text-xs mt-1&apos;>
+                            <div className='text-blue-700 text-xs mt-1'>
                               Any changes you make will create an override at
                               this level
                             </div>
@@ -555,7 +554,7 @@ export function HierarchicalAlertConfiguration({
                 })()}
 
                 {/* Enable/Disable */}
-                <div className=&apos;flex items-center justify-between&apos;>
+                <div className='flex items-center justify-between'>
                   <Label>Enable Alert</Label>
                   <Switch
                     checked={editingConfig.enabled}
@@ -569,7 +568,7 @@ export function HierarchicalAlertConfiguration({
                 <Separator />
 
                 {/* Severity */}
-                <div className=&apos;space-y-2&apos;>
+                <div className='space-y-2'>
                   <Label>Severity</Label>
                   <Select
                     value={editingConfig.severity}
@@ -585,10 +584,10 @@ export function HierarchicalAlertConfiguration({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value=&apos;low&apos;>Low</SelectItem>
-                      <SelectItem value=&apos;medium&apos;>Medium</SelectItem>
-                      <SelectItem value=&apos;high&apos;>High</SelectItem>
-                      <SelectItem value=&apos;critical&apos;>Critical</SelectItem>
+                      <SelectItem value='low'>Low</SelectItem>
+                      <SelectItem value='medium'>Medium</SelectItem>
+                      <SelectItem value='high'>High</SelectItem>
+                      <SelectItem value='critical'>Critical</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -608,8 +607,8 @@ export function HierarchicalAlertConfiguration({
                 <Separator />
 
                 {/* Auto Escalation */}
-                <div className=&apos;space-y-3&apos;>
-                  <div className=&apos;flex items-center justify-between&apos;>
+                <div className='space-y-3'>
+                  <div className='flex items-center justify-between'>
                     <Label>Auto-Escalate</Label>
                     <Switch
                       checked={editingConfig.autoEscalate}
@@ -623,11 +622,11 @@ export function HierarchicalAlertConfiguration({
                     />
                   </div>
                   {editingConfig.autoEscalate && (
-                    <div className=&apos;space-y-2&apos;>
+                    <div className='space-y-2'>
                       <Label>Escalation Time (minutes)</Label>
                       <input
-                        type=&apos;number&apos;
-                        className=&apos;w-full px-3 py-2 border rounded-md&apos;
+                        type='number'
+                        className='w-full px-3 py-2 border rounded-md'
                         value={editingConfig.escalationTime || 60}
                         onChange={e => {
                           setEditingConfig({
@@ -645,8 +644,8 @@ export function HierarchicalAlertConfiguration({
                 {editingConfig.suppressionRules && (
                   <>
                     <Separator />
-                    <div className=&apos;space-y-3&apos;>
-                      <div className=&apos;flex items-center justify-between&apos;>
+                    <div className='space-y-3'>
+                      <div className='flex items-center justify-between'>
                         <Label>Enable Suppression</Label>
                         <Switch
                           checked={editingConfig.suppressionRules.enabled}
@@ -663,11 +662,11 @@ export function HierarchicalAlertConfiguration({
                         />
                       </div>
                       {editingConfig.suppressionRules.enabled && (
-                        <div className=&apos;space-y-2&apos;>
+                        <div className='space-y-2'>
                           <Label>Cooldown Duration (minutes)</Label>
                           <input
-                            type=&apos;number&apos;
-                            className=&apos;w-full px-3 py-2 border rounded-md&apos;
+                            type='number'
+                            className='w-full px-3 py-2 border rounded-md'
                             value={
                               editingConfig.suppressionRules.duration || 30
                             }
@@ -690,31 +689,31 @@ export function HierarchicalAlertConfiguration({
               </div>
             )}
 
-            <DialogFooter className=&apos;flex items-center justify-between&apos;>
+            <DialogFooter className='flex items-center justify-between'>
               <div>
-                {selectedLevel !== &apos;user&apos; &&
-                  getConfigStatus(selectedAlertType) === &apos;override&apos; && (
+                {selectedLevel !== 'user' &&
+                  getConfigStatus(selectedAlertType) === 'override' && (
                     <Button
-                      variant=&apos;outline&apos;
+                      variant='outline'
                       onClick={handleDeleteOverride}
-                      className=&apos;text-red-600&apos;
+                      className='text-red-600'
                     >
                       Remove Override
                     </Button>
                   )}
               </div>
-              <div className=&apos;flex gap-2&apos;>
+              <div className='flex gap-2'>
                 <Button
-                  variant=&apos;outline&apos;
+                  variant='outline'
                   onClick={() => setIsConfigDialogOpen(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSaveConfig}
-                  disabled={!hasUnsavedChanges && selectedLevel === &apos;user&apos;}
+                  disabled={!hasUnsavedChanges && selectedLevel === 'user'}
                 >
-                  <Save className=&apos;h-4 w-4 mr-2&apos; />
+                  <Save className='h-4 w-4 mr-2' />
                   Save Configuration
                 </Button>
               </div>

@@ -1,9 +1,9 @@
-import React, { useState } from &apos;react&apos;;
-import { Card } from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { StatusBadge, InfoRow, PageLayout } from &apos;../common&apos;;
+import React, { useState } from 'react';
+import { Card } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { StatusBadge, InfoRow, PageLayout } from '../common';
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from &apos;../ui/table&apos;;
+} from '../ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +19,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from &apos;../ui/dropdown-menu&apos;;
+} from '../ui/dropdown-menu';
 import {
   Search,
   Plus,
@@ -30,18 +30,18 @@ import {
   Package,
   Filter,
   X,
-} from &apos;lucide-react&apos;;
+} from 'lucide-react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import type { Site } from &apos;../../types&apos;;
-import { mockSites as sharedMockSites } from &apos;../../data/mockData&apos;;
-import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
+} from '../ui/select';
+import { Label } from '../ui/label';
+import type { Site } from '../../types';
+import { mockSites as sharedMockSites } from '../../data/mockData';
+import { useNavigation } from '../../contexts/NavigationContext';
 
 // Extended Site type with UI-specific fields for the table
 type SiteWithActivity = Site & {
@@ -55,13 +55,13 @@ const mockSites: SiteWithActivity[] = sharedMockSites.map((site, index) => ({
   personnel: [45, 128, 89, 32, 56, 8][index] || 0,
   lastActivity:
     [
-      &apos;2 min ago&apos;,
-      &apos;5 min ago&apos;,
-      &apos;1 min ago&apos;,
-      &apos;12 min ago&apos;,
-      &apos;45 min ago&apos;,
-      &apos;3 hours ago&apos;,
-    ][index] || &apos;Unknown&apos;,
+      '2 min ago',
+      '5 min ago',
+      '1 min ago',
+      '12 min ago',
+      '45 min ago',
+      '3 hours ago',
+    ][index] || 'Unknown',
 }));
 
 interface SitesProps {
@@ -70,20 +70,20 @@ interface SitesProps {
 
 export function Sites({ onSiteClick }: SitesProps) {
   const navigation = useNavigation();
-  const [searchTerm, setSearchTerm] = useState(&apos;&apos;);
+  const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
   // Filter states
-  const [statusFilter, setStatusFilter] = useState<string>(&apos;all&apos;);
-  const [stateFilter, setStateFilter] = useState<string>(&apos;all&apos;);
-  const [assetRangeFilter, setAssetRangeFilter] = useState<string>(&apos;all&apos;);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [stateFilter, setStateFilter] = useState<string>('all');
+  const [assetRangeFilter, setAssetRangeFilter] = useState<string>('all');
 
   // Sites are already in the shared format, no conversion needed
 
   // Extract state from address
   const getState = (address: string) => {
     const match = address.match(/,\s*([A-Z]{2})\s+\d{5}/);
-    return match ? match[1] : &apos;&apos;;
+    return match ? match[1] : '';
   };
 
   // Filter sites based on all criteria
@@ -94,36 +94,36 @@ export function Sites({ onSiteClick }: SitesProps) {
       const matchesSearch =
         site.name.toLowerCase().includes(searchLower) ||
         site.id.toLowerCase().includes(searchLower) ||
-        (site.address || site.location || &apos;&apos;)
+        (site.address || site.location || '')
           .toLowerCase()
           .includes(searchLower);
       if (!matchesSearch) return false;
     }
 
     // Status filter
-    if (statusFilter !== &apos;all&apos; && site.status !== statusFilter) {
+    if (statusFilter !== 'all' && site.status !== statusFilter) {
       return false;
     }
 
     // State filter
-    if (stateFilter !== &apos;all&apos;) {
-      const siteState = getState(site.address || site.location || &apos;&apos;);
+    if (stateFilter !== 'all') {
+      const siteState = getState(site.address || site.location || '');
       if (siteState !== stateFilter) return false;
     }
 
     // Asset range filter
-    if (assetRangeFilter !== &apos;all&apos;) {
+    if (assetRangeFilter !== 'all') {
       switch (assetRangeFilter) {
-        case &apos;0-100&apos;:
+        case '0-100':
           if (site.assets > 100) return false;
           break;
-        case &apos;101-500&apos;:
+        case '101-500':
           if (site.assets <= 100 || site.assets > 500) return false;
           break;
-        case &apos;501-1000&apos;:
+        case '501-1000':
           if (site.assets <= 500 || site.assets > 1000) return false;
           break;
-        case &apos;1000+&apos;:
+        case '1000+':
           if (site.assets <= 1000) return false;
           break;
       }
@@ -133,77 +133,77 @@ export function Sites({ onSiteClick }: SitesProps) {
   });
 
   const hasActiveFilters =
-    statusFilter !== &apos;all&apos; ||
-    stateFilter !== &apos;all&apos; ||
-    assetRangeFilter !== &apos;all&apos;;
+    statusFilter !== 'all' ||
+    stateFilter !== 'all' ||
+    assetRangeFilter !== 'all';
 
   const clearFilters = () => {
-    setStatusFilter(&apos;all&apos;);
-    setStateFilter(&apos;all&apos;);
-    setAssetRangeFilter(&apos;all&apos;);
+    setStatusFilter('all');
+    setStateFilter('all');
+    setAssetRangeFilter('all');
   };
 
   return (
-    <PageLayout variant=&apos;wide&apos; padding=&apos;lg&apos;>
+    <PageLayout variant='wide' padding='lg'>
       {/* Header */}
-      <div className=&apos;flex items-center justify-between&apos;>
+      <div className='flex items-center justify-between'>
         <div>
           <h1>Sites</h1>
-          <p className=&apos;text-muted-foreground&apos;>
+          <p className='text-muted-foreground'>
             Manage physical locations and boundaries
           </p>
         </div>
         <Button onClick={navigation.navigateToCreateSite}>
-          <Plus className=&apos;h-4 w-4 mr-2&apos; />
+          <Plus className='h-4 w-4 mr-2' />
           Add Site
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
-        <Card className=&apos;p-4&apos;>
-          <div className=&apos;flex items-center gap-4&apos;>
-            <div className=&apos;flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10&apos;>
-              <Building2 className=&apos;h-6 w-6 text-primary&apos; />
+      <div className='grid gap-4 md:grid-cols-4'>
+        <Card className='p-4'>
+          <div className='flex items-center gap-4'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10'>
+              <Building2 className='h-6 w-6 text-primary' />
             </div>
             <div>
-              <p className=&apos;text-muted-foreground text-sm&apos;>Total Sites</p>
+              <p className='text-muted-foreground text-sm'>Total Sites</p>
               <h3>6</h3>
             </div>
           </div>
         </Card>
 
-        <Card className=&apos;p-4&apos;>
-          <div className=&apos;flex items-center gap-4&apos;>
-            <div className=&apos;flex h-12 w-12 items-center justify-center rounded-lg bg-green-100&apos;>
-              <MapPin className=&apos;h-6 w-6 text-green-700&apos; />
+        <Card className='p-4'>
+          <div className='flex items-center gap-4'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-green-100'>
+              <MapPin className='h-6 w-6 text-green-700' />
             </div>
             <div>
-              <p className=&apos;text-muted-foreground text-sm&apos;>Active Sites</p>
+              <p className='text-muted-foreground text-sm'>Active Sites</p>
               <h3>4</h3>
             </div>
           </div>
         </Card>
 
-        <Card className=&apos;p-4&apos;>
-          <div className=&apos;flex items-center gap-4&apos;>
-            <div className=&apos;flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100&apos;>
-              <Package className=&apos;h-6 w-6 text-blue-700&apos; />
+        <Card className='p-4'>
+          <div className='flex items-center gap-4'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100'>
+              <Package className='h-6 w-6 text-blue-700' />
             </div>
             <div>
-              <p className=&apos;text-muted-foreground text-sm&apos;>Total Assets</p>
+              <p className='text-muted-foreground text-sm'>Total Assets</p>
               <h3>3,372</h3>
             </div>
           </div>
         </Card>
 
-        <Card className=&apos;p-4&apos;>
-          <div className=&apos;flex items-center gap-4&apos;>
-            <div className=&apos;flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100&apos;>
-              <Users className=&apos;h-6 w-6 text-purple-700&apos; />
+        <Card className='p-4'>
+          <div className='flex items-center gap-4'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100'>
+              <Users className='h-6 w-6 text-purple-700' />
             </div>
             <div>
-              <p className=&apos;text-muted-foreground text-sm&apos;>Total Personnel</p>
+              <p className='text-muted-foreground text-sm'>Total Personnel</p>
               <h3>358</h3>
             </div>
           </div>
@@ -211,28 +211,28 @@ export function Sites({ onSiteClick }: SitesProps) {
       </div>
 
       {/* Search and Filters */}
-      <Card className=&apos;p-4 space-y-4&apos;>
-        <div className=&apos;flex gap-2&apos;>
-          <div className=&apos;relative flex-1&apos;>
-            <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
+      <Card className='p-4 space-y-4'>
+        <div className='flex gap-2'>
+          <div className='relative flex-1'>
+            <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
             <Input
-              placeholder=&apos;Search by site name, ID, or location...&apos;
-              className=&apos;pl-9&apos;
+              placeholder='Search by site name, ID, or location...'
+              className='pl-9'
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
             />
           </div>
           <Button
-            variant={showFilters ? &apos;secondary&apos; : &apos;outline&apos;}
+            variant={showFilters ? 'secondary' : 'outline'}
             onClick={() => setShowFilters(!showFilters)}
           >
-            <Filter className=&apos;h-4 w-4 mr-2&apos; />
+            <Filter className='h-4 w-4 mr-2' />
             Filters
             {hasActiveFilters && (
-              <Badge variant=&apos;destructive&apos; className=&apos;ml-2 px-1 min-w-5 h-5&apos;>
+              <Badge variant='destructive' className='ml-2 px-1 min-w-5 h-5'>
                 {
                   [statusFilter, stateFilter, assetRangeFilter].filter(
-                    f => f !== &apos;all&apos;
+                    f => f !== 'all'
                   ).length
                 }
               </Badge>
@@ -241,50 +241,50 @@ export function Sites({ onSiteClick }: SitesProps) {
         </div>
 
         {showFilters && (
-          <div className=&apos;pt-4 border-t space-y-4&apos;>
-            <div className=&apos;flex items-center justify-between&apos;>
+          <div className='pt-4 border-t space-y-4'>
+            <div className='flex items-center justify-between'>
               <h4>Filter Sites</h4>
               {hasActiveFilters && (
-                <Button variant=&apos;ghost&apos; size=&apos;sm&apos; onClick={clearFilters}>
-                  <X className=&apos;h-4 w-4 mr-1&apos; />
+                <Button variant='ghost' size='sm' onClick={clearFilters}>
+                  <X className='h-4 w-4 mr-1' />
                   Clear All
                 </Button>
               )}
             </div>
 
-            <div className=&apos;grid grid-cols-1 md:grid-cols-3 gap-4&apos;>
-              <div className=&apos;space-y-2&apos;>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+              <div className='space-y-2'>
                 <Label>Status</Label>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value=&apos;all&apos;>All Statuses</SelectItem>
-                    <SelectItem value=&apos;active&apos;>Active</SelectItem>
-                    <SelectItem value=&apos;maintenance&apos;>Maintenance</SelectItem>
-                    <SelectItem value=&apos;inactive&apos;>Inactive</SelectItem>
+                    <SelectItem value='all'>All Statuses</SelectItem>
+                    <SelectItem value='active'>Active</SelectItem>
+                    <SelectItem value='maintenance'>Maintenance</SelectItem>
+                    <SelectItem value='inactive'>Inactive</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className=&apos;space-y-2&apos;>
+              <div className='space-y-2'>
                 <Label>State</Label>
                 <Select value={stateFilter} onValueChange={setStateFilter}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value=&apos;all&apos;>All States</SelectItem>
-                    <SelectItem value=&apos;TX&apos;>Texas (TX)</SelectItem>
-                    <SelectItem value=&apos;CA&apos;>California (CA)</SelectItem>
-                    <SelectItem value=&apos;NY&apos;>New York (NY)</SelectItem>
-                    <SelectItem value=&apos;FL&apos;>Florida (FL)</SelectItem>
+                    <SelectItem value='all'>All States</SelectItem>
+                    <SelectItem value='TX'>Texas (TX)</SelectItem>
+                    <SelectItem value='CA'>California (CA)</SelectItem>
+                    <SelectItem value='NY'>New York (NY)</SelectItem>
+                    <SelectItem value='FL'>Florida (FL)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className=&apos;space-y-2&apos;>
+              <div className='space-y-2'>
                 <Label>Asset Count</Label>
                 <Select
                   value={assetRangeFilter}
@@ -294,17 +294,17 @@ export function Sites({ onSiteClick }: SitesProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value=&apos;all&apos;>All Ranges</SelectItem>
-                    <SelectItem value=&apos;0-100&apos;>0 - 100</SelectItem>
-                    <SelectItem value=&apos;101-500&apos;>101 - 500</SelectItem>
-                    <SelectItem value=&apos;501-1000&apos;>501 - 1,000</SelectItem>
-                    <SelectItem value=&apos;1000+&apos;>1,000+</SelectItem>
+                    <SelectItem value='all'>All Ranges</SelectItem>
+                    <SelectItem value='0-100'>0 - 100</SelectItem>
+                    <SelectItem value='101-500'>101 - 500</SelectItem>
+                    <SelectItem value='501-1000'>501 - 1,000</SelectItem>
+                    <SelectItem value='1000+'>1,000+</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground&apos;>
+            <div className='flex items-center gap-2 text-sm text-muted-foreground'>
               <span>
                 Showing {filteredSites.length} of {mockSites.length} sites
               </span>
@@ -333,59 +333,59 @@ export function Sites({ onSiteClick }: SitesProps) {
             {filteredSites.map(site => (
               <TableRow
                 key={site.id}
-                className=&apos;cursor-pointer hover:bg-muted/50&apos;
+                className='cursor-pointer hover:bg-muted/50'
                 onClick={() => onSiteClick?.(site)}
               >
                 <TableCell>
                   <div>
-                    <div className=&apos;flex items-center gap-2&apos;>
-                      <Building2 className=&apos;h-4 w-4 text-muted-foreground&apos; />
+                    <div className='flex items-center gap-2'>
+                      <Building2 className='h-4 w-4 text-muted-foreground' />
                       <span>{site.name}</span>
                     </div>
-                    <p className=&apos;text-sm text-muted-foreground&apos;>{site.id}</p>
+                    <p className='text-sm text-muted-foreground'>{site.id}</p>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className=&apos;max-w-xs&apos;>
-                    <p className=&apos;text-sm truncate&apos;>
+                  <div className='max-w-xs'>
+                    <p className='text-sm truncate'>
                       {site.address || site.location}
                     </p>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <InfoRow icon={MapPin} iconClassName=&apos;h-4 w-4&apos;>
-                    <p className=&apos;text-sm&apos;>{site.area || &apos;Not defined&apos;}</p>
+                  <InfoRow icon={MapPin} iconClassName='h-4 w-4'>
+                    <p className='text-sm'>{site.area || 'Not defined'}</p>
                   </InfoRow>
                 </TableCell>
                 <TableCell>
-                  <Badge variant=&apos;outline&apos;>±{site.tolerance} ft</Badge>
+                  <Badge variant='outline'>±{site.tolerance} ft</Badge>
                 </TableCell>
                 <TableCell>
-                  <InfoRow icon={Package} iconClassName=&apos;h-4 w-4&apos;>
+                  <InfoRow icon={Package} iconClassName='h-4 w-4'>
                     <span>{site.assets}</span>
                   </InfoRow>
                 </TableCell>
                 <TableCell>
-                  <InfoRow icon={Users} iconClassName=&apos;h-4 w-4&apos;>
+                  <InfoRow icon={Users} iconClassName='h-4 w-4'>
                     <span>{site.personnel}</span>
                   </InfoRow>
                 </TableCell>
                 <TableCell>
-                  <StatusBadge status={site.status} type=&apos;site&apos; />
+                  <StatusBadge status={site.status} type='site' />
                 </TableCell>
                 <TableCell>
-                  <p className=&apos;text-sm text-muted-foreground&apos;>
+                  <p className='text-sm text-muted-foreground'>
                     {site.lastActivity}
                   </p>
                 </TableCell>
                 <TableCell onClick={e => e.stopPropagation()}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant=&apos;ghost&apos; size=&apos;sm&apos;>
-                        <MoreVertical className=&apos;h-4 w-4&apos; />
+                      <Button variant='ghost' size='sm'>
+                        <MoreVertical className='h-4 w-4' />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align=&apos;end&apos;>
+                    <DropdownMenuContent align='end'>
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem onClick={() => onSiteClick?.(site)}>
                         View Details
@@ -394,7 +394,7 @@ export function Sites({ onSiteClick }: SitesProps) {
                       <DropdownMenuItem>View Assets</DropdownMenuItem>
                       <DropdownMenuItem>View on Map</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem className=&apos;text-destructive&apos;>
+                      <DropdownMenuItem className='text-destructive'>
                         Deactivate Site
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -407,18 +407,18 @@ export function Sites({ onSiteClick }: SitesProps) {
       </Card>
 
       {/* Pagination */}
-      <div className=&apos;flex items-center justify-between&apos;>
-        <p className=&apos;text-sm text-muted-foreground&apos;>
+      <div className='flex items-center justify-between'>
+        <p className='text-sm text-muted-foreground'>
           Showing {filteredSites.length} of {mockSites.length} sites
         </p>
-        <div className=&apos;flex items-center gap-2&apos;>
-          <Button variant=&apos;outline&apos; size=&apos;sm&apos;>
+        <div className='flex items-center gap-2'>
+          <Button variant='outline' size='sm'>
             Previous
           </Button>
-          <Button variant=&apos;outline&apos; size=&apos;sm&apos;>
+          <Button variant='outline' size='sm'>
             1
           </Button>
-          <Button variant=&apos;outline&apos; size=&apos;sm&apos;>
+          <Button variant='outline' size='sm'>
             Next
           </Button>
         </div>

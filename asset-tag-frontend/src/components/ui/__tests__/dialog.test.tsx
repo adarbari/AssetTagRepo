@@ -1,7 +1,6 @@
-import React from &apos;react&apos;;
-import { describe, it, expect, vi } from &apos;vitest&apos;;
-import { screen, waitFor } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
+import { describe, it, expect, vi } from 'vitest';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   Dialog,
   DialogTrigger,
@@ -11,14 +10,14 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from &apos;../dialog&apos;;
-import { Button } from &apos;../button&apos;;
-import { Input } from &apos;../input&apos;;
-import { render } from &apos;../../../test/test-utils&apos;;
+} from '../dialog';
+import { Button } from '../button';
+import { Input } from '../input';
+import { render } from '../../../test/test-utils';
 
-describe(&apos;Dialog Component - Click Tests&apos;, () => {
-  describe(&apos;Basic Dialog Functionality&apos;, () => {
-    it(&apos;should open dialog when trigger is clicked&apos;, async () => {
+describe('Dialog Component - Click Tests', () => {
+  describe('Basic Dialog Functionality', () => {
+    it('should open dialog when trigger is clicked', async () => {
       const user = userEvent.setup();
 
       render(
@@ -36,21 +35,21 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const triggerButton = screen.getByRole(&apos;button&apos;, {
+      const triggerButton = screen.getByRole('button', {
         name: /open dialog/i,
       });
       await user.click(triggerButton);
 
       await waitFor(() => {
-        expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
       });
 
-      expect(screen.getByText(&apos;Test Dialog&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;This is a test dialog&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Dialog content&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Test Dialog')).toBeInTheDocument();
+      expect(screen.getByText('This is a test dialog')).toBeInTheDocument();
+      expect(screen.getByText('Dialog content')).toBeInTheDocument();
     });
 
-    it(&apos;should close dialog when close button is clicked&apos;, async () => {
+    it('should close dialog when close button is clicked', async () => {
       const user = userEvent.setup();
 
       render(
@@ -68,18 +67,18 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
       );
 
       // Dialog should be open by default
-      expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
 
       // Find and click the close button (X button)
-      const closeButton = screen.getByRole(&apos;button&apos;, { name: /close/i });
+      const closeButton = screen.getByRole('button', { name: /close/i });
       await user.click(closeButton);
 
       await waitFor(() => {
-        expect(screen.queryByRole(&apos;dialog&apos;)).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
     });
 
-    it(&apos;should close dialog when DialogClose is clicked&apos;, async () => {
+    it('should close dialog when DialogClose is clicked', async () => {
       const user = userEvent.setup();
 
       render(
@@ -91,7 +90,7 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
             <div>Dialog content</div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant=&apos;outline&apos;>Cancel</Button>
+                <Button variant='outline'>Cancel</Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>
@@ -99,20 +98,20 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
       );
 
       // Dialog should be open by default
-      expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
 
       // Click the cancel button
-      const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
       await user.click(cancelButton);
 
       await waitFor(() => {
-        expect(screen.queryByRole(&apos;dialog&apos;)).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
     });
   });
 
-  describe(&apos;Dialog with Form Interactions&apos;, () => {
-    it(&apos;should handle form submission in dialog&apos;, async () => {
+  describe('Dialog with Form Interactions', () => {
+    it('should handle form submission in dialog', async () => {
       const user = userEvent.setup();
       const mockSubmit = vi.fn();
 
@@ -123,30 +122,30 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
               <DialogTitle>Form Dialog</DialogTitle>
             </DialogHeader>
             <form onSubmit={mockSubmit}>
-              <Input placeholder=&apos;Enter name&apos; />
+              <Input placeholder='Enter name' />
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button type=&apos;button&apos; variant=&apos;outline&apos;>
+                  <Button type='button' variant='outline'>
                     Cancel
                   </Button>
                 </DialogClose>
-                <Button type=&apos;submit&apos;>Submit</Button>
+                <Button type='submit'>Submit</Button>
               </DialogFooter>
             </form>
           </DialogContent>
         </Dialog>
       );
 
-      const input = screen.getByPlaceholderText(&apos;Enter name&apos;);
-      const submitButton = screen.getByRole(&apos;button&apos;, { name: /submit/i });
+      const input = screen.getByPlaceholderText('Enter name');
+      const submitButton = screen.getByRole('button', { name: /submit/i });
 
-      await user.type(input, &apos;John Doe&apos;);
+      await user.type(input, 'John Doe');
       await user.click(submitButton);
 
       expect(mockSubmit).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle multiple form inputs&apos;, async () => {
+    it('should handle multiple form inputs', async () => {
       const user = userEvent.setup();
 
       render(
@@ -155,10 +154,10 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
             <DialogHeader>
               <DialogTitle>Multi Input Dialog</DialogTitle>
             </DialogHeader>
-            <div className=&apos;space-y-4&apos;>
-              <Input placeholder=&apos;First name&apos; />
-              <Input placeholder=&apos;Last name&apos; />
-              <Input placeholder=&apos;Email&apos; type=&apos;email&apos; />
+            <div className='space-y-4'>
+              <Input placeholder='First name' />
+              <Input placeholder='Last name' />
+              <Input placeholder='Email' type='email' />
             </div>
             <DialogFooter>
               <Button>Save</Button>
@@ -167,22 +166,22 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const firstNameInput = screen.getByPlaceholderText(&apos;First name&apos;);
-      const lastNameInput = screen.getByPlaceholderText(&apos;Last name&apos;);
-      const emailInput = screen.getByPlaceholderText(&apos;Email&apos;);
+      const firstNameInput = screen.getByPlaceholderText('First name');
+      const lastNameInput = screen.getByPlaceholderText('Last name');
+      const emailInput = screen.getByPlaceholderText('Email');
 
-      await user.type(firstNameInput, &apos;John&apos;);
-      await user.type(lastNameInput, &apos;Doe&apos;);
-      await user.type(emailInput, &apos;john@example.com&apos;);
+      await user.type(firstNameInput, 'John');
+      await user.type(lastNameInput, 'Doe');
+      await user.type(emailInput, 'john@example.com');
 
-      expect(firstNameInput).toHaveValue(&apos;John&apos;);
-      expect(lastNameInput).toHaveValue(&apos;Doe&apos;);
-      expect(emailInput).toHaveValue(&apos;john@example.com&apos;);
+      expect(firstNameInput).toHaveValue('John');
+      expect(lastNameInput).toHaveValue('Doe');
+      expect(emailInput).toHaveValue('john@example.com');
     });
   });
 
-  describe(&apos;Dialog Button Interactions&apos;, () => {
-    it(&apos;should handle multiple action buttons&apos;, async () => {
+  describe('Dialog Button Interactions', () => {
+    it('should handle multiple action buttons', async () => {
       const user = userEvent.setup();
       const mockSave = vi.fn();
       const mockDelete = vi.fn();
@@ -196,9 +195,9 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
             <div>Choose an action</div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant=&apos;outline&apos;>Cancel</Button>
+                <Button variant='outline'>Cancel</Button>
               </DialogClose>
-              <Button onClick={mockDelete} variant=&apos;destructive&apos;>
+              <Button onClick={mockDelete} variant='destructive'>
                 Delete
               </Button>
               <Button onClick={mockSave}>Save</Button>
@@ -207,9 +206,9 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
-      const deleteButton = screen.getByRole(&apos;button&apos;, { name: /delete/i });
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save/i });
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
+      const deleteButton = screen.getByRole('button', { name: /delete/i });
+      const saveButton = screen.getByRole('button', { name: /save/i });
 
       await user.click(saveButton);
       expect(mockSave).toHaveBeenCalledTimes(1);
@@ -219,11 +218,11 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
 
       await user.click(cancelButton);
       await waitFor(() => {
-        expect(screen.queryByRole(&apos;dialog&apos;)).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
     });
 
-    it(&apos;should handle button clicks without closing dialog&apos;, async () => {
+    it('should handle button clicks without closing dialog', async () => {
       const user = userEvent.setup();
       const mockAction = vi.fn();
 
@@ -233,7 +232,7 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
             <DialogHeader>
               <DialogTitle>Non-closing Dialog</DialogTitle>
             </DialogHeader>
-            <div>This action won&apos;t close the dialog</div>
+            <div>This action won't close the dialog</div>
             <DialogFooter>
               <Button onClick={mockAction}>Perform Action</Button>
             </DialogFooter>
@@ -241,19 +240,19 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, {
+      const actionButton = screen.getByRole('button', {
         name: /perform action/i,
       });
       await user.click(actionButton);
 
       expect(mockAction).toHaveBeenCalledTimes(1);
       // Dialog should still be open
-      expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Dialog Keyboard Interactions&apos;, () => {
-    it(&apos;should close dialog on Escape key&apos;, async () => {
+  describe('Dialog Keyboard Interactions', () => {
+    it('should close dialog on Escape key', async () => {
       const user = userEvent.setup();
 
       render(
@@ -268,17 +267,17 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
       );
 
       // Dialog should be open
-      expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
 
       // Press Escape key
-      await user.keyboard(&apos;{Escape}&apos;);
+      await user.keyboard('{Escape}');
 
       await waitFor(() => {
-        expect(screen.queryByRole(&apos;dialog&apos;)).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
     });
 
-    it(&apos;should handle keyboard navigation in dialog&apos;, async () => {
+    it('should handle keyboard navigation in dialog', async () => {
       const user = userEvent.setup();
 
       render(
@@ -287,7 +286,7 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
             <DialogHeader>
               <DialogTitle>Keyboard Navigation</DialogTitle>
             </DialogHeader>
-            <div className=&apos;space-y-2&apos;>
+            <div className='space-y-2'>
               <Button>First Button</Button>
               <Button>Second Button</Button>
               <Button>Third Button</Button>
@@ -296,24 +295,24 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const firstButton = screen.getByRole(&apos;button&apos;, { name: /first button/i });
-      const secondButton = screen.getByRole(&apos;button&apos;, {
+      const firstButton = screen.getByRole('button', { name: /first button/i });
+      const secondButton = screen.getByRole('button', {
         name: /second button/i,
       });
-      const thirdButton = screen.getByRole(&apos;button&apos;, { name: /third button/i });
+      const thirdButton = screen.getByRole('button', { name: /third button/i });
 
       // Focus first button and tab through
       firstButton.focus();
-      await user.keyboard(&apos;{Tab}&apos;);
+      await user.keyboard('{Tab}');
       expect(secondButton).toHaveFocus();
 
-      await user.keyboard(&apos;{Tab}&apos;);
+      await user.keyboard('{Tab}');
       expect(thirdButton).toHaveFocus();
     });
   });
 
-  describe(&apos;Dialog Accessibility&apos;, () => {
-    it(&apos;should have proper ARIA attributes&apos;, async () => {
+  describe('Dialog Accessibility', () => {
+    it('should have proper ARIA attributes', async () => {
       const user = userEvent.setup();
 
       render(
@@ -333,19 +332,19 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const triggerButton = screen.getByRole(&apos;button&apos;, {
+      const triggerButton = screen.getByRole('button', {
         name: /open dialog/i,
       });
       await user.click(triggerButton);
 
       await waitFor(() => {
-        const dialog = screen.getByRole(&apos;dialog&apos;);
+        const dialog = screen.getByRole('dialog');
         expect(dialog).toBeInTheDocument();
-        expect(dialog).toHaveAttribute(&apos;aria-modal&apos;, &apos;true&apos;);
+        expect(dialog).toHaveAttribute('aria-modal', 'true');
       });
     });
 
-    it(&apos;should support custom aria attributes&apos;, async () => {
+    it('should support custom aria attributes', async () => {
       const user = userEvent.setup();
 
       render(
@@ -353,7 +352,7 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
           <DialogTrigger asChild>
             <Button>Open Custom Dialog</Button>
           </DialogTrigger>
-          <DialogContent aria-label=&apos;Custom dialog label&apos;>
+          <DialogContent aria-label='Custom dialog label'>
             <DialogHeader>
               <DialogTitle>Custom Dialog</DialogTitle>
             </DialogHeader>
@@ -362,20 +361,20 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const triggerButton = screen.getByRole(&apos;button&apos;, {
+      const triggerButton = screen.getByRole('button', {
         name: /open custom dialog/i,
       });
       await user.click(triggerButton);
 
       await waitFor(() => {
-        const dialog = screen.getByLabelText(&apos;Custom dialog label&apos;);
+        const dialog = screen.getByLabelText('Custom dialog label');
         expect(dialog).toBeInTheDocument();
       });
     });
   });
 
-  describe(&apos;Dialog State Management&apos;, () => {
-    it(&apos;should handle controlled open state&apos;, async () => {
+  describe('Dialog State Management', () => {
+    it('should handle controlled open state', async () => {
       const user = userEvent.setup();
       const TestComponent = () => {
         const [open, setOpen] = React.useState(false);
@@ -400,23 +399,23 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
 
       render(<TestComponent />);
 
-      const openButton = screen.getByRole(&apos;button&apos;, { name: /open/i });
+      const openButton = screen.getByRole('button', { name: /open/i });
       await user.click(openButton);
 
       await waitFor(() => {
-        expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
       });
 
       // Click the footer close button (not the X button)
-      const closeButton = screen.getByRole(&apos;button&apos;, { name: &apos;Close&apos; });
+      const closeButton = screen.getByRole('button', { name: 'Close' });
       await user.click(closeButton);
 
       await waitFor(() => {
-        expect(screen.queryByRole(&apos;dialog&apos;)).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
     });
 
-    it(&apos;should handle onOpenChange callback&apos;, async () => {
+    it('should handle onOpenChange callback', async () => {
       const user = userEvent.setup();
       const mockOnOpenChange = vi.fn();
 
@@ -434,7 +433,7 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const triggerButton = screen.getByRole(&apos;button&apos;, {
+      const triggerButton = screen.getByRole('button', {
         name: /open dialog/i,
       });
       await user.click(triggerButton);
@@ -444,7 +443,7 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
       });
 
       // Close dialog
-      const closeButton = screen.getByRole(&apos;button&apos;, { name: /close/i });
+      const closeButton = screen.getByRole('button', { name: /close/i });
       await user.click(closeButton);
 
       await waitFor(() => {
@@ -453,8 +452,8 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Dialog Custom Styling&apos;, () => {
-    it(&apos;should apply custom className to dialog content&apos;, async () => {
+  describe('Dialog Custom Styling', () => {
+    it('should apply custom className to dialog content', async () => {
       const user = userEvent.setup();
 
       render(
@@ -462,7 +461,7 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
           <DialogTrigger asChild>
             <Button>Open Styled Dialog</Button>
           </DialogTrigger>
-          <DialogContent className=&apos;custom-dialog-class&apos;>
+          <DialogContent className='custom-dialog-class'>
             <DialogHeader>
               <DialogTitle>Styled Dialog</DialogTitle>
             </DialogHeader>
@@ -471,20 +470,20 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const triggerButton = screen.getByRole(&apos;button&apos;, {
+      const triggerButton = screen.getByRole('button', {
         name: /open styled dialog/i,
       });
       await user.click(triggerButton);
 
       await waitFor(() => {
         const dialogContent = document.querySelector(
-          &apos;[data-slot=&quot;dialog-content&quot;]&apos;
+          '[data-slot="dialog-content"]'
         );
-        expect(dialogContent).toHaveClass(&apos;custom-dialog-class&apos;);
+        expect(dialogContent).toHaveClass('custom-dialog-class');
       });
     });
 
-    it(&apos;should apply custom className to dialog header and footer&apos;, async () => {
+    it('should apply custom className to dialog header and footer', async () => {
       const user = userEvent.setup();
 
       render(
@@ -493,35 +492,35 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
             <Button>Open Custom Dialog</Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader className=&apos;custom-header&apos;>
+            <DialogHeader className='custom-header'>
               <DialogTitle>Custom Header</DialogTitle>
             </DialogHeader>
             <div>Content</div>
-            <DialogFooter className=&apos;custom-footer&apos;>
+            <DialogFooter className='custom-footer'>
               <Button>Action</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       );
 
-      const triggerButton = screen.getByRole(&apos;button&apos;, {
+      const triggerButton = screen.getByRole('button', {
         name: /open custom dialog/i,
       });
       await user.click(triggerButton);
 
       await waitFor(() => {
         expect(
-          document.querySelector(&apos;[data-slot=&quot;dialog-header&quot;]&apos;)
-        ).toHaveClass(&apos;custom-header&apos;);
+          document.querySelector('[data-slot="dialog-header"]')
+        ).toHaveClass('custom-header');
         expect(
-          document.querySelector(&apos;[data-slot=&quot;dialog-footer&quot;]&apos;)
-        ).toHaveClass(&apos;custom-footer&apos;);
+          document.querySelector('[data-slot="dialog-footer"]')
+        ).toHaveClass('custom-footer');
       });
     });
   });
 
-  describe(&apos;Dialog Edge Cases&apos;, () => {
-    it(&apos;should handle dialog with no content&apos;, async () => {
+  describe('Dialog Edge Cases', () => {
+    it('should handle dialog with no content', async () => {
       const user = userEvent.setup();
 
       render(
@@ -537,19 +536,19 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const triggerButton = screen.getByRole(&apos;button&apos;, {
+      const triggerButton = screen.getByRole('button', {
         name: /open empty dialog/i,
       });
       await user.click(triggerButton);
 
       await waitFor(() => {
-        expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
       });
     });
 
-    it(&apos;should handle dialog with very long content&apos;, async () => {
+    it('should handle dialog with very long content', async () => {
       const user = userEvent.setup();
-      const longContent = &apos;Lorem ipsum &apos;.repeat(100);
+      const longContent = 'Lorem ipsum '.repeat(100);
 
       render(
         <Dialog>
@@ -565,19 +564,19 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </Dialog>
       );
 
-      const triggerButton = screen.getByRole(&apos;button&apos;, {
+      const triggerButton = screen.getByRole('button', {
         name: /open long dialog/i,
       });
       await user.click(triggerButton);
 
       await waitFor(() => {
-        expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
         // Check that the content is present (may be truncated in display)
         expect(screen.getByText(/Lorem ipsum/)).toBeInTheDocument();
       });
     });
 
-    it(&apos;should handle multiple dialogs&apos;, async () => {
+    it('should handle multiple dialogs', async () => {
       const user = userEvent.setup();
 
       render(
@@ -608,31 +607,31 @@ describe(&apos;Dialog Component - Click Tests&apos;, () => {
         </div>
       );
 
-      const firstTrigger = screen.getByRole(&apos;button&apos;, {
+      const firstTrigger = screen.getByRole('button', {
         name: /open first dialog/i,
       });
       await user.click(firstTrigger);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;First Dialog&apos;)).toBeInTheDocument();
+        expect(screen.getByText('First Dialog')).toBeInTheDocument();
       });
 
       // Close first dialog
-      const closeButton = screen.getByRole(&apos;button&apos;, { name: /close/i });
+      const closeButton = screen.getByRole('button', { name: /close/i });
       await user.click(closeButton);
 
       await waitFor(() => {
-        expect(screen.queryByText(&apos;First Dialog&apos;)).not.toBeInTheDocument();
+        expect(screen.queryByText('First Dialog')).not.toBeInTheDocument();
       });
 
       // Open second dialog
-      const secondTrigger = screen.getByRole(&apos;button&apos;, {
+      const secondTrigger = screen.getByRole('button', {
         name: /open second dialog/i,
       });
       await user.click(secondTrigger);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Second Dialog&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Second Dialog')).toBeInTheDocument();
       });
     });
   });

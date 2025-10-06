@@ -310,9 +310,7 @@ function populateSiteRelationships() {
     }
   } catch (error) {
     // mockPersonnel not yet defined, will be populated later
-// // // // // // // console.log(
-      'Personnel relationships will be populated after mockPersonnel is defined'
-    );
+    // console.log('Personnel relationships will be populated after mockPersonnel is defined');
   }
 
   // Update assets count

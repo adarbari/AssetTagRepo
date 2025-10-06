@@ -1,17 +1,17 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
-import { screen, waitFor } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { IssueDetails } from &apos;../issues/IssueDetails&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { IssueDetails } from '../issues/IssueDetails';
 import {
   render,
   mockIssue,
   mockOnUpdateIssue,
   mockOnBack,
-} from &apos;../../test/test-utils&apos;;
+} from '../../test/test-utils';
 
 // Mock the toast function
-vi.mock(&apos;sonner&apos;, () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -19,13 +19,13 @@ vi.mock(&apos;sonner&apos;, () => ({
 }));
 
 // Mock the getIssueById function
-vi.mock(&apos;../../data/mockIssueData&apos;, () => ({
+vi.mock('../../data/mockIssueData', () => ({
   getIssueById: vi.fn(() => mockIssue),
 }));
 
-describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
+describe('IssueDetails Component - Button Click Tests', () => {
   const defaultProps = {
-    issueId: &apos;ISS-001&apos;,
+    issueId: 'ISS-001',
     onBack: mockOnBack,
     onUpdateIssue: mockOnUpdateIssue,
   };
@@ -34,38 +34,38 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
     vi.clearAllMocks();
   });
 
-  describe(&apos;Back Button Functionality&apos;, () => {
-    it(&apos;should call onBack when back button is clicked&apos;, async () => {
+  describe('Back Button Functionality', () => {
+    it('should call onBack when back button is clicked', async () => {
       const user = userEvent.setup();
       render(<IssueDetails {...defaultProps} />);
 
       // Wait for component to load
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Find and click the back button
-      const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
+      const backButton = screen.getByRole('button', { name: /back/i });
       await user.click(backButton);
 
       expect(mockOnBack).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should call onBack when &quot;Back to Issues&quot; button is clicked in error state&apos;, async () => {
+    it('should call onBack when "Back to Issues" button is clicked in error state', async () => {
       const user = userEvent.setup();
 
       // Mock getIssueById to return null (issue not found)
-      const { getIssueById } = await import(&apos;../../data/mockIssueData&apos;);
+      const { getIssueById } = await import('../../data/mockIssueData');
       vi.mocked(getIssueById).mockReturnValueOnce(null);
 
       render(<IssueDetails {...defaultProps} />);
 
       // Wait for error state to appear
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Not Found&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Not Found')).toBeInTheDocument();
       });
 
-      const backButton = screen.getByRole(&apos;button&apos;, {
+      const backButton = screen.getByRole('button', {
         name: /back to issues/i,
       });
       await user.click(backButton);
@@ -74,106 +74,106 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Edit Button Functionality&apos;, () => {
-    it(&apos;should toggle to edit mode when Edit Issue button is clicked&apos;, async () => {
+  describe('Edit Button Functionality', () => {
+    it('should toggle to edit mode when Edit Issue button is clicked', async () => {
       const user = userEvent.setup();
       render(<IssueDetails {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Click Edit Issue button
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit issue/i });
+      const editButton = screen.getByRole('button', { name: /edit issue/i });
       await user.click(editButton);
 
       // Should show edit form
-      expect(screen.getByText(&apos;Edit Issue&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Edit Issue')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Update the issue information&apos;)
+        screen.getByText('Update the issue information')
       ).toBeInTheDocument();
 
       // Should show Cancel and Save buttons
       expect(
-        screen.getByRole(&apos;button&apos;, { name: /cancel/i })
+        screen.getByRole('button', { name: /cancel/i })
       ).toBeInTheDocument();
       expect(
-        screen.getByRole(&apos;button&apos;, { name: /save changes/i })
+        screen.getByRole('button', { name: /save changes/i })
       ).toBeInTheDocument();
     });
 
-    it(&apos;should toggle back to view mode when Cancel button is clicked&apos;, async () => {
+    it('should toggle back to view mode when Cancel button is clicked', async () => {
       const user = userEvent.setup();
       render(<IssueDetails {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Enter edit mode
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit issue/i });
+      const editButton = screen.getByRole('button', { name: /edit issue/i });
       await user.click(editButton);
 
       // Click Cancel button
-      const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
       await user.click(cancelButton);
 
       // Should be back to view mode
-      expect(screen.getByText(&apos;Edit Issue&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Edit Issue')).not.toBeInTheDocument();
       expect(
-        screen.getByRole(&apos;button&apos;, { name: /edit issue/i })
+        screen.getByRole('button', { name: /edit issue/i })
       ).toBeInTheDocument();
     });
 
-    it(&apos;should call onUpdateIssue when Save Changes button is clicked with valid form data&apos;, async () => {
+    it('should call onUpdateIssue when Save Changes button is clicked with valid form data', async () => {
       const user = userEvent.setup();
       render(<IssueDetails {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Enter edit mode
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit issue/i });
+      const editButton = screen.getByRole('button', { name: /edit issue/i });
       await user.click(editButton);
 
       // Wait for form to appear
       await waitFor(() => {
-        expect(screen.getByText(&apos;Edit Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Edit Issue')).toBeInTheDocument();
       });
 
       // Fill in form fields (assuming IssueForm has these fields)
-      const titleInput = screen.getByDisplayValue(&apos;Test Issue&apos;);
+      const titleInput = screen.getByDisplayValue('Test Issue');
       await user.clear(titleInput);
-      await user.type(titleInput, &apos;Updated Test Issue&apos;);
+      await user.type(titleInput, 'Updated Test Issue');
 
       const descriptionInput = screen.getByDisplayValue(
-        &apos;This is a test issue description&apos;
+        'This is a test issue description'
       );
       await user.clear(descriptionInput);
-      await user.type(descriptionInput, &apos;Updated description&apos;);
+      await user.type(descriptionInput, 'Updated description');
 
       // Click Save Changes button
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save changes/i });
+      const saveButton = screen.getByRole('button', { name: /save changes/i });
       await user.click(saveButton);
 
       // Wait for the update to be called
       await waitFor(() => {
         expect(mockOnUpdateIssue).toHaveBeenCalledWith(
-          &apos;ISS-001&apos;,
+          'ISS-001',
           expect.objectContaining({
-            title: &apos;Updated Test Issue&apos;,
-            description: &apos;Updated description&apos;,
+            title: 'Updated Test Issue',
+            description: 'Updated description',
           })
         );
       });
     });
 
-    it(&apos;should handle form submission errors gracefully&apos;, async () => {
+    it('should handle form submission errors gracefully', async () => {
       const user = userEvent.setup();
       const mockOnUpdateIssueError = vi.fn().mockResolvedValue({
         success: false,
-        error: &apos;Update failed&apos;,
+        error: 'Update failed',
       });
 
       render(
@@ -184,19 +184,19 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Enter edit mode
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit issue/i });
+      const editButton = screen.getByRole('button', { name: /edit issue/i });
       await user.click(editButton);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Edit Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Edit Issue')).toBeInTheDocument();
       });
 
       // Click Save Changes button
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save changes/i });
+      const saveButton = screen.getByRole('button', { name: /save changes/i });
       await user.click(saveButton);
 
       // Should call onUpdateIssue but handle error
@@ -206,27 +206,27 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Form Submission via Button&apos;, () => {
-    it(&apos;should submit form when Save Changes button is clicked (form submit)&apos;, async () => {
+  describe('Form Submission via Button', () => {
+    it('should submit form when Save Changes button is clicked (form submit)', async () => {
       const user = userEvent.setup();
       render(<IssueDetails {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Enter edit mode
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit issue/i });
+      const editButton = screen.getByRole('button', { name: /edit issue/i });
       await user.click(editButton);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Edit Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Edit Issue')).toBeInTheDocument();
       });
 
-      // The Save Changes button should have type=&quot;submit&quot; and form=&quot;issue-form&quot;
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save changes/i });
-      expect(saveButton).toHaveAttribute(&apos;type&apos;, &apos;submit&apos;);
-      expect(saveButton).toHaveAttribute(&apos;form&apos;, &apos;issue-form&apos;);
+      // The Save Changes button should have type="submit" and form="issue-form"
+      const saveButton = screen.getByRole('button', { name: /save changes/i });
+      expect(saveButton).toHaveAttribute('type', 'submit');
+      expect(saveButton).toHaveAttribute('form', 'issue-form');
 
       // Click the button to submit the form
       await user.click(saveButton);
@@ -238,32 +238,32 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Loading and Error States&apos;, () => {
-    it(&apos;should show loading state initially&apos;, () => {
+  describe('Loading and Error States', () => {
+    it('should show loading state initially', () => {
       render(<IssueDetails {...defaultProps} />);
 
       // Should show loading spinner
-      expect(screen.getByRole(&apos;status&apos;, { hidden: true })).toBeInTheDocument();
+      expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
     });
 
-    it(&apos;should handle loading errors and show back button&apos;, async () => {
+    it('should handle loading errors and show back button', async () => {
       const user = userEvent.setup();
 
       // Mock getIssueById to throw an error
-      const { getIssueById } = await import(&apos;../../data/mockIssueData&apos;);
+      const { getIssueById } = await import('../../data/mockIssueData');
       vi.mocked(getIssueById).mockImplementationOnce(() => {
-        throw new Error(&apos;Failed to load issue&apos;);
+        throw new Error('Failed to load issue');
       });
 
       render(<IssueDetails {...defaultProps} />);
 
       // Wait for error handling
       await waitFor(() => {
-        expect(screen.getByText(&apos;Issue Not Found&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Issue Not Found')).toBeInTheDocument();
       });
 
       // Should have back button
-      const backButton = screen.getByRole(&apos;button&apos;, {
+      const backButton = screen.getByRole('button', {
         name: /back to issues/i,
       });
       expect(backButton).toBeInTheDocument();
@@ -274,37 +274,37 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Button Accessibility&apos;, () => {
-    it(&apos;should have proper ARIA labels and roles for all buttons&apos;, async () => {
+  describe('Button Accessibility', () => {
+    it('should have proper ARIA labels and roles for all buttons', async () => {
       render(<IssueDetails {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Check that all buttons have proper roles
-      const buttons = screen.getAllByRole(&apos;button&apos;);
+      const buttons = screen.getAllByRole('button');
       buttons.forEach(button => {
         expect(button).toBeInTheDocument();
         // Each button should have accessible text or aria-label
         expect(
           button.textContent ||
-            button.getAttribute(&apos;aria-label&apos;) ||
-            button.getAttribute(&apos;aria-labelledby&apos;)
+            button.getAttribute('aria-label') ||
+            button.getAttribute('aria-labelledby')
         ).toBeTruthy();
       });
     });
 
-    it(&apos;should maintain focus management during edit mode toggle&apos;, async () => {
+    it('should maintain focus management during edit mode toggle', async () => {
       const user = userEvent.setup();
       render(<IssueDetails {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Focus on edit button
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit issue/i });
+      const editButton = screen.getByRole('button', { name: /edit issue/i });
       editButton.focus();
       expect(document.activeElement).toBe(editButton);
 
@@ -312,16 +312,16 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
       await user.click(editButton);
 
       // Should have cancel and save buttons available
-      const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save changes/i });
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
+      const saveButton = screen.getByRole('button', { name: /save changes/i });
 
       expect(cancelButton).toBeInTheDocument();
       expect(saveButton).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Button State Management&apos;, () => {
-    it(&apos;should disable Save button while saving&apos;, async () => {
+  describe('Button State Management', () => {
+    it('should disable Save button while saving', async () => {
       const user = userEvent.setup();
       const mockOnUpdateIssueSlow = vi
         .fn()
@@ -340,19 +340,19 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Enter edit mode
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit issue/i });
+      const editButton = screen.getByRole('button', { name: /edit issue/i });
       await user.click(editButton);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Edit Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Edit Issue')).toBeInTheDocument();
       });
 
       // Click Save Changes button
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save changes/i });
+      const saveButton = screen.getByRole('button', { name: /save changes/i });
       await user.click(saveButton);
 
       // Button should be disabled while saving
@@ -361,24 +361,24 @@ describe(&apos;IssueDetails Component - Button Click Tests&apos;, () => {
       });
     });
 
-    it(&apos;should re-enable buttons after save completion&apos;, async () => {
+    it('should re-enable buttons after save completion', async () => {
       const user = userEvent.setup();
       render(<IssueDetails {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;ISS-001 - Test Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('ISS-001 - Test Issue')).toBeInTheDocument();
       });
 
       // Enter edit mode
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit issue/i });
+      const editButton = screen.getByRole('button', { name: /edit issue/i });
       await user.click(editButton);
 
       await waitFor(() => {
-        expect(screen.getByText(&apos;Edit Issue&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Edit Issue')).toBeInTheDocument();
       });
 
       // Click Save Changes button
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save changes/i });
+      const saveButton = screen.getByRole('button', { name: /save changes/i });
       await user.click(saveButton);
 
       // Wait for save to complete
