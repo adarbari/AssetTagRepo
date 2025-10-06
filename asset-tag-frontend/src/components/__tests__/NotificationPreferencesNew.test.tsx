@@ -1,26 +1,26 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
-import { NotificationPreferencesNew } from '../notifications/NotificationPreferencesNew';
-import type { NotificationPreferences } from '../../types/notificationConfig';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach, afterEach } from &apos;vitest&apos;;
+import { render, screen, fireEvent, waitFor } from &apos;../../test/test-utils&apos;;
+import { NotificationPreferencesNew } from &apos;../notifications/NotificationPreferencesNew&apos;;
+import type { NotificationPreferences } from &apos;../../types/notificationConfig&apos;;
 
 // Mock the alert configurations
-vi.mock('../../data/alertConfigurations', () => ({
+vi.mock(&apos;../../data/alertConfigurations&apos;, () => ({
   getAllAlertTypes: vi
     .fn()
     .mockReturnValue([
-      'theft',
-      'battery',
-      'compliance',
-      'offline',
-      'geofence_entry',
-      'geofence_exit',
-      'maintenance_due',
+      &apos;theft&apos;,
+      &apos;battery&apos;,
+      &apos;compliance&apos;,
+      &apos;offline&apos;,
+      &apos;geofence_entry&apos;,
+      &apos;geofence_exit&apos;,
+      &apos;maintenance_due&apos;,
     ]),
 }));
 
 // Mock toast
-vi.mock('sonner', () => ({
+vi.mock(&apos;sonner&apos;, () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -28,14 +28,14 @@ vi.mock('sonner', () => ({
 }));
 
 const mockNotificationConfigs: Record<string, NotificationPreferences> = {
-  'user:default': {
-    id: 'user-default-1',
-    level: 'user',
-    entityId: 'default',
+  &apos;user:default&apos;: {
+    id: &apos;user-default-1&apos;,
+    level: &apos;user&apos;,
+    entityId: &apos;default&apos;,
     channels: {
       email: {
         enabled: true,
-        addresses: ['user@example.com'],
+        addresses: [&apos;user@example.com&apos;],
         verified: true,
       },
       sms: {
@@ -45,7 +45,7 @@ const mockNotificationConfigs: Record<string, NotificationPreferences> = {
       },
       push: {
         enabled: true,
-        devices: ['device-1'],
+        devices: [&apos;device-1&apos;],
       },
       webhook: {
         enabled: false,
@@ -53,14 +53,14 @@ const mockNotificationConfigs: Record<string, NotificationPreferences> = {
       },
     },
     filters: {
-      types: ['theft', 'battery', 'compliance'],
-      severities: ['medium', 'high', 'critical'],
+      types: [&apos;theft&apos;, &apos;battery&apos;, &apos;compliance&apos;],
+      severities: [&apos;medium&apos;, &apos;high&apos;, &apos;critical&apos;],
     },
     quietHours: {
       enabled: true,
-      start: '22:00',
-      end: '08:00',
-      timezone: 'America/New_York',
+      start: &apos;22:00&apos;,
+      end: &apos;08:00&apos;,
+      timezone: &apos;America/New_York&apos;,
       excludeCritical: true,
     },
     frequency: {
@@ -72,19 +72,19 @@ const mockNotificationConfigs: Record<string, NotificationPreferences> = {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-  'site:SITE-001': {
-    id: 'site-SITE-001-1',
-    level: 'site',
-    entityId: 'SITE-001',
+  &apos;site:SITE-001&apos;: {
+    id: &apos;site-SITE-001-1&apos;,
+    level: &apos;site&apos;,
+    entityId: &apos;SITE-001&apos;,
     channels: {
       email: {
         enabled: true,
-        addresses: ['site@example.com'],
+        addresses: [&apos;site@example.com&apos;],
         verified: true,
       },
       sms: {
         enabled: true,
-        phoneNumbers: ['+1234567890'],
+        phoneNumbers: [&apos;+1234567890&apos;],
         verified: true,
       },
       push: {
@@ -93,18 +93,18 @@ const mockNotificationConfigs: Record<string, NotificationPreferences> = {
       },
       webhook: {
         enabled: true,
-        endpoints: ['https://api.example.com/webhooks/site'],
+        endpoints: [&apos;https://api.example.com/webhooks/site&apos;],
       },
     },
     filters: {
-      types: ['theft', 'geofence_entry', 'geofence_exit'],
-      severities: ['high', 'critical'],
+      types: [&apos;theft&apos;, &apos;geofence_entry&apos;, &apos;geofence_exit&apos;],
+      severities: [&apos;high&apos;, &apos;critical&apos;],
     },
     quietHours: {
       enabled: false,
-      start: '22:00',
-      end: '08:00',
-      timezone: 'America/New_York',
+      start: &apos;22:00&apos;,
+      end: &apos;08:00&apos;,
+      timezone: &apos;America/New_York&apos;,
       excludeCritical: true,
     },
     frequency: {
@@ -118,7 +118,7 @@ const mockNotificationConfigs: Record<string, NotificationPreferences> = {
   },
 };
 
-describe('NotificationPreferencesNew', () => {
+describe(&apos;NotificationPreferencesNew&apos;, () => {
   const mockOnSaveConfig = vi.fn();
   const mockOnDeleteConfig = vi.fn();
   const mockOnGetConfig = vi.fn();
@@ -140,8 +140,8 @@ describe('NotificationPreferencesNew', () => {
     vi.resetAllMocks();
   });
 
-  describe('Component Rendering', () => {
-    it('renders the notification preferences page with correct title', () => {
+  describe(&apos;Component Rendering&apos;, () => {
+    it(&apos;renders the notification preferences page with correct title&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -151,10 +151,10 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Notification Preferences')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Notification Preferences&apos;)).toBeInTheDocument();
     });
 
-    it('renders the back button when onBack is provided', () => {
+    it(&apos;renders the back button when onBack is provided&apos;, () => {
       render(
         <NotificationPreferencesNew
           onBack={mockOnBack}
@@ -165,10 +165,10 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Back')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Back&apos;)).toBeInTheDocument();
     });
 
-    it('renders the three-level tab selector', () => {
+    it(&apos;renders the three-level tab selector&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -178,12 +178,12 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('User Level')).toBeInTheDocument();
-      expect(screen.getByText('Site Level')).toBeInTheDocument();
-      expect(screen.getByText('Asset Level')).toBeInTheDocument();
+      expect(screen.getByText(&apos;User Level&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Site Level&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Asset Level&apos;)).toBeInTheDocument();
     });
 
-    it('renders channel configuration sections', () => {
+    it(&apos;renders channel configuration sections&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -193,15 +193,15 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Email')).toBeInTheDocument();
-      expect(screen.getByText('SMS')).toBeInTheDocument();
-      expect(screen.getByText('Push Notifications')).toBeInTheDocument();
-      expect(screen.getByText('Webhook')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Email&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;SMS&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Push Notifications&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Webhook&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Tab Navigation', () => {
-    it('starts with User Level tab selected by default', () => {
+  describe(&apos;Tab Navigation&apos;, () => {
+    it(&apos;starts with User Level tab selected by default&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -211,11 +211,11 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const userTab = screen.getByText('User Level');
-      expect(userTab).toHaveClass('data-[state=active]');
+      const userTab = screen.getByText(&apos;User Level&apos;);
+      expect(userTab).toHaveClass(&apos;data-[state=active]&apos;);
     });
 
-    it('switches to Site Level tab when clicked', () => {
+    it(&apos;switches to Site Level tab when clicked&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -225,13 +225,13 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      fireEvent.click(screen.getByText('Site Level'));
+      fireEvent.click(screen.getByText(&apos;Site Level&apos;));
 
-      const siteTab = screen.getByText('Site Level');
-      expect(siteTab).toHaveClass('data-[state=active]');
+      const siteTab = screen.getByText(&apos;Site Level&apos;);
+      expect(siteTab).toHaveClass(&apos;data-[state=active]&apos;);
     });
 
-    it('switches to Asset Level tab when clicked', () => {
+    it(&apos;switches to Asset Level tab when clicked&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -241,18 +241,18 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      fireEvent.click(screen.getByText('Asset Level'));
+      fireEvent.click(screen.getByText(&apos;Asset Level&apos;));
 
-      const assetTab = screen.getByText('Asset Level');
-      expect(assetTab).toHaveClass('data-[state=active]');
+      const assetTab = screen.getByText(&apos;Asset Level&apos;);
+      expect(assetTab).toHaveClass(&apos;data-[state=active]&apos;);
     });
 
-    it('preselects the correct tab when preselectedLevel is provided', () => {
+    it(&apos;preselects the correct tab when preselectedLevel is provided&apos;, () => {
       render(
         <NotificationPreferencesNew
-          preselectedLevel='site'
-          preselectedEntityId='SITE-001'
-          preselectedEntityName='Construction Site A'
+          preselectedLevel=&apos;site&apos;
+          preselectedEntityId=&apos;SITE-001&apos;
+          preselectedEntityName=&apos;Construction Site A&apos;
           notificationConfigs={mockNotificationConfigs}
           onSaveConfig={mockOnSaveConfig}
           onDeleteConfig={mockOnDeleteConfig}
@@ -260,13 +260,13 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const siteTab = screen.getByText('Site Level');
-      expect(siteTab).toHaveClass('data-[state=active]');
+      const siteTab = screen.getByText(&apos;Site Level&apos;);
+      expect(siteTab).toHaveClass(&apos;data-[state=active]&apos;);
     });
   });
 
-  describe('Channel Configuration', () => {
-    it('displays current channel settings for User Level', () => {
+  describe(&apos;Channel Configuration&apos;, () => {
+    it(&apos;displays current channel settings for User Level&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -277,19 +277,19 @@ describe('NotificationPreferencesNew', () => {
       );
 
       // Email should be enabled
-      const emailSwitch = screen.getByLabelText('Enable Email notifications');
+      const emailSwitch = screen.getByLabelText(&apos;Enable Email notifications&apos;);
       expect(emailSwitch).toBeChecked();
 
       // SMS should be disabled
-      const smsSwitch = screen.getByLabelText('Enable SMS notifications');
+      const smsSwitch = screen.getByLabelText(&apos;Enable SMS notifications&apos;);
       expect(smsSwitch).not.toBeChecked();
 
       // Push should be enabled
-      const pushSwitch = screen.getByLabelText('Enable Push notifications');
+      const pushSwitch = screen.getByLabelText(&apos;Enable Push notifications&apos;);
       expect(pushSwitch).toBeChecked();
     });
 
-    it('allows toggling channel switches', () => {
+    it(&apos;allows toggling channel switches&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -299,13 +299,13 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const emailSwitch = screen.getByLabelText('Enable Email notifications');
+      const emailSwitch = screen.getByLabelText(&apos;Enable Email notifications&apos;);
       fireEvent.click(emailSwitch);
 
       expect(emailSwitch).not.toBeChecked();
     });
 
-    it('shows email address input when email is enabled', () => {
+    it(&apos;shows email address input when email is enabled&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -315,14 +315,14 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByDisplayValue('user@example.com')).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;user@example.com&apos;)).toBeInTheDocument();
     });
 
-    it('shows SMS number input when SMS is enabled', () => {
+    it(&apos;shows SMS number input when SMS is enabled&apos;, () => {
       render(
         <NotificationPreferencesNew
-          preselectedLevel='site'
-          preselectedEntityId='SITE-001'
+          preselectedLevel=&apos;site&apos;
+          preselectedEntityId=&apos;SITE-001&apos;
           notificationConfigs={mockNotificationConfigs}
           onSaveConfig={mockOnSaveConfig}
           onDeleteConfig={mockOnDeleteConfig}
@@ -330,14 +330,14 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByDisplayValue('+1234567890')).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;+1234567890&apos;)).toBeInTheDocument();
     });
 
-    it('shows webhook URL input when webhook is enabled', () => {
+    it(&apos;shows webhook URL input when webhook is enabled&apos;, () => {
       render(
         <NotificationPreferencesNew
-          preselectedLevel='site'
-          preselectedEntityId='SITE-001'
+          preselectedLevel=&apos;site&apos;
+          preselectedEntityId=&apos;SITE-001&apos;
           notificationConfigs={mockNotificationConfigs}
           onSaveConfig={mockOnSaveConfig}
           onDeleteConfig={mockOnDeleteConfig}
@@ -346,13 +346,13 @@ describe('NotificationPreferencesNew', () => {
       );
 
       expect(
-        screen.getByDisplayValue('https://api.example.com/webhooks/site')
+        screen.getByDisplayValue(&apos;https://api.example.com/webhooks/site&apos;)
       ).toBeInTheDocument();
     });
   });
 
-  describe('Quiet Hours Configuration', () => {
-    it('displays quiet hours settings', () => {
+  describe(&apos;Quiet Hours Configuration&apos;, () => {
+    it(&apos;displays quiet hours settings&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -362,11 +362,11 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Quiet Hours')).toBeInTheDocument();
-      expect(screen.getByText('Enable quiet hours')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Quiet Hours&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Enable quiet hours&apos;)).toBeInTheDocument();
     });
 
-    it('shows quiet hours enabled by default for User Level', () => {
+    it(&apos;shows quiet hours enabled by default for User Level&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -376,11 +376,11 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const quietHoursSwitch = screen.getByLabelText('Enable quiet hours');
+      const quietHoursSwitch = screen.getByLabelText(&apos;Enable quiet hours&apos;);
       expect(quietHoursSwitch).toBeChecked();
     });
 
-    it('allows toggling quiet hours', () => {
+    it(&apos;allows toggling quiet hours&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -390,13 +390,13 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const quietHoursSwitch = screen.getByLabelText('Enable quiet hours');
+      const quietHoursSwitch = screen.getByLabelText(&apos;Enable quiet hours&apos;);
       fireEvent.click(quietHoursSwitch);
 
       expect(quietHoursSwitch).not.toBeChecked();
     });
 
-    it('displays quiet hours time inputs', () => {
+    it(&apos;displays quiet hours time inputs&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -406,13 +406,13 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByDisplayValue('22:00')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('08:00')).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;22:00&apos;)).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;08:00&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Alert Filtering', () => {
-    it('displays alert filtering section', () => {
+  describe(&apos;Alert Filtering&apos;, () => {
+    it(&apos;displays alert filtering section&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -422,12 +422,12 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Alert Filtering')).toBeInTheDocument();
-      expect(screen.getByText('Minimum Severity')).toBeInTheDocument();
-      expect(screen.getByText('Alert Types')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Alert Filtering&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Minimum Severity&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Alert Types&apos;)).toBeInTheDocument();
     });
 
-    it('displays current minimum severity setting', () => {
+    it(&apos;displays current minimum severity setting&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -437,10 +437,10 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByDisplayValue('Medium')).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;Medium&apos;)).toBeInTheDocument();
     });
 
-    it('allows changing minimum severity', () => {
+    it(&apos;allows changing minimum severity&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -450,14 +450,14 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const severitySelect = screen.getByDisplayValue('Medium');
+      const severitySelect = screen.getByDisplayValue(&apos;Medium&apos;);
       fireEvent.click(severitySelect);
-      fireEvent.click(screen.getByText('High'));
+      fireEvent.click(screen.getByText(&apos;High&apos;));
 
-      expect(screen.getByDisplayValue('High')).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;High&apos;)).toBeInTheDocument();
     });
 
-    it('displays alert type checkboxes', () => {
+    it(&apos;displays alert type checkboxes&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -467,12 +467,12 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByLabelText('Theft')).toBeInTheDocument();
-      expect(screen.getByLabelText('Battery')).toBeInTheDocument();
-      expect(screen.getByLabelText('Compliance')).toBeInTheDocument();
+      expect(screen.getByLabelText(&apos;Theft&apos;)).toBeInTheDocument();
+      expect(screen.getByLabelText(&apos;Battery&apos;)).toBeInTheDocument();
+      expect(screen.getByLabelText(&apos;Compliance&apos;)).toBeInTheDocument();
     });
 
-    it('allows toggling alert type checkboxes', () => {
+    it(&apos;allows toggling alert type checkboxes&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -482,7 +482,7 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const theftCheckbox = screen.getByLabelText('Theft');
+      const theftCheckbox = screen.getByLabelText(&apos;Theft&apos;);
       expect(theftCheckbox).toBeChecked();
 
       fireEvent.click(theftCheckbox);
@@ -490,8 +490,8 @@ describe('NotificationPreferencesNew', () => {
     });
   });
 
-  describe('Frequency Limits', () => {
-    it('displays frequency limits section', () => {
+  describe(&apos;Frequency Limits&apos;, () => {
+    it(&apos;displays frequency limits section&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -501,12 +501,12 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Frequency Limits')).toBeInTheDocument();
-      expect(screen.getByText('Max per hour')).toBeInTheDocument();
-      expect(screen.getByText('Max per day')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Frequency Limits&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Max per hour&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Max per day&apos;)).toBeInTheDocument();
     });
 
-    it('displays current frequency limit values', () => {
+    it(&apos;displays current frequency limit values&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -516,11 +516,11 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByDisplayValue('10')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('50')).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;10&apos;)).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;50&apos;)).toBeInTheDocument();
     });
 
-    it('allows changing frequency limit values', () => {
+    it(&apos;allows changing frequency limit values&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -530,15 +530,15 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const hourlyInput = screen.getByDisplayValue('10');
-      fireEvent.change(hourlyInput, { target: { value: '15' } });
+      const hourlyInput = screen.getByDisplayValue(&apos;10&apos;);
+      fireEvent.change(hourlyInput, { target: { value: &apos;15&apos; } });
 
-      expect(hourlyInput).toHaveValue('15');
+      expect(hourlyInput).toHaveValue(&apos;15&apos;);
     });
   });
 
-  describe('Save and Delete Operations', () => {
-    it('calls onSaveConfig when Save button is clicked', async () => {
+  describe(&apos;Save and Delete Operations&apos;, () => {
+    it(&apos;calls onSaveConfig when Save button is clicked&apos;, async () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -548,7 +548,7 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const saveButton = screen.getByText('Save Configuration');
+      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
       fireEvent.click(saveButton);
 
       await waitFor(() => {
@@ -556,8 +556,8 @@ describe('NotificationPreferencesNew', () => {
       });
     });
 
-    it('shows success toast when save is successful', async () => {
-      const { toast } = require('sonner');
+    it(&apos;shows success toast when save is successful&apos;, async () => {
+      const { toast } = require(&apos;sonner&apos;);
 
       render(
         <NotificationPreferencesNew
@@ -568,21 +568,21 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const saveButton = screen.getByText('Save Configuration');
+      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(toast.success).toHaveBeenCalledWith(
-          'Configuration saved successfully'
+          &apos;Configuration saved successfully&apos;
         );
       });
     });
 
-    it('shows error toast when save fails', async () => {
-      const { toast } = require('sonner');
+    it(&apos;shows error toast when save fails&apos;, async () => {
+      const { toast } = require(&apos;sonner&apos;);
       mockOnSaveConfig.mockResolvedValue({
         success: false,
-        error: 'Save failed',
+        error: &apos;Save failed&apos;,
       });
 
       render(
@@ -594,21 +594,21 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const saveButton = screen.getByText('Save Configuration');
+      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalledWith(
-          'Failed to save configuration: Save failed'
+          &apos;Failed to save configuration: Save failed&apos;
         );
       });
     });
 
-    it('shows delete override button for non-user level configurations', () => {
+    it(&apos;shows delete override button for non-user level configurations&apos;, () => {
       render(
         <NotificationPreferencesNew
-          preselectedLevel='site'
-          preselectedEntityId='SITE-001'
+          preselectedLevel=&apos;site&apos;
+          preselectedEntityId=&apos;SITE-001&apos;
           notificationConfigs={mockNotificationConfigs}
           onSaveConfig={mockOnSaveConfig}
           onDeleteConfig={mockOnDeleteConfig}
@@ -616,14 +616,14 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Delete Override')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Delete Override&apos;)).toBeInTheDocument();
     });
 
-    it('calls onDeleteConfig when Delete Override button is clicked', async () => {
+    it(&apos;calls onDeleteConfig when Delete Override button is clicked&apos;, async () => {
       render(
         <NotificationPreferencesNew
-          preselectedLevel='site'
-          preselectedEntityId='SITE-001'
+          preselectedLevel=&apos;site&apos;
+          preselectedEntityId=&apos;SITE-001&apos;
           notificationConfigs={mockNotificationConfigs}
           onSaveConfig={mockOnSaveConfig}
           onDeleteConfig={mockOnDeleteConfig}
@@ -631,17 +631,17 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const deleteButton = screen.getByText('Delete Override');
+      const deleteButton = screen.getByText(&apos;Delete Override&apos;);
       fireEvent.click(deleteButton);
 
       await waitFor(() => {
-        expect(mockOnDeleteConfig).toHaveBeenCalledWith('site', 'SITE-001');
+        expect(mockOnDeleteConfig).toHaveBeenCalledWith(&apos;site&apos;, &apos;SITE-001&apos;);
       });
     });
   });
 
-  describe('Configuration Inspector', () => {
-    it('renders configuration inspector', () => {
+  describe(&apos;Configuration Inspector&apos;, () => {
+    it(&apos;renders configuration inspector&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -651,10 +651,10 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Configuration Inspector')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Configuration Inspector&apos;)).toBeInTheDocument();
     });
 
-    it('shows current active configuration', () => {
+    it(&apos;shows current active configuration&apos;, () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -664,12 +664,12 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      expect(screen.getByText('Active Configuration')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Active Configuration&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Form Validation', () => {
-    it('validates email format', async () => {
+  describe(&apos;Form Validation&apos;, () => {
+    it(&apos;validates email format&apos;, async () => {
       render(
         <NotificationPreferencesNew
           notificationConfigs={mockNotificationConfigs}
@@ -679,24 +679,24 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const emailInput = screen.getByDisplayValue('user@example.com');
-      fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+      const emailInput = screen.getByDisplayValue(&apos;user@example.com&apos;);
+      fireEvent.change(emailInput, { target: { value: &apos;invalid-email&apos; } });
 
-      const saveButton = screen.getByText('Save Configuration');
+      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(
-          screen.getByText('Please enter a valid email address')
+          screen.getByText(&apos;Please enter a valid email address&apos;)
         ).toBeInTheDocument();
       });
     });
 
-    it('validates phone number format', async () => {
+    it(&apos;validates phone number format&apos;, async () => {
       render(
         <NotificationPreferencesNew
-          preselectedLevel='site'
-          preselectedEntityId='SITE-001'
+          preselectedLevel=&apos;site&apos;
+          preselectedEntityId=&apos;SITE-001&apos;
           notificationConfigs={mockNotificationConfigs}
           onSaveConfig={mockOnSaveConfig}
           onDeleteConfig={mockOnDeleteConfig}
@@ -704,27 +704,27 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      const smsSwitch = screen.getByLabelText('Enable SMS notifications');
+      const smsSwitch = screen.getByLabelText(&apos;Enable SMS notifications&apos;);
       fireEvent.click(smsSwitch);
 
-      const phoneInput = screen.getByDisplayValue('+1234567890');
-      fireEvent.change(phoneInput, { target: { value: 'invalid-phone' } });
+      const phoneInput = screen.getByDisplayValue(&apos;+1234567890&apos;);
+      fireEvent.change(phoneInput, { target: { value: &apos;invalid-phone&apos; } });
 
-      const saveButton = screen.getByText('Save Configuration');
+      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(
-          screen.getByText('Please enter a valid phone number')
+          screen.getByText(&apos;Please enter a valid phone number&apos;)
         ).toBeInTheDocument();
       });
     });
 
-    it('validates webhook URL format', async () => {
+    it(&apos;validates webhook URL format&apos;, async () => {
       render(
         <NotificationPreferencesNew
-          preselectedLevel='site'
-          preselectedEntityId='SITE-001'
+          preselectedLevel=&apos;site&apos;
+          preselectedEntityId=&apos;SITE-001&apos;
           notificationConfigs={mockNotificationConfigs}
           onSaveConfig={mockOnSaveConfig}
           onDeleteConfig={mockOnDeleteConfig}
@@ -733,23 +733,23 @@ describe('NotificationPreferencesNew', () => {
       );
 
       const webhookInput = screen.getByDisplayValue(
-        'https://api.example.com/webhooks/site'
+        &apos;https://api.example.com/webhooks/site&apos;
       );
-      fireEvent.change(webhookInput, { target: { value: 'invalid-url' } });
+      fireEvent.change(webhookInput, { target: { value: &apos;invalid-url&apos; } });
 
-      const saveButton = screen.getByText('Save Configuration');
+      const saveButton = screen.getByText(&apos;Save Configuration&apos;);
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(
-          screen.getByText('Please enter a valid URL')
+          screen.getByText(&apos;Please enter a valid URL&apos;)
         ).toBeInTheDocument();
       });
     });
   });
 
-  describe('Back Navigation', () => {
-    it('calls onBack when Back button is clicked', () => {
+  describe(&apos;Back Navigation&apos;, () => {
+    it(&apos;calls onBack when Back button is clicked&apos;, () => {
       render(
         <NotificationPreferencesNew
           onBack={mockOnBack}
@@ -760,7 +760,7 @@ describe('NotificationPreferencesNew', () => {
         />
       );
 
-      fireEvent.click(screen.getByText('Back'));
+      fireEvent.click(screen.getByText(&apos;Back&apos;));
 
       expect(mockOnBack).toHaveBeenCalled();
     });

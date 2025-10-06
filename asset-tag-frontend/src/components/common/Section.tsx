@@ -4,8 +4,8 @@
  * Provides consistent section UI with optional icon and actions
  */
 
-import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import React from &apos;react&apos;;
+import { LucideIcon } from &apos;lucide-react&apos;;
 
 interface SectionProps {
   title: string;
@@ -26,17 +26,17 @@ export function Section({
 }: SectionProps) {
   return (
     <div className={className}>
-      <div className='flex items-center justify-between mb-4'>
-        <div className='flex items-center gap-2'>
-          {Icon && <Icon className='h-5 w-5 text-muted-foreground' />}
+      <div className=&apos;flex items-center justify-between mb-4&apos;>
+        <div className=&apos;flex items-center gap-2&apos;>
+          {Icon && <Icon className=&apos;h-5 w-5 text-muted-foreground&apos; />}
           <div>
-            <div className='text-xl text-muted-foreground'>{title}</div>
+            <div className=&apos;text-xl text-muted-foreground&apos;>{title}</div>
             {description && (
-              <p className='text-sm text-muted-foreground'>{description}</p>
+              <p className=&apos;text-sm text-muted-foreground&apos;>{description}</p>
             )}
           </div>
         </div>
-        {actions && <div className='flex items-center gap-2'>{actions}</div>}
+        {actions && <div className=&apos;flex items-center gap-2&apos;>{actions}</div>}
       </div>
       {children}
     </div>

@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
-import { ChevronRight, MoreHorizontal } from 'lucide-react';
+import * as React from &apos;react&apos;;
+import { Slot } from &apos;@radix-ui/react-slot&apos;;
+import { ChevronRight, MoreHorizontal } from &apos;lucide-react&apos;;
 
-import { cn } from './utils';
+import { cn } from &apos;./utils&apos;;
 
-function Breadcrumb({ ...props }: React.ComponentProps<'nav'>) {
-  return <nav aria-label='breadcrumb' data-slot='breadcrumb' {...props} />;
+function Breadcrumb({ ...props }: React.ComponentProps<&apos;nav&apos;>) {
+  return <nav aria-label=&apos;breadcrumb&apos; data-slot=&apos;breadcrumb&apos; {...props} />;
 }
 
-function BreadcrumbList({ className, ...props }: React.ComponentProps<'ol'>) {
+function BreadcrumbList({ className, ...props }: React.ComponentProps<&apos;ol&apos;>) {
   return (
     <ol
-      data-slot='breadcrumb-list'
+      data-slot=&apos;breadcrumb-list&apos;
       className={cn(
-        'text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5',
+        &apos;text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5&apos;,
         className
       )}
       {...props}
@@ -21,11 +21,11 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<'ol'>) {
   );
 }
 
-function BreadcrumbItem({ className, ...props }: React.ComponentProps<'li'>) {
+function BreadcrumbItem({ className, ...props }: React.ComponentProps<&apos;li&apos;>) {
   return (
     <li
-      data-slot='breadcrumb-item'
-      className={cn('inline-flex items-center gap-1.5', className)}
+      data-slot=&apos;breadcrumb-item&apos;
+      className={cn(&apos;inline-flex items-center gap-1.5&apos;, className)}
       {...props}
     />
   );
@@ -35,28 +35,28 @@ function BreadcrumbLink({
   asChild,
   className,
   ...props
-}: React.ComponentProps<'a'> & {
+}: React.ComponentProps<&apos;a&apos;> & {
   asChild?: boolean;
 }) {
-  const Comp = asChild ? Slot : 'a';
+  const Comp = asChild ? Slot : &apos;a&apos;;
 
   return (
     <Comp
-      data-slot='breadcrumb-link'
-      className={cn('hover:text-foreground transition-colors', className)}
+      data-slot=&apos;breadcrumb-link&apos;
+      className={cn(&apos;hover:text-foreground transition-colors&apos;, className)}
       {...props}
     />
   );
 }
 
-function BreadcrumbPage({ className, ...props }: React.ComponentProps<'span'>) {
+function BreadcrumbPage({ className, ...props }: React.ComponentProps<&apos;span&apos;>) {
   return (
     <span
-      data-slot='breadcrumb-page'
-      role='link'
-      aria-disabled='true'
-      aria-current='page'
-      className={cn('text-foreground font-normal', className)}
+      data-slot=&apos;breadcrumb-page&apos;
+      role=&apos;link&apos;
+      aria-disabled=&apos;true&apos;
+      aria-current=&apos;page&apos;
+      className={cn(&apos;text-foreground font-normal&apos;, className)}
       {...props}
     />
   );
@@ -66,13 +66,13 @@ function BreadcrumbSeparator({
   children,
   className,
   ...props
-}: React.ComponentProps<'li'>) {
+}: React.ComponentProps<&apos;li&apos;>) {
   return (
     <li
-      data-slot='breadcrumb-separator'
-      role='presentation'
-      aria-hidden='true'
-      className={cn('[&>svg]:size-3.5', className)}
+      data-slot=&apos;breadcrumb-separator&apos;
+      role=&apos;presentation&apos;
+      aria-hidden=&apos;true&apos;
+      className={cn(&apos;[&>svg]:size-3.5&apos;, className)}
       {...props}
     >
       {children ?? <ChevronRight />}
@@ -83,17 +83,17 @@ function BreadcrumbSeparator({
 function BreadcrumbEllipsis({
   className,
   ...props
-}: React.ComponentProps<'span'>) {
+}: React.ComponentProps<&apos;span&apos;>) {
   return (
     <span
-      data-slot='breadcrumb-ellipsis'
-      role='presentation'
-      aria-hidden='true'
-      className={cn('flex size-9 items-center justify-center', className)}
+      data-slot=&apos;breadcrumb-ellipsis&apos;
+      role=&apos;presentation&apos;
+      aria-hidden=&apos;true&apos;
+      className={cn(&apos;flex size-9 items-center justify-center&apos;, className)}
       {...props}
     >
-      <MoreHorizontal className='size-4' />
-      <span className='sr-only'>More</span>
+      <MoreHorizontal className=&apos;size-4&apos; />
+      <span className=&apos;sr-only&apos;>More</span>
     </span>
   );
 }

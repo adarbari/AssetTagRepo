@@ -4,37 +4,37 @@
  * Provides consistent loading UI across the application
  */
 
-import React from 'react';
-import { Loader2 } from 'lucide-react';
+import React from &apos;react&apos;;
+import { Loader2 } from &apos;lucide-react&apos;;
 
 interface LoadingStateProps {
   message?: string;
   fullScreen?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: &apos;sm&apos; | &apos;md&apos; | &apos;lg&apos;;
 }
 
 export function LoadingState({
-  message = 'Loading...',
+  message = &apos;Loading...&apos;,
   fullScreen = false,
-  size = 'md',
+  size = &apos;md&apos;,
 }: LoadingStateProps) {
   const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12',
+    sm: &apos;h-4 w-4&apos;,
+    md: &apos;h-8 w-8&apos;,
+    lg: &apos;h-12 w-12&apos;,
   };
 
   const containerClasses = fullScreen
-    ? 'flex items-center justify-center h-screen'
-    : 'flex items-center justify-center p-8';
+    ? &apos;flex items-center justify-center h-screen&apos;
+    : &apos;flex items-center justify-center p-8&apos;;
 
   return (
     <div className={containerClasses}>
-      <div className='text-center'>
+      <div className=&apos;text-center&apos;>
         <Loader2
           className={`${sizeClasses[size]} animate-spin mx-auto mb-4 text-primary`}
         />
-        <p className='text-muted-foreground'>{message}</p>
+        <p className=&apos;text-muted-foreground&apos;>{message}</p>
       </div>
     </div>
   );

@@ -5,15 +5,15 @@
  * Used for job asset assignments and other datetime needs
  */
 
-import { useState } from 'react';
-import { Calendar } from './calendar';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { Button } from './button';
-import { Input } from './input';
-import { Label } from './label';
-import { Calendar as CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from './utils';
+import { useState } from &apos;react&apos;;
+import { Calendar } from &apos;./calendar&apos;;
+import { Popover, PopoverContent, PopoverTrigger } from &apos;./popover&apos;;
+import { Button } from &apos;./button&apos;;
+import { Input } from &apos;./input&apos;;
+import { Label } from &apos;./label&apos;;
+import { Calendar as CalendarIcon } from &apos;lucide-react&apos;;
+import { format } from &apos;date-fns&apos;;
+import { cn } from &apos;./utils&apos;;
 
 interface DateTimeInputProps {
   value?: Date;
@@ -30,7 +30,7 @@ export function DateTimeInput({
   value,
   onChange,
   label,
-  placeholder = 'Select date and time',
+  placeholder = &apos;Select date and time&apos;,
   disabled = false,
   minDate,
   maxDate,
@@ -39,11 +39,11 @@ export function DateTimeInput({
   const [isOpen, setIsOpen] = useState(false);
   const [time, setTime] = useState(() => {
     if (value) {
-      const hours = value.getHours().toString().padStart(2, '0');
-      const minutes = value.getMinutes().toString().padStart(2, '0');
+      const hours = value.getHours().toString().padStart(2, &apos;0&apos;);
+      const minutes = value.getMinutes().toString().padStart(2, &apos;0&apos;);
       return `${hours}:${minutes}`;
     }
-    return '09:00';
+    return &apos;09:00&apos;;
   });
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
@@ -53,7 +53,7 @@ export function DateTimeInput({
     }
 
     // Parse the time input
-    const [hours, minutes] = time.split(':').map(Number);
+    const [hours, minutes] = time.split(&apos;:&apos;).map(Number);
 
     // Create new date with selected date and time
     const newDate = new Date(selectedDate);
@@ -66,7 +66,7 @@ export function DateTimeInput({
     setTime(newTime);
 
     if (value) {
-      const [hours, minutes] = newTime.split(':').map(Number);
+      const [hours, minutes] = newTime.split(&apos;:&apos;).map(Number);
       const newDate = new Date(value);
       newDate.setHours(hours, minutes, 0, 0);
       onChange(newDate);
@@ -78,30 +78,30 @@ export function DateTimeInput({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn(&apos;space-y-2&apos;, className)}>
       {label && <Label>{label}</Label>}
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
-            variant='outline'
+            variant=&apos;outline&apos;
             className={cn(
-              'w-full justify-start text-left',
-              !value && 'text-muted-foreground'
+              &apos;w-full justify-start text-left&apos;,
+              !value && &apos;text-muted-foreground&apos;
             )}
             disabled={disabled}
           >
-            <CalendarIcon className='mr-2 h-4 w-4' />
+            <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
             {value ? (
-              format(value, "PPP 'at' h:mm a")
+              format(value, &quot;PPP &apos;at&apos; h:mm a&quot;)
             ) : (
               <span>{placeholder}</span>
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className='w-auto p-0' align='start'>
-          <div className='p-3 space-y-3'>
+        <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
+          <div className=&apos;p-3 space-y-3&apos;>
             <Calendar
-              mode='single'
+              mode=&apos;single&apos;
               selected={value}
               onSelect={handleDateSelect}
               disabled={date => {
@@ -111,17 +111,17 @@ export function DateTimeInput({
               }}
               initialFocus
             />
-            <div className='space-y-2 border-t pt-3'>
-              <Label htmlFor='time-input'>Time</Label>
+            <div className=&apos;space-y-2 border-t pt-3&apos;>
+              <Label htmlFor=&apos;time-input&apos;>Time</Label>
               <Input
-                id='time-input'
-                type='time'
+                id=&apos;time-input&apos;
+                type=&apos;time&apos;
                 value={time}
                 onChange={e => handleTimeChange(e.target.value)}
-                className='w-full'
+                className=&apos;w-full&apos;
               />
             </div>
-            <Button onClick={handleApply} className='w-full'>
+            <Button onClick={handleApply} className=&apos;w-full&apos;>
               Apply
             </Button>
           </div>

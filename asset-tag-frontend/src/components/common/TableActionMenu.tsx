@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from '../ui/button';
+import React from &apos;react&apos;;
+import { Button } from &apos;../ui/button&apos;;
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,8 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { MoreVertical, LucideIcon } from 'lucide-react';
+} from &apos;../ui/dropdown-menu&apos;;
+import { MoreVertical, LucideIcon } from &apos;lucide-react&apos;;
 
 export interface TableAction {
   label: string;
@@ -26,16 +26,16 @@ interface TableActionMenuProps {
 
 export function TableActionMenu({
   actions,
-  label = 'Actions',
+  label = &apos;Actions&apos;,
 }: TableActionMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' size='icon' className='h-8 w-8 p-0'>
-          <MoreVertical className='h-4 w-4' />
+        <Button variant=&apos;ghost&apos; size=&apos;icon&apos; className=&apos;h-8 w-8 p-0&apos;>
+          <MoreVertical className=&apos;h-4 w-4&apos; />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
+      <DropdownMenuContent align=&apos;end&apos;>
         <DropdownMenuLabel>{label}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {actions.map((action, index) => (
@@ -43,9 +43,9 @@ export function TableActionMenu({
             {action.separatorBefore && <DropdownMenuSeparator />}
             <DropdownMenuItem
               onClick={action.onClick}
-              className={action.isDestructive ? 'text-destructive' : ''}
+              className={action.isDestructive ? &apos;text-destructive&apos; : &apos;&apos;}
             >
-              {action.icon && <action.icon className='h-4 w-4 mr-2' />}
+              {action.icon && <action.icon className=&apos;h-4 w-4 mr-2&apos; />}
               {action.label}
             </DropdownMenuItem>
           </React.Fragment>

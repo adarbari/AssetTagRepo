@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+import { useState } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Input } from &apos;../ui/input&apos;;
 import {
   LoadingState,
   EmptyState,
@@ -9,13 +9,13 @@ import {
   PageHeader,
   StatusBadge,
   PageLayout,
-} from '../common';
-import { useAsyncDataAll } from '../../hooks/useAsyncData';
+} from &apos;../common&apos;;
+import { useAsyncDataAll } from &apos;../../hooks/useAsyncData&apos;;
 import {
   getComplianceRecords,
   getComplianceSummary,
   type ComplianceRecord,
-} from '../../data/mockReportsData';
+} from &apos;../../data/mockReportsData&apos;;
 import {
   Table,
   TableBody,
@@ -23,8 +23,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+} from &apos;../ui/table&apos;;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +32,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+} from &apos;../ui/dropdown-menu&apos;;
 import {
   Search,
   AlertTriangle,
@@ -44,14 +44,14 @@ import {
   Plus,
   MoreVertical,
   Calendar,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { useNavigation } from '../../contexts/NavigationContext';
+} from &apos;lucide-react&apos;;
+import { toast } from &apos;sonner&apos;;
+import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
 
 export function ComplianceTracking() {
   const navigation = useNavigation();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
+  const [searchTerm, setSearchTerm] = useState(&apos;&apos;);
+  const [activeTab, setActiveTab] = useState(&apos;all&apos;);
 
   // Fetch compliance data
   const { data, loading, error, refetch } = useAsyncDataAll(
@@ -63,7 +63,7 @@ export function ComplianceTracking() {
   );
 
   const handleUploadDocument = () => {
-    toast.success('Upload feature coming soon');
+    toast.success(&apos;Upload feature coming soon&apos;);
   };
 
   const handleDownloadDocument = (record: ComplianceRecord) => {
@@ -79,18 +79,18 @@ export function ComplianceTracking() {
   };
 
   if (loading) {
-    return <LoadingState message='Loading compliance data...' fullScreen />;
+    return <LoadingState message=&apos;Loading compliance data...&apos; fullScreen />;
   }
 
   if (error) {
     return (
-      <div className='p-8'>
+      <div className=&apos;p-8&apos;>
         <EmptyState
           icon={AlertTriangle}
-          title='Failed to load compliance data'
+          title=&apos;Failed to load compliance data&apos;
           description={error.message}
           action={{
-            label: 'Try Again',
+            label: &apos;Try Again&apos;,
             onClick: () => refetch(),
           }}
         />
@@ -115,18 +115,18 @@ export function ComplianceTracking() {
   );
 
   return (
-    <PageLayout variant='wide' padding='lg'>
+    <PageLayout variant=&apos;wide&apos; padding=&apos;lg&apos;>
       <PageHeader
-        title='Compliance Tracking'
-        description='Manage certifications, inspections, and regulatory compliance'
+        title=&apos;Compliance Tracking&apos;
+        description=&apos;Manage certifications, inspections, and regulatory compliance&apos;
         actions={
-          <div className='flex items-center gap-2'>
-            <Button variant='outline' onClick={handleUploadDocument}>
-              <Upload className='h-4 w-4 mr-2' />
+          <div className=&apos;flex items-center gap-2&apos;>
+            <Button variant=&apos;outline&apos; onClick={handleUploadDocument}>
+              <Upload className=&apos;h-4 w-4 mr-2&apos; />
               Upload
             </Button>
             <Button onClick={handleAddCompliance}>
-              <Plus className='h-4 w-4 mr-2' />
+              <Plus className=&apos;h-4 w-4 mr-2&apos; />
               Add Compliance
             </Button>
           </div>
@@ -134,49 +134,49 @@ export function ComplianceTracking() {
       />
 
       {/* Summary Stats */}
-      <div className='grid gap-4 md:grid-cols-4'>
+      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
         <StatsCard
-          title='Total Certifications'
+          title=&apos;Total Certifications&apos;
           value={summary.total.toString()}
           icon={FileText}
-          description='All compliance records'
+          description=&apos;All compliance records&apos;
         />
         <StatsCard
-          title='Valid'
+          title=&apos;Valid&apos;
           value={summary.valid.toString()}
           icon={CheckCircle}
-          description='Up to date'
-          variant='success'
+          description=&apos;Up to date&apos;
+          variant=&apos;success&apos;
         />
         <StatsCard
-          title='Expiring Soon'
+          title=&apos;Expiring Soon&apos;
           value={summary.expiringSoon.toString()}
           icon={Clock}
-          description='Within 30 days'
-          variant='warning'
+          description=&apos;Within 30 days&apos;
+          variant=&apos;warning&apos;
         />
         <StatsCard
-          title='Expired'
+          title=&apos;Expired&apos;
           value={summary.expired.toString()}
           icon={AlertTriangle}
-          description='Action required'
-          variant='destructive'
+          description=&apos;Action required&apos;
+          variant=&apos;destructive&apos;
         />
       </div>
 
       {/* Compliance Records Table */}
       <Card>
         <CardHeader>
-          <div className='flex items-center justify-between'>
+          <div className=&apos;flex items-center justify-between&apos;>
             <CardTitle>Compliance Records</CardTitle>
-            <div className='flex items-center gap-2'>
-              <div className='relative'>
-                <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
+            <div className=&apos;flex items-center gap-2&apos;>
+              <div className=&apos;relative&apos;>
+                <Search className=&apos;absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground&apos; />
                 <Input
-                  placeholder='Search assets or certificates...'
+                  placeholder=&apos;Search assets or certificates...&apos;
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  className='pl-9 w-[300px]'
+                  className=&apos;pl-9 w-[300px]&apos;
                 />
               </div>
             </div>
@@ -185,35 +185,35 @@ export function ComplianceTracking() {
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList>
-              <TabsTrigger value='all'>All ({summary.total})</TabsTrigger>
-              <TabsTrigger value='valid'>
-                <CheckCircle className='h-4 w-4 mr-1' />
+              <TabsTrigger value=&apos;all&apos;>All ({summary.total})</TabsTrigger>
+              <TabsTrigger value=&apos;valid&apos;>
+                <CheckCircle className=&apos;h-4 w-4 mr-1&apos; />
                 Valid ({summary.valid})
               </TabsTrigger>
-              <TabsTrigger value='expiring_soon'>
-                <Clock className='h-4 w-4 mr-1' />
+              <TabsTrigger value=&apos;expiring_soon&apos;>
+                <Clock className=&apos;h-4 w-4 mr-1&apos; />
                 Expiring Soon ({summary.expiringSoon})
               </TabsTrigger>
-              <TabsTrigger value='expired'>
-                <AlertTriangle className='h-4 w-4 mr-1' />
+              <TabsTrigger value=&apos;expired&apos;>
+                <AlertTriangle className=&apos;h-4 w-4 mr-1&apos; />
                 Expired ({summary.expired})
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value={activeTab} className='mt-4'>
+            <TabsContent value={activeTab} className=&apos;mt-4&apos;>
               {filteredRecords.length === 0 ? (
                 <EmptyState
                   icon={FileText}
-                  title='No compliance records found'
+                  title=&apos;No compliance records found&apos;
                   description={
                     searchTerm
-                      ? 'Try adjusting your search terms'
-                      : 'No compliance records in this category'
+                      ? &apos;Try adjusting your search terms&apos;
+                      : &apos;No compliance records in this category&apos;
                   }
                   action={
                     !searchTerm
                       ? {
-                          label: 'Add Compliance Record',
+                          label: &apos;Add Compliance Record&apos;,
                           onClick: handleAddCompliance,
                         }
                       : undefined
@@ -239,7 +239,7 @@ export function ComplianceTracking() {
                         <TableCell>
                           <div>
                             <div>{record.assetName}</div>
-                            <div className='text-sm text-muted-foreground'>
+                            <div className=&apos;text-sm text-muted-foreground&apos;>
                               {record.assetId}
                             </div>
                           </div>
@@ -258,10 +258,10 @@ export function ComplianceTracking() {
                           <span
                             className={
                               record.daysUntilExpiry < 0
-                                ? 'text-red-600'
+                                ? &apos;text-red-600&apos;
                                 : record.daysUntilExpiry < 30
-                                  ? 'text-amber-600'
-                                  : 'text-green-600'
+                                  ? &apos;text-amber-600&apos;
+                                  : &apos;text-green-600&apos;
                             }
                           >
                             {record.daysUntilExpiry < 0
@@ -270,35 +270,35 @@ export function ComplianceTracking() {
                           </span>
                         </TableCell>
                         <TableCell>
-                          <div className='text-sm'>{record.inspector}</div>
+                          <div className=&apos;text-sm&apos;>{record.inspector}</div>
                         </TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant='ghost' size='sm'>
-                                <MoreVertical className='h-4 w-4' />
+                              <Button variant=&apos;ghost&apos; size=&apos;sm&apos;>
+                                <MoreVertical className=&apos;h-4 w-4&apos; />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align='end'>
+                            <DropdownMenuContent align=&apos;end&apos;>
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem
                                 onClick={() => handleDownloadDocument(record)}
                               >
-                                <Download className='h-4 w-4 mr-2' />
+                                <Download className=&apos;h-4 w-4 mr-2&apos; />
                                 Download Certificate
                               </DropdownMenuItem>
-                              {(record.status === 'expiring_soon' ||
-                                record.status === 'expired') && (
+                              {(record.status === &apos;expiring_soon&apos; ||
+                                record.status === &apos;expired&apos;) && (
                                 <DropdownMenuItem
                                   onClick={() => handleRenewCertificate(record)}
                                 >
-                                  <Calendar className='h-4 w-4 mr-2' />
+                                  <Calendar className=&apos;h-4 w-4 mr-2&apos; />
                                   Renew Certificate
                                 </DropdownMenuItem>
                               )}
                               <DropdownMenuSeparator />
                               <DropdownMenuItem>
-                                <FileText className='h-4 w-4 mr-2' />
+                                <FileText className=&apos;h-4 w-4 mr-2&apos; />
                                 View Details
                               </DropdownMenuItem>
                             </DropdownMenuContent>

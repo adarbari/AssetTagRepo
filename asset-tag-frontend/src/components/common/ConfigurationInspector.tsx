@@ -1,4 +1,4 @@
-import React from 'react';
+import React from &apos;react&apos;;
 
 /**
  * Configuration Inspector
@@ -7,11 +7,11 @@ import React from 'react';
  * Displays the inheritance chain and overrides for debugging.
  */
 
-import { useState, useEffect } from 'react';
-import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Separator } from '../ui/separator';
+import { useState, useEffect } from &apos;react&apos;;
+import { Card } from &apos;../ui/card&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Separator } from &apos;../ui/separator&apos;;
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog';
+} from &apos;../ui/dialog&apos;;
 import {
   AlertCircle,
   CheckCircle2,
@@ -34,16 +34,16 @@ import {
   MessageSquare,
   Smartphone,
   Webhook,
-} from 'lucide-react';
-import type { Asset, Site } from '../types';
-import { inspectConfiguration } from '../../services/notificationConfigService';
+} from &apos;lucide-react&apos;;
+import type { Asset, Site } from &apos;../types&apos;;
+import { inspectConfiguration } from &apos;../../services/notificationConfigService&apos;;
 import type {
   ConfigurationInspection,
   NotificationPreferences,
-} from '../../types/notificationConfig';
+} from &apos;../../types/notificationConfig&apos;;
 
 interface ConfigurationInspectorProps {
-  entityType: 'user' | 'site' | 'asset';
+  entityType: &apos;user&apos; | &apos;site&apos; | &apos;asset&apos;;
   entityId: string;
   entityName: string;
   userId?: string;
@@ -51,7 +51,7 @@ interface ConfigurationInspectorProps {
   assetId?: string;
   asset?: Asset;
   site?: Site;
-  variant?: 'button' | 'inline' | 'card';
+  variant?: &apos;button&apos; | &apos;inline&apos; | &apos;card&apos;;
   // Optional: Pass centralized configs from App.tsx
   notificationConfigs?: Record<string, NotificationPreferences>;
 }
@@ -60,12 +60,12 @@ export function ConfigurationInspector({
   entityType,
   entityId,
   entityName,
-  userId = 'current-user',
+  userId = &apos;current-user&apos;,
   siteId,
   assetId,
   asset,
   site,
-  variant = 'button',
+  variant = &apos;button&apos;,
   notificationConfigs,
 }: ConfigurationInspectorProps) {
   const [inspection, setInspection] = useState<ConfigurationInspection | null>(
@@ -74,7 +74,7 @@ export function ConfigurationInspector({
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (isOpen || variant === 'inline' || variant === 'card') {
+    if (isOpen || variant === &apos;inline&apos; || variant === &apos;card&apos;) {
       loadInspection();
     }
   }, [isOpen, variant, entityType, entityId]);
@@ -96,27 +96,27 @@ export function ConfigurationInspector({
 
   const getLevelIcon = (level: string) => {
     switch (level) {
-      case 'user':
-        return <User className='h-4 w-4' />;
-      case 'site':
-        return <Building2 className='h-4 w-4' />;
-      case 'asset':
-        return <Package className='h-4 w-4' />;
+      case &apos;user&apos;:
+        return <User className=&apos;h-4 w-4&apos; />;
+      case &apos;site&apos;:
+        return <Building2 className=&apos;h-4 w-4&apos; />;
+      case &apos;asset&apos;:
+        return <Package className=&apos;h-4 w-4&apos; />;
       default:
-        return <Settings className='h-4 w-4' />;
+        return <Settings className=&apos;h-4 w-4&apos; />;
     }
   };
 
   const getChannelIcon = (channel: string) => {
     switch (channel) {
-      case 'email':
-        return <Mail className='h-4 w-4' />;
-      case 'sms':
-        return <MessageSquare className='h-4 w-4' />;
-      case 'push':
-        return <Smartphone className='h-4 w-4' />;
-      case 'webhook':
-        return <Webhook className='h-4 w-4' />;
+      case &apos;email&apos;:
+        return <Mail className=&apos;h-4 w-4&apos; />;
+      case &apos;sms&apos;:
+        return <MessageSquare className=&apos;h-4 w-4&apos; />;
+      case &apos;push&apos;:
+        return <Smartphone className=&apos;h-4 w-4&apos; />;
+      case &apos;webhook&apos;:
+        return <Webhook className=&apos;h-4 w-4&apos; />;
       default:
         return null;
     }
@@ -124,31 +124,31 @@ export function ConfigurationInspector({
 
   const renderInspectionContent = () => {
     if (!inspection) {
-      return <div className='text-muted-foreground'>Loading...</div>;
+      return <div className=&apos;text-muted-foreground&apos;>Loading...</div>;
     }
 
     const { effectiveConfig, availableLevels } = inspection;
 
     return (
-      <div className='space-y-6'>
+      <div className=&apos;space-y-6&apos;>
         {/* Active Configuration */}
         <div>
-          <h3 className='flex items-center gap-2 mb-3'>
-            <CheckCircle2 className='h-5 w-5 text-green-600' />
+          <h3 className=&apos;flex items-center gap-2 mb-3&apos;>
+            <CheckCircle2 className=&apos;h-5 w-5 text-green-600&apos; />
             Active Configuration
           </h3>
-          <Card className='p-4'>
-            <div className='flex items-center justify-between mb-3'>
-              <div className='flex items-center gap-2'>
+          <Card className=&apos;p-4&apos;>
+            <div className=&apos;flex items-center justify-between mb-3&apos;>
+              <div className=&apos;flex items-center gap-2&apos;>
                 {getLevelIcon(effectiveConfig.source.level)}
                 <div>
-                  <div className='flex items-center gap-2'>
+                  <div className=&apos;flex items-center gap-2&apos;>
                     <span>{effectiveConfig.source.entityName}</span>
-                    <Badge variant='outline' className='capitalize'>
+                    <Badge variant=&apos;outline&apos; className=&apos;capitalize&apos;>
                       {effectiveConfig.source.level} Level
                     </Badge>
                   </div>
-                  <p className='text-muted-foreground'>
+                  <p className=&apos;text-muted-foreground&apos;>
                     This configuration is currently being used
                   </p>
                 </div>
@@ -156,17 +156,17 @@ export function ConfigurationInspector({
             </div>
 
             {/* Channel Summary */}
-            <div className='grid grid-cols-2 gap-3 mt-4'>
+            <div className=&apos;grid grid-cols-2 gap-3 mt-4&apos;>
               {Object.entries(effectiveConfig.preferences.channels).map(
                 ([channel, config]) => (
-                  <div key={channel} className='flex items-center gap-2'>
+                  <div key={channel} className=&apos;flex items-center gap-2&apos;>
                     {getChannelIcon(channel)}
-                    <span className='capitalize'>{channel}</span>
+                    <span className=&apos;capitalize&apos;>{channel}</span>
                     <Badge
-                      variant={config.enabled ? 'default' : 'secondary'}
-                      className='ml-auto'
+                      variant={config.enabled ? &apos;default&apos; : &apos;secondary&apos;}
+                      className=&apos;ml-auto&apos;
                     >
-                      {config.enabled ? 'Enabled' : 'Disabled'}
+                      {config.enabled ? &apos;Enabled&apos; : &apos;Disabled&apos;}
                     </Badge>
                   </div>
                 )
@@ -175,11 +175,11 @@ export function ConfigurationInspector({
 
             {/* Quiet Hours */}
             {effectiveConfig.preferences.quietHours.enabled && (
-              <div className='mt-4 p-3 bg-muted rounded-md'>
-                <div className='flex items-center gap-2'>
-                  <Info className='h-4 w-4' />
+              <div className=&apos;mt-4 p-3 bg-muted rounded-md&apos;>
+                <div className=&apos;flex items-center gap-2&apos;>
+                  <Info className=&apos;h-4 w-4&apos; />
                   <span>
-                    Quiet Hours: {effectiveConfig.preferences.quietHours.start}{' '}
+                    Quiet Hours: {effectiveConfig.preferences.quietHours.start}{&apos; &apos;}
                     - {effectiveConfig.preferences.quietHours.end}
                   </span>
                 </div>
@@ -190,55 +190,55 @@ export function ConfigurationInspector({
 
         {/* Inheritance Chain */}
         <div>
-          <h3 className='flex items-center gap-2 mb-3'>
-            <Info className='h-5 w-5 text-blue-600' />
+          <h3 className=&apos;flex items-center gap-2 mb-3&apos;>
+            <Info className=&apos;h-5 w-5 text-blue-600&apos; />
             Configuration Inheritance
           </h3>
-          <Card className='p-4'>
-            <div className='space-y-2'>
+          <Card className=&apos;p-4&apos;>
+            <div className=&apos;space-y-2&apos;>
               {effectiveConfig.inheritanceChain.map((item, index) => (
                 <div key={`${item.level}-${item.entityId}`}>
-                  <div className='flex items-center gap-3'>
+                  <div className=&apos;flex items-center gap-3&apos;>
                     <div
                       className={`flex items-center justify-center w-8 h-8 rounded-full ${
                         item.isActive
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-gray-100 text-gray-500'
+                          ? &apos;bg-green-100 text-green-700&apos;
+                          : &apos;bg-gray-100 text-gray-500&apos;
                       }`}
                     >
                       {getLevelIcon(item.level)}
                     </div>
-                    <div className='flex-1'>
-                      <div className='flex items-center gap-2'>
+                    <div className=&apos;flex-1&apos;>
+                      <div className=&apos;flex items-center gap-2&apos;>
                         <span
                           className={
-                            item.isActive ? '' : 'text-muted-foreground'
+                            item.isActive ? &apos;&apos; : &apos;text-muted-foreground&apos;
                           }
                         >
                           {item.entityName}
                         </span>
                         <Badge
-                          variant={item.isActive ? 'default' : 'outline'}
-                          className='capitalize'
+                          variant={item.isActive ? &apos;default&apos; : &apos;outline&apos;}
+                          className=&apos;capitalize&apos;
                         >
                           {item.level}
                         </Badge>
                         {item.isActive && (
-                          <Badge variant='default' className='bg-green-600'>
+                          <Badge variant=&apos;default&apos; className=&apos;bg-green-600&apos;>
                             Active
                           </Badge>
                         )}
                       </div>
                       {!item.isActive && (
-                        <p className='text-muted-foreground'>
+                        <p className=&apos;text-muted-foreground&apos;>
                           Overridden by {effectiveConfig.source.level} level
                         </p>
                       )}
                     </div>
                   </div>
                   {index < effectiveConfig.inheritanceChain.length - 1 && (
-                    <div className='ml-4 my-1'>
-                      <ChevronRight className='h-4 w-4 text-muted-foreground' />
+                    <div className=&apos;ml-4 my-1&apos;>
+                      <ChevronRight className=&apos;h-4 w-4 text-muted-foreground&apos; />
                     </div>
                   )}
                 </div>
@@ -246,8 +246,8 @@ export function ConfigurationInspector({
             </div>
 
             {effectiveConfig.inheritanceChain.length === 1 && (
-              <p className='text-muted-foreground mt-2'>
-                No overrides configured. Using default{' '}
+              <p className=&apos;text-muted-foreground mt-2&apos;>
+                No overrides configured. Using default{&apos; &apos;}
                 {effectiveConfig.source.level}-level settings.
               </p>
             )}
@@ -256,29 +256,29 @@ export function ConfigurationInspector({
 
         {/* Available Configurations */}
         <div>
-          <h3 className='flex items-center gap-2 mb-3'>
-            <Settings className='h-5 w-5 text-gray-600' />
+          <h3 className=&apos;flex items-center gap-2 mb-3&apos;>
+            <Settings className=&apos;h-5 w-5 text-gray-600&apos; />
             Available Configurations
           </h3>
-          <Card className='p-4'>
-            <div className='space-y-2'>
+          <Card className=&apos;p-4&apos;>
+            <div className=&apos;space-y-2&apos;>
               {availableLevels.map(level => (
                 <div
                   key={level.level}
-                  className='flex items-center justify-between p-2 rounded hover:bg-muted'
+                  className=&apos;flex items-center justify-between p-2 rounded hover:bg-muted&apos;
                 >
-                  <div className='flex items-center gap-2'>
+                  <div className=&apos;flex items-center gap-2&apos;>
                     {getLevelIcon(level.level)}
-                    <span className='capitalize'>{level.level} Level</span>
+                    <span className=&apos;capitalize&apos;>{level.level} Level</span>
                   </div>
                   {level.exists ? (
-                    <Badge variant='outline' className='gap-1'>
-                      <CheckCircle2 className='h-3 w-3' />
+                    <Badge variant=&apos;outline&apos; className=&apos;gap-1&apos;>
+                      <CheckCircle2 className=&apos;h-3 w-3&apos; />
                       Configured
                     </Badge>
                   ) : (
-                    <Badge variant='secondary' className='gap-1'>
-                      <AlertCircle className='h-3 w-3' />
+                    <Badge variant=&apos;secondary&apos; className=&apos;gap-1&apos;>
+                      <AlertCircle className=&apos;h-3 w-3&apos; />
                       Not Set
                     </Badge>
                   )}
@@ -291,22 +291,22 @@ export function ConfigurationInspector({
         {/* Overrides */}
         {effectiveConfig.overrides.length > 0 && (
           <div>
-            <h3 className='flex items-center gap-2 mb-3'>
-              <AlertCircle className='h-5 w-5 text-orange-600' />
+            <h3 className=&apos;flex items-center gap-2 mb-3&apos;>
+              <AlertCircle className=&apos;h-5 w-5 text-orange-600&apos; />
               Active Overrides
             </h3>
-            <Card className='p-4'>
-              <div className='space-y-2'>
+            <Card className=&apos;p-4&apos;>
+              <div className=&apos;space-y-2&apos;>
                 {effectiveConfig.overrides.map((override, index) => (
                   <div
                     key={index}
-                    className='flex items-center justify-between'
+                    className=&apos;flex items-center justify-between&apos;
                   >
-                    <code className='text-sm'>{override.field}</code>
-                    <div className='flex items-center gap-2'>
-                      <Badge variant='outline'>{String(override.value)}</Badge>
-                      <span className='text-muted-foreground'>from</span>
-                      <Badge className='capitalize'>{override.source}</Badge>
+                    <code className=&apos;text-sm&apos;>{override.field}</code>
+                    <div className=&apos;flex items-center gap-2&apos;>
+                      <Badge variant=&apos;outline&apos;>{String(override.value)}</Badge>
+                      <span className=&apos;text-muted-foreground&apos;>from</span>
+                      <Badge className=&apos;capitalize&apos;>{override.source}</Badge>
                     </div>
                   </div>
                 ))}
@@ -316,16 +316,16 @@ export function ConfigurationInspector({
         )}
 
         {/* Help Text */}
-        <Card className='p-4 bg-blue-50 border-blue-200'>
-          <div className='flex gap-3'>
-            <Info className='h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5' />
-            <div className='space-y-2'>
+        <Card className=&apos;p-4 bg-blue-50 border-blue-200&apos;>
+          <div className=&apos;flex gap-3&apos;>
+            <Info className=&apos;h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5&apos; />
+            <div className=&apos;space-y-2&apos;>
               <p>
                 <strong>How it works:</strong> Notification settings inherit
                 from User → Site → Asset. More specific levels override less
                 specific ones.
               </p>
-              <ul className='space-y-1 text-muted-foreground'>
+              <ul className=&apos;space-y-1 text-muted-foreground&apos;>
                 <li>• User Level: Your default notification preferences</li>
                 <li>• Site Level: Override for specific sites</li>
                 <li>• Asset Level: Override for specific assets</li>
@@ -338,20 +338,20 @@ export function ConfigurationInspector({
   };
 
   // Button variant
-  if (variant === 'button') {
+  if (variant === &apos;button&apos;) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant='outline' className='gap-2'>
-            <Eye className='h-4 w-4' />
+          <Button variant=&apos;outline&apos; className=&apos;gap-2&apos;>
+            <Eye className=&apos;h-4 w-4&apos; />
             View Configuration
           </Button>
         </DialogTrigger>
-        <DialogContent className='max-w-3xl max-h-[80vh] overflow-y-auto'>
+        <DialogContent className=&apos;max-w-3xl max-h-[80vh] overflow-y-auto&apos;>
           <DialogHeader>
             <DialogTitle>Notification Configuration Inspector</DialogTitle>
             <DialogDescription>
-              View which notification settings are being applied for{' '}
+              View which notification settings are being applied for{&apos; &apos;}
               {entityName}
             </DialogDescription>
           </DialogHeader>
@@ -362,24 +362,24 @@ export function ConfigurationInspector({
   }
 
   // Card variant
-  if (variant === 'card') {
+  if (variant === &apos;card&apos;) {
     return (
-      <Card className='p-6'>
-        <div className='flex items-center justify-between mb-4'>
-          <h2 className='flex items-center gap-2'>
-            <Eye className='h-5 w-5' />
+      <Card className=&apos;p-6&apos;>
+        <div className=&apos;flex items-center justify-between mb-4&apos;>
+          <h2 className=&apos;flex items-center gap-2&apos;>
+            <Eye className=&apos;h-5 w-5&apos; />
             Configuration Inspector
           </h2>
-          <Button variant='outline' size='sm' onClick={loadInspection}>
+          <Button variant=&apos;outline&apos; size=&apos;sm&apos; onClick={loadInspection}>
             Refresh
           </Button>
         </div>
-        <Separator className='mb-6' />
+        <Separator className=&apos;mb-6&apos; />
         {renderInspectionContent()}
       </Card>
     );
   }
 
   // Inline variant
-  return <div className='space-y-4'>{renderInspectionContent()}</div>;
+  return <div className=&apos;space-y-4&apos;>{renderInspectionContent()}</div>;
 }

@@ -1,20 +1,20 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { AssetDetails } from '../assets/AssetDetails';
-import { render } from '../../test/test-utils';
-import { mockAssets } from '../../data/mockData';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
+import { screen, waitFor } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { AssetDetails } from &apos;../assets/AssetDetails&apos;;
+import { render } from &apos;../../test/test-utils&apos;;
+import { mockAssets } from &apos;../../data/mockData&apos;;
 
 // Mock QRCode
-vi.mock('qrcode', () => ({
+vi.mock(&apos;qrcode&apos;, () => ({
   default: {
-    toDataURL: vi.fn().mockResolvedValue('data:image/png;base64,mock-qr-code'),
+    toDataURL: vi.fn().mockResolvedValue(&apos;data:image/png;base64,mock-qr-code&apos;),
   },
 }));
 
 // Mock toast
-vi.mock('sonner', () => ({
+vi.mock(&apos;sonner&apos;, () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -22,7 +22,7 @@ vi.mock('sonner', () => ({
   },
 }));
 
-describe('AssetDetails Component - Button Click Tests', () => {
+describe(&apos;AssetDetails Component - Button Click Tests&apos;, () => {
   const mockAsset = mockAssets[0];
   const mockProps = {
     asset: mockAsset,
@@ -36,139 +36,139 @@ describe('AssetDetails Component - Button Click Tests', () => {
     vi.clearAllMocks();
   });
 
-  describe('Navigation and Header Buttons', () => {
-    it('should render back button and handle click', async () => {
+  describe(&apos;Navigation and Header Buttons&apos;, () => {
+    it(&apos;should render back button and handle click&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /back/i })
+          screen.getByRole(&apos;button&apos;, { name: /back/i })
         ).toBeInTheDocument();
       });
 
-      const backButton = screen.getByRole('button', { name: /back/i });
+      const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
       await user.click(backButton);
       expect(mockProps.onBack).toHaveBeenCalledTimes(1);
     });
 
-    it('should render edit button and handle click', async () => {
+    it(&apos;should render edit button and handle click&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /edit/i })
+          screen.getByRole(&apos;button&apos;, { name: /edit/i })
         ).toBeInTheDocument();
       });
 
-      const editButton = screen.getByRole('button', { name: /edit/i });
+      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit/i });
       await user.click(editButton);
-      // Note: AssetDetails component doesn't have onEditAsset prop
+      // Note: AssetDetails component doesn&apos;t have onEditAsset prop
     });
 
-    it('should render delete button and handle click', async () => {
+    it(&apos;should render delete button and handle click&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /delete/i })
+          screen.getByRole(&apos;button&apos;, { name: /delete/i })
         ).toBeInTheDocument();
       });
 
-      const deleteButton = screen.getByRole('button', { name: /delete/i });
+      const deleteButton = screen.getByRole(&apos;button&apos;, { name: /delete/i });
       await user.click(deleteButton);
-      // Note: AssetDetails component doesn't have onDeleteAsset prop
+      // Note: AssetDetails component doesn&apos;t have onDeleteAsset prop
     });
   });
 
-  describe('Action Buttons', () => {
-    it('should render track history button and handle click', async () => {
+  describe(&apos;Action Buttons&apos;, () => {
+    it(&apos;should render track history button and handle click&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /track history/i })
+          screen.getByRole(&apos;button&apos;, { name: /track history/i })
         ).toBeInTheDocument();
       });
 
-      const trackHistoryButton = screen.getByRole('button', {
+      const trackHistoryButton = screen.getByRole(&apos;button&apos;, {
         name: /track history/i,
       });
       await user.click(trackHistoryButton);
-      // Note: AssetDetails component doesn't have onTrackHistory prop
+      // Note: AssetDetails component doesn&apos;t have onTrackHistory prop
     });
 
-    it('should render view on map button and handle click', async () => {
+    it(&apos;should render view on map button and handle click&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /view on map/i })
+          screen.getByRole(&apos;button&apos;, { name: /view on map/i })
         ).toBeInTheDocument();
       });
 
-      const viewOnMapButton = screen.getByRole('button', {
+      const viewOnMapButton = screen.getByRole(&apos;button&apos;, {
         name: /view on map/i,
       });
       await user.click(viewOnMapButton);
       expect(mockProps.onShowOnMap).toHaveBeenCalledTimes(1);
     });
 
-    it('should render export data button and handle click', async () => {
+    it(&apos;should render export data button and handle click&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /export/i })
+          screen.getByRole(&apos;button&apos;, { name: /export/i })
         ).toBeInTheDocument();
       });
 
-      const exportButton = screen.getByRole('button', { name: /export/i });
+      const exportButton = screen.getByRole(&apos;button&apos;, { name: /export/i });
       await user.click(exportButton);
-      // Note: AssetDetails component doesn't have onExportData prop
+      // Note: AssetDetails component doesn&apos;t have onExportData prop
     });
   });
 
-  describe('Tab Navigation', () => {
-    it('should switch between tabs when clicked', async () => {
+  describe(&apos;Tab Navigation&apos;, () => {
+    it(&apos;should switch between tabs when clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
-        expect(screen.getByRole('tablist')).toBeInTheDocument();
+        expect(screen.getByRole(&apos;tablist&apos;)).toBeInTheDocument();
       });
 
       // Click on different tabs
-      const overviewTab = screen.getByRole('tab', { name: /overview/i });
-      const maintenanceTab = screen.getByRole('tab', { name: /maintenance/i });
-      const historyTab = screen.getByRole('tab', { name: /history/i });
+      const overviewTab = screen.getByRole(&apos;tab&apos;, { name: /overview/i });
+      const maintenanceTab = screen.getByRole(&apos;tab&apos;, { name: /maintenance/i });
+      const historyTab = screen.getByRole(&apos;tab&apos;, { name: /history/i });
 
       await user.click(maintenanceTab);
-      expect(maintenanceTab).toHaveAttribute('data-state', 'active');
+      expect(maintenanceTab).toHaveAttribute(&apos;data-state&apos;, &apos;active&apos;);
 
       await user.click(historyTab);
-      expect(historyTab).toHaveAttribute('data-state', 'active');
+      expect(historyTab).toHaveAttribute(&apos;data-state&apos;, &apos;active&apos;);
 
       await user.click(overviewTab);
-      expect(overviewTab).toHaveAttribute('data-state', 'active');
+      expect(overviewTab).toHaveAttribute(&apos;data-state&apos;, &apos;active&apos;);
     });
   });
 
-  describe('QR Code Generation', () => {
-    it('should generate QR code when QR button is clicked', async () => {
+  describe(&apos;QR Code Generation&apos;, () => {
+    it(&apos;should generate QR code when QR button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /qr/i })).toBeInTheDocument();
+        expect(screen.getByRole(&apos;button&apos;, { name: /qr/i })).toBeInTheDocument();
       });
 
-      const qrButton = screen.getByRole('button', { name: /qr/i });
+      const qrButton = screen.getByRole(&apos;button&apos;, { name: /qr/i });
       await user.click(qrButton);
 
       // Should show QR code dialog or modal
@@ -178,24 +178,24 @@ describe('AssetDetails Component - Button Click Tests', () => {
     });
   });
 
-  describe('Maintenance Actions', () => {
-    it('should handle maintenance button clicks', async () => {
+  describe(&apos;Maintenance Actions&apos;, () => {
+    it(&apos;should handle maintenance button clicks&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       // Switch to maintenance tab
       await waitFor(() => {
         expect(
-          screen.getByRole('tab', { name: /maintenance/i })
+          screen.getByRole(&apos;tab&apos;, { name: /maintenance/i })
         ).toBeInTheDocument();
       });
 
-      const maintenanceTab = screen.getByRole('tab', { name: /maintenance/i });
+      const maintenanceTab = screen.getByRole(&apos;tab&apos;, { name: /maintenance/i });
       await user.click(maintenanceTab);
 
       // Look for maintenance action buttons
       await waitFor(() => {
-        const addMaintenanceButton = screen.queryByRole('button', {
+        const addMaintenanceButton = screen.queryByRole(&apos;button&apos;, {
           name: /add maintenance/i,
         });
         if (addMaintenanceButton) {
@@ -205,19 +205,19 @@ describe('AssetDetails Component - Button Click Tests', () => {
     });
   });
 
-  describe('Form Interactions', () => {
-    it('should handle form inputs in edit mode', async () => {
+  describe(&apos;Form Interactions&apos;, () => {
+    it(&apos;should handle form inputs in edit mode&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetDetails {...mockProps} />);
 
       // Click edit button to enter edit mode
       await waitFor(() => {
         expect(
-          screen.getByRole('button', { name: /edit/i })
+          screen.getByRole(&apos;button&apos;, { name: /edit/i })
         ).toBeInTheDocument();
       });
 
-      const editButton = screen.getByRole('button', { name: /edit/i });
+      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit/i });
       await user.click(editButton);
 
       // Look for form inputs
@@ -227,15 +227,15 @@ describe('AssetDetails Component - Button Click Tests', () => {
           expect(nameInput).toBeInTheDocument();
           // Test typing in the input
           await user.clear(nameInput);
-          await user.type(nameInput, 'Updated Asset Name');
-          expect(nameInput).toHaveValue('Updated Asset Name');
+          await user.type(nameInput, &apos;Updated Asset Name&apos;);
+          expect(nameInput).toHaveValue(&apos;Updated Asset Name&apos;);
         }
       });
     });
   });
 
-  describe('Loading States', () => {
-    it('should show loading state initially', () => {
+  describe(&apos;Loading States&apos;, () => {
+    it(&apos;should show loading state initially&apos;, () => {
       render(<AssetDetails {...mockProps} />);
 
       // Should show loading skeleton or spinner
@@ -244,9 +244,9 @@ describe('AssetDetails Component - Button Click Tests', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle asset not found', async () => {
-      const nonExistentAsset = { ...mockAsset, id: 'non-existent-id' };
+  describe(&apos;Error Handling&apos;, () => {
+    it(&apos;should handle asset not found&apos;, async () => {
+      const nonExistentAsset = { ...mockAsset, id: &apos;non-existent-id&apos; };
       render(<AssetDetails {...mockProps} asset={nonExistentAsset} />);
 
       await waitFor(() => {
@@ -255,31 +255,31 @@ describe('AssetDetails Component - Button Click Tests', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper ARIA labels and roles', async () => {
+  describe(&apos;Accessibility&apos;, () => {
+    it(&apos;should have proper ARIA labels and roles&apos;, async () => {
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
-        expect(screen.getByRole('main')).toBeInTheDocument();
-        expect(screen.getByRole('tablist')).toBeInTheDocument();
+        expect(screen.getByRole(&apos;main&apos;)).toBeInTheDocument();
+        expect(screen.getByRole(&apos;tablist&apos;)).toBeInTheDocument();
       });
 
       // Check for proper button labels
-      expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
+      expect(screen.getByRole(&apos;button&apos;, { name: /back/i })).toBeInTheDocument();
+      expect(screen.getByRole(&apos;button&apos;, { name: /edit/i })).toBeInTheDocument();
     });
   });
 
-  describe('Responsive Design', () => {
-    it('should render properly on different screen sizes', async () => {
+  describe(&apos;Responsive Design&apos;, () => {
+    it(&apos;should render properly on different screen sizes&apos;, async () => {
       render(<AssetDetails {...mockProps} />);
 
       await waitFor(() => {
-        expect(screen.getByRole('main')).toBeInTheDocument();
+        expect(screen.getByRole(&apos;main&apos;)).toBeInTheDocument();
       });
 
       // Component should be responsive
-      const mainElement = screen.getByRole('main');
+      const mainElement = screen.getByRole(&apos;main&apos;);
       expect(mainElement).toBeInTheDocument();
     });
   });

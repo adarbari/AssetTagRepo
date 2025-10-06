@@ -1,30 +1,30 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import { useState } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { GenerateReportDialog } from './GenerateReportDialog';
+} from &apos;../ui/select&apos;;
+import { GenerateReportDialog } from &apos;./GenerateReportDialog&apos;;
 import {
   LoadingState,
   EmptyState,
   StatsCard,
   PageHeader,
   PageLayout,
-} from '../common';
-import { useAsyncDataAll } from '../../hooks/useAsyncData';
+} from &apos;../common&apos;;
+import { useAsyncDataAll } from &apos;../../hooks/useAsyncData&apos;;
 import {
   getUtilizationData,
   getCostSavingsData,
   getTopAssets,
   getReportTemplates,
   calculateTotalROI,
-} from '../../data/mockReportsData';
+} from &apos;../../data/mockReportsData&apos;;
 import {
   BarChart,
   Bar,
@@ -36,7 +36,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
+} from &apos;recharts&apos;;
 import {
   FileText,
   Download,
@@ -45,12 +45,12 @@ import {
   DollarSign,
   Clock,
   Activity,
-} from 'lucide-react';
+} from &apos;lucide-react&apos;;
 
 export function Reports() {
-  const [timeRange, setTimeRange] = useState('6');
+  const [timeRange, setTimeRange] = useState(&apos;6&apos;);
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
-  const [selectedReportType, setSelectedReportType] = useState('');
+  const [selectedReportType, setSelectedReportType] = useState(&apos;&apos;);
 
   const months = parseInt(timeRange);
 
@@ -71,22 +71,22 @@ export function Reports() {
   };
 
   const handleExportAll = () => {
-    console.log('Exporting comprehensive report for:', timeRange);
+    // console.log(&apos;Exporting comprehensive report for:&apos;, timeRange);
   };
 
   if (loading) {
-    return <LoadingState message='Loading reports...' fullScreen />;
+    return <LoadingState message=&apos;Loading reports...&apos; fullScreen />;
   }
 
   if (error) {
     return (
-      <div className='p-8'>
+      <div className=&apos;p-8&apos;>
         <EmptyState
           icon={FileText}
-          title='Failed to load reports'
+          title=&apos;Failed to load reports&apos;
           description={error.message}
           action={{
-            label: 'Try Again',
+            label: &apos;Try Again&apos;,
             onClick: () => window.location.reload(),
           }}
         />
@@ -114,26 +114,26 @@ export function Reports() {
   );
 
   return (
-    <PageLayout variant='standard' padding='lg'>
+    <PageLayout variant=&apos;standard&apos; padding=&apos;lg&apos;>
       <PageHeader
-        title='Reports & Analytics'
-        description='Insights and performance metrics'
+        title=&apos;Reports & Analytics&apos;
+        description=&apos;Insights and performance metrics&apos;
         actions={
-          <div className='flex items-center gap-2'>
+          <div className=&apos;flex items-center gap-2&apos;>
             <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className='w-[180px]'>
-                <Calendar className='h-4 w-4 mr-2' />
+              <SelectTrigger className=&apos;w-[180px]&apos;>
+                <Calendar className=&apos;h-4 w-4 mr-2&apos; />
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='3'>Last 3 months</SelectItem>
-                <SelectItem value='6'>Last 6 months</SelectItem>
-                <SelectItem value='9'>Last 9 months</SelectItem>
-                <SelectItem value='12'>Last 12 months</SelectItem>
+                <SelectItem value=&apos;3&apos;>Last 3 months</SelectItem>
+                <SelectItem value=&apos;6&apos;>Last 6 months</SelectItem>
+                <SelectItem value=&apos;9&apos;>Last 9 months</SelectItem>
+                <SelectItem value=&apos;12&apos;>Last 12 months</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant='outline' onClick={handleExportAll}>
-              <Download className='h-4 w-4 mr-2' />
+            <Button variant=&apos;outline&apos; onClick={handleExportAll}>
+              <Download className=&apos;h-4 w-4 mr-2&apos; />
               Export Report
             </Button>
           </div>
@@ -141,58 +141,58 @@ export function Reports() {
       />
 
       {/* ROI Summary */}
-      <div className='grid gap-4 md:grid-cols-4'>
+      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
         <StatsCard
-          title='Total ROI'
+          title=&apos;Total ROI&apos;
           value={`${(totalROI / 1000).toFixed(0)}K`}
           icon={TrendingUp}
           description={`${months} month period`}
-          trend={{ value: 23, direction: 'up' }}
+          trend={{ value: 23, direction: &apos;up&apos; }}
         />
         <StatsCard
-          title='Theft Prevention'
+          title=&apos;Theft Prevention&apos;
           value={`${(totalTheftPrevention / 1000).toFixed(0)}K`}
           icon={DollarSign}
-          description='Assets recovered'
+          description=&apos;Assets recovered&apos;
         />
         <StatsCard
-          title='Labor Savings'
+          title=&apos;Labor Savings&apos;
           value={`${(totalLaborSavings / 1000).toFixed(1)}K`}
           icon={Clock}
-          description='Reduced search time'
+          description=&apos;Reduced search time&apos;
         />
         <StatsCard
-          title='Insurance Reduction'
+          title=&apos;Insurance Reduction&apos;
           value={`${(totalInsuranceSavings / 1000).toFixed(1)}K`}
           icon={Activity}
-          description='Premium savings'
+          description=&apos;Premium savings&apos;
         />
       </div>
 
       {/* Charts */}
-      <div className='grid gap-4 md:grid-cols-2'>
+      <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
         <Card>
           <CardHeader>
             <CardTitle>Asset Utilization Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width='100%' height={300}>
+            <ResponsiveContainer width=&apos;100%&apos; height={300}>
               <BarChart data={utilization}>
-                <CartesianGrid strokeDasharray='3 3' className='stroke-muted' />
-                <XAxis dataKey='month' className='text-xs' />
-                <YAxis className='text-xs' />
+                <CartesianGrid strokeDasharray=&apos;3 3&apos; className=&apos;stroke-muted&apos; />
+                <XAxis dataKey=&apos;month&apos; className=&apos;text-xs&apos; />
+                <YAxis className=&apos;text-xs&apos; />
                 <Tooltip />
                 <Legend />
                 <Bar
-                  dataKey='utilization'
-                  fill='hsl(var(--chart-1))'
-                  name='Utilized %'
+                  dataKey=&apos;utilization&apos;
+                  fill=&apos;hsl(var(--chart-1))&apos;
+                  name=&apos;Utilized %&apos;
                 />
-                <Bar dataKey='idle' fill='hsl(var(--chart-2))' name='Idle %' />
+                <Bar dataKey=&apos;idle&apos; fill=&apos;hsl(var(--chart-2))&apos; name=&apos;Idle %&apos; />
                 <Bar
-                  dataKey='maintenance'
-                  fill='hsl(var(--chart-3))'
-                  name='Maintenance %'
+                  dataKey=&apos;maintenance&apos;
+                  fill=&apos;hsl(var(--chart-3))&apos;
+                  name=&apos;Maintenance %&apos;
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -204,36 +204,36 @@ export function Reports() {
             <CardTitle>Cost Savings Breakdown</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width='100%' height={300}>
+            <ResponsiveContainer width=&apos;100%&apos; height={300}>
               <LineChart data={costSavings}>
-                <CartesianGrid strokeDasharray='3 3' className='stroke-muted' />
-                <XAxis dataKey='month' className='text-xs' />
-                <YAxis className='text-xs' />
+                <CartesianGrid strokeDasharray=&apos;3 3&apos; className=&apos;stroke-muted&apos; />
+                <XAxis dataKey=&apos;month&apos; className=&apos;text-xs&apos; />
+                <YAxis className=&apos;text-xs&apos; />
                 <Tooltip />
                 <Legend />
                 <Line
-                  type='monotone'
-                  dataKey='theftPrevention'
-                  stroke='hsl(var(--chart-1))'
-                  name='Theft Prevention'
+                  type=&apos;monotone&apos;
+                  dataKey=&apos;theftPrevention&apos;
+                  stroke=&apos;hsl(var(--chart-1))&apos;
+                  name=&apos;Theft Prevention&apos;
                 />
                 <Line
-                  type='monotone'
-                  dataKey='laborSaved'
-                  stroke='hsl(var(--chart-2))'
-                  name='Labor Saved'
+                  type=&apos;monotone&apos;
+                  dataKey=&apos;laborSaved&apos;
+                  stroke=&apos;hsl(var(--chart-2))&apos;
+                  name=&apos;Labor Saved&apos;
                 />
                 <Line
-                  type='monotone'
-                  dataKey='insurance'
-                  stroke='hsl(var(--chart-3))'
-                  name='Insurance'
+                  type=&apos;monotone&apos;
+                  dataKey=&apos;insurance&apos;
+                  stroke=&apos;hsl(var(--chart-3))&apos;
+                  name=&apos;Insurance&apos;
                 />
                 <Line
-                  type='monotone'
-                  dataKey='maintenanceSavings'
-                  stroke='hsl(var(--chart-4))'
-                  name='Maintenance'
+                  type=&apos;monotone&apos;
+                  dataKey=&apos;maintenanceSavings&apos;
+                  stroke=&apos;hsl(var(--chart-4))&apos;
+                  name=&apos;Maintenance&apos;
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -250,50 +250,50 @@ export function Reports() {
           {topAssets.length === 0 ? (
             <EmptyState
               icon={Activity}
-              title='No asset data available'
-              description='Asset utilization data will appear here'
+              title=&apos;No asset data available&apos;
+              description=&apos;Asset utilization data will appear here&apos;
             />
           ) : (
-            <div className='space-y-4'>
+            <div className=&apos;space-y-4&apos;>
               {topAssets.map((asset, index) => (
                 <div
                   key={asset.id}
-                  className='flex items-center justify-between'
+                  className=&apos;flex items-center justify-between&apos;
                 >
-                  <div className='flex items-center gap-3 flex-1'>
+                  <div className=&apos;flex items-center gap-3 flex-1&apos;>
                     <Badge
-                      variant='outline'
-                      className='w-8 h-8 rounded-full flex items-center justify-center'
+                      variant=&apos;outline&apos;
+                      className=&apos;w-8 h-8 rounded-full flex items-center justify-center&apos;
                     >
                       {index + 1}
                     </Badge>
-                    <div className='flex-1'>
-                      <div className='flex items-center gap-2'>
-                        <span className='text-sm'>{asset.name}</span>
-                        <Badge variant='outline' className='text-xs'>
+                    <div className=&apos;flex-1&apos;>
+                      <div className=&apos;flex items-center gap-2&apos;>
+                        <span className=&apos;text-sm&apos;>{asset.name}</span>
+                        <Badge variant=&apos;outline&apos; className=&apos;text-xs&apos;>
                           {asset.type}
                         </Badge>
                       </div>
-                      <div className='flex items-center gap-4 mt-1'>
-                        <div className='flex-1 max-w-xs'>
-                          <div className='flex items-center gap-2'>
-                            <div className='flex-1 h-2 bg-muted rounded-full overflow-hidden'>
+                      <div className=&apos;flex items-center gap-4 mt-1&apos;>
+                        <div className=&apos;flex-1 max-w-xs&apos;>
+                          <div className=&apos;flex items-center gap-2&apos;>
+                            <div className=&apos;flex-1 h-2 bg-muted rounded-full overflow-hidden&apos;>
                               <div
-                                className='h-full bg-primary'
+                                className=&apos;h-full bg-primary&apos;
                                 style={{ width: `${asset.utilization}%` }}
                               />
                             </div>
-                            <span className='text-xs text-muted-foreground w-8'>
+                            <span className=&apos;text-xs text-muted-foreground w-8&apos;>
                               {asset.utilization}%
                             </span>
                           </div>
                         </div>
-                        <div className='flex items-center gap-1 text-xs text-muted-foreground'>
-                          <Clock className='h-3 w-3' />
+                        <div className=&apos;flex items-center gap-1 text-xs text-muted-foreground&apos;>
+                          <Clock className=&apos;h-3 w-3&apos; />
                           {asset.hours}h
                         </div>
-                        <div className='flex items-center gap-1 text-xs text-muted-foreground'>
-                          <DollarSign className='h-3 w-3' />$
+                        <div className=&apos;flex items-center gap-1 text-xs text-muted-foreground&apos;>
+                          <DollarSign className=&apos;h-3 w-3&apos; />$
                           {(asset.revenue / 1000).toFixed(0)}K
                         </div>
                       </div>
@@ -315,28 +315,28 @@ export function Reports() {
           {templates.length === 0 ? (
             <EmptyState
               icon={FileText}
-              title='No report templates'
-              description='Report templates will appear here'
+              title=&apos;No report templates&apos;
+              description=&apos;Report templates will appear here&apos;
             />
           ) : (
-            <div className='grid gap-3 md:grid-cols-2 lg:grid-cols-3'>
+            <div className=&apos;grid gap-3 md:grid-cols-2 lg:grid-cols-3&apos;>
               {templates.map(template => (
                 <Button
                   key={template.id}
-                  variant='outline'
-                  className='justify-start h-auto py-4'
+                  variant=&apos;outline&apos;
+                  className=&apos;justify-start h-auto py-4&apos;
                   onClick={() => handleGenerateReport(template.type)}
                 >
-                  <div className='flex items-center gap-3 w-full'>
-                    <FileText className='h-5 w-5 flex-shrink-0' />
-                    <div className='text-left flex-1'>
-                      <div className='text-sm'>{template.name}</div>
-                      <div className='text-xs text-muted-foreground'>
+                  <div className=&apos;flex items-center gap-3 w-full&apos;>
+                    <FileText className=&apos;h-5 w-5 flex-shrink-0&apos; />
+                    <div className=&apos;text-left flex-1&apos;>
+                      <div className=&apos;text-sm&apos;>{template.name}</div>
+                      <div className=&apos;text-xs text-muted-foreground&apos;>
                         {template.description}
                       </div>
                       {template.lastGenerated && (
-                        <div className='text-xs text-muted-foreground mt-1'>
-                          Last:{' '}
+                        <div className=&apos;text-xs text-muted-foreground mt-1&apos;>
+                          Last:{&apos; &apos;}
                           {new Date(
                             template.lastGenerated
                           ).toLocaleDateString()}

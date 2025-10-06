@@ -27,6 +27,26 @@ from modules.observations.schemas import (
 router = APIRouter()
 
 
+def _observation_to_response(observation: Observation) -> ObservationResponse:
+    """Convert Observation model to ObservationResponse schema"""
+    return ObservationResponse(
+        id=str(observation.id),
+        organization_id=str(observation.organization_id),
+        asset_id=str(observation.asset_id),
+        gateway_id=str(observation.gateway_id),
+        rssi=observation.rssi,
+        battery_level=observation.battery_level,
+        temperature=observation.temperature,
+        observed_at=observation.observed_at.isoformat(),
+        received_at=observation.received_at.isoformat(),
+        signal_quality=observation.signal_quality,
+        noise_level=observation.noise_level,
+        metadata=observation.observation_metadata or {},
+        created_at=observation.created_at,
+        updated_at=observation.updated_at,
+    )
+
+
 @router.get("/observations", response_model=List[ObservationResponse])
 async def get_observations(
     skip: int = Query(0, ge=0),
@@ -68,7 +88,7 @@ async def get_observations(
         result = await db.execute(query)
         observations = result.scalars().all()
 
-        return [ObservationResponse.from_orm(obs) for obs in observations]
+        return [_observation_to_response(obs) for obs in observations]
 
     except Exception as e:
         raise HTTPException(
@@ -88,7 +108,7 @@ async def get_observation(observation_id: str, db: AsyncSession = Depends(get_db
         if not observation:
             raise HTTPException(status_code=404, detail="Observation not found")
 
-        return ObservationResponse.from_orm(observation)
+        return _observation_to_response(observation)
 
     except HTTPException:
         raise
@@ -105,18 +125,21 @@ async def create_observation(
     """Create a new observation"""
     try:
         # Parse timestamps
-        observed_at = datetime.fromisoformat(observation_data.observed_at)
-        received_at = (
-            datetime.fromisoformat(observation_data.received_at)
-            if observation_data.received_at
-            else datetime.now()
-        )
+        # Handle ISO format with Z suffix
+        observed_at_str = observation_data.observed_at.replace('Z', '+00:00')
+        observed_at = datetime.fromisoformat(observed_at_str)
+        
+        if observation_data.received_at:
+            received_at_str = observation_data.received_at.replace('Z', '+00:00')
+            received_at = datetime.fromisoformat(received_at_str)
+        else:
+            received_at = datetime.now()
 
         # Create new observation
         observation = Observation(
-            organization_id="00000000-0000-0000-0000-000000000000",  # Default org for now
-            asset_id=observation_data.asset_id,
-            gateway_id=observation_data.gateway_id,
+            organization_id=uuid.UUID("00000000-0000-0000-0000-000000000000"),  # Default org for now
+            asset_id=uuid.UUID(observation_data.asset_id),
+            gateway_id=uuid.UUID(observation_data.gateway_id),
             rssi=observation_data.rssi,
             battery_level=observation_data.battery_level,
             temperature=observation_data.temperature,
@@ -131,7 +154,7 @@ async def create_observation(
         await db.commit()
         await db.refresh(observation)
 
-        return ObservationResponse.from_orm(observation)
+        return _observation_to_response(observation)
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Invalid timestamp format: {e}")
@@ -244,7 +267,7 @@ async def update_observation(
         await db.commit()
         await db.refresh(observation)
 
-        return ObservationResponse.from_orm(observation)
+        return _observation_to_response(observation)
 
     except HTTPException:
         raise
@@ -274,7 +297,7 @@ async def get_latest_observation_for_asset(
                 status_code=404, detail="No observations found for asset"
             )
 
-        return ObservationResponse.from_orm(observation)
+        return _observation_to_response(observation)
 
     except HTTPException:
         raise

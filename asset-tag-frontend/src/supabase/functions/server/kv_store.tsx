@@ -10,18 +10,18 @@ CREATE TABLE kv_store_668f981a (
 // View at https://supabase.com/dashboard/project/jtzbcspwcqancmrntsud/database/tables
 
 // This file provides a simple key-value interface for storing Figma Make data. It should be adequate for most small-scale use cases.
-import { createClient } from 'jsr:@supabase/supabase-js';
+import { createClient } from &apos;jsr:@supabase/supabase-js&apos;;
 
 const client = () =>
   createClient(
-    Deno.env.get('SUPABASE_URL'),
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    Deno.env.get(&apos;SUPABASE_URL&apos;),
+    Deno.env.get(&apos;SUPABASE_SERVICE_ROLE_KEY&apos;)
   );
 
 // Set stores a key-value pair in the database.
 export const set = async (key: string, value: any): Promise<void> => {
   const supabase = client();
-  const { error } = await supabase.from('kv_store_668f981a').upsert({
+  const { error } = await supabase.from(&apos;kv_store_668f981a&apos;).upsert({
     key,
     value,
   });
@@ -34,9 +34,9 @@ export const set = async (key: string, value: any): Promise<void> => {
 export const get = async (key: string): Promise<any> => {
   const supabase = client();
   const { data, error } = await supabase
-    .from('kv_store_668f981a')
-    .select('value')
-    .eq('key', key)
+    .from(&apos;kv_store_668f981a&apos;)
+    .select(&apos;value&apos;)
+    .eq(&apos;key&apos;, key)
     .maybeSingle();
   if (error) {
     throw new Error(error.message);
@@ -48,19 +48,19 @@ export const get = async (key: string): Promise<any> => {
 export const del = async (key: string): Promise<void> => {
   const supabase = client();
   const { error } = await supabase
-    .from('kv_store_668f981a')
+    .from(&apos;kv_store_668f981a&apos;)
     .delete()
-    .eq('key', key);
+    .eq(&apos;key&apos;, key);
   if (error) {
     throw new Error(error.message);
   }
 };
 
 // Sets multiple key-value pairs in the database.
-export const mset = async (keys: string[], values: any[]): Promise<void> => {
+export const mset = async (keys: string[], values: unknown[]): Promise<void> => {
   const supabase = client();
   const { error } = await supabase
-    .from('kv_store_668f981a')
+    .from(&apos;kv_store_668f981a&apos;)
     .upsert(keys.map((k, i) => ({ key: k, value: values[i] })));
   if (error) {
     throw new Error(error.message);
@@ -68,12 +68,12 @@ export const mset = async (keys: string[], values: any[]): Promise<void> => {
 };
 
 // Gets multiple key-value pairs from the database.
-export const mget = async (keys: string[]): Promise<any[]> => {
+export const mget = async (keys: string[]): Promise<unknown[]> => {
   const supabase = client();
   const { data, error } = await supabase
-    .from('kv_store_668f981a')
-    .select('value')
-    .in('key', keys);
+    .from(&apos;kv_store_668f981a&apos;)
+    .select(&apos;value&apos;)
+    .in(&apos;key&apos;, keys);
   if (error) {
     throw new Error(error.message);
   }
@@ -84,21 +84,21 @@ export const mget = async (keys: string[]): Promise<any[]> => {
 export const mdel = async (keys: string[]): Promise<void> => {
   const supabase = client();
   const { error } = await supabase
-    .from('kv_store_668f981a')
+    .from(&apos;kv_store_668f981a&apos;)
     .delete()
-    .in('key', keys);
+    .in(&apos;key&apos;, keys);
   if (error) {
     throw new Error(error.message);
   }
 };
 
 // Search for key-value pairs by prefix.
-export const getByPrefix = async (prefix: string): Promise<any[]> => {
+export const getByPrefix = async (prefix: string): Promise<unknown[]> => {
   const supabase = client();
   const { data, error } = await supabase
-    .from('kv_store_668f981a')
-    .select('key, value')
-    .like('key', prefix + '%');
+    .from(&apos;kv_store_668f981a&apos;)
+    .select(&apos;key, value&apos;)
+    .like(&apos;key&apos;, prefix + &apos;%&apos;);
   if (error) {
     throw new Error(error.message);
   }

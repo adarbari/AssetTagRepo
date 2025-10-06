@@ -4,19 +4,19 @@
  * Standardized filter UI for list pages
  */
 
-import React from 'react';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import React from &apos;react&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Label } from '../ui/label';
-import { Search, Filter, X } from 'lucide-react';
+} from &apos;../ui/select&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Search, Filter, X } from &apos;lucide-react&apos;;
 
 export interface FilterOption {
   value: string;
@@ -48,28 +48,28 @@ interface FilterBarProps {
 export function FilterBar({
   searchTerm,
   onSearchChange,
-  searchPlaceholder = 'Search...',
+  searchPlaceholder = &apos;Search...&apos;,
   filters,
   showAdvancedFilters = false,
   onToggleAdvancedFilters,
   activeFiltersCount = 0,
   onClearAllFilters,
-  className = '',
+  className = &apos;&apos;,
 }: FilterBarProps) {
-  const hasActiveFilters = activeFiltersCount > 0 || searchTerm.trim() !== '';
+  const hasActiveFilters = activeFiltersCount > 0 || searchTerm.trim() !== &apos;&apos;;
 
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Main Filter Row */}
-      <div className='flex items-center gap-2'>
+      <div className=&apos;flex items-center gap-2&apos;>
         {/* Search Input */}
-        <div className='relative flex-1 max-w-sm'>
-          <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+        <div className=&apos;relative flex-1 max-w-sm&apos;>
+          <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
           <Input
             placeholder={searchPlaceholder}
             value={searchTerm}
             onChange={e => onSearchChange(e.target.value)}
-            className='pl-9'
+            className=&apos;pl-9&apos;
           />
         </div>
 
@@ -80,7 +80,7 @@ export function FilterBar({
             value={filter.currentValue}
             onValueChange={filter.onValueChange}
           >
-            <SelectTrigger className={filter.width || 'w-[150px]'}>
+            <SelectTrigger className={filter.width || &apos;w-[150px]&apos;}>
               <SelectValue placeholder={filter.placeholder || filter.label} />
             </SelectTrigger>
             <SelectContent>
@@ -96,13 +96,13 @@ export function FilterBar({
         {/* Advanced Filters Button */}
         {filters.length > 2 && onToggleAdvancedFilters && (
           <Button
-            variant={showAdvancedFilters ? 'secondary' : 'outline'}
+            variant={showAdvancedFilters ? &apos;secondary&apos; : &apos;outline&apos;}
             onClick={onToggleAdvancedFilters}
           >
-            <Filter className='h-4 w-4 mr-2' />
+            <Filter className=&apos;h-4 w-4 mr-2&apos; />
             More Filters
             {activeFiltersCount > 0 && (
-              <Badge variant='destructive' className='ml-2 px-1 min-w-5 h-5'>
+              <Badge variant=&apos;destructive&apos; className=&apos;ml-2 px-1 min-w-5 h-5&apos;>
                 {activeFiltersCount}
               </Badge>
             )}
@@ -111,8 +111,8 @@ export function FilterBar({
 
         {/* Clear All Filters */}
         {hasActiveFilters && onClearAllFilters && (
-          <Button variant='ghost' size='sm' onClick={onClearAllFilters}>
-            <X className='h-4 w-4 mr-2' />
+          <Button variant=&apos;ghost&apos; size=&apos;sm&apos; onClick={onClearAllFilters}>
+            <X className=&apos;h-4 w-4 mr-2&apos; />
             Clear All
           </Button>
         )}
@@ -120,9 +120,9 @@ export function FilterBar({
 
       {/* Advanced Filters Panel */}
       {showAdvancedFilters && filters.length > 2 && (
-        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <div className=&apos;grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4&apos;>
           {filters.slice(2).map(filter => (
-            <div className='space-y-2' key={filter.key}>
+            <div className=&apos;space-y-2&apos; key={filter.key}>
               <Label htmlFor={filter.key}>{filter.label}</Label>
               <Select
                 value={filter.currentValue}
@@ -148,31 +148,31 @@ export function FilterBar({
 
       {/* Active Filters Display */}
       {hasActiveFilters && (
-        <div className='flex items-center gap-2 flex-wrap'>
-          <span className='text-sm text-muted-foreground'>Active filters:</span>
+        <div className=&apos;flex items-center gap-2 flex-wrap&apos;>
+          <span className=&apos;text-sm text-muted-foreground&apos;>Active filters:</span>
           {searchTerm && (
-            <Badge variant='secondary' className='gap-1'>
+            <Badge variant=&apos;secondary&apos; className=&apos;gap-1&apos;>
               Search: {searchTerm}
               <X
-                className='h-3 w-3 cursor-pointer'
-                onClick={() => onSearchChange('')}
+                className=&apos;h-3 w-3 cursor-pointer&apos;
+                onClick={() => onSearchChange(&apos;&apos;)}
               />
             </Badge>
           )}
           {filters.map(filter => {
             const isActive =
-              filter.currentValue !== 'all' && filter.currentValue !== '';
+              filter.currentValue !== &apos;all&apos; && filter.currentValue !== &apos;&apos;;
             if (!isActive) return null;
 
             const optionLabel =
               filter.options.find(o => o.value === filter.currentValue)
                 ?.label || filter.currentValue;
             return (
-              <Badge variant='secondary' className='gap-1' key={filter.key}>
+              <Badge variant=&apos;secondary&apos; className=&apos;gap-1&apos; key={filter.key}>
                 {filter.label}: {optionLabel}
                 <X
-                  className='h-3 w-3 cursor-pointer'
-                  onClick={() => filter.onValueChange('all')}
+                  className=&apos;h-3 w-3 cursor-pointer&apos;
+                  onClick={() => filter.onValueChange(&apos;all&apos;)}
                 />
               </Badge>
             );

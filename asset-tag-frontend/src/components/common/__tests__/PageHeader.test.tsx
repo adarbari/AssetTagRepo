@@ -1,91 +1,91 @@
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { PageHeader } from '../PageHeader';
-import { render } from '../../../test/test-utils';
-import { AlertTriangle, Plus } from 'lucide-react';
+import React from &apos;react&apos;;
+import { describe, it, expect, vi } from &apos;vitest&apos;;
+import { screen } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { PageHeader } from &apos;../PageHeader&apos;;
+import { render } from &apos;../../../test/test-utils&apos;;
+import { AlertTriangle, Plus } from &apos;lucide-react&apos;;
 
-describe('PageHeader Component - Button Click Tests', () => {
-  describe('Back Button Functionality', () => {
-    it('should render back button when onBack is provided', () => {
+describe(&apos;PageHeader Component - Button Click Tests&apos;, () => {
+  describe(&apos;Back Button Functionality&apos;, () => {
+    it(&apos;should render back button when onBack is provided&apos;, () => {
       const mockOnBack = vi.fn();
 
-      render(<PageHeader title='Test Page' onBack={mockOnBack} />);
+      render(<PageHeader title=&apos;Test Page&apos; onBack={mockOnBack} />);
 
-      const backButton = screen.getByRole('button', { name: /back/i });
+      const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
       expect(backButton).toBeInTheDocument();
     });
 
-    it('should not render back button when onBack is not provided', () => {
-      render(<PageHeader title='Test Page' />);
+    it(&apos;should not render back button when onBack is not provided&apos;, () => {
+      render(<PageHeader title=&apos;Test Page&apos; />);
 
-      const backButton = screen.queryByRole('button', { name: /back/i });
+      const backButton = screen.queryByRole(&apos;button&apos;, { name: /back/i });
       expect(backButton).not.toBeInTheDocument();
     });
 
-    it('should call onBack when back button is clicked', async () => {
+    it(&apos;should call onBack when back button is clicked&apos;, async () => {
       const user = userEvent.setup();
       const mockOnBack = vi.fn();
 
-      render(<PageHeader title='Test Page' onBack={mockOnBack} />);
+      render(<PageHeader title=&apos;Test Page&apos; onBack={mockOnBack} />);
 
-      const backButton = screen.getByRole('button', { name: /back/i });
+      const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
       await user.click(backButton);
 
       expect(mockOnBack).toHaveBeenCalledTimes(1);
     });
 
-    it('should have proper accessibility attributes for back button', () => {
+    it(&apos;should have proper accessibility attributes for back button&apos;, () => {
       const mockOnBack = vi.fn();
 
-      render(<PageHeader title='Test Page' onBack={mockOnBack} />);
+      render(<PageHeader title=&apos;Test Page&apos; onBack={mockOnBack} />);
 
-      const backButton = screen.getByRole('button', { name: /back/i });
-      // Button component doesn't explicitly set type, so it uses browser default
+      const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
+      // Button component doesn&apos;t explicitly set type, so it uses browser default
       expect(backButton).toBeInTheDocument();
-      expect(backButton.tagName).toBe('BUTTON');
+      expect(backButton.tagName).toBe(&apos;BUTTON&apos;);
       // Check for ghost variant styling (hover:bg-accent indicates ghost variant)
-      expect(backButton.className).toContain('hover:bg-accent');
+      expect(backButton.className).toContain(&apos;hover:bg-accent&apos;);
     });
   });
 
-  describe('Actions Area', () => {
-    it('should render actions when provided', () => {
+  describe(&apos;Actions Area&apos;, () => {
+    it(&apos;should render actions when provided&apos;, () => {
       const mockAction = vi.fn();
 
       render(
         <PageHeader
-          title='Test Page'
+          title=&apos;Test Page&apos;
           actions={
             <button onClick={mockAction}>
-              <Plus className='h-4 w-4 mr-2' />
+              <Plus className=&apos;h-4 w-4 mr-2&apos; />
               Add Item
             </button>
           }
         />
       );
 
-      const actionButton = screen.getByRole('button', { name: /add item/i });
+      const actionButton = screen.getByRole(&apos;button&apos;, { name: /add item/i });
       expect(actionButton).toBeInTheDocument();
     });
 
-    it('should not render actions area when actions is not provided', () => {
-      render(<PageHeader title='Test Page' />);
+    it(&apos;should not render actions area when actions is not provided&apos;, () => {
+      render(<PageHeader title=&apos;Test Page&apos; />);
 
       // Should not have any action buttons
-      const buttons = screen.queryAllByRole('button');
+      const buttons = screen.queryAllByRole(&apos;button&apos;);
       expect(buttons).toHaveLength(0);
     });
 
-    it('should handle multiple actions', async () => {
+    it(&apos;should handle multiple actions&apos;, async () => {
       const user = userEvent.setup();
       const mockAction1 = vi.fn();
       const mockAction2 = vi.fn();
 
       render(
         <PageHeader
-          title='Test Page'
+          title=&apos;Test Page&apos;
           actions={
             <>
               <button onClick={mockAction1}>Action 1</button>
@@ -95,8 +95,8 @@ describe('PageHeader Component - Button Click Tests', () => {
         />
       );
 
-      const action1Button = screen.getByRole('button', { name: /action 1/i });
-      const action2Button = screen.getByRole('button', { name: /action 2/i });
+      const action1Button = screen.getByRole(&apos;button&apos;, { name: /action 1/i });
+      const action2Button = screen.getByRole(&apos;button&apos;, { name: /action 2/i });
 
       await user.click(action1Button);
       expect(mockAction1).toHaveBeenCalledTimes(1);
@@ -106,113 +106,113 @@ describe('PageHeader Component - Button Click Tests', () => {
     });
   });
 
-  describe('Icon Display', () => {
-    it('should render icon when provided', () => {
-      render(<PageHeader title='Test Page' icon={AlertTriangle} />);
+  describe(&apos;Icon Display&apos;, () => {
+    it(&apos;should render icon when provided&apos;, () => {
+      render(<PageHeader title=&apos;Test Page&apos; icon={AlertTriangle} />);
 
-      // Icon should be rendered in the header (SVG elements don't have img role by default)
-      const iconElement = document.querySelector('svg');
+      // Icon should be rendered in the header (SVG elements don&apos;t have img role by default)
+      const iconElement = document.querySelector(&apos;svg&apos;);
       expect(iconElement).toBeInTheDocument();
     });
 
-    it('should not render icon container when icon is not provided', () => {
-      render(<PageHeader title='Test Page' />);
+    it(&apos;should not render icon container when icon is not provided&apos;, () => {
+      render(<PageHeader title=&apos;Test Page&apos; />);
 
       // Should not have icon container
-      const iconContainer = document.querySelector('.bg-primary');
+      const iconContainer = document.querySelector(&apos;.bg-primary&apos;);
       expect(iconContainer).not.toBeInTheDocument();
     });
   });
 
-  describe('Badge Display', () => {
-    it('should render badge when provided', () => {
+  describe(&apos;Badge Display&apos;, () => {
+    it(&apos;should render badge when provided&apos;, () => {
       render(
         <PageHeader
-          title='Test Page'
-          badge={{ label: 'Beta', variant: 'secondary' }}
+          title=&apos;Test Page&apos;
+          badge={{ label: &apos;Beta&apos;, variant: &apos;secondary&apos; }}
         />
       );
 
-      const badge = screen.getByText('Beta');
+      const badge = screen.getByText(&apos;Beta&apos;);
       expect(badge).toBeInTheDocument();
     });
 
-    it('should not render badge when not provided', () => {
-      render(<PageHeader title='Test Page' />);
+    it(&apos;should not render badge when not provided&apos;, () => {
+      render(<PageHeader title=&apos;Test Page&apos; />);
 
       // Should not have any badges
-      const badges = document.querySelectorAll('[data-testid="badge"]');
+      const badges = document.querySelectorAll(&apos;[data-testid=&quot;badge&quot;]&apos;);
       expect(badges).toHaveLength(0);
     });
 
-    it('should apply correct badge variant', () => {
+    it(&apos;should apply correct badge variant&apos;, () => {
       render(
         <PageHeader
-          title='Test Page'
-          badge={{ label: 'Warning', variant: 'destructive' }}
+          title=&apos;Test Page&apos;
+          badge={{ label: &apos;Warning&apos;, variant: &apos;destructive&apos; }}
         />
       );
 
-      const badge = screen.getByText('Warning');
+      const badge = screen.getByText(&apos;Warning&apos;);
       expect(badge).toBeInTheDocument();
       // Badge should have destructive styling (check for destructive-related classes)
-      expect(badge.className).toContain('destructive');
+      expect(badge.className).toContain(&apos;destructive&apos;);
     });
   });
 
-  describe('Content Display', () => {
-    it('should render title', () => {
-      render(<PageHeader title='Test Page' />);
+  describe(&apos;Content Display&apos;, () => {
+    it(&apos;should render title&apos;, () => {
+      render(<PageHeader title=&apos;Test Page&apos; />);
 
-      expect(screen.getByText('Test Page')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Test Page&apos;)).toBeInTheDocument();
     });
 
-    it('should render description when provided', () => {
+    it(&apos;should render description when provided&apos;, () => {
       render(
         <PageHeader
-          title='Test Page'
-          description='This is a test page description'
+          title=&apos;Test Page&apos;
+          description=&apos;This is a test page description&apos;
         />
       );
 
       expect(
-        screen.getByText('This is a test page description')
+        screen.getByText(&apos;This is a test page description&apos;)
       ).toBeInTheDocument();
     });
 
-    it('should not render description when not provided', () => {
-      render(<PageHeader title='Test Page' />);
+    it(&apos;should not render description when not provided&apos;, () => {
+      render(<PageHeader title=&apos;Test Page&apos; />);
 
       // Should not have description paragraph
-      const description = document.querySelector('p.text-muted-foreground');
+      const description = document.querySelector(&apos;p.text-muted-foreground&apos;);
       expect(description).not.toBeInTheDocument();
     });
   });
 
-  describe('Combined Functionality', () => {
-    it('should work with all props together', async () => {
+  describe(&apos;Combined Functionality&apos;, () => {
+    it(&apos;should work with all props together&apos;, async () => {
       const user = userEvent.setup();
       const mockOnBack = vi.fn();
       const mockAction = vi.fn();
 
       render(
         <PageHeader
-          title='Complete Test Page'
-          description='A page with all features'
+          title=&apos;Complete Test Page&apos;
+          description=&apos;A page with all features&apos;
           icon={AlertTriangle}
-          badge={{ label: 'Active', variant: 'default' }}
+          badge={{ label: &apos;Active&apos;, variant: &apos;default&apos; }}
           onBack={mockOnBack}
           actions={<button onClick={mockAction}>Complete Action</button>}
         />
       );
 
       // Check all elements are present
-      expect(screen.getByText('Complete Test Page')).toBeInTheDocument();
-      expect(screen.getByText('A page with all features')).toBeInTheDocument();
-      expect(screen.getByText('Active')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Complete Test Page&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;A page with all features&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Active&apos;)).toBeInTheDocument();
 
-      const backButton = screen.getByRole('button', { name: /back/i });
-      const actionButton = screen.getByRole('button', {
+      const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
+      const actionButton = screen.getByRole(&apos;button&apos;, {
         name: /complete action/i,
       });
 
@@ -226,23 +226,23 @@ describe('PageHeader Component - Button Click Tests', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper heading structure', () => {
-      render(<PageHeader title='Test Page' />);
+  describe(&apos;Accessibility&apos;, () => {
+    it(&apos;should have proper heading structure&apos;, () => {
+      render(<PageHeader title=&apos;Test Page&apos; />);
 
-      const heading = screen.getByRole('heading', { level: 1 });
+      const heading = screen.getByRole(&apos;heading&apos;, { level: 1 });
       expect(heading).toBeInTheDocument();
-      expect(heading).toHaveTextContent('Test Page');
+      expect(heading).toHaveTextContent(&apos;Test Page&apos;);
     });
 
-    it('should support keyboard navigation', async () => {
+    it(&apos;should support keyboard navigation&apos;, async () => {
       const user = userEvent.setup();
       const mockOnBack = vi.fn();
       const mockAction = vi.fn();
 
       render(
         <PageHeader
-          title='Test Page'
+          title=&apos;Test Page&apos;
           onBack={mockOnBack}
           actions={<button onClick={mockAction}>Test Action</button>}
         />
@@ -250,21 +250,21 @@ describe('PageHeader Component - Button Click Tests', () => {
 
       // Tab to back button
       await user.tab();
-      const backButton = screen.getByRole('button', { name: /back/i });
+      const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
       expect(document.activeElement).toBe(backButton);
 
       // Tab to action button
       await user.tab();
-      const actionButton = screen.getByRole('button', { name: /test action/i });
+      const actionButton = screen.getByRole(&apos;button&apos;, { name: /test action/i });
       expect(document.activeElement).toBe(actionButton);
     });
 
-    it('should have proper button roles and labels', () => {
+    it(&apos;should have proper button roles and labels&apos;, () => {
       const mockOnBack = vi.fn();
 
-      render(<PageHeader title='Test Page' onBack={mockOnBack} />);
+      render(<PageHeader title=&apos;Test Page&apos; onBack={mockOnBack} />);
 
-      const backButton = screen.getByRole('button', { name: /back/i });
+      const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
       expect(backButton).toBeInTheDocument();
       expect(backButton).toHaveAccessibleName();
     });

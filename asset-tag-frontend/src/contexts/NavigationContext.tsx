@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import type { ViewType } from '../App';
-import type { Asset, Site, Alert } from '../types';
-import type { AlertFilter } from '../components/alerts/Alerts';
+import React, { createContext, useContext, useState, ReactNode } from &apos;react&apos;;
+import type { ViewType } from &apos;../App&apos;;
+import type { Asset, Site, Alert } from &apos;../types&apos;;
+import type { AlertFilter } from &apos;../components/alerts/Alerts&apos;;
 
 interface GeofenceCreationData {
   siteId?: string;
@@ -40,7 +40,7 @@ interface MaintenanceCreationData {
 
 interface MaintenanceEditData {
   maintenanceId: string;
-  fromContext?: 'predictive-alert' | 'maintenance-list' | 'asset-details';
+  fromContext?: &apos;predictive-alert&apos; | &apos;maintenance-list&apos; | &apos;asset-details&apos;;
   sourceAssetContext?: Asset;
 }
 
@@ -71,8 +71,8 @@ interface LoadAssetData {
 interface CheckInOutData {
   assetId: string;
   assetName: string;
-  currentStatus: Asset['status'];
-  mode: 'check-in' | 'check-out';
+  currentStatus: Asset[&apos;status&apos;];
+  mode: &apos;check-in&apos; | &apos;check-out&apos;;
   assetContext?: Asset;
   onComplete?: (updates: Partial<Asset>) => void;
 }
@@ -198,7 +198,7 @@ const NavigationContext = createContext<NavigationContextType | undefined>(
 );
 
 export function NavigationProvider({ children }: { children: ReactNode }) {
-  const [currentView, setCurrentView] = useState<ViewType>('dashboard');
+  const [currentView, setCurrentView] = useState<ViewType>(&apos;dashboard&apos;);
   const [navigationStack, setNavigationStack] = useState<NavigationState[]>([]);
   const [alertFilter, setAlertFilter] = useState<AlertFilter | undefined>(
     undefined
@@ -242,7 +242,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [vehicleEditData, setVehicleEditData] = useState<
     VehicleEditData | undefined
   >(undefined);
-  const [siteActiveTab, setSiteActiveTab] = useState<string>('overview');
+  const [siteActiveTab, setSiteActiveTab] = useState<string>(&apos;overview&apos;);
   const [isEditingGeofence, setIsEditingGeofence] = useState(false);
   const [editingGeofenceId, setEditingGeofenceId] = useState<
     string | undefined
@@ -264,7 +264,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     useState<Alert | null>(null);
 
   const pushNavigationState = () => {
-    console.log('📚 Pushing navigation state, current view:', currentView);
+    // console.log(&apos;📚 Pushing navigation state, current view:&apos;, currentView);
     setNavigationStack(prev => {
       const newStack = [
         ...prev,
@@ -285,8 +285,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
           selectedAlertForWorkflow: selectedAlertForWorkflow,
         },
       ];
-      console.log(
-        '📚 Navigation stack after push:',
+      // console.log(
+        &apos;📚 Navigation stack after push:&apos;,
         newStack.map(s => s.view)
       );
       return newStack;
@@ -294,18 +294,18 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const popNavigationState = () => {
-    console.log(
-      '📚 Popping navigation state, current stack:',
+    // console.log(
+      &apos;📚 Popping navigation state, current stack:&apos;,
       navigationStack.map(s => s.view)
     );
     if (navigationStack.length === 0) {
-      console.log('📚 Navigation stack is empty, going to dashboard');
-      handleViewChange('dashboard');
+      // console.log(&apos;📚 Navigation stack is empty, going to dashboard&apos;);
+      handleViewChange(&apos;dashboard&apos;);
       return;
     }
 
     const previousState = navigationStack[navigationStack.length - 1];
-    console.log('📚 Restoring previous state:', previousState.view);
+    // console.log(&apos;📚 Restoring previous state:&apos;, previousState.view);
     setNavigationStack(prev => prev.slice(0, -1));
 
     setCurrentView(previousState.view);
@@ -315,7 +315,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     setHistoricalPlaybackAsset(previousState.historicalPlaybackAsset || null);
     setAlertFilter(previousState.alertFilter);
     setGeofenceCreationData(previousState.geofenceData);
-    setSiteActiveTab(previousState.siteActiveTab || 'overview');
+    setSiteActiveTab(previousState.siteActiveTab || &apos;overview&apos;);
     setFilteredAssetIds(previousState.filteredAssetIds);
     setGeofenceViolationMode(previousState.geofenceViolationMode || false);
     setViolatingGeofenceId(previousState.violatingGeofenceId);
@@ -325,12 +325,12 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const handleViewChange = (view: ViewType) => {
-    if (view === 'alert-configuration') {
+    if (view === &apos;alert-configuration&apos;) {
       navigateToAlertConfiguration();
       return;
     }
 
-    if (view !== 'map') {
+    if (view !== &apos;map&apos;) {
       setHighlightAsset(null);
       setFilteredAssetIds(undefined);
       setExpectedAssetIds(undefined);
@@ -343,21 +343,21 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
   const navigateToAlerts = (filter?: AlertFilter) => {
     setAlertFilter(filter);
-    handleViewChange('alerts');
+    handleViewChange(&apos;alerts&apos;);
   };
 
   const handleAlertTypeClick = (alertType: string) => {
     setAlertFilter({
       category: alertType,
-      status: 'active',
+      status: &apos;active&apos;,
     });
-    handleViewChange('alerts');
+    handleViewChange(&apos;alerts&apos;);
   };
 
   const navigateToAssetDetails = (asset: Asset) => {
     pushNavigationState();
     setSelectedAsset(asset);
-    handleViewChange('asset-details');
+    handleViewChange(&apos;asset-details&apos;);
   };
 
   const handleBackFromAssetDetails = () => {
@@ -367,7 +367,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToSiteDetails = (site: Site) => {
     pushNavigationState();
     setSelectedSite(site);
-    handleViewChange('site-details');
+    handleViewChange(&apos;site-details&apos;);
   };
 
   const handleBackFromSiteDetails = () => {
@@ -377,7 +377,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const handleSiteUpdate = (updatedSite: Site) => {
     setSelectedSite(updatedSite);
 
-    import('../data/mockData').then(({ updateSite }) => {
+    import(&apos;../data/mockData&apos;).then(({ updateSite }) => {
       updateSite(updatedSite.id, updatedSite);
     });
   };
@@ -386,7 +386,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     pushNavigationState();
     setHighlightAsset(asset);
     setFilteredAssetIds([asset.id]); // Show only this asset on the map
-    setCurrentView('map');
+    setCurrentView(&apos;map&apos;);
   };
 
   const handleBackFromMap = () => {
@@ -400,7 +400,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const handleViewHistoricalPlayback = (asset?: Asset) => {
     pushNavigationState();
     setHistoricalPlaybackAsset(asset || null);
-    setCurrentView('historical-playback');
+    setCurrentView(&apos;historical-playback&apos;);
   };
 
   const handleBackFromHistoricalPlayback = () => {
@@ -418,7 +418,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     if (currentTab) {
       setSiteActiveTab(currentTab);
     }
-    setCurrentView('create-geofence');
+    setCurrentView(&apos;create-geofence&apos;);
   };
 
   const navigateToEditGeofence = (
@@ -429,7 +429,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     pushNavigationState();
 
     if (!data) {
-      import('../data/mockData').then(({ getGeofenceById }) => {
+      import(&apos;../data/mockData&apos;).then(({ getGeofenceById }) => {
         const geofence = getGeofenceById(geofenceId);
         if (geofence) {
           const geofenceData: GeofenceCreationData = {
@@ -454,7 +454,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     if (currentTab) {
       setSiteActiveTab(currentTab);
     }
-    setCurrentView('create-geofence');
+    setCurrentView(&apos;create-geofence&apos;);
   };
 
   const handleBackFromCreateGeofence = () => {
@@ -465,7 +465,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
   const handleGeofenceCreated = (geofenceId: string, siteId?: string) => {
     if (siteId) {
-      import('../data/mockData').then(({ updateSite, getSiteById }) => {
+      import(&apos;../data/mockData&apos;).then(({ updateSite, getSiteById }) => {
         const site = getSiteById(siteId);
         if (site) {
           const updatedSite = updateSite(siteId, { geofenceId });
@@ -480,7 +480,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
   const handleGeofenceUpdated = (geofenceId: string, siteId?: string) => {
     if (siteId && selectedSite && selectedSite.id === siteId) {
-      import('../data/mockData').then(({ getSiteById }) => {
+      import(&apos;../data/mockData&apos;).then(({ getSiteById }) => {
         const site = getSiteById(siteId);
         if (site) {
           setSelectedSite(site);
@@ -501,7 +501,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     setActualAssetIds(actualAssetIds);
     setGeofenceViolationMode(true);
     setViolatingGeofenceId(geofenceId);
-    setCurrentView('map');
+    setCurrentView(&apos;map&apos;);
   };
 
   const handleBackFromViolationMap = () => {
@@ -516,7 +516,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToAlertWorkflow = (alert: Alert) => {
     pushNavigationState();
     setSelectedAlertForWorkflow(alert);
-    setCurrentView('alert-workflow');
+    setCurrentView(&apos;alert-workflow&apos;);
   };
 
   const handleBackFromAlertWorkflow = () => {
@@ -526,7 +526,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
   const navigateToAlertConfiguration = () => {
     pushNavigationState();
-    setCurrentView('alert-configuration');
+    setCurrentView(&apos;alert-configuration&apos;);
   };
 
   const handleBackFromAlertConfiguration = () => {
@@ -535,7 +535,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
   const navigateToCreateSite = () => {
     pushNavigationState();
-    setCurrentView('create-site');
+    setCurrentView(&apos;create-site&apos;);
   };
 
   const handleBackFromCreateSite = () => {
@@ -543,11 +543,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const navigateToCreateMaintenance = (data?: MaintenanceCreationData) => {
-    console.log('🚀 navigateToCreateMaintenance called with:', data);
+    // console.log(&apos;🚀 navigateToCreateMaintenance called with:&apos;, data);
     pushNavigationState();
     setMaintenanceCreationData(data);
-    setCurrentView('create-maintenance');
-    console.log('✅ Navigation state updated to create-maintenance');
+    setCurrentView(&apos;create-maintenance&apos;);
+    // console.log(&apos;✅ Navigation state updated to create-maintenance&apos;);
   };
 
   const handleBackFromCreateMaintenance = () => {
@@ -558,7 +558,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToEditMaintenance = (data: MaintenanceEditData) => {
     pushNavigationState();
     setMaintenanceEditData(data);
-    setCurrentView('edit-maintenance');
+    setCurrentView(&apos;edit-maintenance&apos;);
   };
 
   const handleBackFromEditMaintenance = () => {
@@ -569,7 +569,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToEditIssue = (issueId: string) => {
     pushNavigationState();
     setSelectedIssueId(issueId);
-    setCurrentView('issue-details');
+    setCurrentView(&apos;issue-details&apos;);
   };
 
   const handleBackFromEditIssue = () => {
@@ -579,7 +579,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
   const navigateToCreateCompliance = () => {
     pushNavigationState();
-    setCurrentView('create-compliance');
+    setCurrentView(&apos;create-compliance&apos;);
   };
 
   const handleBackFromCreateCompliance = () => {
@@ -588,7 +588,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
   const navigateToCreateVehicle = () => {
     pushNavigationState();
-    setCurrentView('create-vehicle');
+    setCurrentView(&apos;create-vehicle&apos;);
   };
 
   const handleBackFromCreateVehicle = () => {
@@ -598,7 +598,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToEditVehicle = (data: VehicleEditData) => {
     pushNavigationState();
     setVehicleEditData(data);
-    setCurrentView('edit-vehicle');
+    setCurrentView(&apos;edit-vehicle&apos;);
   };
 
   const handleBackFromEditVehicle = () => {
@@ -609,7 +609,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToCreateJob = (data?: JobCreationData) => {
     pushNavigationState();
     setJobCreationData(data);
-    setCurrentView('create-job');
+    setCurrentView(&apos;create-job&apos;);
   };
 
   const handleBackFromCreateJob = () => {
@@ -620,7 +620,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToEditJob = (data: JobEditData) => {
     pushNavigationState();
     setJobEditData(data);
-    setCurrentView('edit-job');
+    setCurrentView(&apos;edit-job&apos;);
   };
 
   const handleBackFromEditJob = () => {
@@ -631,7 +631,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToJobDetails = (data: JobDetailsData) => {
     pushNavigationState();
     setJobDetailsData(data);
-    setCurrentView('job-details');
+    setCurrentView(&apos;job-details&apos;);
   };
 
   const handleBackFromJobDetails = () => {
@@ -642,7 +642,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToCreateAsset = (data?: AssetCreationData) => {
     pushNavigationState();
     setAssetCreationData(data);
-    setCurrentView('create-asset');
+    setCurrentView(&apos;create-asset&apos;);
   };
 
   const handleBackFromCreateAsset = () => {
@@ -653,7 +653,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToLoadAsset = (data?: LoadAssetData) => {
     pushNavigationState();
     setLoadAssetData(data);
-    setCurrentView('load-asset');
+    setCurrentView(&apos;load-asset&apos;);
   };
 
   const handleBackFromLoadAsset = () => {
@@ -662,11 +662,11 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   };
 
   const navigateToCheckInOut = (data: CheckInOutData) => {
-    console.log('🚀 navigateToCheckInOut called with:', data);
+    // console.log(&apos;🚀 navigateToCheckInOut called with:&apos;, data);
     pushNavigationState();
     setCheckInOutData(data);
-    setCurrentView('check-in-out');
-    console.log('✅ Navigation state updated to check-in-out');
+    setCurrentView(&apos;check-in-out&apos;);
+    // console.log(&apos;✅ Navigation state updated to check-in-out&apos;);
   };
 
   const handleBackFromCheckInOut = () => {
@@ -677,7 +677,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const navigateToReportIssue = (data: IssueData) => {
     pushNavigationState();
     setIssueData(data);
-    setCurrentView('report-issue');
+    setCurrentView(&apos;report-issue&apos;);
   };
 
   const handleBackFromReportIssue = () => {
@@ -784,7 +784,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 export const useNavigation = () => {
   const context = useContext(NavigationContext);
   if (context === undefined) {
-    throw new Error('useNavigation must be used within a NavigationProvider');
+    throw new Error(&apos;useNavigation must be used within a NavigationProvider&apos;);
   }
   return context;
 };

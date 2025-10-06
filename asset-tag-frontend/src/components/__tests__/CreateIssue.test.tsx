@@ -1,13 +1,13 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { CreateIssue } from '../issues/CreateIssue';
-import { render } from '../../test/test-utils';
-import { mockAssets } from '../../data/mockData';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
+import { screen } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { CreateIssue } from &apos;../issues/CreateIssue&apos;;
+import { render } from &apos;../../test/test-utils&apos;;
+import { mockAssets } from &apos;../../data/mockData&apos;;
 
 // Mock toast
-vi.mock('sonner', () => ({
+vi.mock(&apos;sonner&apos;, () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock('sonner', () => ({
   },
 }));
 
-describe('CreateIssue Component - Basic Tests', () => {
+describe(&apos;CreateIssue Component - Basic Tests&apos;, () => {
   const mockAsset = mockAssets[0];
   const mockProps = {
     onBack: vi.fn(),
@@ -24,96 +24,96 @@ describe('CreateIssue Component - Basic Tests', () => {
     assetContext: mockAsset,
     onCreateIssue: vi
       .fn()
-      .mockResolvedValue({ success: true, issue: { id: 'new-issue-id' } }),
+      .mockResolvedValue({ success: true, issue: { id: &apos;new-issue-id&apos; } }),
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('Basic Rendering', () => {
-    it('should render the component without crashing', () => {
+  describe(&apos;Basic Rendering&apos;, () => {
+    it(&apos;should render the component without crashing&apos;, () => {
       render(<CreateIssue {...mockProps} />);
 
       expect(
-        screen.getByRole('heading', { name: /report issue/i })
+        screen.getByRole(&apos;heading&apos;, { name: /report issue/i })
       ).toBeInTheDocument();
     });
 
-    it('should render back button and handle click', async () => {
+    it(&apos;should render back button and handle click&apos;, async () => {
       const user = userEvent.setup();
       render(<CreateIssue {...mockProps} />);
 
-      const backButton = screen.getAllByRole('button')[0]; // First button is the back button
+      const backButton = screen.getAllByRole(&apos;button&apos;)[0]; // First button is the back button
       await user.click(backButton);
       expect(mockProps.onBack).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('Form Structure', () => {
-    it('should render form with proper structure', () => {
+  describe(&apos;Form Structure&apos;, () => {
+    it(&apos;should render form with proper structure&apos;, () => {
       render(<CreateIssue {...mockProps} />);
 
       expect(
-        screen.getByRole('heading', { name: /report issue/i })
+        screen.getByRole(&apos;heading&apos;, { name: /report issue/i })
       ).toBeInTheDocument();
     });
 
-    it('should render asset information', () => {
+    it(&apos;should render asset information&apos;, () => {
       render(<CreateIssue {...mockProps} />);
 
       expect(
-        screen.getByRole('heading', { name: mockAsset.name })
+        screen.getByRole(&apos;heading&apos;, { name: mockAsset.name })
       ).toBeInTheDocument();
     });
   });
 
-  describe('Form Inputs', () => {
-    it('should render issue title input', () => {
+  describe(&apos;Form Inputs&apos;, () => {
+    it(&apos;should render issue title input&apos;, () => {
       render(<CreateIssue {...mockProps} />);
 
       expect(screen.getByLabelText(/description/i)).toBeInTheDocument();
     });
 
-    it('should handle title input typing', async () => {
+    it(&apos;should handle title input typing&apos;, async () => {
       const user = userEvent.setup();
       render(<CreateIssue {...mockProps} />);
 
       const descriptionInput = screen.getByLabelText(/description/i);
-      await user.type(descriptionInput, 'Test Issue');
-      expect(descriptionInput).toHaveValue('Test Issue');
+      await user.type(descriptionInput, &apos;Test Issue&apos;);
+      expect(descriptionInput).toHaveValue(&apos;Test Issue&apos;);
     });
   });
 
-  describe('Button Interactions', () => {
-    it('should render submit button', () => {
+  describe(&apos;Button Interactions&apos;, () => {
+    it(&apos;should render submit button&apos;, () => {
       render(<CreateIssue {...mockProps} />);
 
-      const submitButton = screen.getByRole('button', {
+      const submitButton = screen.getByRole(&apos;button&apos;, {
         name: /submit issue/i,
       });
       expect(submitButton).toBeInTheDocument();
     });
 
-    it('should handle cancel button click', async () => {
+    it(&apos;should handle cancel button click&apos;, async () => {
       const user = userEvent.setup();
       render(<CreateIssue {...mockProps} />);
 
-      const cancelButton = screen.getByRole('button', { name: /cancel/i });
+      const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
       await user.click(cancelButton);
       expect(mockProps.onBack).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('Form Validation', () => {
-    it('should handle form submission with valid data', async () => {
+  describe(&apos;Form Validation&apos;, () => {
+    it(&apos;should handle form submission with valid data&apos;, async () => {
       const user = userEvent.setup();
       render(<CreateIssue {...mockProps} />);
 
       const descriptionInput = screen.getByLabelText(/description/i);
-      await user.type(descriptionInput, 'Test Issue');
+      await user.type(descriptionInput, &apos;Test Issue&apos;);
 
-      const submitButton = screen.getByRole('button', {
+      const submitButton = screen.getByRole(&apos;button&apos;, {
         name: /submit issue/i,
       });
       await user.click(submitButton);
@@ -123,32 +123,32 @@ describe('CreateIssue Component - Basic Tests', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper form structure', () => {
+  describe(&apos;Accessibility&apos;, () => {
+    it(&apos;should have proper form structure&apos;, () => {
       render(<CreateIssue {...mockProps} />);
 
-      const form = document.querySelector('form');
+      const form = document.querySelector(&apos;form&apos;);
       expect(form).toBeInTheDocument();
     });
 
-    it('should have proper labels for inputs', () => {
+    it(&apos;should have proper labels for inputs&apos;, () => {
       render(<CreateIssue {...mockProps} />);
 
       expect(screen.getByLabelText(/description/i)).toBeInTheDocument();
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle missing asset data gracefully', () => {
+  describe(&apos;Error Handling&apos;, () => {
+    it(&apos;should handle missing asset data gracefully&apos;, () => {
       render(<CreateIssue {...mockProps} assetContext={null} />);
 
       // Should render without crashing
       expect(
-        screen.getByRole('heading', { name: /report issue/i })
+        screen.getByRole(&apos;heading&apos;, { name: /report issue/i })
       ).toBeInTheDocument();
     });
 
-    it('should handle onCreateIssue callback', () => {
+    it(&apos;should handle onCreateIssue callback&apos;, () => {
       expect(mockProps.onCreateIssue).toBeDefined();
     });
   });

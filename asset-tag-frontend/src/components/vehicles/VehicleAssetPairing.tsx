@@ -12,12 +12,12 @@
  * - Multi-asset loading to vehicles
  */
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Badge } from '../ui/badge';
+import React, { useState, useEffect } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
 import {
   PageHeader,
   EmptyState,
@@ -25,9 +25,9 @@ import {
   StatusBadge,
   InfoRow,
   PageLayout,
-} from '../common';
-import { Separator } from '../ui/separator';
-import { Switch } from '../ui/switch';
+} from &apos;../common&apos;;
+import { Separator } from &apos;../ui/separator&apos;;
+import { Switch } from &apos;../ui/switch&apos;;
 import {
   Dialog,
   DialogContent,
@@ -35,15 +35,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../ui/dialog';
+} from &apos;../ui/dialog&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { DateTimeInput } from '../ui/datetime-input';
+} from &apos;../ui/select&apos;;
+import { DateTimeInput } from &apos;../ui/datetime-input&apos;;
 import {
   Search,
   Truck,
@@ -58,20 +58,20 @@ import {
   Settings,
   Shield,
   Edit,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { format, formatDistanceToNow } from 'date-fns';
-import { mockAssets, getAvailableGeofences } from '../../data/mockData';
-import { expirationMechanisms } from '../../data/dropdownOptions';
-import { useNavigation } from '../../contexts/NavigationContext';
+} from &apos;lucide-react&apos;;
+import { toast } from &apos;sonner&apos;;
+import { format, formatDistanceToNow } from &apos;date-fns&apos;;
+import { mockAssets, getAvailableGeofences } from &apos;../../data/mockData&apos;;
+import { expirationMechanisms } from &apos;../../data/dropdownOptions&apos;;
+import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
 
 // Expiration mechanism types - pulled from dropdown config
 export type ExpirationMechanism =
-  | 'manual' // Manual unload only
-  | 'time-based' // Unload at specific date/time
-  | 'geofence-exit' // Unload when vehicle exits geofence
-  | 'geofence-enter' // Unload when vehicle enters geofence
-  | 'time-and-geofence'; // Combination of time and geofence
+  | &apos;manual&apos; // Manual unload only
+  | &apos;time-based&apos; // Unload at specific date/time
+  | &apos;geofence-exit&apos; // Unload when vehicle exits geofence
+  | &apos;geofence-enter&apos; // Unload when vehicle enters geofence
+  | &apos;time-and-geofence&apos;; // Combination of time and geofence
 
 interface AssetPairing {
   id: string;
@@ -84,7 +84,7 @@ interface AssetPairing {
   expirationDateTime?: Date;
   geofenceId?: string;
   geofenceName?: string;
-  geofenceAction?: 'exit' | 'enter';
+  geofenceAction?: &apos;exit&apos; | &apos;enter&apos;;
   notes?: string;
   autoUnload: boolean;
 }
@@ -95,7 +95,7 @@ interface VehicleWithPairings {
   licensePlate: string;
   type: string;
   driver?: string;
-  status: 'active' | 'inactive' | 'maintenance';
+  status: &apos;active&apos; | &apos;inactive&apos; | &apos;maintenance&apos;;
   location?: string;
   capacity: number;
   pairings: AssetPairing[];
@@ -109,54 +109,54 @@ export function VehicleAssetPairing({
   onBack: _onBack,
 }: VehicleAssetPairingProps) {
   const navigation = useNavigation();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(&apos;&apos;);
 
   // Get geofences from centralized data
   const availableGeofences = getAvailableGeofences();
 
   const [vehicles, setVehicles] = useState<VehicleWithPairings[]>([
     {
-      id: 'VEH-001',
-      name: 'Truck Alpha',
-      licensePlate: 'ABC-123',
-      type: 'Pickup Truck',
-      driver: 'Mike Wilson',
-      status: 'active',
-      location: 'Construction Site A',
+      id: &apos;VEH-001&apos;,
+      name: &apos;Truck Alpha&apos;,
+      licensePlate: &apos;ABC-123&apos;,
+      type: &apos;Pickup Truck&apos;,
+      driver: &apos;Mike Wilson&apos;,
+      status: &apos;active&apos;,
+      location: &apos;Construction Site A&apos;,
       capacity: 10,
       pairings: [
         {
-          id: 'pair-001',
-          assetId: 'AT-42891',
-          assetName: 'Excavator CAT 320',
-          assetType: 'Heavy Equipment',
-          pairedAt: new Date('2025-10-04T08:00:00'),
-          pairedBy: 'Mike Wilson',
-          expirationMechanism: 'time-based',
-          expirationDateTime: new Date('2025-10-04T18:00:00'),
+          id: &apos;pair-001&apos;,
+          assetId: &apos;AT-42891&apos;,
+          assetName: &apos;Excavator CAT 320&apos;,
+          assetType: &apos;Heavy Equipment&apos;,
+          pairedAt: new Date(&apos;2025-10-04T08:00:00&apos;),
+          pairedBy: &apos;Mike Wilson&apos;,
+          expirationMechanism: &apos;time-based&apos;,
+          expirationDateTime: new Date(&apos;2025-10-04T18:00:00&apos;),
           autoUnload: true,
         },
       ],
     },
     {
-      id: 'VEH-002',
-      name: 'Truck Beta',
-      licensePlate: 'XYZ-789',
-      type: 'Box Truck',
-      driver: 'Sarah Johnson',
-      status: 'active',
-      location: 'Warehouse B',
+      id: &apos;VEH-002&apos;,
+      name: &apos;Truck Beta&apos;,
+      licensePlate: &apos;XYZ-789&apos;,
+      type: &apos;Box Truck&apos;,
+      driver: &apos;Sarah Johnson&apos;,
+      status: &apos;active&apos;,
+      location: &apos;Warehouse B&apos;,
       capacity: 20,
       pairings: [],
     },
     {
-      id: 'VEH-003',
-      name: 'Van Gamma',
-      licensePlate: 'DEF-456',
-      type: 'Cargo Van',
-      driver: 'John Smith',
-      status: 'active',
-      location: 'Office Parking',
+      id: &apos;VEH-003&apos;,
+      name: &apos;Van Gamma&apos;,
+      licensePlate: &apos;DEF-456&apos;,
+      type: &apos;Cargo Van&apos;,
+      driver: &apos;John Smith&apos;,
+      status: &apos;active&apos;,
+      location: &apos;Office Parking&apos;,
       capacity: 8,
       pairings: [],
     },
@@ -164,19 +164,19 @@ export function VehicleAssetPairing({
 
   // Add Asset Dialog State
   const [showAddAssetDialog, setShowAddAssetDialog] = useState(false);
-  const [selectedVehicleId, setSelectedVehicleId] = useState('');
+  const [selectedVehicleId, setSelectedVehicleId] = useState(&apos;&apos;);
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
   const [expirationMechanism, setExpirationMechanism] =
-    useState<ExpirationMechanism>('manual');
+    useState<ExpirationMechanism>(&apos;manual&apos;);
   const [expirationDateTime, setExpirationDateTime] = useState<
     Date | undefined
   >();
-  const [selectedGeofenceId, setSelectedGeofenceId] = useState('');
-  const [geofenceAction, setGeofenceAction] = useState<'exit' | 'enter'>(
-    'exit'
+  const [selectedGeofenceId, setSelectedGeofenceId] = useState(&apos;&apos;);
+  const [geofenceAction, setGeofenceAction] = useState<&apos;exit&apos; | &apos;enter&apos;>(
+    &apos;exit&apos;
   );
   const [autoUnload, setAutoUnload] = useState(true);
-  const [pairingNotes, setPairingNotes] = useState('');
+  const [pairingNotes, setPairingNotes] = useState(&apos;&apos;);
 
   // View pairing details
   const [viewPairingDialog, setViewPairingDialog] = useState(false);
@@ -196,8 +196,8 @@ export function VehicleAssetPairing({
             // Check time-based expiration
             if (
               pairing.autoUnload &&
-              (pairing.expirationMechanism === 'time-based' ||
-                pairing.expirationMechanism === 'time-and-geofence') &&
+              (pairing.expirationMechanism === &apos;time-based&apos; ||
+                pairing.expirationMechanism === &apos;time-and-geofence&apos;) &&
               pairing.expirationDateTime &&
               pairing.expirationDateTime <= now
             ) {
@@ -221,32 +221,32 @@ export function VehicleAssetPairing({
 
   const handleAddAssets = () => {
     if (!selectedVehicleId || selectedAssets.length === 0) {
-      toast.error('Please select a vehicle and at least one asset');
+      toast.error(&apos;Please select a vehicle and at least one asset&apos;);
       return;
     }
 
     // Validate expiration settings
     if (
-      expirationMechanism === 'time-based' ||
-      expirationMechanism === 'time-and-geofence'
+      expirationMechanism === &apos;time-based&apos; ||
+      expirationMechanism === &apos;time-and-geofence&apos;
     ) {
       if (!expirationDateTime) {
-        toast.error('Please select an expiration date/time');
+        toast.error(&apos;Please select an expiration date/time&apos;);
         return;
       }
       if (expirationDateTime <= new Date()) {
-        toast.error('Expiration date/time must be in the future');
+        toast.error(&apos;Expiration date/time must be in the future&apos;);
         return;
       }
     }
 
     if (
-      (expirationMechanism === 'geofence-exit' ||
-        expirationMechanism === 'geofence-enter' ||
-        expirationMechanism === 'time-and-geofence') &&
+      (expirationMechanism === &apos;geofence-exit&apos; ||
+        expirationMechanism === &apos;geofence-enter&apos; ||
+        expirationMechanism === &apos;time-and-geofence&apos;) &&
       !selectedGeofenceId
     ) {
-      toast.error('Please select a geofence');
+      toast.error(&apos;Please select a geofence&apos;);
       return;
     }
 
@@ -264,7 +264,7 @@ export function VehicleAssetPairing({
     // Create pairings
     const newPairings: AssetPairing[] = selectedAssets.map(assetId => {
       const asset = mockAssets.find(a => a.id === assetId);
-      if (!asset) throw new Error('Asset not found');
+      if (!asset) throw new Error(&apos;Asset not found&apos;);
 
       const geofence = availableGeofences.find(
         g => g.value === selectedGeofenceId
@@ -276,11 +276,11 @@ export function VehicleAssetPairing({
         assetName: asset.name,
         assetType: asset.type,
         pairedAt: new Date(),
-        pairedBy: vehicle.driver || 'Unknown',
+        pairedBy: vehicle.driver || &apos;Unknown&apos;,
         expirationMechanism,
         expirationDateTime:
-          expirationMechanism === 'time-based' ||
-          expirationMechanism === 'time-and-geofence'
+          expirationMechanism === &apos;time-based&apos; ||
+          expirationMechanism === &apos;time-and-geofence&apos;
             ? expirationDateTime
             : undefined,
         geofenceId: selectedGeofenceId || undefined,
@@ -300,20 +300,20 @@ export function VehicleAssetPairing({
       )
     );
 
-    const assetNames = newPairings.map(p => p.assetName).join(', ');
+    const assetNames = newPairings.map(p => p.assetName).join(&apos;, &apos;);
     toast.success(`Assets loaded successfully`, {
       description: `${assetNames} loaded onto ${vehicle.name}`,
     });
 
     // Reset form
     setShowAddAssetDialog(false);
-    setSelectedVehicleId('');
+    setSelectedVehicleId(&apos;&apos;);
     setSelectedAssets([]);
-    setExpirationMechanism('manual');
+    setExpirationMechanism(&apos;manual&apos;);
     setExpirationDateTime(undefined);
-    setSelectedGeofenceId('');
+    setSelectedGeofenceId(&apos;&apos;);
     setAutoUnload(true);
-    setPairingNotes('');
+    setPairingNotes(&apos;&apos;);
   };
 
   const handleUnloadAsset = (vehicleId: string, pairingId: string) => {
@@ -330,7 +330,7 @@ export function VehicleAssetPairing({
       )
     );
 
-    toast.success('Asset unloaded', {
+    toast.success(&apos;Asset unloaded&apos;, {
       description: `${pairing.assetName} removed from ${vehicle.name}`,
     });
   };
@@ -357,7 +357,7 @@ export function VehicleAssetPairing({
   };
 
   const availableAssets = getAvailableAssets();
-  const activeVehicles = vehicles.filter(v => v.status === 'active');
+  const activeVehicles = vehicles.filter(v => v.status === &apos;active&apos;);
   const totalPairings = vehicles.reduce((sum, v) => sum + v.pairings.length, 0);
 
   // Calculate expiring soon (within 2 hours)
@@ -371,7 +371,7 @@ export function VehicleAssetPairing({
 
   const filteredVehicles = vehicles.filter(
     vehicle =>
-      searchTerm === '' ||
+      searchTerm === &apos;&apos; ||
       vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vehicle.licensePlate.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vehicle.driver?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -382,30 +382,30 @@ export function VehicleAssetPairing({
 
   const getExpirationDisplay = (pairing: AssetPairing) => {
     switch (pairing.expirationMechanism) {
-      case 'manual':
-        return 'Manual unload only';
-      case 'time-based':
+      case &apos;manual&apos;:
+        return &apos;Manual unload only&apos;;
+      case &apos;time-based&apos;:
         return pairing.expirationDateTime
-          ? `${format(pairing.expirationDateTime, "MMM d, yyyy 'at' h:mm a")}`
-          : 'No expiration set';
-      case 'geofence-exit':
-        return `On exit: ${pairing.geofenceName || 'Unknown geofence'}`;
-      case 'geofence-enter':
-        return `On enter: ${pairing.geofenceName || 'Unknown geofence'}`;
-      case 'time-and-geofence':
-        return `${pairing.expirationDateTime ? format(pairing.expirationDateTime, 'MMM d, h:mm a') : 'No date'} or ${pairing.geofenceAction} ${pairing.geofenceName}`;
+          ? `${format(pairing.expirationDateTime, &quot;MMM d, yyyy &apos;at&apos; h:mm a&quot;)}`
+          : &apos;No expiration set&apos;;
+      case &apos;geofence-exit&apos;:
+        return `On exit: ${pairing.geofenceName || &apos;Unknown geofence&apos;}`;
+      case &apos;geofence-enter&apos;:
+        return `On enter: ${pairing.geofenceName || &apos;Unknown geofence&apos;}`;
+      case &apos;time-and-geofence&apos;:
+        return `${pairing.expirationDateTime ? format(pairing.expirationDateTime, &apos;MMM d, h:mm a&apos;) : &apos;No date&apos;} or ${pairing.geofenceAction} ${pairing.geofenceName}`;
       default:
-        return 'Unknown';
+        return &apos;Unknown&apos;;
     }
   };
 
   const getExpirationIcon = (mechanism: ExpirationMechanism) => {
     switch (mechanism) {
-      case 'time-based':
-      case 'time-and-geofence':
+      case &apos;time-based&apos;:
+      case &apos;time-and-geofence&apos;:
         return Clock;
-      case 'geofence-exit':
-      case 'geofence-enter':
+      case &apos;geofence-exit&apos;:
+      case &apos;geofence-enter&apos;:
         return MapPin;
       default:
         return Settings;
@@ -414,116 +414,116 @@ export function VehicleAssetPairing({
 
   return (
     <PageLayout
-      variant='wide'
-      padding='md'
+      variant=&apos;wide&apos;
+      padding=&apos;md&apos;
       header={
         <PageHeader
-          title='Vehicle-Asset Pairing'
-          description='Manage asset loading with automatic expiration mechanisms'
+          title=&apos;Vehicle-Asset Pairing&apos;
+          description=&apos;Manage asset loading with automatic expiration mechanisms&apos;
           action={
             <Button onClick={() => setShowAddAssetDialog(true)}>
-              <Plus className='h-4 w-4 mr-2' />
+              <Plus className=&apos;h-4 w-4 mr-2&apos; />
               Load Assets
             </Button>
           }
         />
       }
     >
-      <div className='flex-1 overflow-auto p-6 space-y-6'>
+      <div className=&apos;flex-1 overflow-auto p-6 space-y-6&apos;>
         {/* Summary Cards */}
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
+        <div className=&apos;grid grid-cols-1 md:grid-cols-4 gap-4&apos;>
           <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='flex items-center gap-2'>
-                <Truck className='h-4 w-4 text-blue-600' />
+            <CardHeader className=&apos;pb-2&apos;>
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <Truck className=&apos;h-4 w-4 text-blue-600&apos; />
                 Active Vehicles
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='text-2xl'>{activeVehicles.length}</div>
-              <p className='text-xs text-muted-foreground'>On the road</p>
+              <div className=&apos;text-2xl&apos;>{activeVehicles.length}</div>
+              <p className=&apos;text-xs text-muted-foreground&apos;>On the road</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='flex items-center gap-2'>
-                <LinkIcon className='h-4 w-4 text-green-600' />
+            <CardHeader className=&apos;pb-2&apos;>
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <LinkIcon className=&apos;h-4 w-4 text-green-600&apos; />
                 Active Pairings
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='text-2xl'>{totalPairings}</div>
-              <p className='text-xs text-muted-foreground'>Assets loaded</p>
+              <div className=&apos;text-2xl&apos;>{totalPairings}</div>
+              <p className=&apos;text-xs text-muted-foreground&apos;>Assets loaded</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='flex items-center gap-2'>
-                <Package className='h-4 w-4 text-gray-600' />
+            <CardHeader className=&apos;pb-2&apos;>
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <Package className=&apos;h-4 w-4 text-gray-600&apos; />
                 Available Assets
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='text-2xl'>{availableAssets.length}</div>
-              <p className='text-xs text-muted-foreground'>Ready to load</p>
+              <div className=&apos;text-2xl&apos;>{availableAssets.length}</div>
+              <p className=&apos;text-xs text-muted-foreground&apos;>Ready to load</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='flex items-center gap-2'>
-                <AlertCircle className='h-4 w-4 text-orange-600' />
+            <CardHeader className=&apos;pb-2&apos;>
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <AlertCircle className=&apos;h-4 w-4 text-orange-600&apos; />
                 Expiring Soon
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='text-2xl'>{expiringSoon}</div>
-              <p className='text-xs text-muted-foreground'>Within 2 hours</p>
+              <div className=&apos;text-2xl&apos;>{expiringSoon}</div>
+              <p className=&apos;text-xs text-muted-foreground&apos;>Within 2 hours</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Search */}
-        <div className='relative'>
-          <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+        <div className=&apos;relative&apos;>
+          <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
           <Input
-            placeholder='Search vehicles, drivers, or assets...'
+            placeholder=&apos;Search vehicles, drivers, or assets...&apos;
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className='pl-10'
+            className=&apos;pl-10&apos;
           />
         </div>
 
         {/* Vehicles List */}
-        <div className='space-y-4'>
+        <div className=&apos;space-y-4&apos;>
           {filteredVehicles.length === 0 ? (
             <EmptyState
               icon={Truck}
-              title='No vehicles found'
-              description='Try adjusting your search criteria'
+              title=&apos;No vehicles found&apos;
+              description=&apos;Try adjusting your search criteria&apos;
             />
           ) : (
             filteredVehicles.map(vehicle => (
               <Card key={vehicle.id}>
                 <CardHeader>
-                  <div className='flex items-start justify-between'>
-                    <div className='flex-1'>
-                      <div className='flex items-center gap-3'>
-                        <Truck className='h-5 w-5' />
+                  <div className=&apos;flex items-start justify-between&apos;>
+                    <div className=&apos;flex-1&apos;>
+                      <div className=&apos;flex items-center gap-3&apos;>
+                        <Truck className=&apos;h-5 w-5&apos; />
                         <div>
                           <CardTitle>{vehicle.name}</CardTitle>
-                          <p className='text-sm text-muted-foreground mt-1'>
+                          <p className=&apos;text-sm text-muted-foreground mt-1&apos;>
                             {vehicle.licensePlate} • {vehicle.type}
                           </p>
                         </div>
                       </div>
                     </div>
-                    <div className='flex items-center gap-2'>
+                    <div className=&apos;flex items-center gap-2&apos;>
                       <Button
-                        variant='ghost'
-                        size='sm'
+                        variant=&apos;ghost&apos;
+                        size=&apos;sm&apos;
                         onClick={() => {
                           navigation.navigateToEditVehicle({
                             vehicleId: vehicle.id,
@@ -535,30 +535,30 @@ export function VehicleAssetPairing({
                                     : v
                                 )
                               );
-                              toast.success('Vehicle updated successfully');
+                              toast.success(&apos;Vehicle updated successfully&apos;);
                             },
                           });
                         }}
-                        aria-label='Edit vehicle'
+                        aria-label=&apos;Edit vehicle&apos;
                       >
-                        <Edit className='h-4 w-4' />
+                        <Edit className=&apos;h-4 w-4&apos; />
                       </Button>
-                      <StatusBadge status={vehicle.status} type='vehicle' />
+                      <StatusBadge status={vehicle.status} type=&apos;vehicle&apos; />
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className='space-y-4'>
+                <CardContent className=&apos;space-y-4&apos;>
                   {/* Vehicle Info */}
-                  <div className='grid grid-cols-2 gap-4 text-sm'>
+                  <div className=&apos;grid grid-cols-2 gap-4 text-sm&apos;>
                     {vehicle.driver && (
                       <InfoRow icon={User}>
-                        <span className='text-muted-foreground'>Driver:</span>
+                        <span className=&apos;text-muted-foreground&apos;>Driver:</span>
                         <span>{vehicle.driver}</span>
                       </InfoRow>
                     )}
                     {vehicle.location && (
                       <InfoRow icon={MapPin}>
-                        <span className='text-muted-foreground'>Location:</span>
+                        <span className=&apos;text-muted-foreground&apos;>Location:</span>
                         <span>{vehicle.location}</span>
                       </InfoRow>
                     )}
@@ -572,22 +572,22 @@ export function VehicleAssetPairing({
 
                   {/* Loaded Assets */}
                   {vehicle.pairings.length > 0 ? (
-                    <div className='space-y-2'>
-                      <div className='flex items-center justify-between'>
+                    <div className=&apos;space-y-2&apos;>
+                      <div className=&apos;flex items-center justify-between&apos;>
                         <h4>Loaded Assets</h4>
                         <Button
-                          size='sm'
-                          variant='outline'
+                          size=&apos;sm&apos;
+                          variant=&apos;outline&apos;
                           onClick={() => {
                             setSelectedVehicleId(vehicle.id);
                             setShowAddAssetDialog(true);
                           }}
                         >
-                          <Plus className='h-3 w-3 mr-1' />
+                          <Plus className=&apos;h-3 w-3 mr-1&apos; />
                           Add More
                         </Button>
                       </div>
-                      <div className='space-y-2'>
+                      <div className=&apos;space-y-2&apos;>
                         {vehicle.pairings.map(pairing => {
                           const ExpirationIcon = getExpirationIcon(
                             pairing.expirationMechanism
@@ -602,62 +602,62 @@ export function VehicleAssetPairing({
                               key={pairing.id}
                               className={`p-3 bg-muted rounded-lg space-y-2 ${
                                 isExpiringSoon
-                                  ? 'border-2 border-orange-300'
-                                  : ''
+                                  ? &apos;border-2 border-orange-300&apos;
+                                  : &apos;&apos;
                               }`}
                             >
-                              <div className='flex items-start justify-between'>
-                                <div className='flex items-start gap-2 flex-1'>
-                                  <Package className='h-4 w-4 text-muted-foreground mt-0.5' />
-                                  <div className='flex-1 min-w-0'>
-                                    <p className='font-medium'>
+                              <div className=&apos;flex items-start justify-between&apos;>
+                                <div className=&apos;flex items-start gap-2 flex-1&apos;>
+                                  <Package className=&apos;h-4 w-4 text-muted-foreground mt-0.5&apos; />
+                                  <div className=&apos;flex-1 min-w-0&apos;>
+                                    <p className=&apos;font-medium&apos;>
                                       {pairing.assetName}
                                     </p>
-                                    <p className='text-xs text-muted-foreground'>
-                                      {pairing.assetType} • Loaded{' '}
+                                    <p className=&apos;text-xs text-muted-foreground&apos;>
+                                      {pairing.assetType} • Loaded{&apos; &apos;}
                                       {formatDistanceToNow(pairing.pairedAt, {
                                         addSuffix: true,
                                       })}
                                     </p>
                                   </div>
                                 </div>
-                                <div className='flex gap-1'>
+                                <div className=&apos;flex gap-1&apos;>
                                   <Button
-                                    size='sm'
-                                    variant='ghost'
+                                    size=&apos;sm&apos;
+                                    variant=&apos;ghost&apos;
                                     onClick={() => handleViewPairing(pairing)}
-                                    aria-label='View pairing settings'
+                                    aria-label=&apos;View pairing settings&apos;
                                   >
-                                    <Settings className='h-4 w-4' />
+                                    <Settings className=&apos;h-4 w-4&apos; />
                                   </Button>
                                   <Button
-                                    size='sm'
-                                    variant='ghost'
+                                    size=&apos;sm&apos;
+                                    variant=&apos;ghost&apos;
                                     onClick={() =>
                                       handleUnloadAsset(vehicle.id, pairing.id)
                                     }
-                                    aria-label='Unload asset'
+                                    aria-label=&apos;Unload asset&apos;
                                   >
-                                    <Unlink className='h-4 w-4' />
+                                    <Unlink className=&apos;h-4 w-4&apos; />
                                   </Button>
                                 </div>
                               </div>
 
-                              <div className='flex items-center gap-2 text-xs'>
-                                <ExpirationIcon className='h-3 w-3' />
+                              <div className=&apos;flex items-center gap-2 text-xs&apos;>
+                                <ExpirationIcon className=&apos;h-3 w-3&apos; />
                                 <span
                                   className={
                                     isExpiringSoon
-                                      ? 'text-orange-600 font-medium'
-                                      : 'text-muted-foreground'
+                                      ? &apos;text-orange-600 font-medium&apos;
+                                      : &apos;text-muted-foreground&apos;
                                   }
                                 >
                                   {getExpirationDisplay(pairing)}
                                 </span>
                                 {pairing.autoUnload && (
                                   <Badge
-                                    variant='secondary'
-                                    className='text-xs'
+                                    variant=&apos;secondary&apos;
+                                    className=&apos;text-xs&apos;
                                   >
                                     Auto-unload
                                   </Badge>
@@ -669,20 +669,20 @@ export function VehicleAssetPairing({
                       </div>
                     </div>
                   ) : (
-                    <div className='py-8'>
+                    <div className=&apos;py-8&apos;>
                       <EmptyState
                         icon={Package}
-                        title='No assets loaded'
-                        description='Load assets to this vehicle'
+                        title=&apos;No assets loaded&apos;
+                        description=&apos;Load assets to this vehicle&apos;
                         action={
                           <Button
-                            size='sm'
+                            size=&apos;sm&apos;
                             onClick={() => {
                               setSelectedVehicleId(vehicle.id);
                               setShowAddAssetDialog(true);
                             }}
                           >
-                            <Plus className='h-4 w-4 mr-2' />
+                            <Plus className=&apos;h-4 w-4 mr-2&apos; />
                             Load Assets
                           </Button>
                         }
@@ -698,7 +698,7 @@ export function VehicleAssetPairing({
 
       {/* Add Assets Dialog */}
       <Dialog open={showAddAssetDialog} onOpenChange={setShowAddAssetDialog}>
-        <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
+        <DialogContent className=&apos;max-w-2xl max-h-[90vh] overflow-y-auto&apos;>
           <DialogHeader>
             <DialogTitle>Load Assets to Vehicle</DialogTitle>
             <DialogDescription>
@@ -707,16 +707,16 @@ export function VehicleAssetPairing({
             </DialogDescription>
           </DialogHeader>
 
-          <div className='space-y-6 py-4'>
+          <div className=&apos;space-y-6 py-4&apos;>
             {/* Vehicle Selection */}
-            <div className='space-y-2'>
+            <div className=&apos;space-y-2&apos;>
               <Label>Vehicle *</Label>
               <Select
                 value={selectedVehicleId}
                 onValueChange={setSelectedVehicleId}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder='Select a vehicle' />
+                  <SelectValue placeholder=&apos;Select a vehicle&apos; />
                 </SelectTrigger>
                 <SelectContent>
                   {activeVehicles.map(vehicle => (
@@ -730,11 +730,11 @@ export function VehicleAssetPairing({
             </div>
 
             {/* Asset Selection */}
-            <div className='space-y-2'>
+            <div className=&apos;space-y-2&apos;>
               <Label>Assets * (Select multiple)</Label>
-              <div className='border rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto'>
+              <div className=&apos;border rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto&apos;>
                 {availableAssets.length === 0 ? (
-                  <p className='text-sm text-muted-foreground text-center py-4'>
+                  <p className=&apos;text-sm text-muted-foreground text-center py-4&apos;>
                     No available assets to load
                   </p>
                 ) : (
@@ -743,27 +743,27 @@ export function VehicleAssetPairing({
                       key={asset.id}
                       className={`p-3 rounded-lg border-2 cursor-pointer transition-colors ${
                         selectedAssets.includes(asset.id)
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border hover:border-primary/50'
+                          ? &apos;border-primary bg-primary/5&apos;
+                          : &apos;border-border hover:border-primary/50&apos;
                       }`}
                       onClick={() => toggleAssetSelection(asset.id)}
                     >
-                      <div className='flex items-center gap-3'>
+                      <div className=&apos;flex items-center gap-3&apos;>
                         <div
                           className={`w-4 h-4 rounded border-2 flex items-center justify-center ${
                             selectedAssets.includes(asset.id)
-                              ? 'border-primary bg-primary'
-                              : 'border-border'
+                              ? &apos;border-primary bg-primary&apos;
+                              : &apos;border-border&apos;
                           }`}
                         >
                           {selectedAssets.includes(asset.id) && (
-                            <div className='w-2 h-2 bg-white rounded-sm' />
+                            <div className=&apos;w-2 h-2 bg-white rounded-sm&apos; />
                           )}
                         </div>
-                        <Package className='h-4 w-4 text-muted-foreground' />
-                        <div className='flex-1'>
-                          <p className='font-medium'>{asset.name}</p>
-                          <p className='text-xs text-muted-foreground'>
+                        <Package className=&apos;h-4 w-4 text-muted-foreground&apos; />
+                        <div className=&apos;flex-1&apos;>
+                          <p className=&apos;font-medium&apos;>{asset.name}</p>
+                          <p className=&apos;text-xs text-muted-foreground&apos;>
                             {asset.id} • {asset.type}
                           </p>
                         </div>
@@ -773,9 +773,9 @@ export function VehicleAssetPairing({
                 )}
               </div>
               {selectedAssets.length > 0 && (
-                <p className='text-sm text-muted-foreground'>
+                <p className=&apos;text-sm text-muted-foreground&apos;>
                   {selectedAssets.length} asset
-                  {selectedAssets.length > 1 ? 's' : ''} selected
+                  {selectedAssets.length > 1 ? &apos;s&apos; : &apos;&apos;} selected
                 </p>
               )}
             </div>
@@ -783,7 +783,7 @@ export function VehicleAssetPairing({
             <Separator />
 
             {/* Expiration Mechanism */}
-            <div className='space-y-4'>
+            <div className=&apos;space-y-4&apos;>
               <Label>Expiration Mechanism *</Label>
 
               <Select
@@ -798,19 +798,19 @@ export function VehicleAssetPairing({
                 <SelectContent>
                   {expirationMechanisms.map(mechanism => {
                     const Icon =
-                      mechanism.value === 'manual'
+                      mechanism.value === &apos;manual&apos;
                         ? Settings
-                        : mechanism.value === 'time-based'
+                        : mechanism.value === &apos;time-based&apos;
                           ? Clock
-                          : mechanism.value.includes('geofence') &&
-                              !mechanism.value.includes('time')
+                          : mechanism.value.includes(&apos;geofence&apos;) &&
+                              !mechanism.value.includes(&apos;time&apos;)
                             ? MapPin
                             : Shield;
 
                     return (
                       <SelectItem key={mechanism.value} value={mechanism.value}>
-                        <div className='flex items-center gap-2'>
-                          <Icon className='h-4 w-4' />
+                        <div className=&apos;flex items-center gap-2&apos;>
+                          <Icon className=&apos;h-4 w-4&apos; />
                           {mechanism.label}
                         </div>
                       </SelectItem>
@@ -820,30 +820,30 @@ export function VehicleAssetPairing({
               </Select>
 
               {/* Time-Based Configuration */}
-              {(expirationMechanism === 'time-based' ||
-                expirationMechanism === 'time-and-geofence') && (
+              {(expirationMechanism === &apos;time-based&apos; ||
+                expirationMechanism === &apos;time-and-geofence&apos;) && (
                 <DateTimeInput
-                  label='Expiration Date & Time *'
+                  label=&apos;Expiration Date & Time *&apos;
                   value={expirationDateTime}
                   onChange={setExpirationDateTime}
-                  placeholder='Select when to unload assets'
+                  placeholder=&apos;Select when to unload assets&apos;
                   minDate={new Date()}
                 />
               )}
 
               {/* Geofence Configuration */}
-              {(expirationMechanism === 'geofence-exit' ||
-                expirationMechanism === 'geofence-enter' ||
-                expirationMechanism === 'time-and-geofence') && (
+              {(expirationMechanism === &apos;geofence-exit&apos; ||
+                expirationMechanism === &apos;geofence-enter&apos; ||
+                expirationMechanism === &apos;time-and-geofence&apos;) && (
                 <>
-                  <div className='space-y-2'>
+                  <div className=&apos;space-y-2&apos;>
                     <Label>Geofence *</Label>
                     <Select
                       value={selectedGeofenceId}
                       onValueChange={setSelectedGeofenceId}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder='Select a geofence' />
+                        <SelectValue placeholder=&apos;Select a geofence&apos; />
                       </SelectTrigger>
                       <SelectContent>
                         {availableGeofences.map(geofence => (
@@ -858,12 +858,12 @@ export function VehicleAssetPairing({
                     </Select>
                   </div>
 
-                  {expirationMechanism === 'time-and-geofence' && (
-                    <div className='space-y-2'>
+                  {expirationMechanism === &apos;time-and-geofence&apos; && (
+                    <div className=&apos;space-y-2&apos;>
                       <Label>Geofence Action</Label>
                       <Select
                         value={geofenceAction}
-                        onValueChange={(value: 'exit' | 'enter') =>
+                        onValueChange={(value: &apos;exit&apos; | &apos;enter&apos;) =>
                           setGeofenceAction(value)
                         }
                       >
@@ -871,8 +871,8 @@ export function VehicleAssetPairing({
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value='exit'>Unload on Exit</SelectItem>
-                          <SelectItem value='enter'>Unload on Entry</SelectItem>
+                          <SelectItem value=&apos;exit&apos;>Unload on Exit</SelectItem>
+                          <SelectItem value=&apos;enter&apos;>Unload on Entry</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -881,11 +881,11 @@ export function VehicleAssetPairing({
               )}
 
               {/* Auto-Unload Toggle */}
-              {expirationMechanism !== 'manual' && (
-                <div className='flex items-center justify-between p-4 bg-muted rounded-lg'>
-                  <div className='space-y-0.5'>
+              {expirationMechanism !== &apos;manual&apos; && (
+                <div className=&apos;flex items-center justify-between p-4 bg-muted rounded-lg&apos;>
+                  <div className=&apos;space-y-0.5&apos;>
                     <Label>Automatic Unload</Label>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className=&apos;text-sm text-muted-foreground&apos;>
                       Automatically unload when expiration condition is met
                     </p>
                   </div>
@@ -897,10 +897,10 @@ export function VehicleAssetPairing({
               )}
 
               {/* Notes */}
-              <div className='space-y-2'>
+              <div className=&apos;space-y-2&apos;>
                 <Label>Notes (Optional)</Label>
                 <Input
-                  placeholder='Add notes about this pairing...'
+                  placeholder=&apos;Add notes about this pairing...&apos;
                   value={pairingNotes}
                   onChange={e => setPairingNotes(e.target.value)}
                 />
@@ -908,37 +908,37 @@ export function VehicleAssetPairing({
             </div>
 
             {/* Expiration Summary */}
-            {expirationMechanism !== 'manual' && (
-              <div className='p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2'>
-                <div className='flex items-start gap-2'>
-                  <AlertCircle className='h-5 w-5 text-blue-600 mt-0.5' />
+            {expirationMechanism !== &apos;manual&apos; && (
+              <div className=&apos;p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2&apos;>
+                <div className=&apos;flex items-start gap-2&apos;>
+                  <AlertCircle className=&apos;h-5 w-5 text-blue-600 mt-0.5&apos; />
                   <div>
-                    <p className='text-sm font-medium text-blue-900'>
+                    <p className=&apos;text-sm font-medium text-blue-900&apos;>
                       Expiration Summary
                     </p>
-                    <p className='text-sm text-blue-700 mt-1'>
-                      {expirationMechanism === 'time-based' &&
+                    <p className=&apos;text-sm text-blue-700 mt-1&apos;>
+                      {expirationMechanism === &apos;time-based&apos; &&
                         expirationDateTime && (
                           <>
-                            Assets will{' '}
+                            Assets will{&apos; &apos;}
                             {autoUnload
-                              ? 'automatically unload'
-                              : 'be marked for unload'}{' '}
-                            on{' '}
+                              ? &apos;automatically unload&apos;
+                              : &apos;be marked for unload&apos;}{&apos; &apos;}
+                            on{&apos; &apos;}
                             {format(
                               expirationDateTime,
-                              "MMMM d, yyyy 'at' h:mm a"
+                              &quot;MMMM d, yyyy &apos;at&apos; h:mm a&quot;
                             )}
                           </>
                         )}
-                      {expirationMechanism === 'geofence-exit' &&
+                      {expirationMechanism === &apos;geofence-exit&apos; &&
                         selectedGeofenceId && (
                           <>
-                            Assets will{' '}
+                            Assets will{&apos; &apos;}
                             {autoUnload
-                              ? 'automatically unload'
-                              : 'be marked for unload'}{' '}
-                            when vehicle exits{' '}
+                              ? &apos;automatically unload&apos;
+                              : &apos;be marked for unload&apos;}{&apos; &apos;}
+                            when vehicle exits{&apos; &apos;}
                             {
                               availableGeofences.find(
                                 g => g.value === selectedGeofenceId
@@ -946,14 +946,14 @@ export function VehicleAssetPairing({
                             }
                           </>
                         )}
-                      {expirationMechanism === 'geofence-enter' &&
+                      {expirationMechanism === &apos;geofence-enter&apos; &&
                         selectedGeofenceId && (
                           <>
-                            Assets will{' '}
+                            Assets will{&apos; &apos;}
                             {autoUnload
-                              ? 'automatically unload'
-                              : 'be marked for unload'}{' '}
-                            when vehicle enters{' '}
+                              ? &apos;automatically unload&apos;
+                              : &apos;be marked for unload&apos;}{&apos; &apos;}
+                            when vehicle enters{&apos; &apos;}
                             {
                               availableGeofences.find(
                                 g => g.value === selectedGeofenceId
@@ -961,17 +961,17 @@ export function VehicleAssetPairing({
                             }
                           </>
                         )}
-                      {expirationMechanism === 'time-and-geofence' &&
+                      {expirationMechanism === &apos;time-and-geofence&apos; &&
                         expirationDateTime &&
                         selectedGeofenceId && (
                           <>
-                            Assets will{' '}
+                            Assets will{&apos; &apos;}
                             {autoUnload
-                              ? 'automatically unload'
-                              : 'be marked for unload'}{' '}
-                            on {format(expirationDateTime, "MMM d 'at' h:mm a")}{' '}
-                            OR when vehicle{' '}
-                            {geofenceAction === 'exit' ? 'exits' : 'enters'}{' '}
+                              ? &apos;automatically unload&apos;
+                              : &apos;be marked for unload&apos;}{&apos; &apos;}
+                            on {format(expirationDateTime, &quot;MMM d &apos;at&apos; h:mm a&quot;)}{&apos; &apos;}
+                            OR when vehicle{&apos; &apos;}
+                            {geofenceAction === &apos;exit&apos; ? &apos;exits&apos; : &apos;enters&apos;}{&apos; &apos;}
                             {
                               availableGeofences.find(
                                 g => g.value === selectedGeofenceId
@@ -988,15 +988,15 @@ export function VehicleAssetPairing({
 
           <DialogFooter>
             <Button
-              variant='outline'
+              variant=&apos;outline&apos;
               onClick={() => setShowAddAssetDialog(false)}
             >
               Cancel
             </Button>
             <Button onClick={handleAddAssets}>
-              <LinkIcon className='h-4 w-4 mr-2' />
+              <LinkIcon className=&apos;h-4 w-4 mr-2&apos; />
               Load {selectedAssets.length} Asset
-              {selectedAssets.length !== 1 ? 's' : ''}
+              {selectedAssets.length !== 1 ? &apos;s&apos; : &apos;&apos;}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1010,12 +1010,12 @@ export function VehicleAssetPairing({
           </DialogHeader>
 
           {selectedPairing && (
-            <div className='space-y-4 py-4'>
-              <div className='space-y-3'>
+            <div className=&apos;space-y-4 py-4&apos;>
+              <div className=&apos;space-y-3&apos;>
                 <div>
                   <Label>Asset</Label>
-                  <p className='text-sm mt-1'>{selectedPairing.assetName}</p>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className=&apos;text-sm mt-1&apos;>{selectedPairing.assetName}</p>
+                  <p className=&apos;text-xs text-muted-foreground&apos;>
                     {selectedPairing.assetType}
                   </p>
                 </div>
@@ -1024,13 +1024,13 @@ export function VehicleAssetPairing({
 
                 <div>
                   <Label>Paired At</Label>
-                  <p className='text-sm mt-1'>
+                  <p className=&apos;text-sm mt-1&apos;>
                     {format(
                       selectedPairing.pairedAt,
-                      "MMMM d, yyyy 'at' h:mm a"
+                      &quot;MMMM d, yyyy &apos;at&apos; h:mm a&quot;
                     )}
                   </p>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className=&apos;text-xs text-muted-foreground&apos;>
                     {formatDistanceToNow(selectedPairing.pairedAt, {
                       addSuffix: true,
                     })}
@@ -1041,7 +1041,7 @@ export function VehicleAssetPairing({
 
                 <div>
                   <Label>Expiration Mechanism</Label>
-                  <p className='text-sm mt-1'>
+                  <p className=&apos;text-sm mt-1&apos;>
                     {getExpirationDisplay(selectedPairing)}
                   </p>
                 </div>
@@ -1051,21 +1051,21 @@ export function VehicleAssetPairing({
                     <Separator />
                     <div>
                       <Label>Notes</Label>
-                      <p className='text-sm mt-1'>{selectedPairing.notes}</p>
+                      <p className=&apos;text-sm mt-1&apos;>{selectedPairing.notes}</p>
                     </div>
                   </>
                 )}
 
                 <Separator />
 
-                <div className='flex items-center justify-between'>
+                <div className=&apos;flex items-center justify-between&apos;>
                   <Label>Automatic Unload</Label>
                   <Badge
                     variant={
-                      selectedPairing.autoUnload ? 'default' : 'secondary'
+                      selectedPairing.autoUnload ? &apos;default&apos; : &apos;secondary&apos;
                     }
                   >
-                    {selectedPairing.autoUnload ? 'Enabled' : 'Disabled'}
+                    {selectedPairing.autoUnload ? &apos;Enabled&apos; : &apos;Disabled&apos;}
                   </Badge>
                 </div>
               </div>
@@ -1074,7 +1074,7 @@ export function VehicleAssetPairing({
 
           <DialogFooter>
             <Button
-              variant='outline'
+              variant=&apos;outline&apos;
               onClick={() => setViewPairingDialog(false)}
             >
               Close

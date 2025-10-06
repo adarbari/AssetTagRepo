@@ -38,7 +38,7 @@ export class AssetService {
       );
       return response.data;
     } catch (error) {
-      console.error('Error fetching asset details:', error);
+      // console.error('Error fetching asset details:', error);
       // Fallback to mock data on error
       return this.getMockAssetDetails(assetId);
     }
@@ -60,7 +60,7 @@ export class AssetService {
       const response = await apiClient.get(`/assets/${assetId}`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching asset:', error);
+      // console.error('Error fetching asset:', error);
       // Fallback to mock data on error
       const asset = mockAssets.find(a => a.id === assetId);
       if (!asset) {
@@ -90,7 +90,7 @@ export class AssetService {
       const response = await apiClient.put(`/assets/${assetId}`, updates);
       return response.data;
     } catch (error) {
-      console.error('Error updating asset:', error);
+      // console.error('Error updating asset:', error);
       throw error;
     }
   }
@@ -133,7 +133,7 @@ export class AssetService {
       );
       return response.data;
     } catch (error) {
-      console.error('Error fetching battery history:', error);
+      // console.error('Error fetching battery history:', error);
       // Return mock data as fallback
       return {
         assetId,
@@ -234,7 +234,7 @@ export class AssetService {
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching location history:', error);
+      // console.error('Error fetching location history:', error);
       // Return mock data as fallback
       return {
         assetId,
@@ -408,7 +408,7 @@ export class AssetService {
       const response = await apiClient.get(`/maintenance/asset/${assetId}`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching maintenance schedule:', error);
+      // console.error('Error fetching maintenance schedule:', error);
       // Return mock data as fallback
       return {
         assetId,
@@ -479,7 +479,7 @@ export class AssetService {
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching alerts:', error);
+      // console.error('Error fetching alerts:', error);
       // Return mock data as fallback
       return {
         assetId,
@@ -500,7 +500,7 @@ export class AssetService {
    */
   static async checkIn(assetId: string, data: CheckInData) {
     if (shouldUseMockData()) {
-      console.log('Check in asset:', assetId, data);
+      // console.log('Check in asset:', assetId, data);
       return {
         success: true,
         message: 'Asset checked in successfully',
@@ -514,7 +514,7 @@ export class AssetService {
       });
       return response.data;
     } catch (error) {
-      console.error('Error checking in asset:', error);
+      // console.error('Error checking in asset:', error);
       throw error;
     }
   }
@@ -524,7 +524,7 @@ export class AssetService {
    */
   static async checkOut(assetId: string, data: CheckOutData) {
     if (shouldUseMockData()) {
-      console.log('Check out asset:', assetId, data);
+      // console.log('Check out asset:', assetId, data);
       return {
         success: true,
         message: 'Asset checked out successfully',
@@ -538,7 +538,7 @@ export class AssetService {
       });
       return response.data;
     } catch (error) {
-      console.error('Error checking out asset:', error);
+      // console.error('Error checking out asset:', error);
       throw error;
     }
   }

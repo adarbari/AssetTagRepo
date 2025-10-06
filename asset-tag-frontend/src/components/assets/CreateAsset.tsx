@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import React, { useState, useEffect } from &apos;react&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Label } from &apos;../ui/label&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Switch } from '../ui/switch';
-import { Badge } from '../ui/badge';
-import { Card, CardContent } from '../ui/card';
-import { PageHeader, LoadingState, PageLayout } from '../common';
-import { Package, X } from 'lucide-react';
-import { toast } from 'sonner';
+} from &apos;../ui/select&apos;;
+import { Switch } from &apos;../ui/switch&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Card, CardContent } from &apos;../ui/card&apos;;
+import { PageHeader, LoadingState, PageLayout } from &apos;../common&apos;;
+import { Package, X } from &apos;lucide-react&apos;;
+import { toast } from &apos;sonner&apos;;
 import {
   fetchConfig,
   fetchAvailableSites,
   fetchAvailableGeofences,
   type BackendAsset,
-} from '../../services/configService';
-import type { DropdownOption } from '../../data/dropdownOptions';
-import { addAsset } from '../../data/mockData';
+} from &apos;../../services/configService&apos;;
+import type { DropdownOption } from &apos;../../data/dropdownOptions&apos;;
+import { addAsset } from &apos;../../data/mockData&apos;;
 
 interface CreateAssetProps {
   onBack: () => void;
@@ -31,23 +31,23 @@ interface CreateAssetProps {
 
 export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
   // Form state
-  const [assetName, setAssetName] = useState('');
-  const [barcodeRfid, setBarcodeRfid] = useState('');
-  const [owner, setOwner] = useState('');
-  const [assetType, setAssetType] = useState('');
-  const [project, setProject] = useState('');
-  const [cost, setCost] = useState('');
+  const [assetName, setAssetName] = useState(&apos;&apos;);
+  const [barcodeRfid, setBarcodeRfid] = useState(&apos;&apos;);
+  const [owner, setOwner] = useState(&apos;&apos;);
+  const [assetType, setAssetType] = useState(&apos;&apos;);
+  const [project, setProject] = useState(&apos;&apos;);
+  const [cost, setCost] = useState(&apos;&apos;);
   const [inMotion, setInMotion] = useState(false);
   const [offHourMovement, setOffHourMovement] = useState(false);
-  const [site, setSite] = useState('');
-  const [geofenceBoundary, setGeofenceBoundary] = useState('');
+  const [site, setSite] = useState(&apos;&apos;);
+  const [geofenceBoundary, setGeofenceBoundary] = useState(&apos;&apos;);
   const [notificationChannels, setNotificationChannels] = useState<string[]>(
     []
   );
-  const [lostItemMechanism, setLostItemMechanism] = useState('');
-  const [manufacturer, setManufacturer] = useState('');
-  const [model, setModel] = useState('');
-  const [serialNumber, setSerialNumber] = useState('');
+  const [lostItemMechanism, setLostItemMechanism] = useState(&apos;&apos;);
+  const [manufacturer, setManufacturer] = useState(&apos;&apos;);
+  const [model, setModel] = useState(&apos;&apos;);
+  const [serialNumber, setSerialNumber] = useState(&apos;&apos;);
 
   // Configuration options from backend
   const [assetTypes, setAssetTypes] = useState<DropdownOption[]>([]);
@@ -64,8 +64,8 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
     DropdownOption[]
   >([]);
   const [loading, setLoading] = useState(true);
-  const [hourlyRate, setHourlyRate] = useState('');
-  const [availability, setAvailability] = useState('available');
+  const [hourlyRate, setHourlyRate] = useState(&apos;&apos;);
+  const [availability, setAvailability] = useState(&apos;available&apos;);
 
   useEffect(() => {
     loadConfigData();
@@ -84,13 +84,13 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
         mechanismsData,
         availabilityData,
       ] = await Promise.all([
-        fetchConfig('assetTypes'),
-        fetchConfig('assetOwners'),
-        fetchConfig('projects'),
+        fetchConfig(&apos;assetTypes&apos;),
+        fetchConfig(&apos;assetOwners&apos;),
+        fetchConfig(&apos;projects&apos;),
         fetchAvailableSites(),
         fetchAvailableGeofences(),
-        fetchConfig('lostItemMechanisms'),
-        fetchConfig('assetAvailability'),
+        fetchConfig(&apos;lostItemMechanisms&apos;),
+        fetchConfig(&apos;assetAvailability&apos;),
       ]);
 
       setAssetTypes(typesData);
@@ -101,8 +101,8 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
       setLostItemMechanisms(mechanismsData);
       setAvailabilityOptions(availabilityData);
     } catch (error) {
-      console.error('Error loading configuration data:', error);
-      toast.error('Failed to load configuration data');
+      // console.error(&apos;Error loading configuration data:&apos;, error);
+      toast.error(&apos;Failed to load configuration data&apos;);
     } finally {
       setLoading(false);
     }
@@ -112,7 +112,7 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
     e.preventDefault();
 
     if (!assetName || !barcodeRfid || !assetType) {
-      toast.error('Please fill in all required fields');
+      toast.error(&apos;Please fill in all required fields&apos;);
       return;
     }
 
@@ -123,14 +123,14 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
         barcodeRfid,
         type: assetType,
         owner: owner || undefined,
-        project: project !== 'none' ? project : undefined,
+        project: project !== &apos;none&apos; ? project : undefined,
         cost: cost ? parseFloat(cost) : undefined,
         manufacturer: manufacturer || undefined,
         model: model || undefined,
         serialNumber: serialNumber || barcodeRfid,
-        site: site !== 'no-site' ? site : undefined,
+        site: site !== &apos;no-site&apos; ? site : undefined,
         geofence:
-          geofenceBoundary !== 'no-boundary' ? geofenceBoundary : undefined,
+          geofenceBoundary !== &apos;no-boundary&apos; ? geofenceBoundary : undefined,
         inMotionTracking: inMotion,
         offHourMovementAlert: offHourMovement,
         notificationChannels:
@@ -140,7 +140,7 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
         availability: availability || undefined,
         createdAt: new Date().toISOString(),
         metadata: {
-          // Any additional fields that don't fit the schema
+          // Any additional fields that don&apos;t fit the schema
         },
       };
 
@@ -154,38 +154,38 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
       const ownerLabel =
         assetOwners.find(o => o.value === owner)?.label ||
         owner ||
-        'Unassigned';
+        &apos;Unassigned&apos;;
       const siteLabel =
-        site && site !== 'no-site'
-          ? availableSites.find(s => s.value === site)?.label || ''
-          : '';
+        site && site !== &apos;no-site&apos;
+          ? availableSites.find(s => s.value === site)?.label || &apos;&apos;
+          : &apos;&apos;;
 
       const newAsset = addAsset({
         name: assetName,
         type: assetTypeLabel,
-        status: 'active' as const,
-        location: siteLabel || 'Unassigned',
+        status: &apos;active&apos; as const,
+        location: siteLabel || &apos;Unassigned&apos;,
         site: siteLabel,
-        lastSeen: 'Just now',
+        lastSeen: &apos;Just now&apos;,
         battery: 100,
         assignedTo: ownerLabel,
         serialNumber: serialNumber || barcodeRfid,
-        manufacturer: manufacturer || 'N/A',
-        model: model || 'N/A',
-        purchaseDate: new Date().toISOString().split('T')[0],
+        manufacturer: manufacturer || &apos;N/A&apos;,
+        model: model || &apos;N/A&apos;,
+        purchaseDate: new Date().toISOString().split(&apos;T&apos;)[0],
         coordinates: [37.7749, -122.4194],
         temperature: 70,
-        movement: 'stationary' as const,
+        movement: &apos;stationary&apos; as const,
         hourlyRate: hourlyRate ? parseFloat(hourlyRate) : undefined,
-        availability: (availability as any) || 'available',
+        availability: (availability as any) || &apos;available&apos;,
       });
 
-      toast.success('Asset created successfully', {
+      toast.success(&apos;Asset created successfully&apos;, {
         description: `${assetName} has been added to the inventory`,
       });
 
       // Log backend-ready object for reference
-      console.log('Backend-ready asset object:', backendAsset);
+      // console.log(&apos;Backend-ready asset object:&apos;, backendAsset);
 
       if (onAssetCreated) {
         onAssetCreated(newAsset);
@@ -193,9 +193,9 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
 
       onBack();
     } catch (error) {
-      console.error('Error creating asset:', error);
-      toast.error('Failed to create asset', {
-        description: 'Please try again',
+      // console.error(&apos;Error creating asset:&apos;, error);
+      toast.error(&apos;Failed to create asset&apos;, {
+        description: &apos;Please try again&apos;,
       });
     }
   };
@@ -209,21 +209,21 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
   };
 
   if (loading) {
-    return <LoadingState message='Loading configuration...' fullScreen />;
+    return <LoadingState message=&apos;Loading configuration...&apos; fullScreen />;
   }
 
   return (
     <PageLayout
-      variant='narrow'
-      padding='md'
+      variant=&apos;narrow&apos;
+      padding=&apos;md&apos;
       header={
         <PageHeader
-          title='Add New Asset'
-          description='Register a new asset to the tracking system'
+          title=&apos;Add New Asset&apos;
+          description=&apos;Register a new asset to the tracking system&apos;
           onBack={onBack}
           actions={
-            <Button type='submit' form='create-asset-form'>
-              <Package className='h-4 w-4 mr-2' />
+            <Button type=&apos;submit&apos; form=&apos;create-asset-form&apos;>
+              <Package className=&apos;h-4 w-4 mr-2&apos; />
               Add Asset
             </Button>
           }
@@ -231,43 +231,43 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
       }
     >
       <form
-        id='create-asset-form'
+        id=&apos;create-asset-form&apos;
         onSubmit={handleSubmit}
-        className='space-y-6'
+        className=&apos;space-y-6&apos;
       >
         {/* Basic Information */}
         <Card>
-          <CardContent className='pt-6 space-y-4'>
+          <CardContent className=&apos;pt-6 space-y-4&apos;>
             <h3>Basic Information</h3>
 
-            <div className='space-y-2'>
-              <Label htmlFor='asset-name'>Asset Name *</Label>
+            <div className=&apos;space-y-2&apos;>
+              <Label htmlFor=&apos;asset-name&apos;>Asset Name *</Label>
               <Input
-                id='asset-name'
-                placeholder='Enter asset name'
+                id=&apos;asset-name&apos;
+                placeholder=&apos;Enter asset name&apos;
                 value={assetName}
                 onChange={e => setAssetName(e.target.value)}
                 required
               />
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='barcode'>Barcode / RFID Tag *</Label>
+            <div className=&apos;space-y-2&apos;>
+              <Label htmlFor=&apos;barcode&apos;>Barcode / RFID Tag *</Label>
               <Input
-                id='barcode'
-                placeholder='Enter barcode or RFID tag number'
+                id=&apos;barcode&apos;
+                placeholder=&apos;Enter barcode or RFID tag number&apos;
                 value={barcodeRfid}
                 onChange={e => setBarcodeRfid(e.target.value)}
                 required
               />
             </div>
 
-            <div className='grid gap-4 md:grid-cols-2'>
-              <div className='space-y-2'>
-                <Label htmlFor='owner'>Owner / Assigned To</Label>
+            <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;owner&apos;>Owner / Assigned To</Label>
                 <Select value={owner} onValueChange={setOwner}>
-                  <SelectTrigger id='owner'>
-                    <SelectValue placeholder='Select owner' />
+                  <SelectTrigger id=&apos;owner&apos;>
+                    <SelectValue placeholder=&apos;Select owner&apos; />
                   </SelectTrigger>
                   <SelectContent>
                     {assetOwners.map(ownerOption => (
@@ -282,11 +282,11 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
                 </Select>
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='type'>Asset Type *</Label>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;type&apos;>Asset Type *</Label>
                 <Select value={assetType} onValueChange={setAssetType} required>
-                  <SelectTrigger id='type'>
-                    <SelectValue placeholder='Select asset type' />
+                  <SelectTrigger id=&apos;type&apos;>
+                    <SelectValue placeholder=&apos;Select asset type&apos; />
                   </SelectTrigger>
                   <SelectContent>
                     {assetTypes.map(type => (
@@ -299,44 +299,44 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
               </div>
             </div>
 
-            <div className='grid gap-4 md:grid-cols-3'>
-              <div className='space-y-2'>
-                <Label htmlFor='manufacturer'>Manufacturer</Label>
+            <div className=&apos;grid gap-4 md:grid-cols-3&apos;>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;manufacturer&apos;>Manufacturer</Label>
                 <Input
-                  id='manufacturer'
-                  placeholder='e.g., Caterpillar'
+                  id=&apos;manufacturer&apos;
+                  placeholder=&apos;e.g., Caterpillar&apos;
                   value={manufacturer}
                   onChange={e => setManufacturer(e.target.value)}
                 />
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='model'>Model</Label>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;model&apos;>Model</Label>
                 <Input
-                  id='model'
-                  placeholder='e.g., 320 GC'
+                  id=&apos;model&apos;
+                  placeholder=&apos;e.g., 320 GC&apos;
                   value={model}
                   onChange={e => setModel(e.target.value)}
                 />
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='serial'>Serial Number</Label>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;serial&apos;>Serial Number</Label>
                 <Input
-                  id='serial'
-                  placeholder='Serial number'
+                  id=&apos;serial&apos;
+                  placeholder=&apos;Serial number&apos;
                   value={serialNumber}
                   onChange={e => setSerialNumber(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className='grid gap-4 md:grid-cols-2'>
-              <div className='space-y-2'>
-                <Label htmlFor='project'>Project / Work Order</Label>
+            <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;project&apos;>Project / Work Order</Label>
                 <Select value={project} onValueChange={setProject}>
-                  <SelectTrigger id='project'>
-                    <SelectValue placeholder='Select project (optional)' />
+                  <SelectTrigger id=&apos;project&apos;>
+                    <SelectValue placeholder=&apos;Select project (optional)&apos; />
                   </SelectTrigger>
                   <SelectContent>
                     {projects.map(proj => (
@@ -348,42 +348,42 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
                 </Select>
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='cost'>Cost (USD)</Label>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;cost&apos;>Cost (USD)</Label>
                 <Input
-                  id='cost'
-                  type='number'
-                  placeholder='0.00'
+                  id=&apos;cost&apos;
+                  type=&apos;number&apos;
+                  placeholder=&apos;0.00&apos;
                   value={cost}
                   onChange={e => setCost(e.target.value)}
-                  min='0'
-                  step='0.01'
+                  min=&apos;0&apos;
+                  step=&apos;0.01&apos;
                 />
               </div>
             </div>
 
-            <div className='grid gap-4 md:grid-cols-2'>
-              <div className='space-y-2'>
-                <Label htmlFor='hourly-rate'>Hourly Rate (USD)</Label>
+            <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;hourly-rate&apos;>Hourly Rate (USD)</Label>
                 <Input
-                  id='hourly-rate'
-                  type='number'
-                  placeholder='0.00'
+                  id=&apos;hourly-rate&apos;
+                  type=&apos;number&apos;
+                  placeholder=&apos;0.00&apos;
                   value={hourlyRate}
                   onChange={e => setHourlyRate(e.target.value)}
-                  min='0'
-                  step='0.01'
+                  min=&apos;0&apos;
+                  step=&apos;0.01&apos;
                 />
-                <p className='text-sm text-muted-foreground'>
+                <p className=&apos;text-sm text-muted-foreground&apos;>
                   Rental or usage cost per hour
                 </p>
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='availability'>Availability Status</Label>
+              <div className=&apos;space-y-2&apos;>
+                <Label htmlFor=&apos;availability&apos;>Availability Status</Label>
                 <Select value={availability} onValueChange={setAvailability}>
-                  <SelectTrigger id='availability'>
-                    <SelectValue placeholder='Select availability' />
+                  <SelectTrigger id=&apos;availability&apos;>
+                    <SelectValue placeholder=&apos;Select availability&apos; />
                   </SelectTrigger>
                   <SelectContent>
                     {availabilityOptions.map(option => (
@@ -393,7 +393,7 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
                     ))}
                   </SelectContent>
                 </Select>
-                <p className='text-sm text-muted-foreground'>
+                <p className=&apos;text-sm text-muted-foreground&apos;>
                   Current availability for job assignment
                 </p>
               </div>
@@ -403,17 +403,17 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
 
         {/* Tracking Settings */}
         <Card>
-          <CardContent className='pt-6 space-y-4'>
+          <CardContent className=&apos;pt-6 space-y-4&apos;>
             <h3>Tracking Settings</h3>
 
-            <div className='space-y-2'>
-              <Label htmlFor='site'>Assigned Site</Label>
+            <div className=&apos;space-y-2&apos;>
+              <Label htmlFor=&apos;site&apos;>Assigned Site</Label>
               <Select value={site} onValueChange={setSite}>
-                <SelectTrigger id='site'>
-                  <SelectValue placeholder='Select a site (optional)' />
+                <SelectTrigger id=&apos;site&apos;>
+                  <SelectValue placeholder=&apos;Select a site (optional)&apos; />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='no-site'>No Site</SelectItem>
+                  <SelectItem value=&apos;no-site&apos;>No Site</SelectItem>
                   {availableSites.map(siteOption => (
                     <SelectItem key={siteOption.value} value={siteOption.value}>
                       {siteOption.label}
@@ -421,22 +421,22 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
                   ))}
                 </SelectContent>
               </Select>
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 Select the physical site where this asset is located
               </p>
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='geofence'>Geo-location Boundary</Label>
+            <div className=&apos;space-y-2&apos;>
+              <Label htmlFor=&apos;geofence&apos;>Geo-location Boundary</Label>
               <Select
                 value={geofenceBoundary}
                 onValueChange={setGeofenceBoundary}
               >
-                <SelectTrigger id='geofence'>
-                  <SelectValue placeholder='Select a geofence (optional)' />
+                <SelectTrigger id=&apos;geofence&apos;>
+                  <SelectValue placeholder=&apos;Select a geofence (optional)&apos; />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='no-boundary'>No Boundary</SelectItem>
+                  <SelectItem value=&apos;no-boundary&apos;>No Boundary</SelectItem>
                   {availableGeofences.map(geofence => (
                     <SelectItem key={geofence.value} value={geofence.value}>
                       {geofence.label}
@@ -444,35 +444,35 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
                   ))}
                 </SelectContent>
               </Select>
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 Optional: Define a specific zone within the site
               </p>
             </div>
 
-            <div className='space-y-3'>
-              <div className='flex items-center justify-between'>
-                <div className='space-y-0.5'>
-                  <Label htmlFor='in-motion'>In-Motion Tracking</Label>
-                  <p className='text-sm text-muted-foreground'>
+            <div className=&apos;space-y-3&apos;>
+              <div className=&apos;flex items-center justify-between&apos;>
+                <div className=&apos;space-y-0.5&apos;>
+                  <Label htmlFor=&apos;in-motion&apos;>In-Motion Tracking</Label>
+                  <p className=&apos;text-sm text-muted-foreground&apos;>
                     Enable real-time movement detection
                   </p>
                 </div>
                 <Switch
-                  id='in-motion'
+                  id=&apos;in-motion&apos;
                   checked={inMotion}
                   onCheckedChange={setInMotion}
                 />
               </div>
 
-              <div className='flex items-center justify-between'>
-                <div className='space-y-0.5'>
-                  <Label htmlFor='off-hour'>Off-Hour Movement Alert</Label>
-                  <p className='text-sm text-muted-foreground'>
+              <div className=&apos;flex items-center justify-between&apos;>
+                <div className=&apos;space-y-0.5&apos;>
+                  <Label htmlFor=&apos;off-hour&apos;>Off-Hour Movement Alert</Label>
+                  <p className=&apos;text-sm text-muted-foreground&apos;>
                     Alert when asset moves outside business hours
                   </p>
                 </div>
                 <Switch
-                  id='off-hour'
+                  id=&apos;off-hour&apos;
                   checked={offHourMovement}
                   onCheckedChange={setOffHourMovement}
                 />
@@ -483,28 +483,28 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
 
         {/* Notification Settings */}
         <Card>
-          <CardContent className='pt-6 space-y-4'>
+          <CardContent className=&apos;pt-6 space-y-4&apos;>
             <h3>Notification Settings</h3>
 
-            <div className='space-y-2'>
+            <div className=&apos;space-y-2&apos;>
               <Label>Notification Channels</Label>
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 Select how you want to be notified about this asset
               </p>
-              <div className='flex flex-wrap gap-2 pt-2'>
-                {['email', 'sms', 'push', 'webhook'].map(channel => (
+              <div className=&apos;flex flex-wrap gap-2 pt-2&apos;>
+                {[&apos;email&apos;, &apos;sms&apos;, &apos;push&apos;, &apos;webhook&apos;].map(channel => (
                   <Badge
                     key={channel}
                     variant={
                       notificationChannels.includes(channel)
-                        ? 'default'
-                        : 'outline'
+                        ? &apos;default&apos;
+                        : &apos;outline&apos;
                     }
-                    className='cursor-pointer'
+                    className=&apos;cursor-pointer&apos;
                     onClick={() => toggleNotificationChannel(channel)}
                   >
                     {notificationChannels.includes(channel) && (
-                      <X className='h-3 w-3 mr-1' />
+                      <X className=&apos;h-3 w-3 mr-1&apos; />
                     )}
                     {channel.toUpperCase()}
                   </Badge>
@@ -512,16 +512,16 @@ export function CreateAsset({ onBack, onAssetCreated }: CreateAssetProps) {
               </div>
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='lost-mechanism'>
+            <div className=&apos;space-y-2&apos;>
+              <Label htmlFor=&apos;lost-mechanism&apos;>
                 Lost Item Notification Mechanism
               </Label>
               <Select
                 value={lostItemMechanism}
                 onValueChange={setLostItemMechanism}
               >
-                <SelectTrigger id='lost-mechanism'>
-                  <SelectValue placeholder='Select notification trigger' />
+                <SelectTrigger id=&apos;lost-mechanism&apos;>
+                  <SelectValue placeholder=&apos;Select notification trigger&apos; />
                 </SelectTrigger>
                 <SelectContent>
                   {lostItemMechanisms.map(mechanism => (

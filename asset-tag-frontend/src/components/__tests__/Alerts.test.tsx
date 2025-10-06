@@ -1,56 +1,56 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent } from '../../test/test-utils';
-import { Alerts } from '../alerts/Alerts';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach, afterEach } from &apos;vitest&apos;;
+import { render, screen, fireEvent } from &apos;../../test/test-utils&apos;;
+import { Alerts } from &apos;../alerts/Alerts&apos;;
 
 // Mock the data functions
-vi.mock('../../data/mockData', () => ({
+vi.mock(&apos;../../data/mockData&apos;, () => ({
   mockAlerts: [
     {
-      id: 'ALERT-001',
-      type: 'theft',
-      severity: 'critical',
-      status: 'active',
-      message: 'Unauthorized movement detected',
-      asset: 'Generator-001',
-      timestamp: '2024-01-15T10:30:00Z',
-      reason: 'Asset moved outside authorized zone',
+      id: &apos;ALERT-001&apos;,
+      type: &apos;theft&apos;,
+      severity: &apos;critical&apos;,
+      status: &apos;active&apos;,
+      message: &apos;Unauthorized movement detected&apos;,
+      asset: &apos;Generator-001&apos;,
+      timestamp: &apos;2024-01-15T10:30:00Z&apos;,
+      reason: &apos;Asset moved outside authorized zone&apos;,
     },
     {
-      id: 'ALERT-002',
-      type: 'battery',
-      severity: 'warning',
-      status: 'active',
-      message: 'Low battery level',
-      asset: 'Crane-002',
-      timestamp: '2024-01-15T09:15:00Z',
-      reason: 'Battery level below 20%',
+      id: &apos;ALERT-002&apos;,
+      type: &apos;battery&apos;,
+      severity: &apos;warning&apos;,
+      status: &apos;active&apos;,
+      message: &apos;Low battery level&apos;,
+      asset: &apos;Crane-002&apos;,
+      timestamp: &apos;2024-01-15T09:15:00Z&apos;,
+      reason: &apos;Battery level below 20%&apos;,
     },
     {
-      id: 'ALERT-003',
-      type: 'compliance',
-      severity: 'info',
-      status: 'acknowledged',
-      message: 'Inspection due',
-      asset: 'Excavator-003',
-      timestamp: '2024-01-15T08:00:00Z',
-      reason: 'Annual inspection required',
+      id: &apos;ALERT-003&apos;,
+      type: &apos;compliance&apos;,
+      severity: &apos;info&apos;,
+      status: &apos;acknowledged&apos;,
+      message: &apos;Inspection due&apos;,
+      asset: &apos;Excavator-003&apos;,
+      timestamp: &apos;2024-01-15T08:00:00Z&apos;,
+      reason: &apos;Annual inspection required&apos;,
     },
     {
-      id: 'ALERT-004',
-      type: 'offline',
-      severity: 'warning',
-      status: 'resolved',
-      message: 'Asset offline',
-      asset: 'Loader-004',
-      timestamp: '2024-01-14T16:45:00Z',
-      reason: 'No signal received for 30 minutes',
+      id: &apos;ALERT-004&apos;,
+      type: &apos;offline&apos;,
+      severity: &apos;warning&apos;,
+      status: &apos;resolved&apos;,
+      message: &apos;Asset offline&apos;,
+      asset: &apos;Loader-004&apos;,
+      timestamp: &apos;2024-01-14T16:45:00Z&apos;,
+      reason: &apos;No signal received for 30 minutes&apos;,
     },
   ],
 }));
 
 // Mock toast
-vi.mock('sonner', () => ({
+vi.mock(&apos;sonner&apos;, () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -65,11 +65,11 @@ const mockLocalStorage = {
   clear: vi.fn(),
 };
 
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, &apos;localStorage&apos;, {
   value: mockLocalStorage,
 });
 
-describe('Alerts', () => {
+describe(&apos;Alerts&apos;, () => {
   const mockOnTakeAction = vi.fn();
   const mockOnNavigateToConfiguration = vi.fn();
 
@@ -82,8 +82,8 @@ describe('Alerts', () => {
     vi.resetAllMocks();
   });
 
-  describe('Component Rendering', () => {
-    it('renders the alerts page with correct title and description', () => {
+  describe(&apos;Component Rendering&apos;, () => {
+    it(&apos;renders the alerts page with correct title and description&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -91,13 +91,13 @@ describe('Alerts', () => {
         />
       );
 
-      expect(screen.getByText('Alert Management')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Alert Management&apos;)).toBeInTheDocument();
       expect(
-        screen.getByText('Monitor and respond to system alerts')
+        screen.getByText(&apos;Monitor and respond to system alerts&apos;)
       ).toBeInTheDocument();
     });
 
-    it('renders the Configure Rules button', () => {
+    it(&apos;renders the Configure Rules button&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -105,10 +105,10 @@ describe('Alerts', () => {
         />
       );
 
-      expect(screen.getByText('Configure Rules')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Configure Rules&apos;)).toBeInTheDocument();
     });
 
-    it('renders all statistics cards', () => {
+    it(&apos;renders all statistics cards&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -116,16 +116,16 @@ describe('Alerts', () => {
         />
       );
 
-      expect(screen.getByText('Total Alerts')).toBeInTheDocument();
-      expect(screen.getByText('Active')).toBeInTheDocument();
-      expect(screen.getByText('Critical')).toBeInTheDocument();
-      expect(screen.getByText('Theft')).toBeInTheDocument();
-      expect(screen.getByText('Battery')).toBeInTheDocument();
-      expect(screen.getByText('Compliance')).toBeInTheDocument();
-      expect(screen.getByText('Offline')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Total Alerts&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Active&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Critical&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Theft&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Battery&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Compliance&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Offline&apos;)).toBeInTheDocument();
     });
 
-    it('displays correct alert counts in statistics', () => {
+    it(&apos;displays correct alert counts in statistics&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -133,14 +133,14 @@ describe('Alerts', () => {
         />
       );
 
-      expect(screen.getByText('4')).toBeInTheDocument(); // Total alerts
-      expect(screen.getByText('2')).toBeInTheDocument(); // Active alerts
-      expect(screen.getByText('1')).toBeInTheDocument(); // Critical alerts
+      expect(screen.getByText(&apos;4&apos;)).toBeInTheDocument(); // Total alerts
+      expect(screen.getByText(&apos;2&apos;)).toBeInTheDocument(); // Active alerts
+      expect(screen.getByText(&apos;1&apos;)).toBeInTheDocument(); // Critical alerts
     });
   });
 
-  describe('Filtering', () => {
-    it('renders search input', () => {
+  describe(&apos;Filtering&apos;, () => {
+    it(&apos;renders search input&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -149,11 +149,11 @@ describe('Alerts', () => {
       );
 
       expect(
-        screen.getByPlaceholderText('Search alerts...')
+        screen.getByPlaceholderText(&apos;Search alerts...&apos;)
       ).toBeInTheDocument();
     });
 
-    it('filters alerts based on search term', () => {
+    it(&apos;filters alerts based on search term&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -161,17 +161,17 @@ describe('Alerts', () => {
         />
       );
 
-      const searchInput = screen.getByPlaceholderText('Search alerts...');
-      fireEvent.change(searchInput, { target: { value: 'battery' } });
+      const searchInput = screen.getByPlaceholderText(&apos;Search alerts...&apos;);
+      fireEvent.change(searchInput, { target: { value: &apos;battery&apos; } });
 
       // Should show only battery-related alerts
-      expect(screen.getByText('Low battery level')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Low battery level&apos;)).toBeInTheDocument();
       expect(
-        screen.queryByText('Unauthorized movement detected')
+        screen.queryByText(&apos;Unauthorized movement detected&apos;)
       ).not.toBeInTheDocument();
     });
 
-    it('filters by alert type', () => {
+    it(&apos;filters by alert type&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -179,17 +179,17 @@ describe('Alerts', () => {
         />
       );
 
-      const typeSelect = screen.getByDisplayValue('All Types');
+      const typeSelect = screen.getByDisplayValue(&apos;All Types&apos;);
       fireEvent.click(typeSelect);
-      fireEvent.click(screen.getByText('Theft Alert'));
+      fireEvent.click(screen.getByText(&apos;Theft Alert&apos;));
 
       expect(
-        screen.getByText('Unauthorized movement detected')
+        screen.getByText(&apos;Unauthorized movement detected&apos;)
       ).toBeInTheDocument();
-      expect(screen.queryByText('Low battery level')).not.toBeInTheDocument();
+      expect(screen.queryByText(&apos;Low battery level&apos;)).not.toBeInTheDocument();
     });
 
-    it('filters by severity', () => {
+    it(&apos;filters by severity&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -197,17 +197,17 @@ describe('Alerts', () => {
         />
       );
 
-      const severitySelect = screen.getByDisplayValue('All Severities');
+      const severitySelect = screen.getByDisplayValue(&apos;All Severities&apos;);
       fireEvent.click(severitySelect);
-      fireEvent.click(screen.getByText('Critical'));
+      fireEvent.click(screen.getByText(&apos;Critical&apos;));
 
       expect(
-        screen.getByText('Unauthorized movement detected')
+        screen.getByText(&apos;Unauthorized movement detected&apos;)
       ).toBeInTheDocument();
-      expect(screen.queryByText('Low battery level')).not.toBeInTheDocument();
+      expect(screen.queryByText(&apos;Low battery level&apos;)).not.toBeInTheDocument();
     });
 
-    it('filters by status', () => {
+    it(&apos;filters by status&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -215,18 +215,18 @@ describe('Alerts', () => {
         />
       );
 
-      const statusSelect = screen.getByDisplayValue('All Statuses');
+      const statusSelect = screen.getByDisplayValue(&apos;All Statuses&apos;);
       fireEvent.click(statusSelect);
-      fireEvent.click(screen.getByText('Active'));
+      fireEvent.click(screen.getByText(&apos;Active&apos;));
 
       expect(
-        screen.getByText('Unauthorized movement detected')
+        screen.getByText(&apos;Unauthorized movement detected&apos;)
       ).toBeInTheDocument();
-      expect(screen.getByText('Low battery level')).toBeInTheDocument();
-      expect(screen.queryByText('Inspection due')).not.toBeInTheDocument();
+      expect(screen.getByText(&apos;Low battery level&apos;)).toBeInTheDocument();
+      expect(screen.queryByText(&apos;Inspection due&apos;)).not.toBeInTheDocument();
     });
 
-    it('shows clear filters button when filters are active', () => {
+    it(&apos;shows clear filters button when filters are active&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -234,13 +234,13 @@ describe('Alerts', () => {
         />
       );
 
-      const searchInput = screen.getByPlaceholderText('Search alerts...');
-      fireEvent.change(searchInput, { target: { value: 'test' } });
+      const searchInput = screen.getByPlaceholderText(&apos;Search alerts...&apos;);
+      fireEvent.change(searchInput, { target: { value: &apos;test&apos; } });
 
-      expect(screen.getByText('Clear All Filters')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Clear All Filters&apos;)).toBeInTheDocument();
     });
 
-    it('clears all filters when Clear All Filters button is clicked', () => {
+    it(&apos;clears all filters when Clear All Filters button is clicked&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -248,17 +248,17 @@ describe('Alerts', () => {
         />
       );
 
-      const searchInput = screen.getByPlaceholderText('Search alerts...');
-      fireEvent.change(searchInput, { target: { value: 'test' } });
+      const searchInput = screen.getByPlaceholderText(&apos;Search alerts...&apos;);
+      fireEvent.change(searchInput, { target: { value: &apos;test&apos; } });
 
-      fireEvent.click(screen.getByText('Clear All Filters'));
+      fireEvent.click(screen.getByText(&apos;Clear All Filters&apos;));
 
-      expect(searchInput).toHaveValue('');
+      expect(searchInput).toHaveValue(&apos;&apos;);
     });
   });
 
-  describe('Grouping', () => {
-    it('renders group by selector', () => {
+  describe(&apos;Grouping&apos;, () => {
+    it(&apos;renders group by selector&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -266,10 +266,10 @@ describe('Alerts', () => {
         />
       );
 
-      expect(screen.getByDisplayValue('No Grouping')).toBeInTheDocument();
+      expect(screen.getByDisplayValue(&apos;No Grouping&apos;)).toBeInTheDocument();
     });
 
-    it('groups alerts by type when selected', () => {
+    it(&apos;groups alerts by type when selected&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -277,14 +277,14 @@ describe('Alerts', () => {
         />
       );
 
-      const groupSelect = screen.getByDisplayValue('No Grouping');
+      const groupSelect = screen.getByDisplayValue(&apos;No Grouping&apos;);
       fireEvent.click(groupSelect);
-      fireEvent.click(screen.getByText('Group by Type'));
+      fireEvent.click(screen.getByText(&apos;Group by Type&apos;));
 
-      expect(screen.getByText('By Type')).toBeInTheDocument();
+      expect(screen.getByText(&apos;By Type&apos;)).toBeInTheDocument();
     });
 
-    it('groups alerts by severity when selected', () => {
+    it(&apos;groups alerts by severity when selected&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -292,14 +292,14 @@ describe('Alerts', () => {
         />
       );
 
-      const groupSelect = screen.getByDisplayValue('No Grouping');
+      const groupSelect = screen.getByDisplayValue(&apos;No Grouping&apos;);
       fireEvent.click(groupSelect);
-      fireEvent.click(screen.getByText('Group by Severity'));
+      fireEvent.click(screen.getByText(&apos;Group by Severity&apos;));
 
-      expect(screen.getByText('By Severity')).toBeInTheDocument();
+      expect(screen.getByText(&apos;By Severity&apos;)).toBeInTheDocument();
     });
 
-    it('groups alerts by asset when selected', () => {
+    it(&apos;groups alerts by asset when selected&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -307,16 +307,16 @@ describe('Alerts', () => {
         />
       );
 
-      const groupSelect = screen.getByDisplayValue('No Grouping');
+      const groupSelect = screen.getByDisplayValue(&apos;No Grouping&apos;);
       fireEvent.click(groupSelect);
-      fireEvent.click(screen.getByText('Group by Asset'));
+      fireEvent.click(screen.getByText(&apos;Group by Asset&apos;));
 
-      expect(screen.getByText('By Asset')).toBeInTheDocument();
+      expect(screen.getByText(&apos;By Asset&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Tab Navigation', () => {
-    it('renders all tab options with correct counts', () => {
+  describe(&apos;Tab Navigation&apos;, () => {
+    it(&apos;renders all tab options with correct counts&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -324,13 +324,13 @@ describe('Alerts', () => {
         />
       );
 
-      expect(screen.getByText('All Alerts (4)')).toBeInTheDocument();
-      expect(screen.getByText('Active (2)')).toBeInTheDocument();
-      expect(screen.getByText('Acknowledged (1)')).toBeInTheDocument();
-      expect(screen.getByText('Resolved (1)')).toBeInTheDocument();
+      expect(screen.getByText(&apos;All Alerts (4)&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Active (2)&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Acknowledged (1)&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Resolved (1)&apos;)).toBeInTheDocument();
     });
 
-    it('filters alerts when switching tabs', () => {
+    it(&apos;filters alerts when switching tabs&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -339,19 +339,19 @@ describe('Alerts', () => {
       );
 
       // Click on Active tab
-      fireEvent.click(screen.getByText('Active (2)'));
+      fireEvent.click(screen.getByText(&apos;Active (2)&apos;));
 
       // Should show only active alerts
       expect(
-        screen.getByText('Unauthorized movement detected')
+        screen.getByText(&apos;Unauthorized movement detected&apos;)
       ).toBeInTheDocument();
-      expect(screen.getByText('Low battery level')).toBeInTheDocument();
-      expect(screen.queryByText('Inspection due')).not.toBeInTheDocument();
+      expect(screen.getByText(&apos;Low battery level&apos;)).toBeInTheDocument();
+      expect(screen.queryByText(&apos;Inspection due&apos;)).not.toBeInTheDocument();
     });
   });
 
-  describe('Statistics Card Interactions', () => {
-    it('filters alerts when clicking on Total Alerts card', () => {
+  describe(&apos;Statistics Card Interactions&apos;, () => {
+    it(&apos;filters alerts when clicking on Total Alerts card&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -360,21 +360,21 @@ describe('Alerts', () => {
       );
 
       const totalCard = screen
-        .getByText('Total Alerts')
-        .closest('.cursor-pointer');
+        .getByText(&apos;Total Alerts&apos;)
+        .closest(&apos;.cursor-pointer&apos;);
       if (totalCard) {
         fireEvent.click(totalCard);
 
         // Should show all alerts
         expect(
-          screen.getByText('Unauthorized movement detected')
+          screen.getByText(&apos;Unauthorized movement detected&apos;)
         ).toBeInTheDocument();
-        expect(screen.getByText('Low battery level')).toBeInTheDocument();
-        expect(screen.getByText('Inspection due')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Low battery level&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Inspection due&apos;)).toBeInTheDocument();
       }
     });
 
-    it('filters alerts when clicking on Active card', () => {
+    it(&apos;filters alerts when clicking on Active card&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -382,20 +382,20 @@ describe('Alerts', () => {
         />
       );
 
-      const activeCard = screen.getByText('Active').closest('.cursor-pointer');
+      const activeCard = screen.getByText(&apos;Active&apos;).closest(&apos;.cursor-pointer&apos;);
       if (activeCard) {
         fireEvent.click(activeCard);
 
         // Should show only active alerts
         expect(
-          screen.getByText('Unauthorized movement detected')
+          screen.getByText(&apos;Unauthorized movement detected&apos;)
         ).toBeInTheDocument();
-        expect(screen.getByText('Low battery level')).toBeInTheDocument();
-        expect(screen.queryByText('Inspection due')).not.toBeInTheDocument();
+        expect(screen.getByText(&apos;Low battery level&apos;)).toBeInTheDocument();
+        expect(screen.queryByText(&apos;Inspection due&apos;)).not.toBeInTheDocument();
       }
     });
 
-    it('filters alerts when clicking on Critical card', () => {
+    it(&apos;filters alerts when clicking on Critical card&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -404,22 +404,22 @@ describe('Alerts', () => {
       );
 
       const criticalCard = screen
-        .getByText('Critical')
-        .closest('.cursor-pointer');
+        .getByText(&apos;Critical&apos;)
+        .closest(&apos;.cursor-pointer&apos;);
       if (criticalCard) {
         fireEvent.click(criticalCard);
 
         // Should show only critical alerts
         expect(
-          screen.getByText('Unauthorized movement detected')
+          screen.getByText(&apos;Unauthorized movement detected&apos;)
         ).toBeInTheDocument();
-        expect(screen.queryByText('Low battery level')).not.toBeInTheDocument();
+        expect(screen.queryByText(&apos;Low battery level&apos;)).not.toBeInTheDocument();
       }
     });
   });
 
-  describe('User Interactions', () => {
-    it('calls onNavigateToConfiguration when Configure Rules button is clicked', () => {
+  describe(&apos;User Interactions&apos;, () => {
+    it(&apos;calls onNavigateToConfiguration when Configure Rules button is clicked&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -427,12 +427,12 @@ describe('Alerts', () => {
         />
       );
 
-      fireEvent.click(screen.getByText('Configure Rules'));
+      fireEvent.click(screen.getByText(&apos;Configure Rules&apos;));
 
       expect(mockOnNavigateToConfiguration).toHaveBeenCalled();
     });
 
-    it('calls onTakeAction when Take Action button is clicked on an alert', () => {
+    it(&apos;calls onTakeAction when Take Action button is clicked on an alert&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -440,15 +440,15 @@ describe('Alerts', () => {
         />
       );
 
-      const takeActionButtons = screen.getAllByText('Take Action');
+      const takeActionButtons = screen.getAllByText(&apos;Take Action&apos;);
       if (takeActionButtons.length > 0) {
         fireEvent.click(takeActionButtons[0]);
         expect(mockOnTakeAction).toHaveBeenCalled();
       }
     });
 
-    it('acknowledges alert when Acknowledge button is clicked', () => {
-      const { toast } = require('sonner');
+    it(&apos;acknowledges alert when Acknowledge button is clicked&apos;, () => {
+      const { toast } = require(&apos;sonner&apos;);
 
       render(
         <Alerts
@@ -457,15 +457,15 @@ describe('Alerts', () => {
         />
       );
 
-      const acknowledgeButtons = screen.getAllByText('Acknowledge');
+      const acknowledgeButtons = screen.getAllByText(&apos;Acknowledge&apos;);
       if (acknowledgeButtons.length > 0) {
         fireEvent.click(acknowledgeButtons[0]);
-        expect(toast.success).toHaveBeenCalledWith('Alert acknowledged');
+        expect(toast.success).toHaveBeenCalledWith(&apos;Alert acknowledged&apos;);
       }
     });
 
-    it('resolves alert when Resolve button is clicked', () => {
-      const { toast } = require('sonner');
+    it(&apos;resolves alert when Resolve button is clicked&apos;, () => {
+      const { toast } = require(&apos;sonner&apos;);
 
       render(
         <Alerts
@@ -474,16 +474,16 @@ describe('Alerts', () => {
         />
       );
 
-      const resolveButtons = screen.getAllByText('Resolve');
+      const resolveButtons = screen.getAllByText(&apos;Resolve&apos;);
       if (resolveButtons.length > 0) {
         fireEvent.click(resolveButtons[0]);
-        expect(toast.success).toHaveBeenCalledWith('Alert resolved');
+        expect(toast.success).toHaveBeenCalledWith(&apos;Alert resolved&apos;);
       }
     });
   });
 
-  describe('Empty States', () => {
-    it('shows no alerts found message when no alerts match filters', () => {
+  describe(&apos;Empty States&apos;, () => {
+    it(&apos;shows no alerts found message when no alerts match filters&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -491,19 +491,19 @@ describe('Alerts', () => {
         />
       );
 
-      const searchInput = screen.getByPlaceholderText('Search alerts...');
-      fireEvent.change(searchInput, { target: { value: 'NonExistent' } });
+      const searchInput = screen.getByPlaceholderText(&apos;Search alerts...&apos;);
+      fireEvent.change(searchInput, { target: { value: &apos;NonExistent&apos; } });
 
-      expect(screen.getByText('No alerts found')).toBeInTheDocument();
+      expect(screen.getByText(&apos;No alerts found&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('User Preferences', () => {
-    it('loads user preferences from localStorage', () => {
+  describe(&apos;User Preferences&apos;, () => {
+    it(&apos;loads user preferences from localStorage&apos;, () => {
       const savedPrefs = {
-        defaultView: 'active',
-        groupBy: 'type',
-        defaultSeverity: 'critical',
+        defaultView: &apos;active&apos;,
+        groupBy: &apos;type&apos;,
+        defaultSeverity: &apos;critical&apos;,
       };
 
       mockLocalStorage.getItem.mockReturnValue(JSON.stringify(savedPrefs));
@@ -515,10 +515,10 @@ describe('Alerts', () => {
         />
       );
 
-      expect(mockLocalStorage.getItem).toHaveBeenCalledWith('alertPreferences');
+      expect(mockLocalStorage.getItem).toHaveBeenCalledWith(&apos;alertPreferences&apos;);
     });
 
-    it('saves user preferences to localStorage when changed', () => {
+    it(&apos;saves user preferences to localStorage when changed&apos;, () => {
       render(
         <Alerts
           onTakeAction={mockOnTakeAction}
@@ -526,24 +526,24 @@ describe('Alerts', () => {
         />
       );
 
-      const groupSelect = screen.getByDisplayValue('No Grouping');
+      const groupSelect = screen.getByDisplayValue(&apos;No Grouping&apos;);
       fireEvent.click(groupSelect);
-      fireEvent.click(screen.getByText('Group by Type'));
+      fireEvent.click(screen.getByText(&apos;Group by Type&apos;));
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
-        'alertPreferences',
-        expect.stringContaining('"groupBy":"type"')
+        &apos;alertPreferences&apos;,
+        expect.stringContaining(&apos;&quot;groupBy&quot;:&quot;type&quot;&apos;)
       );
     });
   });
 
-  describe('Initial Filter Props', () => {
-    it('applies initial filter when provided', () => {
+  describe(&apos;Initial Filter Props&apos;, () => {
+    it(&apos;applies initial filter when provided&apos;, () => {
       const initialFilter = {
-        searchText: 'battery',
-        category: 'battery',
-        severity: 'warning',
-        status: 'active',
+        searchText: &apos;battery&apos;,
+        category: &apos;battery&apos;,
+        severity: &apos;warning&apos;,
+        status: &apos;active&apos;,
       };
 
       render(
@@ -554,8 +554,8 @@ describe('Alerts', () => {
         />
       );
 
-      const searchInput = screen.getByPlaceholderText('Search alerts...');
-      expect(searchInput).toHaveValue('battery');
+      const searchInput = screen.getByPlaceholderText(&apos;Search alerts...&apos;);
+      expect(searchInput).toHaveValue(&apos;battery&apos;);
     });
   });
 });

@@ -164,7 +164,7 @@ export async function saveConfig(
   //   body: JSON.stringify(options)
   // });
 
-  console.log(`Would save ${type} config to backend:`, options);
+  // console.log(`Would save ${type} config to backend:`, options);
 }
 
 /**

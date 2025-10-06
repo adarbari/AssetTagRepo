@@ -45,7 +45,7 @@ export const loadAlertConfigurations = async (): Promise<
     // const response = await apiClient.get('/api/alert-configs');
     // return response.data;
   } catch (error) {
-    console.error('Failed to load alert configurations:', error);
+    // console.error('Failed to load alert configurations:', error);
     throw error;
   }
 };
@@ -85,7 +85,7 @@ export const saveAlertConfigurations = async (
     //   timestamp: new Date().toISOString(),
     // });
   } catch (error) {
-    console.error('Failed to save alert configurations:', error);
+    // console.error('Failed to save alert configurations:', error);
     throw error;
   }
 };
@@ -143,7 +143,7 @@ export const loadAlertConfigByType = async (
     // const response = await apiClient.get(`/api/alert-configs/${type}`);
     // return response.data;
   } catch (error) {
-    console.error(`Failed to load configuration for ${type}:`, error);
+    // console.error(`Failed to load configuration for ${type}:`, error);
     return null;
   }
 };
@@ -169,7 +169,7 @@ export const updateAlertConfig = async (
     //   updatedAt: new Date().toISOString(),
     // });
   } catch (error) {
-    console.error(`Failed to update configuration for ${type}:`, error);
+    // console.error(`Failed to update configuration for ${type}:`, error);
     throw error;
   }
 };
@@ -196,7 +196,7 @@ export const toggleAlertType = async (
     //   userId,
     // });
   } catch (error) {
-    console.error(`Failed to toggle ${type}:`, error);
+    // console.error(`Failed to toggle ${type}:`, error);
     throw error;
   }
 };
@@ -236,7 +236,7 @@ export const importConfigurations = async (
     //   importedAt: new Date().toISOString(),
     // });
   } catch (error) {
-    console.error('Failed to import configurations:', error);
+    // console.error('Failed to import configurations:', error);
     throw error;
   }
 };
@@ -265,7 +265,7 @@ export const savePreset = async (
     // Backend implementation:
     // await apiClient.post('/api/alert-presets', newPreset);
   } catch (error) {
-    console.error('Failed to save preset:', error);
+    // console.error('Failed to save preset:', error);
     throw error;
   }
 };
@@ -283,7 +283,7 @@ export const loadPresets = async (): Promise<AlertConfigPreset[]> => {
     // const response = await apiClient.get('/api/alert-presets');
     // return response.data;
   } catch (error) {
-    console.error('Failed to load presets:', error);
+    // console.error('Failed to load presets:', error);
     return [];
   }
 };
@@ -305,7 +305,7 @@ export const applyPreset = async (
 
     await updateAlertConfig(preset.type, preset.config, userId);
   } catch (error) {
-    console.error('Failed to apply preset:', error);
+    // console.error('Failed to apply preset:', error);
     throw error;
   }
 };

@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { useNavigation } from '../../contexts/NavigationContext';
-import { toast } from 'sonner';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { StatusBadge, PageLayout } from '../common';
+import { useState, useEffect } from &apos;react&apos;;
+import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
+import { toast } from &apos;sonner&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { StatusBadge, PageLayout } from &apos;../common&apos;;
 import {
   Table,
   TableBody,
@@ -13,14 +13,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table';
+} from &apos;../ui/table&apos;;
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+} from &apos;../ui/dropdown-menu&apos;;
 import {
   MapPin,
   Plus,
@@ -35,15 +35,15 @@ import {
   Filter,
   X,
   Search,
-} from 'lucide-react';
+} from &apos;lucide-react&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Label } from '../ui/label';
+} from &apos;../ui/select&apos;;
+import { Label } from &apos;../ui/label&apos;;
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,26 +53,26 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../ui/alert-dialog';
-import { mockGeofences } from '../../data/mockData';
-import type { Geofence } from '../../types';
+} from &apos;../ui/alert-dialog&apos;;
+import { mockGeofences } from &apos;../../data/mockData&apos;;
+import type { Geofence } from &apos;../../types&apos;;
 
 // Helper function to format geofence data for display
 function formatGeofenceForDisplay(geofence: Geofence): DisplayGeofence {
   // Determine shape and radius string
-  let shape: 'circular' | 'polygon' = 'circular';
-  let radiusStr = 'N/A';
+  let shape: &apos;circular&apos; | &apos;polygon&apos; = &apos;circular&apos;;
+  let radiusStr = &apos;N/A&apos;;
 
   if (
-    geofence.type === 'polygon' &&
+    geofence.type === &apos;polygon&apos; &&
     geofence.coordinates &&
     geofence.coordinates.length > 0
   ) {
-    shape = 'polygon';
+    shape = &apos;polygon&apos;;
     // Calculate approximate area for polygon (simplified)
-    radiusStr = 'Area';
-  } else if (geofence.type === 'circular' && geofence.radius) {
-    shape = 'circular';
+    radiusStr = &apos;Area&apos;;
+  } else if (geofence.type === &apos;circular&apos; && geofence.radius) {
+    shape = &apos;circular&apos;;
     radiusStr = `${geofence.radius}m`;
   }
 
@@ -86,7 +86,7 @@ function formatGeofenceForDisplay(geofence: Geofence): DisplayGeofence {
   return {
     id: geofence.id,
     name: geofence.name,
-    type: geofence.geofenceType || 'authorized',
+    type: geofence.geofenceType || &apos;authorized&apos;,
     shape,
     radius: radiusStr,
     assetsInside: geofence.assets || 0,
@@ -113,7 +113,7 @@ interface DisplayGeofence {
   id: string;
   name: string;
   type: string;
-  shape: 'circular' | 'polygon';
+  shape: &apos;circular&apos; | &apos;polygon&apos;;
   radius: string;
   assetsInside: number;
   alerts: number;
@@ -129,18 +129,18 @@ export function Geofences({
   onViewViolatingAssets,
 }: GeofencesProps) {
   const navigation = useNavigation();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(&apos;&apos;);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedGeofence, setSelectedGeofence] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [geofences, setGeofences] = useState<DisplayGeofence[]>([]);
 
   // Filter states
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [shapeFilter, setShapeFilter] = useState<string>('all');
-  const [assetRangeFilter, setAssetRangeFilter] = useState<string>('all');
-  const [alertsFilter, setAlertsFilter] = useState<string>('all');
+  const [typeFilter, setTypeFilter] = useState<string>(&apos;all&apos;);
+  const [statusFilter, setStatusFilter] = useState<string>(&apos;all&apos;);
+  const [shapeFilter, setShapeFilter] = useState<string>(&apos;all&apos;);
+  const [assetRangeFilter, setAssetRangeFilter] = useState<string>(&apos;all&apos;);
+  const [alertsFilter, setAlertsFilter] = useState<string>(&apos;all&apos;);
 
   // Load geofences from mockData on mount
   useEffect(() => {
@@ -164,7 +164,7 @@ export function Geofences({
       getGeofenceViolatingAssets,
       getGeofenceExpectedAssets,
       getGeofenceActualAssets,
-    } = await import('../../data/mockData');
+    } = await import(&apos;../../data/mockData&apos;);
     const violatingAssets = getGeofenceViolatingAssets(geofenceId);
     const expectedAssets = getGeofenceExpectedAssets(geofenceId);
     const actualAssets = getGeofenceActualAssets(geofenceId);
@@ -190,7 +190,7 @@ export function Geofences({
     if (!selectedGeofence) return;
 
     // Delete from mockData
-    import('../../data/mockData').then(({ deleteGeofence }) => {
+    import(&apos;../../data/mockData&apos;).then(({ deleteGeofence }) => {
       const success = deleteGeofence(selectedGeofence);
 
       if (success) {
@@ -198,10 +198,10 @@ export function Geofences({
         setGeofences(prev => prev.filter(g => g.id !== selectedGeofence));
 
         // Show success notification
-        toast.success('Geofence deleted successfully');
+        toast.success(&apos;Geofence deleted successfully&apos;);
       } else {
         // Show error notification
-        toast.error('Failed to delete geofence');
+        toast.error(&apos;Failed to delete geofence&apos;);
       }
 
       setDeleteDialogOpen(false);
@@ -222,114 +222,114 @@ export function Geofences({
     }
 
     // Type filter
-    if (typeFilter !== 'all' && geofence.type !== typeFilter) {
+    if (typeFilter !== &apos;all&apos; && geofence.type !== typeFilter) {
       return false;
     }
 
     // Status filter
-    if (statusFilter !== 'all' && geofence.status !== statusFilter) {
+    if (statusFilter !== &apos;all&apos; && geofence.status !== statusFilter) {
       return false;
     }
 
     // Shape filter
-    if (shapeFilter !== 'all' && geofence.shape !== shapeFilter) {
+    if (shapeFilter !== &apos;all&apos; && geofence.shape !== shapeFilter) {
       return false;
     }
 
     // Asset range filter
-    if (assetRangeFilter !== 'all') {
+    if (assetRangeFilter !== &apos;all&apos;) {
       switch (assetRangeFilter) {
-        case '0':
+        case &apos;0&apos;:
           if (geofence.assetsInside !== 0) return false;
           break;
-        case '1-50':
+        case &apos;1-50&apos;:
           if (geofence.assetsInside < 1 || geofence.assetsInside > 50)
             return false;
           break;
-        case '51-100':
+        case &apos;51-100&apos;:
           if (geofence.assetsInside < 51 || geofence.assetsInside > 100)
             return false;
           break;
-        case '100+':
+        case &apos;100+&apos;:
           if (geofence.assetsInside <= 100) return false;
           break;
       }
     }
 
     // Alerts filter
-    if (alertsFilter !== 'all') {
-      if (alertsFilter === 'active' && geofence.alerts === 0) return false;
-      if (alertsFilter === 'none' && geofence.alerts > 0) return false;
+    if (alertsFilter !== &apos;all&apos;) {
+      if (alertsFilter === &apos;active&apos; && geofence.alerts === 0) return false;
+      if (alertsFilter === &apos;none&apos; && geofence.alerts > 0) return false;
     }
 
     return true;
   });
 
   const hasActiveFilters =
-    typeFilter !== 'all' ||
-    statusFilter !== 'all' ||
-    shapeFilter !== 'all' ||
-    assetRangeFilter !== 'all' ||
-    alertsFilter !== 'all';
+    typeFilter !== &apos;all&apos; ||
+    statusFilter !== &apos;all&apos; ||
+    shapeFilter !== &apos;all&apos; ||
+    assetRangeFilter !== &apos;all&apos; ||
+    alertsFilter !== &apos;all&apos;;
 
   const clearFilters = () => {
-    setTypeFilter('all');
-    setStatusFilter('all');
-    setShapeFilter('all');
-    setAssetRangeFilter('all');
-    setAlertsFilter('all');
+    setTypeFilter(&apos;all&apos;);
+    setStatusFilter(&apos;all&apos;);
+    setShapeFilter(&apos;all&apos;);
+    setAssetRangeFilter(&apos;all&apos;);
+    setAlertsFilter(&apos;all&apos;);
   };
 
   return (
-    <PageLayout variant='wide' padding='lg'>
+    <PageLayout variant=&apos;wide&apos; padding=&apos;lg&apos;>
       {/* Header */}
-      <div className='flex items-center justify-between'>
+      <div className=&apos;flex items-center justify-between&apos;>
         <div>
           <h1>Geofences</h1>
-          <p className='text-muted-foreground'>Manage zones and boundaries</p>
+          <p className=&apos;text-muted-foreground&apos;>Manage zones and boundaries</p>
         </div>
         <Button onClick={onCreateGeofence}>
-          <Plus className='h-4 w-4 mr-2' />
+          <Plus className=&apos;h-4 w-4 mr-2&apos; />
           Create Geofence
         </Button>
       </div>
 
       {/* Stats */}
-      <div className='grid gap-4 md:grid-cols-4'>
+      <div className=&apos;grid gap-4 md:grid-cols-4&apos;>
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm'>Total Geofences</CardTitle>
+          <CardHeader className=&apos;pb-2&apos;>
+            <CardTitle className=&apos;text-sm&apos;>Total Geofences</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl'>{geofences.length}</div>
+            <div className=&apos;text-2xl&apos;>{geofences.length}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm'>Authorized Zones</CardTitle>
+          <CardHeader className=&apos;pb-2&apos;>
+            <CardTitle className=&apos;text-sm&apos;>Authorized Zones</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl'>
-              {geofences.filter(g => g.type === 'authorized').length}
+            <div className=&apos;text-2xl&apos;>
+              {geofences.filter(g => g.type === &apos;authorized&apos;).length}
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm'>Restricted Zones</CardTitle>
+          <CardHeader className=&apos;pb-2&apos;>
+            <CardTitle className=&apos;text-sm&apos;>Restricted Zones</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl'>
-              {geofences.filter(g => g.type === 'restricted').length}
+            <div className=&apos;text-2xl&apos;>
+              {geofences.filter(g => g.type === &apos;restricted&apos;).length}
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className='pb-2'>
-            <CardTitle className='text-sm'>Active Alerts</CardTitle>
+          <CardHeader className=&apos;pb-2&apos;>
+            <CardTitle className=&apos;text-sm&apos;>Active Alerts</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='text-2xl'>
+            <div className=&apos;text-2xl&apos;>
               {geofences.reduce((sum, g) => sum + g.alerts, 0)}
             </div>
           </CardContent>
@@ -341,25 +341,25 @@ export function Geofences({
         <CardHeader>
           <CardTitle>Configured Geofences</CardTitle>
         </CardHeader>
-        <CardContent className='space-y-4'>
-          <div className='flex gap-2'>
-            <div className='relative flex-1'>
-              <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+        <CardContent className=&apos;space-y-4&apos;>
+          <div className=&apos;flex gap-2&apos;>
+            <div className=&apos;relative flex-1&apos;>
+              <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
               <Input
-                placeholder='Search geofences by name, ID, or type...'
-                className='pl-9'
+                placeholder=&apos;Search geofences by name, ID, or type...&apos;
+                className=&apos;pl-9&apos;
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
             <Button
-              variant={showFilters ? 'secondary' : 'outline'}
+              variant={showFilters ? &apos;secondary&apos; : &apos;outline&apos;}
               onClick={() => setShowFilters(!showFilters)}
             >
-              <Filter className='h-4 w-4 mr-2' />
+              <Filter className=&apos;h-4 w-4 mr-2&apos; />
               Filters
               {hasActiveFilters && (
-                <Badge variant='destructive' className='ml-2 px-1 min-w-5 h-5'>
+                <Badge variant=&apos;destructive&apos; className=&apos;ml-2 px-1 min-w-5 h-5&apos;>
                   {
                     [
                       typeFilter,
@@ -367,7 +367,7 @@ export function Geofences({
                       shapeFilter,
                       assetRangeFilter,
                       alertsFilter,
-                    ].filter(f => f !== 'all').length
+                    ].filter(f => f !== &apos;all&apos;).length
                   }
                 </Badge>
               )}
@@ -375,62 +375,62 @@ export function Geofences({
           </div>
 
           {showFilters && (
-            <div className='pt-4 border-t space-y-4'>
-              <div className='flex items-center justify-between'>
+            <div className=&apos;pt-4 border-t space-y-4&apos;>
+              <div className=&apos;flex items-center justify-between&apos;>
                 <h4>Filter Geofences</h4>
                 {hasActiveFilters && (
-                  <Button variant='ghost' size='sm' onClick={clearFilters}>
-                    <X className='h-4 w-4 mr-1' />
+                  <Button variant=&apos;ghost&apos; size=&apos;sm&apos; onClick={clearFilters}>
+                    <X className=&apos;h-4 w-4 mr-1&apos; />
                     Clear All
                   </Button>
                 )}
               </div>
 
-              <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4'>
-                <div className='space-y-2'>
+              <div className=&apos;grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4&apos;>
+                <div className=&apos;space-y-2&apos;>
                   <Label>Type</Label>
                   <Select value={typeFilter} onValueChange={setTypeFilter}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='all'>All Types</SelectItem>
-                      <SelectItem value='authorized'>Authorized</SelectItem>
-                      <SelectItem value='restricted'>Restricted</SelectItem>
-                      <SelectItem value='monitoring'>Monitoring</SelectItem>
+                      <SelectItem value=&apos;all&apos;>All Types</SelectItem>
+                      <SelectItem value=&apos;authorized&apos;>Authorized</SelectItem>
+                      <SelectItem value=&apos;restricted&apos;>Restricted</SelectItem>
+                      <SelectItem value=&apos;monitoring&apos;>Monitoring</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className='space-y-2'>
+                <div className=&apos;space-y-2&apos;>
                   <Label>Status</Label>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='all'>All Statuses</SelectItem>
-                      <SelectItem value='active'>Active</SelectItem>
-                      <SelectItem value='inactive'>Inactive</SelectItem>
+                      <SelectItem value=&apos;all&apos;>All Statuses</SelectItem>
+                      <SelectItem value=&apos;active&apos;>Active</SelectItem>
+                      <SelectItem value=&apos;inactive&apos;>Inactive</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className='space-y-2'>
+                <div className=&apos;space-y-2&apos;>
                   <Label>Shape</Label>
                   <Select value={shapeFilter} onValueChange={setShapeFilter}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='all'>All Shapes</SelectItem>
-                      <SelectItem value='circular'>Circular</SelectItem>
-                      <SelectItem value='polygon'>Polygon</SelectItem>
+                      <SelectItem value=&apos;all&apos;>All Shapes</SelectItem>
+                      <SelectItem value=&apos;circular&apos;>Circular</SelectItem>
+                      <SelectItem value=&apos;polygon&apos;>Polygon</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className='space-y-2'>
+                <div className=&apos;space-y-2&apos;>
                   <Label>Assets Inside</Label>
                   <Select
                     value={assetRangeFilter}
@@ -440,33 +440,33 @@ export function Geofences({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='all'>All Ranges</SelectItem>
-                      <SelectItem value='0'>Empty (0)</SelectItem>
-                      <SelectItem value='1-50'>1 - 50</SelectItem>
-                      <SelectItem value='51-100'>51 - 100</SelectItem>
-                      <SelectItem value='100+'>100+</SelectItem>
+                      <SelectItem value=&apos;all&apos;>All Ranges</SelectItem>
+                      <SelectItem value=&apos;0&apos;>Empty (0)</SelectItem>
+                      <SelectItem value=&apos;1-50&apos;>1 - 50</SelectItem>
+                      <SelectItem value=&apos;51-100&apos;>51 - 100</SelectItem>
+                      <SelectItem value=&apos;100+&apos;>100+</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className='space-y-2'>
+                <div className=&apos;space-y-2&apos;>
                   <Label>Alerts</Label>
                   <Select value={alertsFilter} onValueChange={setAlertsFilter}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='all'>All</SelectItem>
-                      <SelectItem value='active'>Has Active Alerts</SelectItem>
-                      <SelectItem value='none'>No Alerts</SelectItem>
+                      <SelectItem value=&apos;all&apos;>All</SelectItem>
+                      <SelectItem value=&apos;active&apos;>Has Active Alerts</SelectItem>
+                      <SelectItem value=&apos;none&apos;>No Alerts</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+              <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground&apos;>
                 <span>
-                  Showing {filteredGeofences.length} of {mockGeofences.length}{' '}
+                  Showing {filteredGeofences.length} of {mockGeofences.length}{&apos; &apos;}
                   geofences
                 </span>
               </div>
@@ -500,67 +500,67 @@ export function Geofences({
               {filteredGeofences.map(geofence => (
                 <TableRow
                   key={geofence.id}
-                  className='cursor-pointer hover:bg-muted/50'
+                  className=&apos;cursor-pointer hover:bg-muted/50&apos;
                   onClick={() => handleEdit(geofence)}
                 >
-                  <TableCell className='font-mono text-sm'>
+                  <TableCell className=&apos;font-mono text-sm&apos;>
                     {geofence.id}
                   </TableCell>
                   <TableCell>
-                    <div className='flex items-center gap-2'>
-                      <MapPin className='h-4 w-4 text-muted-foreground' />
+                    <div className=&apos;flex items-center gap-2&apos;>
+                      <MapPin className=&apos;h-4 w-4 text-muted-foreground&apos; />
                       {geofence.name}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <StatusBadge status={geofence.type} type='geofence' />
+                    <StatusBadge status={geofence.type} type=&apos;geofence&apos; />
                   </TableCell>
                   <TableCell>
-                    <div className='flex items-center gap-1'>
-                      {geofence.shape === 'circular' ? (
-                        <Circle className='h-3 w-3 text-muted-foreground' />
+                    <div className=&apos;flex items-center gap-1&apos;>
+                      {geofence.shape === &apos;circular&apos; ? (
+                        <Circle className=&apos;h-3 w-3 text-muted-foreground&apos; />
                       ) : (
-                        <Pentagon className='h-3 w-3 text-muted-foreground' />
+                        <Pentagon className=&apos;h-3 w-3 text-muted-foreground&apos; />
                       )}
-                      <span className='text-sm capitalize'>
+                      <span className=&apos;text-sm capitalize&apos;>
                         {geofence.shape}
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className='text-sm'>{geofence.radius}</TableCell>
+                  <TableCell className=&apos;text-sm&apos;>{geofence.radius}</TableCell>
                   <TableCell>
-                    <Badge variant='secondary'>{geofence.expectedAssets}</Badge>
+                    <Badge variant=&apos;secondary&apos;>{geofence.expectedAssets}</Badge>
                   </TableCell>
                   <TableCell>
                     {geofence.violatingAssets > 0 ? (
                       <Button
-                        variant='ghost'
-                        size='sm'
-                        className='h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10'
+                        variant=&apos;ghost&apos;
+                        size=&apos;sm&apos;
+                        className=&apos;h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10&apos;
                         onClick={e => {
                           e.stopPropagation();
                           handleViewViolations(geofence.id);
                         }}
                       >
-                        <Badge variant='destructive' className='mr-2'>
+                        <Badge variant=&apos;destructive&apos; className=&apos;mr-2&apos;>
                           {geofence.violatingAssets}
                         </Badge>
                         View on Map
                       </Button>
                     ) : (
-                      <span className='text-sm text-muted-foreground'>0</span>
+                      <span className=&apos;text-sm text-muted-foreground&apos;>0</span>
                     )}
                   </TableCell>
                   <TableCell>
-                    <div className='flex items-center gap-2'>
+                    <div className=&apos;flex items-center gap-2&apos;>
                       <Badge
-                        variant='outline'
+                        variant=&apos;outline&apos;
                         className={
                           geofence.complianceRate >= 90
-                            ? 'bg-green-50 text-green-700 border-green-200'
+                            ? &apos;bg-green-50 text-green-700 border-green-200&apos;
                             : geofence.complianceRate >= 70
-                              ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
-                              : 'bg-red-50 text-red-700 border-red-200'
+                              ? &apos;bg-yellow-50 text-yellow-700 border-yellow-200&apos;
+                              : &apos;bg-red-50 text-red-700 border-red-200&apos;
                         }
                       >
                         {geofence.complianceRate}%
@@ -569,11 +569,11 @@ export function Geofences({
                   </TableCell>
                   <TableCell>
                     <Badge
-                      variant='outline'
+                      variant=&apos;outline&apos;
                       className={
-                        geofence.status === 'active'
-                          ? 'bg-green-50 text-green-700 border-green-200'
-                          : 'bg-gray-50 text-gray-700 border-gray-200'
+                        geofence.status === &apos;active&apos;
+                          ? &apos;bg-green-50 text-green-700 border-green-200&apos;
+                          : &apos;bg-gray-50 text-gray-700 border-gray-200&apos;
                       }
                     >
                       {geofence.status}
@@ -582,11 +582,11 @@ export function Geofences({
                   <TableCell onClick={e => e.stopPropagation()}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant='ghost' size='icon'>
-                          <MoreVertical className='h-4 w-4' />
+                        <Button variant=&apos;ghost&apos; size=&apos;icon&apos;>
+                          <MoreVertical className=&apos;h-4 w-4&apos; />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align='end'>
+                      <DropdownMenuContent align=&apos;end&apos;>
                         <DropdownMenuItem
                           onClick={() =>
                             navigation.handleShowOnMap({
@@ -595,11 +595,11 @@ export function Geofences({
                             } as any)
                           }
                         >
-                          <Map className='h-4 w-4 mr-2' />
+                          <Map className=&apos;h-4 w-4 mr-2&apos; />
                           View on Map
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleEdit(geofence)}>
-                          <Edit className='h-4 w-4 mr-2' />
+                          <Edit className=&apos;h-4 w-4 mr-2&apos; />
                           Edit Geofence
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -607,25 +607,25 @@ export function Geofences({
                             navigation.navigateToAlertConfiguration()
                           }
                         >
-                          <Settings className='h-4 w-4 mr-2' />
+                          <Settings className=&apos;h-4 w-4 mr-2&apos; />
                           Configure Alerts
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() =>
                             toast.info(
-                              'View history functionality coming soon!'
+                              &apos;View history functionality coming soon!&apos;
                             )
                           }
                         >
-                          <History className='h-4 w-4 mr-2' />
+                          <History className=&apos;h-4 w-4 mr-2&apos; />
                           View History
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          className='text-destructive'
+                          className=&apos;text-destructive&apos;
                           onClick={() => handleDelete(geofence.id)}
                         >
-                          <Trash2 className='h-4 w-4 mr-2' />
+                          <Trash2 className=&apos;h-4 w-4 mr-2&apos; />
                           Delete Geofence
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -652,7 +652,7 @@ export function Geofences({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+              className=&apos;bg-destructive text-destructive-foreground hover:bg-destructive/90&apos;
             >
               Delete
             </AlertDialogAction>

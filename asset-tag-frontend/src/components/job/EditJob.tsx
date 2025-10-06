@@ -14,26 +14,26 @@
  * - Add Team Member uses an inline dropdown (better UX for simple single-field selection)
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from &apos;react&apos;;
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
-import { Button } from '../ui/button';
-import { Label } from '../ui/label';
-import { Separator } from '../ui/separator';
-import { Badge } from '../ui/badge';
-import { PageHeader, PageLayout } from '../common';
+} from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Separator } from &apos;../ui/separator&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { PageHeader, PageLayout } from &apos;../common&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
+} from &apos;../ui/select&apos;;
 import {
   Table,
   TableBody,
@@ -41,7 +41,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table';
+} from &apos;../ui/table&apos;;
 import {
   Dialog,
   DialogContent,
@@ -49,9 +49,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../ui/dialog';
-import { Switch } from '../ui/switch';
-import { DateTimeInput } from '../ui/datetime-input';
+} from &apos;../ui/dialog&apos;;
+import { Switch } from &apos;../ui/switch&apos;;
+import { DateTimeInput } from &apos;../ui/datetime-input&apos;;
 import {
   ArrowLeft,
   Save,
@@ -62,20 +62,20 @@ import {
   DollarSign,
   Clock,
   X,
-} from 'lucide-react';
-import { toast } from 'sonner';
+} from &apos;lucide-react&apos;;
+import { toast } from &apos;sonner&apos;;
 import type {
   Job,
   UpdateJobInput,
   JobPriority,
   JobStatus,
-} from '../../types/job';
-import { mockAssets } from '../../data/mockData';
-import { jobStatuses, teamMembers } from '../../data/dropdownOptions';
-import { JobInformationSection } from './JobInformationSection';
-import { BudgetSection } from './BudgetSection';
-import { NotesSection } from './NotesSection';
-import { TagsSection } from './TagsSection';
+} from &apos;../../types/job&apos;;
+import { mockAssets } from &apos;../../data/mockData&apos;;
+import { jobStatuses, teamMembers } from &apos;../../data/dropdownOptions&apos;;
+import { JobInformationSection } from &apos;./JobInformationSection&apos;;
+import { BudgetSection } from &apos;./BudgetSection&apos;;
+import { NotesSection } from &apos;./NotesSection&apos;;
+import { TagsSection } from &apos;./TagsSection&apos;;
 
 interface EditJobProps {
   jobId: string;
@@ -111,16 +111,16 @@ export function EditJob({
   const [description, setDescription] = useState(job.description);
   const [status, setStatus] = useState<JobStatus>(job.status);
   const [priority, setPriority] = useState<JobPriority>(job.priority);
-  const [startDate, setStartDate] = useState(job.startDate.split('T')[0]); // Convert ISO to date string
-  const [endDate, setEndDate] = useState(job.endDate.split('T')[0]); // Convert ISO to date string
+  const [startDate, setStartDate] = useState(job.startDate.split(&apos;T&apos;)[0]); // Convert ISO to date string
+  const [endDate, setEndDate] = useState(job.endDate.split(&apos;T&apos;)[0]); // Convert ISO to date string
   const [projectManager, setProjectManager] = useState(
-    job.projectManager || ''
+    job.projectManager || &apos;&apos;
   );
-  const [clientId, setClientId] = useState(job.clientId || '');
+  const [clientId, setClientId] = useState(job.clientId || &apos;&apos;);
   const [assignedTeam, setAssignedTeam] = useState<string[]>(
     job.assignedTeam || []
   );
-  const [notes, setNotes] = useState(job.notes || '');
+  const [notes, setNotes] = useState(job.notes || &apos;&apos;);
   const [tags, setTags] = useState<string[]>(job.tags || []);
 
   // Budget state
@@ -138,14 +138,14 @@ export function EditJob({
   const [showAddAssetDialog, setShowAddAssetDialog] = useState(false);
 
   // Add asset dialog state
-  const [selectedAssetId, setSelectedAssetId] = useState('');
+  const [selectedAssetId, setSelectedAssetId] = useState(&apos;&apos;);
   const [assetRequired, setAssetRequired] = useState(true);
   const [useFullJobDuration, setUseFullJobDuration] = useState(true);
   const [customStartDate, setCustomStartDate] = useState<Date | undefined>();
   const [customEndDate, setCustomEndDate] = useState<Date | undefined>();
 
   // Add team member inline state
-  const [selectedTeamMember, setSelectedTeamMember] = useState('');
+  const [selectedTeamMember, setSelectedTeamMember] = useState(&apos;&apos;);
 
   // Get available assets (not already assigned to this job)
   const availableAssets = mockAssets.filter(
@@ -159,24 +159,24 @@ export function EditJob({
 
   // Debug logging
   useEffect(() => {
-    console.log(
-      'EditJob - Available Assets:',
+    // console.log(
+      &apos;EditJob - Available Assets:&apos;,
       availableAssets.length,
       availableAssets
     );
-    console.log('EditJob - Job Assets:', job.assets);
-    console.log('EditJob - Mock Assets:', mockAssets.length);
+    // console.log(&apos;EditJob - Job Assets:&apos;, job.assets);
+    // console.log(&apos;EditJob - Mock Assets:&apos;, mockAssets.length);
   }, [availableAssets, job.assets]);
 
   const handleSave = async () => {
     try {
       if (!name || !startDate || !endDate) {
-        toast.error('Please fill in all required fields');
+        toast.error(&apos;Please fill in all required fields&apos;);
         return;
       }
 
       if (new Date(endDate) <= new Date(startDate)) {
-        toast.error('End date must be after start date');
+        toast.error(&apos;End date must be after start date&apos;);
         return;
       }
 
@@ -204,20 +204,20 @@ export function EditJob({
       const result = await onUpdateJob(jobId, updateInput);
 
       if (result.success) {
-        toast.success('Job updated successfully');
+        toast.success(&apos;Job updated successfully&apos;);
         onBack();
       } else {
-        toast.error('Failed to update job');
+        toast.error(&apos;Failed to update job&apos;);
       }
     } catch (error) {
-      console.error('Error updating job:', error);
-      toast.error('An error occurred while updating the job');
+      // console.error(&apos;Error updating job:&apos;, error);
+      toast.error(&apos;An error occurred while updating the job&apos;);
     }
   };
 
   const handleAddAsset = async () => {
     if (!selectedAssetId) {
-      toast.error('Please select an asset');
+      toast.error(&apos;Please select an asset&apos;);
       return;
     }
 
@@ -225,20 +225,20 @@ export function EditJob({
     if (!useFullJobDuration) {
       if (!customStartDate || !customEndDate) {
         toast.error(
-          'Please select both start and end date/time for custom assignment'
+          &apos;Please select both start and end date/time for custom assignment&apos;
         );
         return;
       }
 
       if (customEndDate <= customStartDate) {
-        toast.error('End date/time must be after start date/time');
+        toast.error(&apos;End date/time must be after start date/time&apos;);
         return;
       }
     }
 
     const asset = mockAssets.find(a => a.id === selectedAssetId);
     if (!asset) {
-      toast.error('Asset not found');
+      toast.error(&apos;Asset not found&apos;);
       return;
     }
 
@@ -258,16 +258,16 @@ export function EditJob({
 
     if (result.success) {
       toast.success(
-        `${asset.name} added to job with ${useFullJobDuration ? 'full job duration' : 'custom schedule'}`
+        `${asset.name} added to job with ${useFullJobDuration ? &apos;full job duration&apos; : &apos;custom schedule&apos;}`
       );
       setShowAddAssetDialog(false);
-      setSelectedAssetId('');
+      setSelectedAssetId(&apos;&apos;);
       setAssetRequired(true);
       setUseFullJobDuration(true);
       setCustomStartDate(undefined);
       setCustomEndDate(undefined);
     } else {
-      toast.error('Failed to add asset to job');
+      toast.error(&apos;Failed to add asset to job&apos;);
     }
   };
 
@@ -279,7 +279,7 @@ export function EditJob({
     if (result.success) {
       toast.success(`${assetName} removed from job`);
     } else {
-      toast.error('Failed to remove asset');
+      toast.error(&apos;Failed to remove asset&apos;);
     }
   };
 
@@ -289,39 +289,39 @@ export function EditJob({
     }
 
     setAssignedTeam([...assignedTeam, memberId]);
-    setSelectedTeamMember('');
+    setSelectedTeamMember(&apos;&apos;);
     const member = teamMembers.find(tm => tm.value === memberId);
-    toast.success(`${member?.label || 'Team member'} added`);
+    toast.success(`${member?.label || &apos;Team member&apos;} added`);
   };
 
   const handleRemoveTeamMember = (memberId: string) => {
     setAssignedTeam(assignedTeam.filter(id => id !== memberId));
-    toast.success('Team member removed');
+    toast.success(&apos;Team member removed&apos;);
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat(&apos;en-US&apos;, {
+      style: &apos;currency&apos;,
+      currency: &apos;USD&apos;,
     }).format(value);
   };
 
   return (
     <PageLayout
-      variant='narrow'
-      padding='md'
+      variant=&apos;narrow&apos;
+      padding=&apos;md&apos;
       header={
         <PageHeader
           title={`Edit Job: ${job.jobNumber}`}
-          description='Update job details, budget, assets, and team assignments'
+          description=&apos;Update job details, budget, assets, and team assignments&apos;
           actions={
-            <div className='flex gap-2'>
-              <Button variant='outline' onClick={onBack}>
-                <ArrowLeft className='h-4 w-4 mr-2' />
+            <div className=&apos;flex gap-2&apos;>
+              <Button variant=&apos;outline&apos; onClick={onBack}>
+                <ArrowLeft className=&apos;h-4 w-4 mr-2&apos; />
                 Back
               </Button>
               <Button onClick={handleSave}>
-                <Save className='h-4 w-4 mr-2' />
+                <Save className=&apos;h-4 w-4 mr-2&apos; />
                 Save Changes
               </Button>
             </div>
@@ -335,15 +335,15 @@ export function EditJob({
           <CardTitle>Job Information</CardTitle>
           <CardDescription>Basic job details and timeline</CardDescription>
         </CardHeader>
-        <CardContent className='space-y-4'>
+        <CardContent className=&apos;space-y-4&apos;>
           {/* Status Field - Only shown in edit */}
-          <div className='space-y-2'>
-            <Label htmlFor='status'>Status</Label>
+          <div className=&apos;space-y-2&apos;>
+            <Label htmlFor=&apos;status&apos;>Status</Label>
             <Select
               value={status}
               onValueChange={value => setStatus(value as JobStatus)}
             >
-              <SelectTrigger id='status'>
+              <SelectTrigger id=&apos;status&apos;>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -397,13 +397,13 @@ export function EditJob({
       {/* Budget */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <DollarSign className='h-5 w-5' />
+          <CardTitle className=&apos;flex items-center gap-2&apos;>
+            <DollarSign className=&apos;h-5 w-5&apos; />
             Budget
           </CardTitle>
           <CardDescription>Job budget breakdown</CardDescription>
         </CardHeader>
-        <CardContent className='space-y-4'>
+        <CardContent className=&apos;space-y-4&apos;>
           {/* Reusable Budget Section */}
           <BudgetSection
             totalBudget={budgetTotal}
@@ -421,18 +421,18 @@ export function EditJob({
           <Separator />
 
           {/* Actual Costs - Only shown in edit mode */}
-          <div className='bg-muted p-4 rounded-lg'>
-            <div className='text-sm text-muted-foreground'>
+          <div className=&apos;bg-muted p-4 rounded-lg&apos;>
+            <div className=&apos;text-sm text-muted-foreground&apos;>
               Current Actual Costs
             </div>
-            <div className='text-2xl mt-1'>
+            <div className=&apos;text-2xl mt-1&apos;>
               {formatCurrency(job.actualCosts.total)}
             </div>
-            <div className='text-sm text-muted-foreground mt-2'>
-              Variance:{' '}
+            <div className=&apos;text-sm text-muted-foreground mt-2&apos;>
+              Variance:{&apos; &apos;}
               <span
                 className={
-                  job.variance >= 0 ? 'text-green-600' : 'text-red-600'
+                  job.variance >= 0 ? &apos;text-green-600&apos; : &apos;text-red-600&apos;
                 }
               >
                 {formatCurrency(Math.abs(job.variance))} (
@@ -446,23 +446,23 @@ export function EditJob({
       {/* Assets */}
       <Card>
         <CardHeader>
-          <div className='flex items-center justify-between'>
+          <div className=&apos;flex items-center justify-between&apos;>
             <div>
-              <CardTitle className='flex items-center gap-2'>
-                <Package className='h-5 w-5' />
+              <CardTitle className=&apos;flex items-center gap-2&apos;>
+                <Package className=&apos;h-5 w-5&apos; />
                 Assets ({job.assets.length})
               </CardTitle>
               <CardDescription>Assets assigned to this job</CardDescription>
             </div>
             <Button onClick={() => setShowAddAssetDialog(true)}>
-              <Plus className='h-4 w-4 mr-2' />
+              <Plus className=&apos;h-4 w-4 mr-2&apos; />
               Add Asset
             </Button>
           </div>
         </CardHeader>
         <CardContent>
           {job.assets.length === 0 ? (
-            <div className='text-center py-8 text-muted-foreground'>
+            <div className=&apos;text-center py-8 text-muted-foreground&apos;>
               No assets assigned yet
             </div>
           ) : (
@@ -480,36 +480,36 @@ export function EditJob({
                 {job.assets.map(asset => (
                   <TableRow key={asset.assetId}>
                     <TableCell>{asset.assetName}</TableCell>
-                    <TableCell className='capitalize'>
+                    <TableCell className=&apos;capitalize&apos;>
                       {asset.assetType}
                     </TableCell>
                     <TableCell>
                       {asset.required ? (
                         <Badge
-                          variant='outline'
-                          className='bg-red-100 text-red-700 border-red-200'
+                          variant=&apos;outline&apos;
+                          className=&apos;bg-red-100 text-red-700 border-red-200&apos;
                         >
                           Required
                         </Badge>
                       ) : (
-                        <Badge variant='outline'>Optional</Badge>
+                        <Badge variant=&apos;outline&apos;>Optional</Badge>
                       )}
                     </TableCell>
                     <TableCell>
                       {asset.assignmentStartDate && asset.assignmentEndDate ? (
-                        <div className='flex flex-col gap-0.5 text-sm'>
-                          <div className='flex items-center gap-1'>
-                            <Clock className='h-3 w-3 text-muted-foreground' />
-                            <span className='text-muted-foreground'>From:</span>
+                        <div className=&apos;flex flex-col gap-0.5 text-sm&apos;>
+                          <div className=&apos;flex items-center gap-1&apos;>
+                            <Clock className=&apos;h-3 w-3 text-muted-foreground&apos; />
+                            <span className=&apos;text-muted-foreground&apos;>From:</span>
                             <span>
                               {new Date(
                                 asset.assignmentStartDate
                               ).toLocaleDateString()}
                             </span>
                           </div>
-                          <div className='flex items-center gap-1'>
-                            <Clock className='h-3 w-3 text-muted-foreground' />
-                            <span className='text-muted-foreground'>To:</span>
+                          <div className=&apos;flex items-center gap-1&apos;>
+                            <Clock className=&apos;h-3 w-3 text-muted-foreground&apos; />
+                            <span className=&apos;text-muted-foreground&apos;>To:</span>
                             <span>
                               {new Date(
                                 asset.assignmentEndDate
@@ -518,20 +518,20 @@ export function EditJob({
                           </div>
                         </div>
                       ) : (
-                        <span className='text-sm text-muted-foreground'>
+                        <span className=&apos;text-sm text-muted-foreground&apos;>
                           Full job duration
                         </span>
                       )}
                     </TableCell>
                     <TableCell>
                       <Button
-                        variant='ghost'
-                        size='sm'
+                        variant=&apos;ghost&apos;
+                        size=&apos;sm&apos;
                         onClick={() =>
                           handleRemoveAsset(asset.assetId, asset.assetName)
                         }
                       >
-                        <Trash2 className='h-4 w-4 text-red-600' />
+                        <Trash2 className=&apos;h-4 w-4 text-red-600&apos; />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -545,24 +545,24 @@ export function EditJob({
       {/* Team Members */}
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <Users className='h-5 w-5' />
+          <CardTitle className=&apos;flex items-center gap-2&apos;>
+            <Users className=&apos;h-5 w-5&apos; />
             Team Members ({assignedTeam.length})
           </CardTitle>
           <CardDescription>Personnel assigned to this job</CardDescription>
         </CardHeader>
-        <CardContent className='space-y-4'>
+        <CardContent className=&apos;space-y-4&apos;>
           {/* Inline Add Team Member - Better UX than modal */}
           {availableTeamMembers.length > 0 && (
-            <div className='flex items-center gap-2'>
+            <div className=&apos;flex items-center gap-2&apos;>
               <Select
                 value={selectedTeamMember}
                 onValueChange={value => {
                   handleAddTeamMember(value);
                 }}
               >
-                <SelectTrigger className='w-[300px]'>
-                  <SelectValue placeholder='Add team member...' />
+                <SelectTrigger className=&apos;w-[300px]&apos;>
+                  <SelectValue placeholder=&apos;Add team member...&apos; />
                 </SelectTrigger>
                 <SelectContent>
                   {availableTeamMembers.map(tm => (
@@ -572,7 +572,7 @@ export function EditJob({
                   ))}
                 </SelectContent>
               </Select>
-              <span className='text-sm text-muted-foreground'>
+              <span className=&apos;text-sm text-muted-foreground&apos;>
                 Select to add instantly
               </span>
             </div>
@@ -580,22 +580,22 @@ export function EditJob({
 
           {/* Current Team Members */}
           {assignedTeam.length === 0 ? (
-            <div className='text-center py-4 text-muted-foreground'>
+            <div className=&apos;text-center py-4 text-muted-foreground&apos;>
               No team members assigned yet
             </div>
           ) : (
-            <div className='flex flex-wrap gap-2'>
+            <div className=&apos;flex flex-wrap gap-2&apos;>
               {assignedTeam.map(memberId => {
                 const member = teamMembers.find(tm => tm.value === memberId);
                 return member ? (
                   <Badge
                     key={memberId}
-                    variant='secondary'
-                    className='px-3 py-2 flex items-center gap-2'
+                    variant=&apos;secondary&apos;
+                    className=&apos;px-3 py-2 flex items-center gap-2&apos;
                   >
                     {member.label}
                     <X
-                      className='h-3 w-3 cursor-pointer hover:text-destructive transition-colors'
+                      className=&apos;h-3 w-3 cursor-pointer hover:text-destructive transition-colors&apos;
                       onClick={() => handleRemoveTeamMember(memberId)}
                     />
                   </Badge>
@@ -605,7 +605,7 @@ export function EditJob({
           )}
 
           {availableTeamMembers.length === 0 && assignedTeam.length > 0 && (
-            <p className='text-sm text-muted-foreground'>
+            <p className=&apos;text-sm text-muted-foreground&apos;>
               All available team members have been assigned
             </p>
           )}
@@ -614,7 +614,7 @@ export function EditJob({
 
       {/* Add Asset Dialog */}
       <Dialog open={showAddAssetDialog} onOpenChange={setShowAddAssetDialog}>
-        <DialogContent className='max-h-[90vh] overflow-y-auto'>
+        <DialogContent className=&apos;max-h-[90vh] overflow-y-auto&apos;>
           <DialogHeader>
             <DialogTitle>Add Asset to Job</DialogTitle>
             <DialogDescription>
@@ -623,19 +623,19 @@ export function EditJob({
             </DialogDescription>
           </DialogHeader>
 
-          <div className='space-y-4'>
-            <div className='space-y-2'>
-              <Label htmlFor='asset'>Asset *</Label>
+          <div className=&apos;space-y-4&apos;>
+            <div className=&apos;space-y-2&apos;>
+              <Label htmlFor=&apos;asset&apos;>Asset *</Label>
               <Select
                 value={selectedAssetId}
                 onValueChange={setSelectedAssetId}
               >
-                <SelectTrigger id='asset'>
-                  <SelectValue placeholder='Select an asset' />
+                <SelectTrigger id=&apos;asset&apos;>
+                  <SelectValue placeholder=&apos;Select an asset&apos; />
                 </SelectTrigger>
                 <SelectContent>
                   {availableAssets.length === 0 ? (
-                    <SelectItem value='no-assets' disabled>
+                    <SelectItem value=&apos;no-assets&apos; disabled>
                       No available assets
                     </SelectItem>
                   ) : (
@@ -648,16 +648,16 @@ export function EditJob({
                 </SelectContent>
               </Select>
               {availableAssets.length === 0 && (
-                <p className='text-sm text-muted-foreground'>
+                <p className=&apos;text-sm text-muted-foreground&apos;>
                   All assets have been assigned to this job
                 </p>
               )}
             </div>
 
-            <div className='flex items-center justify-between'>
-              <div className='space-y-0.5'>
+            <div className=&apos;flex items-center justify-between&apos;>
+              <div className=&apos;space-y-0.5&apos;>
                 <Label>Required Asset</Label>
-                <p className='text-sm text-muted-foreground'>
+                <p className=&apos;text-sm text-muted-foreground&apos;>
                   Mark as required for this job
                 </p>
               </div>
@@ -669,10 +669,10 @@ export function EditJob({
 
             <Separator />
 
-            <div className='flex items-center justify-between'>
-              <div className='space-y-0.5'>
+            <div className=&apos;flex items-center justify-between&apos;>
+              <div className=&apos;space-y-0.5&apos;>
                 <Label>Use Full Job Duration</Label>
-                <p className='text-sm text-muted-foreground'>
+                <p className=&apos;text-sm text-muted-foreground&apos;>
                   Assign for entire job period
                 </p>
               </div>
@@ -683,26 +683,26 @@ export function EditJob({
             </div>
 
             {!useFullJobDuration && (
-              <div className='space-y-4 pt-2 border-t'>
-                <p className='text-sm text-muted-foreground'>
+              <div className=&apos;space-y-4 pt-2 border-t&apos;>
+                <p className=&apos;text-sm text-muted-foreground&apos;>
                   Configure custom assignment period with specific dates and
                   times
                 </p>
 
                 <DateTimeInput
-                  label='Assignment Start Date & Time *'
+                  label=&apos;Assignment Start Date & Time *&apos;
                   value={customStartDate}
                   onChange={setCustomStartDate}
-                  placeholder='Select start date and time'
+                  placeholder=&apos;Select start date and time&apos;
                   minDate={new Date(startDate)}
                   maxDate={new Date(endDate)}
                 />
 
                 <DateTimeInput
-                  label='Assignment End Date & Time *'
+                  label=&apos;Assignment End Date & Time *&apos;
                   value={customEndDate}
                   onChange={setCustomEndDate}
-                  placeholder='Select end date and time'
+                  placeholder=&apos;Select end date and time&apos;
                   minDate={customStartDate || new Date(startDate)}
                   maxDate={new Date(endDate)}
                 />
@@ -710,7 +710,7 @@ export function EditJob({
                 {customStartDate &&
                   customEndDate &&
                   customEndDate <= customStartDate && (
-                    <p className='text-sm text-destructive'>
+                    <p className=&apos;text-sm text-destructive&apos;>
                       End date/time must be after start date/time
                     </p>
                   )}
@@ -720,7 +720,7 @@ export function EditJob({
 
           <DialogFooter>
             <Button
-              variant='outline'
+              variant=&apos;outline&apos;
               onClick={() => setShowAddAssetDialog(false)}
             >
               Cancel

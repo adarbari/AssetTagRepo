@@ -1,17 +1,17 @@
-import React from 'react';
-import { ViewType } from '../../App';
-import { AlertFilter } from '../alerts/Alerts';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Separator } from '../ui/separator';
+import React from &apos;react&apos;;
+import { ViewType } from &apos;../../App&apos;;
+import { AlertFilter } from &apos;../alerts/Alerts&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { Separator } from &apos;../ui/separator&apos;;
 import {
   LoadingState,
   StatsCard,
   Section,
   PageLayout,
   PageHeader,
-} from '../common';
-import { useAsyncDataAll } from '../../hooks/useAsyncData';
+} from &apos;../common&apos;;
+import { useAsyncDataAll } from &apos;../../hooks/useAsyncData&apos;;
 import {
   Activity,
   Package,
@@ -23,7 +23,7 @@ import {
   Shield,
   BarChart3,
   Zap,
-} from 'lucide-react';
+} from &apos;lucide-react&apos;;
 import {
   AreaChart,
   Area,
@@ -38,7 +38,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
+} from &apos;recharts&apos;;
 import {
   getDashboardStats,
   getLocationData,
@@ -46,7 +46,7 @@ import {
   getBatteryStatus,
   getRecentActivity,
   getAlertBreakdown,
-} from '../../data/mockDashboardData';
+} from &apos;../../data/mockDashboardData&apos;;
 
 interface DashboardProps {
   onViewChange: (view: ViewType) => void;
@@ -67,17 +67,17 @@ export function Dashboard({
   });
 
   if (loading) {
-    return <LoadingState message='Loading dashboard...' fullScreen />;
+    return <LoadingState message=&apos;Loading dashboard...&apos; fullScreen />;
   }
 
   if (error) {
     return (
-      <div className='p-8'>
-        <div className='text-center'>
-          <h2 className='text-lg font-semibold text-red-600'>
+      <div className=&apos;p-8&apos;>
+        <div className=&apos;text-center&apos;>
+          <h2 className=&apos;text-lg font-semibold text-red-600&apos;>
             Failed to load dashboard
           </h2>
-          <p className='text-muted-foreground mt-2'>{error.message}</p>
+          <p className=&apos;text-muted-foreground mt-2&apos;>{error.message}</p>
         </div>
       </div>
     );
@@ -91,23 +91,23 @@ export function Dashboard({
 
   return (
     <PageLayout
-      variant='standard'
-      padding='lg'
+      variant=&apos;standard&apos;
+      padding=&apos;lg&apos;
       header={
-        <div className='border-b bg-background px-8 py-6'>
+        <div className=&apos;border-b bg-background px-8 py-6&apos;>
           <PageHeader
-            title='Dashboard'
-            description='Real-time asset tracking overview'
+            title=&apos;Dashboard&apos;
+            description=&apos;Real-time asset tracking overview&apos;
             icon={BarChart3}
             actions={
-              <Badge variant='outline' className='gap-1'>
-                <Activity className='h-3 w-3' />
-                System Status:{' '}
-                {stats.systemStatus === 'online'
-                  ? 'Online'
-                  : stats.systemStatus === 'degraded'
-                    ? 'Degraded'
-                    : 'Offline'}
+              <Badge variant=&apos;outline&apos; className=&apos;gap-1&apos;>
+                <Activity className=&apos;h-3 w-3&apos; />
+                System Status:{&apos; &apos;}
+                {stats.systemStatus === &apos;online&apos;
+                  ? &apos;Online&apos;
+                  : stats.systemStatus === &apos;degraded&apos;
+                    ? &apos;Degraded&apos;
+                    : &apos;Offline&apos;}
               </Badge>
             }
           />
@@ -115,22 +115,22 @@ export function Dashboard({
       }
     >
       {/* SECTION 1: Asset & Location Overview */}
-      <Section title='Asset & Location Overview' icon={Package}>
-        <div className='grid gap-4 md:grid-cols-2'>
+      <Section title=&apos;Asset & Location Overview&apos; icon={Package}>
+        <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
           <StatsCard
-            title='Total Assets'
+            title=&apos;Total Assets&apos;
             value={stats.totalAssets.toLocaleString()}
             icon={Package}
             description={`+${stats.assetsAddedThisMonth} added this month`}
-            trend={{ value: stats.assetsAddedThisMonth, direction: 'up' }}
-            onClick={() => onViewChange('inventory')}
+            trend={{ value: stats.assetsAddedThisMonth, direction: &apos;up&apos; }}
+            onClick={() => onViewChange(&apos;inventory&apos;)}
           />
           <StatsCard
-            title='Active Locations'
+            title=&apos;Active Locations&apos;
             value={stats.activeLocations.toLocaleString()}
             icon={MapPin}
             description={`${stats.trackingAccuracy}% tracking accuracy`}
-            onClick={() => onViewChange('map')}
+            onClick={() => onViewChange(&apos;map&apos;)}
           />
         </div>
       </Section>
@@ -138,27 +138,27 @@ export function Dashboard({
       <Separator />
 
       {/* SECTION 2: Alerts & Issues Requiring Attention */}
-      <Section title='Alerts & Issues' icon={AlertTriangle}>
-        <div className='grid gap-4 md:grid-cols-2'>
+      <Section title=&apos;Alerts & Issues&apos; icon={AlertTriangle}>
+        <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
           <StatsCard
-            title='Active Alerts'
+            title=&apos;Active Alerts&apos;
             value={stats.activeAlerts}
             icon={AlertTriangle}
             description={`${stats.criticalAlerts} critical • ${stats.activeAlerts - stats.criticalAlerts} medium`}
-            onClick={() => onNavigateToAlerts({ status: 'active' })}
-            variant='warning'
-            className='border-l-4 border-l-orange-500'
+            onClick={() => onNavigateToAlerts({ status: &apos;active&apos; })}
+            variant=&apos;warning&apos;
+            className=&apos;border-l-4 border-l-orange-500&apos;
           />
           <StatsCard
-            title='Battery Alerts'
+            title=&apos;Battery Alerts&apos;
             value={stats.batteryAlerts}
             icon={Battery}
-            description='Require attention <20%'
+            description=&apos;Require attention <20%&apos;
             onClick={() =>
-              onNavigateToAlerts({ category: 'battery', status: 'active' })
+              onNavigateToAlerts({ category: &apos;battery&apos;, status: &apos;active&apos; })
             }
-            variant='warning'
-            className='border-l-4 border-l-amber-500'
+            variant=&apos;warning&apos;
+            className=&apos;border-l-4 border-l-amber-500&apos;
           />
         </div>
       </Section>
@@ -166,40 +166,40 @@ export function Dashboard({
       <Separator />
 
       {/* SECTION 3: Analytics & Insights */}
-      <div className='space-y-4'>
-        <div className='flex items-center gap-2'>
-          <BarChart3 className='h-5 w-5 text-muted-foreground' />
-          <div className='text-xl text-muted-foreground'>
+      <div className=&apos;space-y-4&apos;>
+        <div className=&apos;flex items-center gap-2&apos;>
+          <BarChart3 className=&apos;h-5 w-5 text-muted-foreground&apos; />
+          <div className=&apos;text-xl text-muted-foreground&apos;>
             Analytics & Insights
           </div>
         </div>
 
-        <div className='grid gap-4 md:grid-cols-2'>
+        <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
           {/* Asset Distribution */}
           <Card
-            className='cursor-pointer transition-all hover:shadow-md'
-            onClick={() => onViewChange('inventory')}
+            className=&apos;cursor-pointer transition-all hover:shadow-md&apos;
+            onClick={() => onViewChange(&apos;inventory&apos;)}
           >
             <CardHeader>
               <CardTitle>Assets by Type</CardTitle>
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 Click to view inventory
               </p>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width='100%' height={300}>
+              <ResponsiveContainer width=&apos;100%&apos; height={300}>
                 <PieChart>
                   <Pie
                     data={assetsByType}
-                    cx='50%'
-                    cy='50%'
+                    cx=&apos;50%&apos;
+                    cy=&apos;50%&apos;
                     labelLine={false}
                     label={({ name, percent }) =>
                       `${name}: ${(percent * 100).toFixed(0)}%`
                     }
                     outerRadius={80}
-                    fill='#8884d8'
-                    dataKey='value'
+                    fill=&apos;#8884d8&apos;
+                    dataKey=&apos;value&apos;
                   >
                     {assetsByType.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -213,41 +213,41 @@ export function Dashboard({
 
           {/* Location Activity */}
           <Card
-            className='cursor-pointer transition-all hover:shadow-md'
-            onClick={() => onViewChange('map')}
+            className=&apos;cursor-pointer transition-all hover:shadow-md&apos;
+            onClick={() => onViewChange(&apos;map&apos;)}
           >
             <CardHeader>
               <CardTitle>Location Updates (24h)</CardTitle>
-              <p className='text-sm text-muted-foreground'>
+              <p className=&apos;text-sm text-muted-foreground&apos;>
                 Click to view live map
               </p>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width='100%' height={300}>
+              <ResponsiveContainer width=&apos;100%&apos; height={300}>
                 <AreaChart data={locationData}>
                   <CartesianGrid
-                    strokeDasharray='3 3'
-                    className='stroke-muted'
+                    strokeDasharray=&apos;3 3&apos;
+                    className=&apos;stroke-muted&apos;
                   />
-                  <XAxis dataKey='time' className='text-xs' />
-                  <YAxis className='text-xs' />
+                  <XAxis dataKey=&apos;time&apos; className=&apos;text-xs&apos; />
+                  <YAxis className=&apos;text-xs&apos; />
                   <Tooltip />
                   <Legend />
                   <Area
-                    type='monotone'
-                    dataKey='observations'
-                    stroke='hsl(var(--chart-1))'
-                    fill='hsl(var(--chart-1))'
+                    type=&apos;monotone&apos;
+                    dataKey=&apos;observations&apos;
+                    stroke=&apos;hsl(var(--chart-1))&apos;
+                    fill=&apos;hsl(var(--chart-1))&apos;
                     fillOpacity={0.6}
-                    name='Observations'
+                    name=&apos;Observations&apos;
                   />
                   <Area
-                    type='monotone'
-                    dataKey='assets'
-                    stroke='hsl(var(--chart-2))'
-                    fill='hsl(var(--chart-2))'
+                    type=&apos;monotone&apos;
+                    dataKey=&apos;assets&apos;
+                    stroke=&apos;hsl(var(--chart-2))&apos;
+                    fill=&apos;hsl(var(--chart-2))&apos;
                     fillOpacity={0.6}
-                    name='Active Assets'
+                    name=&apos;Active Assets&apos;
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -259,32 +259,32 @@ export function Dashboard({
       <Separator />
 
       {/* SECTION 4: Battery & Maintenance */}
-      <div className='space-y-4'>
-        <div className='flex items-center gap-2'>
-          <Zap className='h-5 w-5 text-muted-foreground' />
-          <div className='text-xl text-muted-foreground'>
+      <div className=&apos;space-y-4&apos;>
+        <div className=&apos;flex items-center gap-2&apos;>
+          <Zap className=&apos;h-5 w-5 text-muted-foreground&apos; />
+          <div className=&apos;text-xl text-muted-foreground&apos;>
             Battery & Maintenance
           </div>
         </div>
 
         <Card
-          className='cursor-pointer transition-all hover:shadow-md'
-          onClick={() => onViewChange('reports')}
+          className=&apos;cursor-pointer transition-all hover:shadow-md&apos;
+          onClick={() => onViewChange(&apos;reports&apos;)}
         >
           <CardHeader>
             <CardTitle>Battery Status Distribution</CardTitle>
-            <p className='text-sm text-muted-foreground'>
+            <p className=&apos;text-sm text-muted-foreground&apos;>
               Click to view detailed reports
             </p>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width='100%' height={300}>
+            <ResponsiveContainer width=&apos;100%&apos; height={300}>
               <BarChart data={batteryStatus}>
-                <CartesianGrid strokeDasharray='3 3' className='stroke-muted' />
-                <XAxis dataKey='range' className='text-xs' />
-                <YAxis className='text-xs' />
+                <CartesianGrid strokeDasharray=&apos;3 3&apos; className=&apos;stroke-muted&apos; />
+                <XAxis dataKey=&apos;range&apos; className=&apos;text-xs&apos; />
+                <YAxis className=&apos;text-xs&apos; />
                 <Tooltip />
-                <Bar dataKey='count' fill='hsl(var(--chart-3))' />
+                <Bar dataKey=&apos;count&apos; fill=&apos;hsl(var(--chart-3))&apos; />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -294,70 +294,70 @@ export function Dashboard({
       <Separator />
 
       {/* SECTION 5: System Health & Infrastructure */}
-      <div className='space-y-4'>
-        <div className='flex items-center gap-2'>
-          <Shield className='h-5 w-5 text-muted-foreground' />
-          <div className='text-xl text-muted-foreground'>
+      <div className=&apos;space-y-4&apos;>
+        <div className=&apos;flex items-center gap-2&apos;>
+          <Shield className=&apos;h-5 w-5 text-muted-foreground&apos; />
+          <div className=&apos;text-xl text-muted-foreground&apos;>
             System Health & Infrastructure
           </div>
         </div>
 
-        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
+        <div className=&apos;grid gap-4 md:grid-cols-2 lg:grid-cols-4&apos;>
           <Card>
-            <CardHeader className='pb-2'>
-              <div className='flex items-center gap-2'>
-                <Shield className='h-4 w-4 text-green-600' />
-                <CardTitle className='text-sm'>Uptime</CardTitle>
+            <CardHeader className=&apos;pb-2&apos;>
+              <div className=&apos;flex items-center gap-2&apos;>
+                <Shield className=&apos;h-4 w-4 text-green-600&apos; />
+                <CardTitle className=&apos;text-sm&apos;>Uptime</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <div className='text-2xl'>99.97%</div>
-              <p className='text-xs text-green-600 mt-1'>
+              <div className=&apos;text-2xl&apos;>99.97%</div>
+              <p className=&apos;text-xs text-green-600 mt-1&apos;>
                 All systems operational
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className='pb-2'>
-              <div className='flex items-center gap-2'>
-                <Clock className='h-4 w-4 text-blue-600' />
-                <CardTitle className='text-sm'>Avg Latency</CardTitle>
+            <CardHeader className=&apos;pb-2&apos;>
+              <div className=&apos;flex items-center gap-2&apos;>
+                <Clock className=&apos;h-4 w-4 text-blue-600&apos; />
+                <CardTitle className=&apos;text-sm&apos;>Avg Latency</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <div className='text-2xl'>2.3s</div>
-              <p className='text-xs text-muted-foreground mt-1'>
+              <div className=&apos;text-2xl&apos;>2.3s</div>
+              <p className=&apos;text-xs text-muted-foreground mt-1&apos;>
                 Last update: 2 hours ago
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className='pb-2'>
-              <div className='flex items-center gap-2'>
-                <TrendingUp className='h-4 w-4 text-purple-600' />
-                <CardTitle className='text-sm'>Observations/sec</CardTitle>
+            <CardHeader className=&apos;pb-2&apos;>
+              <div className=&apos;flex items-center gap-2&apos;>
+                <TrendingUp className=&apos;h-4 w-4 text-purple-600&apos; />
+                <CardTitle className=&apos;text-sm&apos;>Observations/sec</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <div className='text-2xl'>87,432</div>
-              <p className='text-xs text-muted-foreground mt-1'>
+              <div className=&apos;text-2xl&apos;>87,432</div>
+              <p className=&apos;text-xs text-muted-foreground mt-1&apos;>
                 BLE observations rate
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className='pb-2'>
-              <div className='flex items-center gap-2'>
-                <Activity className='h-4 w-4 text-orange-600' />
-                <CardTitle className='text-sm'>Active Gateways</CardTitle>
+            <CardHeader className=&apos;pb-2&apos;>
+              <div className=&apos;flex items-center gap-2&apos;>
+                <Activity className=&apos;h-4 w-4 text-orange-600&apos; />
+                <CardTitle className=&apos;text-sm&apos;>Active Gateways</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <div className='text-2xl'>2,341</div>
-              <p className='text-xs text-muted-foreground mt-1'>
+              <div className=&apos;text-2xl&apos;>2,341</div>
+              <p className=&apos;text-xs text-muted-foreground mt-1&apos;>
                 Vehicle & Asset gateways
               </p>
             </CardContent>

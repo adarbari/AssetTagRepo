@@ -1,53 +1,53 @@
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Input } from '../input';
-import { render } from '../../../test/test-utils';
+import React from &apos;react&apos;;
+import { describe, it, expect, vi } from &apos;vitest&apos;;
+import { screen } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { Input } from &apos;../input&apos;;
+import { render } from &apos;../../../test/test-utils&apos;;
 
-describe('Input Component - Click Tests', () => {
-  describe('Basic Input Functionality', () => {
-    it('should render input with default type', () => {
-      render(<Input placeholder='Enter text' />);
+describe(&apos;Input Component - Click Tests&apos;, () => {
+  describe(&apos;Basic Input Functionality&apos;, () => {
+    it(&apos;should render input with default type&apos;, () => {
+      render(<Input placeholder=&apos;Enter text&apos; />);
 
-      const input = screen.getByPlaceholderText('Enter text');
+      const input = screen.getByPlaceholderText(&apos;Enter text&apos;);
       expect(input).toBeInTheDocument();
-      // Input component doesn't explicitly set type="text" by default
+      // Input component doesn&apos;t explicitly set type=&quot;text&quot; by default
       expect(input).toBeInTheDocument();
-      expect(input).toHaveAttribute('data-slot', 'input');
+      expect(input).toHaveAttribute(&apos;data-slot&apos;, &apos;input&apos;);
     });
 
-    it('should render input with specific type', () => {
-      render(<Input type='email' placeholder='Enter email' />);
+    it(&apos;should render input with specific type&apos;, () => {
+      render(<Input type=&apos;email&apos; placeholder=&apos;Enter email&apos; />);
 
-      const input = screen.getByPlaceholderText('Enter email');
-      expect(input).toHaveAttribute('type', 'email');
+      const input = screen.getByPlaceholderText(&apos;Enter email&apos;);
+      expect(input).toHaveAttribute(&apos;type&apos;, &apos;email&apos;);
     });
 
-    it('should handle text input', async () => {
+    it(&apos;should handle text input&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input placeholder='Enter text' />);
+      render(<Input placeholder=&apos;Enter text&apos; />);
 
-      const input = screen.getByPlaceholderText('Enter text');
-      await user.type(input, 'Hello World');
+      const input = screen.getByPlaceholderText(&apos;Enter text&apos;);
+      await user.type(input, &apos;Hello World&apos;);
 
-      expect(input).toHaveValue('Hello World');
+      expect(input).toHaveValue(&apos;Hello World&apos;);
     });
 
-    it('should handle input focus and blur', async () => {
+    it(&apos;should handle input focus and blur&apos;, async () => {
       const user = userEvent.setup();
       const mockOnFocus = vi.fn();
       const mockOnBlur = vi.fn();
 
       render(
         <Input
-          placeholder='Focus test'
+          placeholder=&apos;Focus test&apos;
           onFocus={mockOnFocus}
           onBlur={mockOnBlur}
         />
       );
 
-      const input = screen.getByPlaceholderText('Focus test');
+      const input = screen.getByPlaceholderText(&apos;Focus test&apos;);
 
       await user.click(input);
       expect(mockOnFocus).toHaveBeenCalledTimes(1);
@@ -57,269 +57,269 @@ describe('Input Component - Click Tests', () => {
     });
   });
 
-  describe('Input Types', () => {
-    it('should handle text input type', async () => {
+  describe(&apos;Input Types&apos;, () => {
+    it(&apos;should handle text input type&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input type='text' placeholder='Text input' />);
+      render(<Input type=&apos;text&apos; placeholder=&apos;Text input&apos; />);
 
-      const input = screen.getByPlaceholderText('Text input');
-      await user.type(input, 'Text content');
+      const input = screen.getByPlaceholderText(&apos;Text input&apos;);
+      await user.type(input, &apos;Text content&apos;);
 
-      expect(input).toHaveValue('Text content');
+      expect(input).toHaveValue(&apos;Text content&apos;);
     });
 
-    it('should handle email input type', async () => {
+    it(&apos;should handle email input type&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input type='email' placeholder='Email input' />);
+      render(<Input type=&apos;email&apos; placeholder=&apos;Email input&apos; />);
 
-      const input = screen.getByPlaceholderText('Email input');
-      await user.type(input, 'test@example.com');
+      const input = screen.getByPlaceholderText(&apos;Email input&apos;);
+      await user.type(input, &apos;test@example.com&apos;);
 
-      expect(input).toHaveValue('test@example.com');
+      expect(input).toHaveValue(&apos;test@example.com&apos;);
     });
 
-    it('should handle password input type', async () => {
+    it(&apos;should handle password input type&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input type='password' placeholder='Password input' />);
+      render(<Input type=&apos;password&apos; placeholder=&apos;Password input&apos; />);
 
-      const input = screen.getByPlaceholderText('Password input');
-      await user.type(input, 'secretpassword');
+      const input = screen.getByPlaceholderText(&apos;Password input&apos;);
+      await user.type(input, &apos;secretpassword&apos;);
 
-      expect(input).toHaveValue('secretpassword');
-      expect(input).toHaveAttribute('type', 'password');
+      expect(input).toHaveValue(&apos;secretpassword&apos;);
+      expect(input).toHaveAttribute(&apos;type&apos;, &apos;password&apos;);
     });
 
-    it('should handle number input type', async () => {
+    it(&apos;should handle number input type&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input type='number' placeholder='Number input' />);
+      render(<Input type=&apos;number&apos; placeholder=&apos;Number input&apos; />);
 
-      const input = screen.getByPlaceholderText('Number input');
-      await user.type(input, '123');
+      const input = screen.getByPlaceholderText(&apos;Number input&apos;);
+      await user.type(input, &apos;123&apos;);
 
       expect(input).toHaveValue(123);
-      expect(input).toHaveAttribute('type', 'number');
+      expect(input).toHaveAttribute(&apos;type&apos;, &apos;number&apos;);
     });
 
-    it('should handle search input type', async () => {
+    it(&apos;should handle search input type&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input type='search' placeholder='Search input' />);
+      render(<Input type=&apos;search&apos; placeholder=&apos;Search input&apos; />);
 
-      const input = screen.getByPlaceholderText('Search input');
-      await user.type(input, 'search query');
+      const input = screen.getByPlaceholderText(&apos;Search input&apos;);
+      await user.type(input, &apos;search query&apos;);
 
-      expect(input).toHaveValue('search query');
-      expect(input).toHaveAttribute('type', 'search');
+      expect(input).toHaveValue(&apos;search query&apos;);
+      expect(input).toHaveAttribute(&apos;type&apos;, &apos;search&apos;);
     });
 
-    it('should handle tel input type', async () => {
+    it(&apos;should handle tel input type&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input type='tel' placeholder='Phone input' />);
+      render(<Input type=&apos;tel&apos; placeholder=&apos;Phone input&apos; />);
 
-      const input = screen.getByPlaceholderText('Phone input');
-      await user.type(input, '123-456-7890');
+      const input = screen.getByPlaceholderText(&apos;Phone input&apos;);
+      await user.type(input, &apos;123-456-7890&apos;);
 
-      expect(input).toHaveValue('123-456-7890');
-      expect(input).toHaveAttribute('type', 'tel');
+      expect(input).toHaveValue(&apos;123-456-7890&apos;);
+      expect(input).toHaveAttribute(&apos;type&apos;, &apos;tel&apos;);
     });
 
-    it('should handle url input type', async () => {
+    it(&apos;should handle url input type&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input type='url' placeholder='URL input' />);
+      render(<Input type=&apos;url&apos; placeholder=&apos;URL input&apos; />);
 
-      const input = screen.getByPlaceholderText('URL input');
-      await user.type(input, 'https://example.com');
+      const input = screen.getByPlaceholderText(&apos;URL input&apos;);
+      await user.type(input, &apos;https://example.com&apos;);
 
-      expect(input).toHaveValue('https://example.com');
-      expect(input).toHaveAttribute('type', 'url');
+      expect(input).toHaveValue(&apos;https://example.com&apos;);
+      expect(input).toHaveAttribute(&apos;type&apos;, &apos;url&apos;);
     });
   });
 
-  describe('Input Interactions', () => {
-    it('should handle click events', async () => {
+  describe(&apos;Input Interactions&apos;, () => {
+    it(&apos;should handle click events&apos;, async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
-      render(<Input placeholder='Clickable input' onClick={mockOnClick} />);
+      render(<Input placeholder=&apos;Clickable input&apos; onClick={mockOnClick} />);
 
-      const input = screen.getByPlaceholderText('Clickable input');
+      const input = screen.getByPlaceholderText(&apos;Clickable input&apos;);
       await user.click(input);
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle change events', async () => {
+    it(&apos;should handle change events&apos;, async () => {
       const user = userEvent.setup();
       const mockOnChange = vi.fn();
 
-      render(<Input placeholder='Change input' onChange={mockOnChange} />);
+      render(<Input placeholder=&apos;Change input&apos; onChange={mockOnChange} />);
 
-      const input = screen.getByPlaceholderText('Change input');
-      await user.type(input, 'test');
+      const input = screen.getByPlaceholderText(&apos;Change input&apos;);
+      await user.type(input, &apos;test&apos;);
 
       expect(mockOnChange).toHaveBeenCalledTimes(4); // One for each character
     });
 
-    it('should handle input events', async () => {
+    it(&apos;should handle input events&apos;, async () => {
       const user = userEvent.setup();
       const mockOnInput = vi.fn();
 
-      render(<Input placeholder='Input event' onInput={mockOnInput} />);
+      render(<Input placeholder=&apos;Input event&apos; onInput={mockOnInput} />);
 
-      const input = screen.getByPlaceholderText('Input event');
-      await user.type(input, 'a');
+      const input = screen.getByPlaceholderText(&apos;Input event&apos;);
+      await user.type(input, &apos;a&apos;);
 
       expect(mockOnInput).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle keydown events', async () => {
+    it(&apos;should handle keydown events&apos;, async () => {
       const user = userEvent.setup();
       const mockOnKeyDown = vi.fn();
 
-      render(<Input placeholder='Keydown input' onKeyDown={mockOnKeyDown} />);
+      render(<Input placeholder=&apos;Keydown input&apos; onKeyDown={mockOnKeyDown} />);
 
-      const input = screen.getByPlaceholderText('Keydown input');
-      await user.type(input, 'a');
+      const input = screen.getByPlaceholderText(&apos;Keydown input&apos;);
+      await user.type(input, &apos;a&apos;);
 
       expect(mockOnKeyDown).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle keyup events', async () => {
+    it(&apos;should handle keyup events&apos;, async () => {
       const user = userEvent.setup();
       const mockOnKeyUp = vi.fn();
 
-      render(<Input placeholder='Keyup input' onKeyUp={mockOnKeyUp} />);
+      render(<Input placeholder=&apos;Keyup input&apos; onKeyUp={mockOnKeyUp} />);
 
-      const input = screen.getByPlaceholderText('Keyup input');
-      await user.type(input, 'a');
+      const input = screen.getByPlaceholderText(&apos;Keyup input&apos;);
+      await user.type(input, &apos;a&apos;);
 
       expect(mockOnKeyUp).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('Input Validation', () => {
-    it('should handle required attribute', () => {
-      render(<Input placeholder='Required input' required />);
+  describe(&apos;Input Validation&apos;, () => {
+    it(&apos;should handle required attribute&apos;, () => {
+      render(<Input placeholder=&apos;Required input&apos; required />);
 
-      const input = screen.getByPlaceholderText('Required input');
+      const input = screen.getByPlaceholderText(&apos;Required input&apos;);
       expect(input).toBeRequired();
     });
 
-    it('should handle disabled state', () => {
-      render(<Input placeholder='Disabled input' disabled />);
+    it(&apos;should handle disabled state&apos;, () => {
+      render(<Input placeholder=&apos;Disabled input&apos; disabled />);
 
-      const input = screen.getByPlaceholderText('Disabled input');
+      const input = screen.getByPlaceholderText(&apos;Disabled input&apos;);
       expect(input).toBeDisabled();
     });
 
-    it('should handle readonly state', () => {
-      render(<Input placeholder='Readonly input' readOnly />);
+    it(&apos;should handle readonly state&apos;, () => {
+      render(<Input placeholder=&apos;Readonly input&apos; readOnly />);
 
-      const input = screen.getByPlaceholderText('Readonly input');
-      expect(input).toHaveAttribute('readonly');
+      const input = screen.getByPlaceholderText(&apos;Readonly input&apos;);
+      expect(input).toHaveAttribute(&apos;readonly&apos;);
     });
 
-    it('should handle invalid state', () => {
-      render(<Input placeholder='Invalid input' aria-invalid='true' />);
+    it(&apos;should handle invalid state&apos;, () => {
+      render(<Input placeholder=&apos;Invalid input&apos; aria-invalid=&apos;true&apos; />);
 
-      const input = screen.getByPlaceholderText('Invalid input');
-      expect(input).toHaveAttribute('aria-invalid', 'true');
+      const input = screen.getByPlaceholderText(&apos;Invalid input&apos;);
+      expect(input).toHaveAttribute(&apos;aria-invalid&apos;, &apos;true&apos;);
     });
 
-    it('should handle min and max attributes for number input', () => {
+    it(&apos;should handle min and max attributes for number input&apos;, () => {
       render(
-        <Input type='number' placeholder='Number range' min='0' max='100' />
+        <Input type=&apos;number&apos; placeholder=&apos;Number range&apos; min=&apos;0&apos; max=&apos;100&apos; />
       );
 
-      const input = screen.getByPlaceholderText('Number range');
-      expect(input).toHaveAttribute('min', '0');
-      expect(input).toHaveAttribute('max', '100');
+      const input = screen.getByPlaceholderText(&apos;Number range&apos;);
+      expect(input).toHaveAttribute(&apos;min&apos;, &apos;0&apos;);
+      expect(input).toHaveAttribute(&apos;max&apos;, &apos;100&apos;);
     });
 
-    it('should handle minlength and maxlength attributes', () => {
+    it(&apos;should handle minlength and maxlength attributes&apos;, () => {
       render(
-        <Input placeholder='Length limited' minLength={2} maxLength={10} />
+        <Input placeholder=&apos;Length limited&apos; minLength={2} maxLength={10} />
       );
 
-      const input = screen.getByPlaceholderText('Length limited');
-      expect(input).toHaveAttribute('minlength', '2');
-      expect(input).toHaveAttribute('maxlength', '10');
+      const input = screen.getByPlaceholderText(&apos;Length limited&apos;);
+      expect(input).toHaveAttribute(&apos;minlength&apos;, &apos;2&apos;);
+      expect(input).toHaveAttribute(&apos;maxlength&apos;, &apos;10&apos;);
     });
   });
 
-  describe('Input Accessibility', () => {
-    it('should support aria-label', () => {
-      render(<Input aria-label='Custom input label' />);
+  describe(&apos;Input Accessibility&apos;, () => {
+    it(&apos;should support aria-label&apos;, () => {
+      render(<Input aria-label=&apos;Custom input label&apos; />);
 
-      const input = screen.getByLabelText('Custom input label');
+      const input = screen.getByLabelText(&apos;Custom input label&apos;);
       expect(input).toBeInTheDocument();
     });
 
-    it('should support aria-describedby', () => {
+    it(&apos;should support aria-describedby&apos;, () => {
       render(
         <div>
-          <Input aria-describedby='help-text' />
-          <div id='help-text'>This is help text</div>
+          <Input aria-describedby=&apos;help-text&apos; />
+          <div id=&apos;help-text&apos;>This is help text</div>
         </div>
       );
 
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('aria-describedby', 'help-text');
+      const input = screen.getByRole(&apos;textbox&apos;);
+      expect(input).toHaveAttribute(&apos;aria-describedby&apos;, &apos;help-text&apos;);
     });
 
-    it('should support aria-labelledby', () => {
+    it(&apos;should support aria-labelledby&apos;, () => {
       render(
         <div>
-          <div id='label-text'>Input Label</div>
-          <Input aria-labelledby='label-text' />
+          <div id=&apos;label-text&apos;>Input Label</div>
+          <Input aria-labelledby=&apos;label-text&apos; />
         </div>
       );
 
-      const input = screen.getByLabelText('Input Label');
+      const input = screen.getByLabelText(&apos;Input Label&apos;);
       expect(input).toBeInTheDocument();
     });
 
-    it('should support custom role', () => {
-      render(<Input role='searchbox' placeholder='Search' />);
+    it(&apos;should support custom role&apos;, () => {
+      render(<Input role=&apos;searchbox&apos; placeholder=&apos;Search&apos; />);
 
-      const input = screen.getByRole('searchbox');
+      const input = screen.getByRole(&apos;searchbox&apos;);
       expect(input).toBeInTheDocument();
     });
   });
 
-  describe('Input Custom Styling', () => {
-    it('should apply custom className', () => {
+  describe(&apos;Input Custom Styling&apos;, () => {
+    it(&apos;should apply custom className&apos;, () => {
       render(
-        <Input className='custom-input-class' placeholder='Custom styled' />
+        <Input className=&apos;custom-input-class&apos; placeholder=&apos;Custom styled&apos; />
       );
 
-      const input = screen.getByPlaceholderText('Custom styled');
-      expect(input).toHaveClass('custom-input-class');
+      const input = screen.getByPlaceholderText(&apos;Custom styled&apos;);
+      expect(input).toHaveClass(&apos;custom-input-class&apos;);
     });
 
-    it('should merge custom className with default classes', () => {
-      render(<Input className='custom-class' placeholder='Merged classes' />);
+    it(&apos;should merge custom className with default classes&apos;, () => {
+      render(<Input className=&apos;custom-class&apos; placeholder=&apos;Merged classes&apos; />);
 
-      const input = screen.getByPlaceholderText('Merged classes');
-      expect(input).toHaveClass('custom-class');
-      expect(input).toHaveClass('border'); // Default class should still be present
+      const input = screen.getByPlaceholderText(&apos;Merged classes&apos;);
+      expect(input).toHaveClass(&apos;custom-class&apos;);
+      expect(input).toHaveClass(&apos;border&apos;); // Default class should still be present
     });
   });
 
-  describe('Input Event Handling', () => {
-    it('should handle mouse events', async () => {
+  describe(&apos;Input Event Handling&apos;, () => {
+    it(&apos;should handle mouse events&apos;, async () => {
       const user = userEvent.setup();
       const mockOnMouseEnter = vi.fn();
       const mockOnMouseLeave = vi.fn();
 
       render(
         <Input
-          placeholder='Mouse events'
+          placeholder=&apos;Mouse events&apos;
           onMouseEnter={mockOnMouseEnter}
           onMouseLeave={mockOnMouseLeave}
         />
       );
 
-      const input = screen.getByPlaceholderText('Mouse events');
+      const input = screen.getByPlaceholderText(&apos;Mouse events&apos;);
 
       await user.hover(input);
       expect(mockOnMouseEnter).toHaveBeenCalledTimes(1);
@@ -328,140 +328,140 @@ describe('Input Component - Click Tests', () => {
       expect(mockOnMouseLeave).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle mouse down and up events', async () => {
+    it(&apos;should handle mouse down and up events&apos;, async () => {
       const user = userEvent.setup();
       const mockOnMouseDown = vi.fn();
       const mockOnMouseUp = vi.fn();
 
       render(
         <Input
-          placeholder='Mouse down/up'
+          placeholder=&apos;Mouse down/up&apos;
           onMouseDown={mockOnMouseDown}
           onMouseUp={mockOnMouseUp}
         />
       );
 
-      const input = screen.getByPlaceholderText('Mouse down/up');
+      const input = screen.getByPlaceholderText(&apos;Mouse down/up&apos;);
 
-      await user.pointer({ keys: '[MouseLeft>]', target: input });
+      await user.pointer({ keys: &apos;[MouseLeft>]&apos;, target: input });
       expect(mockOnMouseDown).toHaveBeenCalledTimes(1);
 
-      await user.pointer({ keys: '[/MouseLeft]', target: input });
+      await user.pointer({ keys: &apos;[/MouseLeft]&apos;, target: input });
       expect(mockOnMouseUp).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('Input Edge Cases', () => {
-    it('should handle empty value', () => {
-      render(<Input placeholder='Empty input' />);
+  describe(&apos;Input Edge Cases&apos;, () => {
+    it(&apos;should handle empty value&apos;, () => {
+      render(<Input placeholder=&apos;Empty input&apos; />);
 
-      const input = screen.getByPlaceholderText('Empty input');
-      expect(input).toHaveValue('');
+      const input = screen.getByPlaceholderText(&apos;Empty input&apos;);
+      expect(input).toHaveValue(&apos;&apos;);
     });
 
-    it('should handle controlled input', async () => {
+    it(&apos;should handle controlled input&apos;, async () => {
       const user = userEvent.setup();
       const TestComponent = () => {
-        const [value, setValue] = React.useState('');
+        const [value, setValue] = React.useState(&apos;&apos;);
         return (
           <Input
             value={value}
             onChange={e => setValue(e.target.value)}
-            placeholder='Controlled input'
+            placeholder=&apos;Controlled input&apos;
           />
         );
       };
 
       render(<TestComponent />);
 
-      const input = screen.getByPlaceholderText('Controlled input');
-      await user.type(input, 'controlled');
+      const input = screen.getByPlaceholderText(&apos;Controlled input&apos;);
+      await user.type(input, &apos;controlled&apos;);
 
-      expect(input).toHaveValue('controlled');
+      expect(input).toHaveValue(&apos;controlled&apos;);
     });
 
-    it('should handle special characters', async () => {
+    it(&apos;should handle special characters&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input placeholder='Special chars' />);
+      render(<Input placeholder=&apos;Special chars&apos; />);
 
-      const input = screen.getByPlaceholderText('Special chars');
-      await user.type(input, '!@#$%^&*()');
+      const input = screen.getByPlaceholderText(&apos;Special chars&apos;);
+      await user.type(input, &apos;!@#$%^&*()&apos;);
 
-      expect(input).toHaveValue('!@#$%^&*()');
+      expect(input).toHaveValue(&apos;!@#$%^&*()&apos;);
     });
 
-    it('should handle very long text', async () => {
+    it(&apos;should handle very long text&apos;, async () => {
       const user = userEvent.setup();
-      const longText = 'a'.repeat(1000);
+      const longText = &apos;a&apos;.repeat(1000);
 
-      render(<Input placeholder='Long text' />);
+      render(<Input placeholder=&apos;Long text&apos; />);
 
-      const input = screen.getByPlaceholderText('Long text');
+      const input = screen.getByPlaceholderText(&apos;Long text&apos;);
       await user.type(input, longText);
 
       expect(input).toHaveValue(longText);
     });
 
-    it('should handle copy and paste', async () => {
+    it(&apos;should handle copy and paste&apos;, async () => {
       const user = userEvent.setup();
-      render(<Input placeholder='Copy paste test' />);
+      render(<Input placeholder=&apos;Copy paste test&apos; />);
 
-      const input = screen.getByPlaceholderText('Copy paste test');
+      const input = screen.getByPlaceholderText(&apos;Copy paste test&apos;);
 
       // Type some text
-      await user.type(input, 'Hello');
+      await user.type(input, &apos;Hello&apos;);
 
       // Select all and copy
-      await user.keyboard('{Control>}a{/Control}');
-      await user.keyboard('{Control>}c{/Control}');
+      await user.keyboard(&apos;{Control>}a{/Control}&apos;);
+      await user.keyboard(&apos;{Control>}c{/Control}&apos;);
 
       // Clear and paste
-      await user.keyboard('{Control>}a{/Control}');
-      await user.keyboard('{Control>}v{/Control}');
+      await user.keyboard(&apos;{Control>}a{/Control}&apos;);
+      await user.keyboard(&apos;{Control>}v{/Control}&apos;);
 
-      expect(input).toHaveValue('Hello');
+      expect(input).toHaveValue(&apos;Hello&apos;);
     });
   });
 
-  describe('Input Form Integration', () => {
-    it('should work within a form', async () => {
+  describe(&apos;Input Form Integration&apos;, () => {
+    it(&apos;should work within a form&apos;, async () => {
       const user = userEvent.setup();
       const mockSubmit = vi.fn();
 
       render(
         <form onSubmit={mockSubmit}>
-          <Input name='test-input' placeholder='Form input' />
-          <button type='submit'>Submit</button>
+          <Input name=&apos;test-input&apos; placeholder=&apos;Form input&apos; />
+          <button type=&apos;submit&apos;>Submit</button>
         </form>
       );
 
-      const input = screen.getByPlaceholderText('Form input');
-      const submitButton = screen.getByRole('button', { name: /submit/i });
+      const input = screen.getByPlaceholderText(&apos;Form input&apos;);
+      const submitButton = screen.getByRole(&apos;button&apos;, { name: /submit/i });
 
-      await user.type(input, 'form data');
+      await user.type(input, &apos;form data&apos;);
       await user.click(submitButton);
 
       expect(mockSubmit).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle form reset', async () => {
+    it(&apos;should handle form reset&apos;, async () => {
       const user = userEvent.setup();
 
       render(
         <form>
-          <Input name='reset-input' placeholder='Reset input' />
-          <button type='reset'>Reset</button>
+          <Input name=&apos;reset-input&apos; placeholder=&apos;Reset input&apos; />
+          <button type=&apos;reset&apos;>Reset</button>
         </form>
       );
 
-      const input = screen.getByPlaceholderText('Reset input');
-      const resetButton = screen.getByRole('button', { name: /reset/i });
+      const input = screen.getByPlaceholderText(&apos;Reset input&apos;);
+      const resetButton = screen.getByRole(&apos;button&apos;, { name: /reset/i });
 
-      await user.type(input, 'some text');
-      expect(input).toHaveValue('some text');
+      await user.type(input, &apos;some text&apos;);
+      expect(input).toHaveValue(&apos;some text&apos;);
 
       await user.click(resetButton);
-      expect(input).toHaveValue('');
+      expect(input).toHaveValue(&apos;&apos;);
     });
   });
 });

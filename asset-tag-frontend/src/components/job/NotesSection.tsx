@@ -5,9 +5,9 @@
  * Used in both CreateJob and EditJob components
  */
 
-import React from 'react';
-import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
+import React from &apos;react&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Textarea } from &apos;../ui/textarea&apos;;
 
 interface NotesSectionProps {
   notes: string;
@@ -16,19 +16,19 @@ interface NotesSectionProps {
 
 export function NotesSection({ notes, onNotesChange }: NotesSectionProps) {
   return (
-    <div className='space-y-6'>
+    <div className=&apos;space-y-6&apos;>
       <div>
         <h3>Additional Notes</h3>
-        <p className='text-sm text-muted-foreground mt-2'>
+        <p className=&apos;text-sm text-muted-foreground mt-2&apos;>
           Optional notes or special instructions
         </p>
       </div>
 
-      <div className='space-y-2'>
-        <Label htmlFor='notes'>Notes</Label>
+      <div className=&apos;space-y-2&apos;>
+        <Label htmlFor=&apos;notes&apos;>Notes</Label>
         <Textarea
-          id='notes'
-          placeholder='Any additional information about this job...'
+          id=&apos;notes&apos;
+          placeholder=&apos;Any additional information about this job...&apos;
           value={notes}
           onChange={e => onNotesChange(e.target.value)}
           rows={4}

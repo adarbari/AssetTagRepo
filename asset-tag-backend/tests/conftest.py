@@ -160,8 +160,8 @@ def sample_observation_data():
     from datetime import datetime
 
     return {
-        "asset_id": "test-asset-1",
-        "gateway_id": "test-gateway-1",
+        "asset_id": "550e8400-e29b-41d4-a716-446655440001",
+        "gateway_id": "550e8400-e29b-41d4-a716-446655440002",
         "rssi": -65,
         "battery_level": 80,
         "temperature": 25.5,

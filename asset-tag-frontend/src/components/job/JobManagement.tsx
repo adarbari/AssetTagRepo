@@ -9,10 +9,10 @@
  * - Monitoring job alerts
  */
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
+import React, { useState } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
 import {
   StatusBadge,
   PriorityBadge,
@@ -20,7 +20,7 @@ import {
   PageLayout,
   FilterBar,
   type FilterConfig,
-} from '../common';
+} from &apos;../common&apos;;
 import {
   Table,
   TableBody,
@@ -28,13 +28,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../ui/table';
+} from &apos;../ui/table&apos;;
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+} from &apos;../ui/dropdown-menu&apos;;
 import {
   Plus,
   MoreVertical,
@@ -46,15 +46,15 @@ import {
   AlertTriangle,
   Package,
   FileText,
-} from 'lucide-react';
-import { toast } from 'sonner';
+} from &apos;lucide-react&apos;;
+import { toast } from &apos;sonner&apos;;
 import type {
   Job,
   CreateJobInput,
   UpdateJobInput,
   JobAlert,
-} from '../../types/job';
-import { useNavigation } from '../../contexts/NavigationContext';
+} from &apos;../../types/job&apos;;
+import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
 
 interface JobManagementProps {
   jobs: Record<string, Job>;
@@ -91,9 +91,9 @@ export function JobManagement({
   onNavigateToJobDetails,
 }: JobManagementProps) {
   const navigation = useNavigation();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState(&apos;&apos;);
+  const [statusFilter, setStatusFilter] = useState<string>(&apos;all&apos;);
+  const [priorityFilter, setPriorityFilter] = useState<string>(&apos;all&apos;);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   const jobsList = Object.values(jobs);
@@ -101,28 +101,28 @@ export function JobManagement({
   // Filter configuration for FilterBar
   const filters: FilterConfig[] = [
     {
-      key: 'status',
-      label: 'Status',
+      key: &apos;status&apos;,
+      label: &apos;Status&apos;,
       options: [
-        { value: 'all', label: 'All Status' },
-        { value: 'planning', label: 'Planning' },
-        { value: 'active', label: 'Active' },
-        { value: 'completed', label: 'Completed' },
-        { value: 'on-hold', label: 'On Hold' },
-        { value: 'cancelled', label: 'Cancelled' },
+        { value: &apos;all&apos;, label: &apos;All Status&apos; },
+        { value: &apos;planning&apos;, label: &apos;Planning&apos; },
+        { value: &apos;active&apos;, label: &apos;Active&apos; },
+        { value: &apos;completed&apos;, label: &apos;Completed&apos; },
+        { value: &apos;on-hold&apos;, label: &apos;On Hold&apos; },
+        { value: &apos;cancelled&apos;, label: &apos;Cancelled&apos; },
       ],
       currentValue: statusFilter,
       onValueChange: setStatusFilter,
     },
     {
-      key: 'priority',
-      label: 'Priority',
+      key: &apos;priority&apos;,
+      label: &apos;Priority&apos;,
       options: [
-        { value: 'all', label: 'All Priorities' },
-        { value: 'critical', label: 'Critical' },
-        { value: 'high', label: 'High' },
-        { value: 'medium', label: 'Medium' },
-        { value: 'low', label: 'Low' },
+        { value: &apos;all&apos;, label: &apos;All Priorities&apos; },
+        { value: &apos;critical&apos;, label: &apos;Critical&apos; },
+        { value: &apos;high&apos;, label: &apos;High&apos; },
+        { value: &apos;medium&apos;, label: &apos;Medium&apos; },
+        { value: &apos;low&apos;, label: &apos;Low&apos; },
       ],
       currentValue: priorityFilter,
       onValueChange: setPriorityFilter,
@@ -131,12 +131,12 @@ export function JobManagement({
 
   // Calculate active filters count
   const activeFiltersCount =
-    (statusFilter !== 'all' ? 1 : 0) + (priorityFilter !== 'all' ? 1 : 0);
+    (statusFilter !== &apos;all&apos; ? 1 : 0) + (priorityFilter !== &apos;all&apos; ? 1 : 0);
 
   // Clear all filters
   const handleClearAllFilters = () => {
-    setStatusFilter('all');
-    setPriorityFilter('all');
+    setStatusFilter(&apos;all&apos;);
+    setPriorityFilter(&apos;all&apos;);
   };
 
   // Filter jobs
@@ -150,9 +150,9 @@ export function JobManagement({
       (job.siteName &&
         job.siteName.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
+    const matchesStatus = statusFilter === &apos;all&apos; || job.status === statusFilter;
     const matchesPriority =
-      priorityFilter === 'all' || job.priority === priorityFilter;
+      priorityFilter === &apos;all&apos; || job.priority === priorityFilter;
 
     return matchesSearch && matchesStatus && matchesPriority;
   });
@@ -160,45 +160,45 @@ export function JobManagement({
   // Statistics
   const stats = {
     total: jobsList.length,
-    active: jobsList.filter(j => j.status === 'active').length,
-    planning: jobsList.filter(j => j.status === 'planning').length,
-    completed: jobsList.filter(j => j.status === 'completed').length,
+    active: jobsList.filter(j => j.status === &apos;active&apos;).length,
+    planning: jobsList.filter(j => j.status === &apos;planning&apos;).length,
+    completed: jobsList.filter(j => j.status === &apos;completed&apos;).length,
     totalBudget: jobsList.reduce((sum, j) => sum + j.budget.total, 0),
     totalActualCosts: jobsList.reduce((sum, j) => sum + j.actualCosts.total, 0),
     activeAlerts: jobAlerts.filter(a => a.active).length,
   };
 
   const handleDeleteJob = async (jobId: string) => {
-    if (!confirm('Are you sure you want to delete this job?')) {
+    if (!confirm(&apos;Are you sure you want to delete this job?&apos;)) {
       return;
     }
 
     const result = await onDeleteJob(jobId);
 
     if (result.success) {
-      toast.success('Job deleted successfully');
+      toast.success(&apos;Job deleted successfully&apos;);
     } else {
-      toast.error('Failed to delete job');
+      toast.error(&apos;Failed to delete job&apos;);
     }
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat(&apos;en-US&apos;, {
+      style: &apos;currency&apos;,
+      currency: &apos;USD&apos;,
     }).format(amount);
   };
 
   return (
-    <PageLayout variant='wide' padding='md'>
+    <PageLayout variant=&apos;wide&apos; padding=&apos;md&apos;>
       {/* Header */}
-      <div className='flex items-center justify-between'>
+      <div className=&apos;flex items-center justify-between&apos;>
         <div>
-          <h1 className='flex items-center gap-2'>
-            <Package className='h-6 w-6' />
+          <h1 className=&apos;flex items-center gap-2&apos;>
+            <Package className=&apos;h-6 w-6&apos; />
             Job Management
           </h1>
-          <p className='text-muted-foreground'>
+          <p className=&apos;text-muted-foreground&apos;>
             Plan projects, allocate resources, track costs, and manage job
             lifecycles
           </p>
@@ -210,44 +210,44 @@ export function JobManagement({
               : navigation.navigateToCreateJob({ onCreateJob })
           }
         >
-          <Plus className='h-4 w-4 mr-2' />
+          <Plus className=&apos;h-4 w-4 mr-2&apos; />
           Create Job
         </Button>
       </div>
 
       {/* Statistics Cards */}
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
+      <div className=&apos;grid grid-cols-1 md:grid-cols-4 gap-4&apos;>
         <StatsCard
-          title='Total Jobs'
+          title=&apos;Total Jobs&apos;
           value={stats.total}
           icon={FileText}
           description={`${stats.active} active, ${stats.planning} planning`}
         />
 
         <StatsCard
-          title='Total Budget'
+          title=&apos;Total Budget&apos;
           value={formatCurrency(stats.totalBudget)}
           icon={DollarSign}
-          description='Across all jobs'
+          description=&apos;Across all jobs&apos;
         />
 
         <StatsCard
-          title='Actual Costs'
+          title=&apos;Actual Costs&apos;
           value={formatCurrency(stats.totalActualCosts)}
           icon={TrendingUp}
           description={
             stats.totalBudget > 0
               ? `${((stats.totalActualCosts / stats.totalBudget) * 100).toFixed(1)}% of budget`
-              : 'No budget allocated'
+              : &apos;No budget allocated&apos;
           }
         />
 
         <StatsCard
-          title='Active Alerts'
+          title=&apos;Active Alerts&apos;
           value={stats.activeAlerts}
           icon={AlertTriangle}
-          description='Requires attention'
-          variant={stats.activeAlerts > 0 ? 'warning' : 'default'}
+          description=&apos;Requires attention&apos;
+          variant={stats.activeAlerts > 0 ? &apos;warning&apos; : &apos;default&apos;}
         />
       </div>
 
@@ -255,7 +255,7 @@ export function JobManagement({
       <FilterBar
         searchTerm={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder='Search jobs, sites, or project managers...'
+        searchPlaceholder=&apos;Search jobs, sites, or project managers...&apos;
         filters={filters}
         showAdvancedFilters={showAdvancedFilters}
         onToggleAdvancedFilters={() =>
@@ -292,18 +292,18 @@ export function JobManagement({
                 <TableRow>
                   <TableCell
                     colSpan={11}
-                    className='text-center text-muted-foreground py-8'
+                    className=&apos;text-center text-muted-foreground py-8&apos;
                   >
-                    {searchQuery || statusFilter !== 'all'
-                      ? 'No jobs match your filters'
-                      : 'No jobs yet. Create your first job to get started.'}
+                    {searchQuery || statusFilter !== &apos;all&apos;
+                      ? &apos;No jobs match your filters&apos;
+                      : &apos;No jobs yet. Create your first job to get started.&apos;}
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredJobs.map(job => (
                   <TableRow
                     key={job.id}
-                    className='cursor-pointer hover:bg-muted/50'
+                    className=&apos;cursor-pointer hover:bg-muted/50&apos;
                     onClick={() => {
                       onNavigateToJobDetails
                         ? onNavigateToJobDetails(job)
@@ -311,8 +311,8 @@ export function JobManagement({
                     }}
                   >
                     <TableCell>
-                      <div className='flex items-center gap-2'>
-                        <span className='font-mono text-sm'>
+                      <div className=&apos;flex items-center gap-2&apos;>
+                        <span className=&apos;font-mono text-sm&apos;>
                           {job.jobNumber}
                         </span>
                       </div>
@@ -321,24 +321,24 @@ export function JobManagement({
                       <div>
                         <div>{job.name}</div>
                         {job.siteName && (
-                          <div className='text-xs text-muted-foreground'>
+                          <div className=&apos;text-xs text-muted-foreground&apos;>
                             {job.siteName}
                           </div>
                         )}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <StatusBadge status={job.status} type='job' />
+                      <StatusBadge status={job.status} type=&apos;job&apos; />
                     </TableCell>
                     <TableCell>
                       <PriorityBadge priority={job.priority} />
                     </TableCell>
                     <TableCell>
-                      <div className='text-sm'>
+                      <div className=&apos;text-sm&apos;>
                         <div>
                           {new Date(job.startDate).toLocaleDateString()}
                         </div>
-                        <div className='text-xs text-muted-foreground'>
+                        <div className=&apos;text-xs text-muted-foreground&apos;>
                           to {new Date(job.endDate).toLocaleDateString()}
                         </div>
                       </div>
@@ -348,17 +348,17 @@ export function JobManagement({
                       {formatCurrency(job.actualCosts.total)}
                     </TableCell>
                     <TableCell>
-                      <div className='flex items-center gap-2'>
+                      <div className=&apos;flex items-center gap-2&apos;>
                         {job.variancePercentage >= 0 ? (
-                          <TrendingUp className='h-4 w-4 text-green-600' />
+                          <TrendingUp className=&apos;h-4 w-4 text-green-600&apos; />
                         ) : (
-                          <TrendingDown className='h-4 w-4 text-red-600' />
+                          <TrendingDown className=&apos;h-4 w-4 text-red-600&apos; />
                         )}
                         <span
                           className={
                             job.variancePercentage >= 0
-                              ? 'text-green-600'
-                              : 'text-red-600'
+                              ? &apos;text-green-600&apos;
+                              : &apos;text-red-600&apos;
                           }
                         >
                           {formatCurrency(Math.abs(job.variance))}
@@ -366,18 +366,18 @@ export function JobManagement({
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className='flex items-center gap-2'>
-                        <Package className='h-4 w-4 text-muted-foreground' />
+                      <div className=&apos;flex items-center gap-2&apos;>
+                        <Package className=&apos;h-4 w-4 text-muted-foreground&apos; />
                         <span>{job.assets.length}</span>
                       </div>
                     </TableCell>
                     <TableCell>
                       {job.hasActiveAlerts && (
                         <Badge
-                          variant='outline'
-                          className='bg-red-100 text-red-700 border-red-200'
+                          variant=&apos;outline&apos;
+                          className=&apos;bg-red-100 text-red-700 border-red-200&apos;
                         >
-                          <AlertTriangle className='h-3 w-3 mr-1' />
+                          <AlertTriangle className=&apos;h-3 w-3 mr-1&apos; />
                           {job.missingAssets?.length || 0}
                         </Badge>
                       )}
@@ -388,11 +388,11 @@ export function JobManagement({
                           asChild
                           onClick={e => e.stopPropagation()}
                         >
-                          <Button variant='ghost' size='sm'>
-                            <MoreVertical className='h-4 w-4' />
+                          <Button variant=&apos;ghost&apos; size=&apos;sm&apos;>
+                            <MoreVertical className=&apos;h-4 w-4&apos; />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align='end'>
+                        <DropdownMenuContent align=&apos;end&apos;>
                           <DropdownMenuItem
                             onClick={e => {
                               e.stopPropagation();
@@ -401,7 +401,7 @@ export function JobManagement({
                                 : navigation.navigateToJobDetails({ job });
                             }}
                           >
-                            <Edit className='h-4 w-4 mr-2' />
+                            <Edit className=&apos;h-4 w-4 mr-2&apos; />
                             View Details
                           </DropdownMenuItem>
                           <DropdownMenuItem
@@ -409,9 +409,9 @@ export function JobManagement({
                               e.stopPropagation();
                               handleDeleteJob(job.id);
                             }}
-                            className='text-red-600'
+                            className=&apos;text-red-600&apos;
                           >
-                            <Trash2 className='h-4 w-4 mr-2' />
+                            <Trash2 className=&apos;h-4 w-4 mr-2&apos; />
                             Delete Job
                           </DropdownMenuItem>
                         </DropdownMenuContent>

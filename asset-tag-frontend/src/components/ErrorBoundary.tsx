@@ -1,13 +1,13 @@
-import React, { Component, ReactNode } from 'react';
-import { AlertTriangle } from 'lucide-react';
-import { Button } from '../ui/button';
+import React, { Component, ReactNode } from &apos;react&apos;;
+import { AlertTriangle } from &apos;lucide-react&apos;;
+import { Button } from &apos;../ui/button&apos;;
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '../ui/card';
+} from &apos;../ui/card&apos;;
 
 interface Props {
   children: ReactNode;
@@ -43,20 +43,20 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Filter out CSS security errors - these are harmless
-    const errorMessage = error.message || '';
+    const errorMessage = error.message || &apos;&apos;;
     if (
-      errorMessage.includes('cssRules') ||
-      errorMessage.includes('CSSStyleSheet') ||
-      errorMessage.includes('Cannot access rules')
+      errorMessage.includes(&apos;cssRules&apos;) ||
+      errorMessage.includes(&apos;CSSStyleSheet&apos;) ||
+      errorMessage.includes(&apos;Cannot access rules&apos;)
     ) {
-      // Don't show error UI for CSS security errors
+      // Don&apos;t show error UI for CSS security errors
       this.setState({ hasError: false });
       return;
     }
 
     // Log error details for debugging
     // eslint-disable-next-line no-console
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    // console.error(&apos;Error caught by ErrorBoundary:&apos;, error, errorInfo);
 
     // Update state with error details
     this.setState({
@@ -82,12 +82,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Default fallback UI
       return (
-        <div className='flex items-center justify-center min-h-screen p-4 bg-muted/30'>
-          <Card className='max-w-2xl w-full'>
+        <div className=&apos;flex items-center justify-center min-h-screen p-4 bg-muted/30&apos;>
+          <Card className=&apos;max-w-2xl w-full&apos;>
             <CardHeader>
-              <div className='flex items-center gap-3 mb-2'>
-                <div className='p-2 rounded-lg bg-destructive/10'>
-                  <AlertTriangle className='h-6 w-6 text-destructive' />
+              <div className=&apos;flex items-center gap-3 mb-2&apos;>
+                <div className=&apos;p-2 rounded-lg bg-destructive/10&apos;>
+                  <AlertTriangle className=&apos;h-6 w-6 text-destructive&apos; />
                 </div>
                 <div>
                   <CardTitle>Something went wrong</CardTitle>
@@ -97,32 +97,32 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className='space-y-4'>
+            <CardContent className=&apos;space-y-4&apos;>
               {this.state.error && (
-                <div className='p-4 bg-muted rounded-lg'>
-                  <p className='text-sm font-medium mb-2'>Error Details:</p>
-                  <code className='text-xs text-muted-foreground block whitespace-pre-wrap'>
+                <div className=&apos;p-4 bg-muted rounded-lg&apos;>
+                  <p className=&apos;text-sm font-medium mb-2&apos;>Error Details:</p>
+                  <code className=&apos;text-xs text-muted-foreground block whitespace-pre-wrap&apos;>
                     {this.state.error.toString()}
                   </code>
                 </div>
               )}
 
-              {process.env.NODE_ENV === 'development' &&
+              {process.env.NODE_ENV === &apos;development&apos; &&
                 this.state.errorInfo && (
-                  <details className='p-4 bg-muted rounded-lg'>
-                    <summary className='text-sm font-medium cursor-pointer mb-2'>
+                  <details className=&apos;p-4 bg-muted rounded-lg&apos;>
+                    <summary className=&apos;text-sm font-medium cursor-pointer mb-2&apos;>
                       Component Stack (Development Only)
                     </summary>
-                    <code className='text-xs text-muted-foreground block whitespace-pre-wrap mt-2'>
+                    <code className=&apos;text-xs text-muted-foreground block whitespace-pre-wrap mt-2&apos;>
                       {this.state.errorInfo.componentStack}
                     </code>
                   </details>
                 )}
 
-              <div className='flex gap-2'>
+              <div className=&apos;flex gap-2&apos;>
                 <Button onClick={this.handleReset}>Try Again</Button>
                 <Button
-                  variant='outline'
+                  variant=&apos;outline&apos;
                   onClick={() => window.location.reload()}
                 >
                   Reload Page

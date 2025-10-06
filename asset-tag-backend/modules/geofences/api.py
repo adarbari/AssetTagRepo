@@ -3,6 +3,7 @@ Geofence API endpoints
 """
 
 import math
+import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional
 
@@ -24,6 +25,39 @@ from modules.geofences.schemas import (
 )
 
 router = APIRouter()
+
+
+def _geofence_to_response(geofence: Geofence) -> GeofenceResponse:
+    """Convert Geofence model to GeofenceResponse schema"""
+    return GeofenceResponse(
+        id=str(geofence.id),
+        organization_id=str(geofence.organization_id),
+        name=geofence.name,
+        description=geofence.description,
+        geofence_type=geofence.geofence_type,
+        status=geofence.status,
+        center_latitude=geofence.center_latitude,
+        center_longitude=geofence.center_longitude,
+        radius=geofence.radius,
+        coordinates=geofence.coordinates,
+        site_id=geofence.site_id,
+        site_name=geofence.site_name,
+        alert_on_entry=geofence.alert_on_entry,
+        alert_on_exit=geofence.alert_on_exit,
+        geofence_classification=geofence.geofence_classification,
+        tolerance=geofence.tolerance,
+        location_mode=geofence.location_mode,
+        vehicle_id=geofence.vehicle_id,
+        vehicle_name=geofence.vehicle_name,
+        asset_id=geofence.asset_id,
+        asset_name=geofence.asset_name,
+        attachment_type=geofence.attachment_type,
+        expected_asset_ids=geofence.expected_asset_ids,
+        metadata=geofence.metadata or {},
+        created_at=geofence.created_at,
+        updated_at=geofence.updated_at,
+        deleted_at=geofence.deleted_at,
+    )
 
 
 def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -119,7 +153,7 @@ async def get_geofence(geofence_id: str, db: AsyncSession = Depends(get_db)):
         if not geofence:
             raise HTTPException(status_code=404, detail="Geofence not found")
 
-        return GeofenceResponse.from_orm(geofence)
+        return _geofence_to_response(geofence)
 
     except HTTPException:
         raise
@@ -136,11 +170,11 @@ async def create_geofence(
     """Create a new geofence"""
     try:
         # Check if geofence name already exists in organization
+        default_org_id = uuid.UUID("00000000-0000-0000-0000-000000000000")
         existing = await db.execute(
             select(Geofence).where(
                 Geofence.name == geofence_data.name,
-                Geofence.organization_id
-                == "00000000-0000-0000-0000-000000000000",  # Default org
+                Geofence.organization_id == default_org_id,
             )
         )
         if existing.scalar_one_or_none():
@@ -150,7 +184,7 @@ async def create_geofence(
 
         # Create new geofence
         geofence = Geofence(
-            organization_id="00000000-0000-0000-0000-000000000000",  # Default org for now
+            organization_id=default_org_id,  # Default org for now
             name=geofence_data.name,
             description=geofence_data.description,
             geofence_type=geofence_data.geofence_type,
@@ -179,7 +213,7 @@ async def create_geofence(
         await db.commit()
         await db.refresh(geofence)
 
-        return GeofenceResponse.from_orm(geofence)
+        return _geofence_to_response(geofence)
 
     except HTTPException:
         raise
@@ -211,7 +245,7 @@ async def update_geofence(
         await db.commit()
         await db.refresh(geofence)
 
-        return GeofenceResponse.from_orm(geofence)
+        return _geofence_to_response(geofence)
 
     except HTTPException:
         raise

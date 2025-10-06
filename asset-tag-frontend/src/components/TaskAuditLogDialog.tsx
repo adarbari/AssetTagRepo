@@ -4,10 +4,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { ScrollArea } from './ui/scroll-area';
-import { AuditLogList, type AuditLogEntry } from './common';
-import { History } from 'lucide-react';
+} from &apos;./ui/dialog&apos;;
+import { ScrollArea } from &apos;./ui/scroll-area&apos;;
+import { AuditLogList, type AuditLogEntry } from &apos;./common&apos;;
+import { History } from &apos;lucide-react&apos;;
 
 interface TaskAuditLogDialogProps {
   open: boolean;
@@ -29,10 +29,10 @@ export function TaskAuditLogDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='max-w-3xl max-h-[85vh]'>
+      <DialogContent className=&apos;max-w-3xl max-h-[85vh]&apos;>
         <DialogHeader>
-          <DialogTitle className='flex items-center gap-2'>
-            <History className='h-5 w-5' />
+          <DialogTitle className=&apos;flex items-center gap-2&apos;>
+            <History className=&apos;h-5 w-5&apos; />
             Audit Log - {task.id}
           </DialogTitle>
           <DialogDescription>
@@ -40,14 +40,14 @@ export function TaskAuditLogDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className='p-4 bg-muted rounded-lg'>
+        <div className=&apos;p-4 bg-muted rounded-lg&apos;>
           <div>
             <h4>{task.assetName}</h4>
-            <p className='text-sm text-muted-foreground'>{task.task}</p>
+            <p className=&apos;text-sm text-muted-foreground&apos;>{task.task}</p>
           </div>
         </div>
 
-        <ScrollArea className='h-[500px] pr-4'>
+        <ScrollArea className=&apos;h-[500px] pr-4&apos;>
           <AuditLogList
             entries={task.auditLog.map((entry, index) => ({
               id: `audit-${index}`,
@@ -57,10 +57,10 @@ export function TaskAuditLogDialog({
               changes: entry.changes,
               notes: entry.notes,
             }))}
-            variant='dialog'
+            variant=&apos;dialog&apos;
             showEmptyState={true}
-            emptyStateTitle='No Audit Log Entries'
-            emptyStateDescription='No changes have been recorded for this task yet.'
+            emptyStateTitle=&apos;No Audit Log Entries&apos;
+            emptyStateDescription=&apos;No changes have been recorded for this task yet.&apos;
           />
         </ScrollArea>
       </DialogContent>

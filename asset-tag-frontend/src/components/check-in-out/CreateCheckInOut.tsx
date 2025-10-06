@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
+import { useState } from &apos;react&apos;;
+import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
+import { Button } from &apos;../ui/button&apos;;
+import { Input } from &apos;../ui/input&apos;;
+import { Label } from &apos;../ui/label&apos;;
+import { Textarea } from &apos;../ui/textarea&apos;;
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Badge } from '../ui/badge';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
-import { Calendar } from '../ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { cn } from '../ui/utils';
+} from &apos;../ui/select&apos;;
+import { Badge } from &apos;../ui/badge&apos;;
+import { RadioGroup, RadioGroupItem } from &apos;../ui/radio-group&apos;;
+import { Calendar } from &apos;../ui/calendar&apos;;
+import { Popover, PopoverContent, PopoverTrigger } from &apos;../ui/popover&apos;;
+import { cn } from &apos;../ui/utils&apos;;
 import {
   LogIn,
   LogOut,
@@ -27,11 +27,11 @@ import {
   AlertCircle,
   CheckCircle,
   ArrowLeft,
-} from 'lucide-react';
-import { format } from 'date-fns';
-import { toast } from 'sonner';
-import { updateAsset } from '../../data/mockData';
-import { PageHeader, PageLayout } from '../common';
+} from &apos;lucide-react&apos;;
+import { format } from &apos;date-fns&apos;;
+import { toast } from &apos;sonner&apos;;
+import { updateAsset } from &apos;../../data/mockData&apos;;
+import { PageHeader, PageLayout } from &apos;../common&apos;;
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -39,15 +39,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '../ui/breadcrumb';
-import type { Asset } from '../types';
+} from &apos;../ui/breadcrumb&apos;;
+import type { Asset } from &apos;../types&apos;;
 
 interface CreateCheckInOutProps {
   onBack: () => void;
   assetId: string;
   assetName: string;
-  currentStatus: Asset['status'];
-  mode: 'check-in' | 'check-out';
+  currentStatus: Asset[&apos;status&apos;];
+  mode: &apos;check-in&apos; | &apos;check-out&apos;;
   assetContext?: Asset;
   onComplete?: (updates: Partial<Asset>) => void;
 }
@@ -61,19 +61,19 @@ export function CreateCheckInOut({
   assetContext,
   onComplete,
 }: CreateCheckInOutProps) {
-  const [assignedTo, setAssignedTo] = useState('');
-  const [project, setProject] = useState('');
-  const [location, setLocation] = useState('');
+  const [assignedTo, setAssignedTo] = useState(&apos;&apos;);
+  const [project, setProject] = useState(&apos;&apos;);
+  const [location, setLocation] = useState(&apos;&apos;);
   const [expectedReturn, setExpectedReturn] = useState<Date>();
-  const [condition, setCondition] = useState('good');
-  const [notes, setNotes] = useState('');
+  const [condition, setCondition] = useState(&apos;good&apos;);
+  const [notes, setNotes] = useState(&apos;&apos;);
 
   const handleSubmit = () => {
     const updates: Partial<Asset> = {};
 
-    if (mode === 'check-out') {
+    if (mode === &apos;check-out&apos;) {
       // Update status to checked-out
-      updates.status = 'checked-out';
+      updates.status = &apos;checked-out&apos;;
 
       // Update assignment if provided
       if (assignedTo) {
@@ -81,15 +81,15 @@ export function CreateCheckInOut({
       }
 
       toast.success(`${assetName} checked out successfully`, {
-        description: `Assigned to ${assignedTo || 'unassigned'}`,
+        description: `Assigned to ${assignedTo || &apos;unassigned&apos;}`,
       });
     } else {
       // Update status back to active on check-in
-      updates.status = 'active';
+      updates.status = &apos;active&apos;;
 
       // If asset is damaged or in poor condition, mark for maintenance
-      if (condition === 'damaged' || condition === 'poor') {
-        updates.status = 'maintenance';
+      if (condition === &apos;damaged&apos; || condition === &apos;poor&apos;) {
+        updates.status = &apos;maintenance&apos;;
       }
 
       toast.success(`${assetName} checked in successfully`, {
@@ -106,7 +106,7 @@ export function CreateCheckInOut({
     try {
       updateAsset(assetId, updates);
     } catch (error) {
-      console.error('Error updating asset in mock data:', error);
+      // console.error(&apos;Error updating asset in mock data:&apos;, error);
     }
 
     // Navigate back
@@ -115,55 +115,55 @@ export function CreateCheckInOut({
 
   const getConditionColor = (cond: string) => {
     switch (cond) {
-      case 'excellent':
-        return 'bg-green-100 text-green-700 border-green-200';
-      case 'good':
-        return 'bg-blue-100 text-blue-700 border-blue-200';
-      case 'fair':
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      case 'poor':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
-      case 'damaged':
-        return 'bg-red-100 text-red-700 border-red-200';
+      case &apos;excellent&apos;:
+        return &apos;bg-green-100 text-green-700 border-green-200&apos;;
+      case &apos;good&apos;:
+        return &apos;bg-blue-100 text-blue-700 border-blue-200&apos;;
+      case &apos;fair&apos;:
+        return &apos;bg-yellow-100 text-yellow-700 border-yellow-200&apos;;
+      case &apos;poor&apos;:
+        return &apos;bg-orange-100 text-orange-700 border-orange-200&apos;;
+      case &apos;damaged&apos;:
+        return &apos;bg-red-100 text-red-700 border-red-200&apos;;
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return &apos;bg-gray-100 text-gray-700 border-gray-200&apos;;
     }
   };
 
   return (
     <PageLayout
-      variant='narrow'
-      padding='md'
+      variant=&apos;narrow&apos;
+      padding=&apos;md&apos;
       header={
-        <div className='border-b bg-background px-8 py-4'>
-          <div className='flex items-center gap-4 mb-4'>
-            <Button variant='ghost' size='icon' onClick={onBack}>
-              <ArrowLeft className='h-5 w-5' />
+        <div className=&apos;border-b bg-background px-8 py-4&apos;>
+          <div className=&apos;flex items-center gap-4 mb-4&apos;>
+            <Button variant=&apos;ghost&apos; size=&apos;icon&apos; onClick={onBack}>
+              <ArrowLeft className=&apos;h-5 w-5&apos; />
             </Button>
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink onClick={onBack} className='cursor-pointer'>
+                  <BreadcrumbLink onClick={onBack} className=&apos;cursor-pointer&apos;>
                     {assetName}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbPage>
-                    {mode === 'check-out' ? 'Check Out' : 'Check In'}
+                    {mode === &apos;check-out&apos; ? &apos;Check Out&apos; : &apos;Check In&apos;}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
           <PageHeader
-            title={mode === 'check-out' ? 'Check Out Asset' : 'Check In Asset'}
+            title={mode === &apos;check-out&apos; ? &apos;Check Out Asset&apos; : &apos;Check In Asset&apos;}
             description={
-              mode === 'check-out'
-                ? 'Assign this asset to a user or project'
-                : 'Return this asset and assess its condition'
+              mode === &apos;check-out&apos;
+                ? &apos;Assign this asset to a user or project&apos;
+                : &apos;Return this asset and assess its condition&apos;
             }
-            icon={mode === 'check-out' ? LogOut : LogIn}
+            icon={mode === &apos;check-out&apos; ? LogOut : LogIn}
           />
         </div>
       }
@@ -174,27 +174,27 @@ export function CreateCheckInOut({
           <CardTitle>Asset Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='p-4 bg-muted rounded-lg'>
-            <div className='flex items-center justify-between'>
+          <div className=&apos;p-4 bg-muted rounded-lg&apos;>
+            <div className=&apos;flex items-center justify-between&apos;>
               <div>
                 <h4>{assetName}</h4>
-                <p className='text-sm text-muted-foreground'>{assetId}</p>
+                <p className=&apos;text-sm text-muted-foreground&apos;>{assetId}</p>
                 {assetContext && (
-                  <div className='mt-2 text-sm space-y-1'>
+                  <div className=&apos;mt-2 text-sm space-y-1&apos;>
                     <p>
-                      <span className='text-muted-foreground'>Type:</span>{' '}
+                      <span className=&apos;text-muted-foreground&apos;>Type:</span>{&apos; &apos;}
                       {assetContext.type}
                     </p>
                     <p>
-                      <span className='text-muted-foreground'>Location:</span>{' '}
+                      <span className=&apos;text-muted-foreground&apos;>Location:</span>{&apos; &apos;}
                       {assetContext.location}
                     </p>
                   </div>
                 )}
               </div>
               <Badge
-                variant='outline'
-                className='bg-blue-100 text-blue-700 border-blue-200'
+                variant=&apos;outline&apos;
+                className=&apos;bg-blue-100 text-blue-700 border-blue-200&apos;
               >
                 {currentStatus}
               </Badge>
@@ -207,92 +207,92 @@ export function CreateCheckInOut({
       <Card>
         <CardHeader>
           <CardTitle>
-            {mode === 'check-out' ? 'Check-Out Details' : 'Check-In Details'}
+            {mode === &apos;check-out&apos; ? &apos;Check-Out Details&apos; : &apos;Check-In Details&apos;}
           </CardTitle>
         </CardHeader>
-        <CardContent className='space-y-6'>
-          {mode === 'check-out' ? (
+        <CardContent className=&apos;space-y-6&apos;>
+          {mode === &apos;check-out&apos; ? (
             <>
               {/* Check-out Form */}
-              <div className='space-y-4'>
-                <div className='space-y-2'>
-                  <Label htmlFor='assigned-to'>
-                    <User className='h-4 w-4 inline mr-2' />
+              <div className=&apos;space-y-4&apos;>
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;assigned-to&apos;>
+                    <User className=&apos;h-4 w-4 inline mr-2&apos; />
                     Assign To
                   </Label>
                   <Select value={assignedTo} onValueChange={setAssignedTo}>
-                    <SelectTrigger id='assigned-to'>
-                      <SelectValue placeholder='Select user or team' />
+                    <SelectTrigger id=&apos;assigned-to&apos;>
+                      <SelectValue placeholder=&apos;Select user or team&apos; />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='john-smith'>John Smith</SelectItem>
-                      <SelectItem value='sarah-johnson'>
+                      <SelectItem value=&apos;john-smith&apos;>John Smith</SelectItem>
+                      <SelectItem value=&apos;sarah-johnson&apos;>
                         Sarah Johnson
                       </SelectItem>
-                      <SelectItem value='mike-wilson'>Mike Wilson</SelectItem>
-                      <SelectItem value='team-alpha'>Team Alpha</SelectItem>
-                      <SelectItem value='team-beta'>Team Beta</SelectItem>
+                      <SelectItem value=&apos;mike-wilson&apos;>Mike Wilson</SelectItem>
+                      <SelectItem value=&apos;team-alpha&apos;>Team Alpha</SelectItem>
+                      <SelectItem value=&apos;team-beta&apos;>Team Beta</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='project'>
-                    <FileText className='h-4 w-4 inline mr-2' />
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;project&apos;>
+                    <FileText className=&apos;h-4 w-4 inline mr-2&apos; />
                     Project / Job Site
                   </Label>
                   <Select value={project} onValueChange={setProject}>
-                    <SelectTrigger id='project'>
-                      <SelectValue placeholder='Select project (optional)' />
+                    <SelectTrigger id=&apos;project&apos;>
+                      <SelectValue placeholder=&apos;Select project (optional)&apos; />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='job-alpha'>Job Site Alpha</SelectItem>
-                      <SelectItem value='job-beta'>Job Site Beta</SelectItem>
-                      <SelectItem value='warehouse'>
+                      <SelectItem value=&apos;job-alpha&apos;>Job Site Alpha</SelectItem>
+                      <SelectItem value=&apos;job-beta&apos;>Job Site Beta</SelectItem>
+                      <SelectItem value=&apos;warehouse&apos;>
                         Warehouse District
                       </SelectItem>
-                      <SelectItem value='campus'>Corporate Campus</SelectItem>
+                      <SelectItem value=&apos;campus&apos;>Corporate Campus</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='location'>
-                    <MapPin className='h-4 w-4 inline mr-2' />
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;location&apos;>
+                    <MapPin className=&apos;h-4 w-4 inline mr-2&apos; />
                     Destination Location
                   </Label>
                   <Input
-                    id='location'
-                    placeholder='Enter location or address'
+                    id=&apos;location&apos;
+                    placeholder=&apos;Enter location or address&apos;
                     value={location}
                     onChange={e => setLocation(e.target.value)}
                   />
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='expected-return-date'>
-                    <CalendarIcon className='h-4 w-4 inline mr-2' />
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;expected-return-date&apos;>
+                    <CalendarIcon className=&apos;h-4 w-4 inline mr-2&apos; />
                     Expected Return Date
                   </Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
-                        id='expected-return-date'
-                        variant='outline'
+                        id=&apos;expected-return-date&apos;
+                        variant=&apos;outline&apos;
                         className={cn(
-                          'w-full justify-start text-left',
-                          !expectedReturn && 'text-muted-foreground'
+                          &apos;w-full justify-start text-left&apos;,
+                          !expectedReturn && &apos;text-muted-foreground&apos;
                         )}
                       >
-                        <CalendarIcon className='mr-2 h-4 w-4' />
+                        <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
                         {expectedReturn
-                          ? format(expectedReturn, 'PPP')
-                          : 'Pick a date'}
+                          ? format(expectedReturn, &apos;PPP&apos;)
+                          : &apos;Pick a date&apos;}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className='w-auto p-0' align='start'>
+                    <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
                       <Calendar
-                        mode='single'
+                        mode=&apos;single&apos;
                         selected={expectedReturn}
                         onSelect={setExpectedReturn}
                         initialFocus
@@ -301,14 +301,14 @@ export function CreateCheckInOut({
                   </Popover>
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='checkout-notes'>
-                    <FileText className='h-4 w-4 inline mr-2' />
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;checkout-notes&apos;>
+                    <FileText className=&apos;h-4 w-4 inline mr-2&apos; />
                     Notes (Optional)
                   </Label>
                   <Textarea
-                    id='checkout-notes'
-                    placeholder='Add any notes about this checkout...'
+                    id=&apos;checkout-notes&apos;
+                    placeholder=&apos;Add any notes about this checkout...&apos;
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
                     rows={3}
@@ -319,67 +319,67 @@ export function CreateCheckInOut({
           ) : (
             <>
               {/* Check-in Form */}
-              <div className='space-y-4'>
-                <div className='space-y-2'>
+              <div className=&apos;space-y-4&apos;>
+                <div className=&apos;space-y-2&apos;>
                   <Label>
-                    <AlertCircle className='h-4 w-4 inline mr-2' />
+                    <AlertCircle className=&apos;h-4 w-4 inline mr-2&apos; />
                     Asset Condition
                   </Label>
                   <RadioGroup value={condition} onValueChange={setCondition}>
-                    <div className='space-y-2'>
+                    <div className=&apos;space-y-2&apos;>
                       {[
                         {
-                          value: 'excellent',
-                          label: 'Excellent',
-                          desc: 'Perfect condition, no issues',
+                          value: &apos;excellent&apos;,
+                          label: &apos;Excellent&apos;,
+                          desc: &apos;Perfect condition, no issues&apos;,
                         },
                         {
-                          value: 'good',
-                          label: 'Good',
-                          desc: 'Normal wear, fully functional',
+                          value: &apos;good&apos;,
+                          label: &apos;Good&apos;,
+                          desc: &apos;Normal wear, fully functional&apos;,
                         },
                         {
-                          value: 'fair',
-                          label: 'Fair',
-                          desc: 'Some wear, may need minor service',
+                          value: &apos;fair&apos;,
+                          label: &apos;Fair&apos;,
+                          desc: &apos;Some wear, may need minor service&apos;,
                         },
                         {
-                          value: 'poor',
-                          label: 'Poor',
-                          desc: 'Significant wear, needs attention',
+                          value: &apos;poor&apos;,
+                          label: &apos;Poor&apos;,
+                          desc: &apos;Significant wear, needs attention&apos;,
                         },
                         {
-                          value: 'damaged',
-                          label: 'Damaged',
-                          desc: 'Requires immediate repair',
+                          value: &apos;damaged&apos;,
+                          label: &apos;Damaged&apos;,
+                          desc: &apos;Requires immediate repair&apos;,
                         },
                       ].map(option => (
                         <div
                           key={option.value}
                           className={cn(
-                            'flex items-start space-x-3 p-3 rounded-lg border',
+                            &apos;flex items-start space-x-3 p-3 rounded-lg border&apos;,
                             condition === option.value &&
-                              'border-primary bg-accent'
+                              &apos;border-primary bg-accent&apos;
                           )}
                         >
                           <RadioGroupItem
                             value={option.value}
                             id={option.value}
                           />
-                          <div className='flex-1'>
+                          <div className=&apos;flex-1&apos;>
                             <Label
                               htmlFor={option.value}
-                              className='flex items-center gap-2 cursor-pointer'
+                              className=&apos;flex items-center gap-2 cursor-pointer&apos;
                             >
                               {option.label}
                               <Badge
-                                variant='outline'
+                                variant=&apos;outline&apos;
                                 className={getConditionColor(option.value)}
                               >
                                 {option.label}
                               </Badge>
                             </Label>
-                            <p className='text-sm text-muted-foreground'>
+                            <p className=&apos;text-sm text-muted-foreground&apos;>
                               {option.desc}
                             </p>
                           </div>
@@ -389,34 +389,34 @@ export function CreateCheckInOut({
                   </RadioGroup>
                 </div>
 
-                <div className='space-y-2'>
-                  <Label htmlFor='return-location'>
-                    <MapPin className='h-4 w-4 inline mr-2' />
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;return-location&apos;>
+                    <MapPin className=&apos;h-4 w-4 inline mr-2&apos; />
                     Return Location
                   </Label>
-                  <Select defaultValue='warehouse'>
-                    <SelectTrigger id='return-location'>
+                  <Select defaultValue=&apos;warehouse&apos;>
+                    <SelectTrigger id=&apos;return-location&apos;>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value='warehouse'>
+                      <SelectItem value=&apos;warehouse&apos;>
                         Warehouse District
                       </SelectItem>
-                      <SelectItem value='depot'>Service Depot C</SelectItem>
-                      <SelectItem value='campus'>Corporate Campus</SelectItem>
+                      <SelectItem value=&apos;depot&apos;>Service Depot C</SelectItem>
+                      <SelectItem value=&apos;campus&apos;>Corporate Campus</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                {condition === 'damaged' || condition === 'poor' ? (
-                  <div className='p-4 bg-orange-50 border border-orange-200 rounded-lg'>
-                    <div className='flex items-start gap-2'>
-                      <AlertCircle className='h-5 w-5 text-orange-600 mt-0.5' />
-                      <div className='flex-1'>
-                        <h4 className='text-orange-900'>
+                {condition === &apos;damaged&apos; || condition === &apos;poor&apos; ? (
+                  <div className=&apos;p-4 bg-orange-50 border border-orange-200 rounded-lg&apos;>
+                    <div className=&apos;flex items-start gap-2&apos;>
+                      <AlertCircle className=&apos;h-5 w-5 text-orange-600 mt-0.5&apos; />
+                      <div className=&apos;flex-1&apos;>
+                        <h4 className=&apos;text-orange-900&apos;>
                           Maintenance Required
                         </h4>
-                        <p className='text-sm text-orange-700'>
+                        <p className=&apos;text-sm text-orange-700&apos;>
                           This asset will be flagged for maintenance review
                         </p>
                       </div>
@@ -424,14 +424,14 @@ export function CreateCheckInOut({
                   </div>
                 ) : null}
 
-                <div className='space-y-2'>
-                  <Label htmlFor='checkin-notes'>
-                    <FileText className='h-4 w-4 inline mr-2' />
+                <div className=&apos;space-y-2&apos;>
+                  <Label htmlFor=&apos;checkin-notes&apos;>
+                    <FileText className=&apos;h-4 w-4 inline mr-2&apos; />
                     Inspection Notes
                   </Label>
                   <Textarea
-                    id='checkin-notes'
-                    placeholder='Describe any issues, damage, or observations...'
+                    id=&apos;checkin-notes&apos;
+                    placeholder=&apos;Describe any issues, damage, or observations...&apos;
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
                     rows={4}
@@ -442,30 +442,30 @@ export function CreateCheckInOut({
           )}
 
           {/* Timestamp */}
-          <div className='flex items-center gap-2 text-sm text-muted-foreground pt-4 border-t'>
-            <Clock className='h-4 w-4' />
+          <div className=&apos;flex items-center gap-2 text-sm text-muted-foreground pt-4 border-t&apos;>
+            <Clock className=&apos;h-4 w-4&apos; />
             <span>
-              {mode === 'check-out' ? 'Check-out' : 'Check-in'} time:{' '}
-              {format(new Date(), 'PPpp')}
+              {mode === &apos;check-out&apos; ? &apos;Check-out&apos; : &apos;Check-in&apos;} time:{&apos; &apos;}
+              {format(new Date(), &apos;PPpp&apos;)}
             </span>
           </div>
         </CardContent>
       </Card>
 
       {/* Actions */}
-      <div className='flex items-center justify-end gap-2'>
-        <Button variant='outline' onClick={onBack}>
+      <div className=&apos;flex items-center justify-end gap-2&apos;>
+        <Button variant=&apos;outline&apos; onClick={onBack}>
           Cancel
         </Button>
         <Button onClick={handleSubmit}>
-          {mode === 'check-out' ? (
+          {mode === &apos;check-out&apos; ? (
             <>
-              <LogOut className='h-4 w-4 mr-2' />
+              <LogOut className=&apos;h-4 w-4 mr-2&apos; />
               Check Out
             </>
           ) : (
             <>
-              <CheckCircle className='h-4 w-4 mr-2' />
+              <CheckCircle className=&apos;h-4 w-4 mr-2&apos; />
               Check In
             </>
           )}

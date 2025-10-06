@@ -340,7 +340,7 @@ export async function fetchSiteActivity(
   const { assetActivityMap, mockPersonnel } = await import('../data/mockData');
 
   // Aggregate activity from all assets and personnel
-  const allAssetActivity: any[] = [];
+  const allAssetActivity: unknown[] = [];
   assetActivityMap.forEach(activities => {
     allAssetActivity.push(...activities);
   });
@@ -349,7 +349,7 @@ export async function fetchSiteActivity(
 
   // Helper to count entities at site during a time period
   const countEntitiesAtSite = (
-    activities: any[],
+    activities: unknown[],
     targetSiteId: string,
     periodStart: Date,
     periodEnd: Date

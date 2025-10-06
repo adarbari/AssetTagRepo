@@ -1,12 +1,12 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { AssetMap } from '../map/AssetMap';
-import { render } from '../../test/test-utils';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
+import { screen } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { AssetMap } from &apos;../map/AssetMap&apos;;
+import { render } from &apos;../../test/test-utils&apos;;
 
 // Mock Leaflet and map-related modules
-vi.mock('leaflet', () => ({
+vi.mock(&apos;leaflet&apos;, () => ({
   map: vi.fn(() => ({
     setView: vi.fn(),
     flyTo: vi.fn(),
@@ -40,48 +40,48 @@ vi.mock('leaflet', () => ({
 }));
 
 // Mock the mock data
-vi.mock('../../data/mockData', () => ({
+vi.mock(&apos;../../data/mockData&apos;, () => ({
   mockAssets: [
     {
-      id: 'AT-001',
-      name: 'Excavator CAT 320',
-      type: 'Heavy Equipment',
-      status: 'active',
+      id: &apos;AT-001&apos;,
+      name: &apos;Excavator CAT 320&apos;,
+      type: &apos;Heavy Equipment&apos;,
+      status: &apos;active&apos;,
       coordinates: [30.2672, -97.7431],
       battery: 87,
-      lastSeen: '2024-01-01T10:00:00Z',
+      lastSeen: &apos;2024-01-01T10:00:00Z&apos;,
     },
     {
-      id: 'AT-002',
-      name: 'Delivery Truck F-350',
-      type: 'Vehicle',
-      status: 'idle',
+      id: &apos;AT-002&apos;,
+      name: &apos;Delivery Truck F-350&apos;,
+      type: &apos;Vehicle&apos;,
+      status: &apos;idle&apos;,
       coordinates: [30.2672, -97.7431],
       battery: 92,
-      lastSeen: '2024-01-01T09:30:00Z',
+      lastSeen: &apos;2024-01-01T09:30:00Z&apos;,
     },
     {
-      id: 'AT-003',
-      name: 'Tool Container #5',
-      type: 'Container',
-      status: 'active',
+      id: &apos;AT-003&apos;,
+      name: &apos;Tool Container #5&apos;,
+      type: &apos;Container&apos;,
+      status: &apos;active&apos;,
       coordinates: [30.2672, -97.7431],
       battery: 78,
-      lastSeen: '2024-01-01T08:45:00Z',
+      lastSeen: &apos;2024-01-01T08:45:00Z&apos;,
     },
   ],
   mockGeofences: [
     {
-      id: 'GF-001',
-      name: 'Main Warehouse',
+      id: &apos;GF-001&apos;,
+      name: &apos;Main Warehouse&apos;,
       center: [30.2672, -97.7431],
       radius: 500,
-      status: 'active',
+      status: &apos;active&apos;,
     },
   ],
 }));
 
-describe('AssetMap Component', () => {
+describe(&apos;AssetMap Component&apos;, () => {
   const defaultProps = {
     onAssetClick: vi.fn(),
     onTrackHistory: vi.fn(),
@@ -93,177 +93,177 @@ describe('AssetMap Component', () => {
     vi.clearAllMocks();
   });
 
-  describe('Rendering and Basic Functionality', () => {
-    it('should render the live map with header', () => {
+  describe(&apos;Rendering and Basic Functionality&apos;, () => {
+    it(&apos;should render the live map with header&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
-      expect(screen.getByText('Live Asset Map')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Live Asset Map&apos;)).toBeInTheDocument();
       expect(
-        screen.getByText('Real-time location tracking with OpenStreetMap')
+        screen.getByText(&apos;Real-time location tracking with OpenStreetMap&apos;)
       ).toBeInTheDocument();
     });
 
-    it('should render asset count badges', () => {
+    it(&apos;should render asset count badges&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
-      expect(screen.getByText('3 Assets Tracked')).toBeInTheDocument();
-      expect(screen.getByText('3 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;3 Assets Tracked&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;3 Visible&apos;)).toBeInTheDocument();
     });
 
-    it('should render search and filter controls', () => {
+    it(&apos;should render search and filter controls&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
       expect(screen.getByPlaceholderText(/search assets/i)).toBeInTheDocument();
-      expect(screen.getByText('All Types')).toBeInTheDocument();
-      expect(screen.getByText('All Statuses')).toBeInTheDocument();
+      expect(screen.getByText(&apos;All Types&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;All Statuses&apos;)).toBeInTheDocument();
     });
 
-    it('should render map controls', () => {
+    it(&apos;should render map controls&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
-      expect(screen.getByText('Geofences')).toBeInTheDocument();
-      expect(screen.getByText('Clusters')).toBeInTheDocument();
-      expect(screen.getByText('Sites')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Geofences&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Clusters&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Sites&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Search Functionality', () => {
-    it('should filter assets by name when searching', async () => {
+  describe(&apos;Search Functionality&apos;, () => {
+    it(&apos;should filter assets by name when searching&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
       const searchInput = screen.getByPlaceholderText(/search assets/i);
-      await user.type(searchInput, 'Excavator');
+      await user.type(searchInput, &apos;Excavator&apos;);
 
       // Should update visible count
-      expect(screen.getByText('1 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;1 Visible&apos;)).toBeInTheDocument();
     });
 
-    it('should filter assets by ID when searching', async () => {
+    it(&apos;should filter assets by ID when searching&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
       const searchInput = screen.getByPlaceholderText(/search assets/i);
-      await user.type(searchInput, 'AT-002');
+      await user.type(searchInput, &apos;AT-002&apos;);
 
-      expect(screen.getByText('1 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;1 Visible&apos;)).toBeInTheDocument();
     });
 
-    it('should clear search results when search is cleared', async () => {
+    it(&apos;should clear search results when search is cleared&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
       const searchInput = screen.getByPlaceholderText(/search assets/i);
-      await user.type(searchInput, 'Excavator');
+      await user.type(searchInput, &apos;Excavator&apos;);
       await user.clear(searchInput);
 
-      expect(screen.getByText('3 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;3 Visible&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Filter Functionality', () => {
-    it('should filter assets by type', async () => {
+  describe(&apos;Filter Functionality&apos;, () => {
+    it(&apos;should filter assets by type&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
-      const typeSelect = screen.getByText('All Types');
+      const typeSelect = screen.getByText(&apos;All Types&apos;);
       await user.click(typeSelect);
-      await user.click(screen.getByText('Heavy Equipment'));
+      await user.click(screen.getByText(&apos;Heavy Equipment&apos;));
 
-      expect(screen.getByText('1 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;1 Visible&apos;)).toBeInTheDocument();
     });
 
-    it('should filter assets by status', async () => {
+    it(&apos;should filter assets by status&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
-      const statusSelect = screen.getByText('All Statuses');
+      const statusSelect = screen.getByText(&apos;All Statuses&apos;);
       await user.click(statusSelect);
-      await user.click(screen.getByText('Active'));
+      await user.click(screen.getByText(&apos;Active&apos;));
 
-      expect(screen.getByText('2 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;2 Visible&apos;)).toBeInTheDocument();
     });
 
-    it('should combine multiple filters', async () => {
+    it(&apos;should combine multiple filters&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
       // Filter by type
-      const typeSelect = screen.getByText('All Types');
+      const typeSelect = screen.getByText(&apos;All Types&apos;);
       await user.click(typeSelect);
-      await user.click(screen.getByText('Vehicle'));
+      await user.click(screen.getByText(&apos;Vehicle&apos;));
 
       // Filter by status
-      const statusSelect = screen.getByText('All Statuses');
+      const statusSelect = screen.getByText(&apos;All Statuses&apos;);
       await user.click(statusSelect);
-      await user.click(screen.getByText('Idle'));
+      await user.click(screen.getByText(&apos;Idle&apos;));
 
-      expect(screen.getByText('1 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;1 Visible&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Map Controls', () => {
-    it('should toggle geofences visibility', async () => {
+  describe(&apos;Map Controls&apos;, () => {
+    it(&apos;should toggle geofences visibility&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
-      const geofencesToggle = screen.getByText('Geofences');
+      const geofencesToggle = screen.getByText(&apos;Geofences&apos;);
       await user.click(geofencesToggle);
 
       // Toggle should work (exact behavior depends on implementation)
       expect(geofencesToggle).toBeInTheDocument();
     });
 
-    it('should toggle clusters visibility', async () => {
+    it(&apos;should toggle clusters visibility&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
-      const clustersToggle = screen.getByText('Clusters');
+      const clustersToggle = screen.getByText(&apos;Clusters&apos;);
       await user.click(clustersToggle);
 
       expect(clustersToggle).toBeInTheDocument();
     });
 
-    it('should toggle sites visibility', async () => {
+    it(&apos;should toggle sites visibility&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
-      const sitesToggle = screen.getByText('Sites');
+      const sitesToggle = screen.getByText(&apos;Sites&apos;);
       await user.click(sitesToggle);
 
       expect(sitesToggle).toBeInTheDocument();
     });
 
-    it('should recenter map when recenter button is clicked', async () => {
+    it(&apos;should recenter map when recenter button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
-      const recenterButton = screen.getByRole('button', { name: /recenter/i });
+      const recenterButton = screen.getByRole(&apos;button&apos;, { name: /recenter/i });
       await user.click(recenterButton);
 
       expect(recenterButton).toBeInTheDocument();
     });
   });
 
-  describe('Asset Interaction', () => {
-    it('should call onAssetClick when asset is clicked', async () => {
+  describe(&apos;Asset Interaction&apos;, () => {
+    it(&apos;should call onAssetClick when asset is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
       // Find and click an asset marker (this would be implemented in the actual component)
-      const assetMarker = screen.getByText('Excavator CAT 320');
+      const assetMarker = screen.getByText(&apos;Excavator CAT 320&apos;);
       if (assetMarker) {
         await user.click(assetMarker);
         expect(defaultProps.onAssetClick).toHaveBeenCalled();
       }
     });
 
-    it('should call onTrackHistory when track history is requested', async () => {
+    it(&apos;should call onTrackHistory when track history is requested&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
       // Find and click track history button
-      const trackButton = screen.getByRole('button', {
+      const trackButton = screen.getByRole(&apos;button&apos;, {
         name: /track history/i,
       });
       if (trackButton) {
@@ -273,88 +273,88 @@ describe('AssetMap Component', () => {
     });
   });
 
-  describe('Navigation', () => {
-    it('should render back button when onBack prop is provided', () => {
+  describe(&apos;Navigation&apos;, () => {
+    it(&apos;should render back button when onBack prop is provided&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
-      const backButton = screen.getByRole('button', { name: '' }); // Icon button
+      const backButton = screen.getByRole(&apos;button&apos;, { name: &apos;&apos; }); // Icon button
       expect(backButton).toBeInTheDocument();
     });
 
-    it('should call onBack when back button is clicked', async () => {
+    it(&apos;should call onBack when back button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
-      const backButton = screen.getByRole('button', { name: '' });
+      const backButton = screen.getByRole(&apos;button&apos;, { name: &apos;&apos; });
       await user.click(backButton);
 
       expect(defaultProps.onBack).toHaveBeenCalledTimes(1);
     });
 
-    it('should not render back button when onBack prop is not provided', () => {
+    it(&apos;should not render back button when onBack prop is not provided&apos;, () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { onBack: _onBack, ...propsWithoutBack } = defaultProps;
       render(<AssetMap {...propsWithoutBack} />);
 
-      const backButtons = screen.queryAllByRole('button', { name: '' });
+      const backButtons = screen.queryAllByRole(&apos;button&apos;, { name: &apos;&apos; });
       expect(backButtons.length).toBe(0);
     });
   });
 
-  describe('Violation Mode', () => {
-    it('should render violation mode when violationMode is true', () => {
+  describe(&apos;Violation Mode&apos;, () => {
+    it(&apos;should render violation mode when violationMode is true&apos;, () => {
       render(<AssetMap {...defaultProps} violationMode={true} />);
 
       expect(
         screen.getByText(
-          'Showing assets outside their designated geofence boundaries'
+          &apos;Showing assets outside their designated geofence boundaries&apos;
         )
       ).toBeInTheDocument();
     });
 
-    it('should show violation count badge in violation mode', () => {
+    it(&apos;should show violation count badge in violation mode&apos;, () => {
       render(<AssetMap {...defaultProps} violationMode={true} />);
 
       expect(screen.getByText(/violation/i)).toBeInTheDocument();
     });
 
-    it('should show normal mode description when violationMode is false', () => {
+    it(&apos;should show normal mode description when violationMode is false&apos;, () => {
       render(<AssetMap {...defaultProps} violationMode={false} />);
 
       expect(
-        screen.getByText('Real-time location tracking with OpenStreetMap')
+        screen.getByText(&apos;Real-time location tracking with OpenStreetMap&apos;)
       ).toBeInTheDocument();
     });
   });
 
-  describe('Asset Highlighting', () => {
-    it('should handle highlighted asset when provided', () => {
+  describe(&apos;Asset Highlighting&apos;, () => {
+    it(&apos;should handle highlighted asset when provided&apos;, () => {
       const highlightedAsset = {
-        id: 'AT-001',
-        name: 'Excavator CAT 320',
-        type: 'Heavy Equipment',
-        status: 'active',
+        id: &apos;AT-001&apos;,
+        name: &apos;Excavator CAT 320&apos;,
+        type: &apos;Heavy Equipment&apos;,
+        status: &apos;active&apos;,
         coordinates: [30.2672, -97.7431],
         battery: 87,
-        lastSeen: '2024-01-01T10:00:00Z',
+        lastSeen: &apos;2024-01-01T10:00:00Z&apos;,
       };
 
       render(<AssetMap {...defaultProps} highlightAsset={highlightedAsset} />);
 
       // Should render without errors
-      expect(screen.getByText('Live Asset Map')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Live Asset Map&apos;)).toBeInTheDocument();
     });
 
-    it('should call onClearHighlight when clear highlight is requested', async () => {
+    it(&apos;should call onClearHighlight when clear highlight is requested&apos;, async () => {
       const user = userEvent.setup();
       const highlightedAsset = {
-        id: 'AT-001',
-        name: 'Excavator CAT 320',
-        type: 'Heavy Equipment',
-        status: 'active',
+        id: &apos;AT-001&apos;,
+        name: &apos;Excavator CAT 320&apos;,
+        type: &apos;Heavy Equipment&apos;,
+        status: &apos;active&apos;,
         coordinates: [30.2672, -97.7431],
         battery: 87,
-        lastSeen: '2024-01-01T10:00:00Z',
+        lastSeen: &apos;2024-01-01T10:00:00Z&apos;,
       };
 
       render(
@@ -366,7 +366,7 @@ describe('AssetMap Component', () => {
       );
 
       // Find and click clear highlight button
-      const clearButton = screen.getByRole('button', { name: /clear/i });
+      const clearButton = screen.getByRole(&apos;button&apos;, { name: /clear/i });
       if (clearButton) {
         await user.click(clearButton);
         expect(defaultProps.onClearHighlight).toHaveBeenCalled();
@@ -374,22 +374,22 @@ describe('AssetMap Component', () => {
     });
   });
 
-  describe('Asset Filtering', () => {
-    it('should filter assets by provided filteredAssetIds', () => {
-      render(<AssetMap {...defaultProps} filteredAssetIds={['AT-001']} />);
+  describe(&apos;Asset Filtering&apos;, () => {
+    it(&apos;should filter assets by provided filteredAssetIds&apos;, () => {
+      render(<AssetMap {...defaultProps} filteredAssetIds={[&apos;AT-001&apos;]} />);
 
-      expect(screen.getByText('1 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;1 Visible&apos;)).toBeInTheDocument();
     });
 
-    it('should show all assets when no filteredAssetIds provided', () => {
+    it(&apos;should show all assets when no filteredAssetIds provided&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
-      expect(screen.getByText('3 Visible')).toBeInTheDocument();
+      expect(screen.getByText(&apos;3 Visible&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper ARIA labels and roles', () => {
+  describe(&apos;Accessibility&apos;, () => {
+    it(&apos;should have proper ARIA labels and roles&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
       // Check search input
@@ -397,14 +397,14 @@ describe('AssetMap Component', () => {
       expect(searchInput).toBeInTheDocument();
 
       // Check filter controls
-      const typeSelect = screen.getByText('All Types');
+      const typeSelect = screen.getByText(&apos;All Types&apos;);
       expect(typeSelect).toBeInTheDocument();
 
-      const statusSelect = screen.getByText('All Statuses');
+      const statusSelect = screen.getByText(&apos;All Statuses&apos;);
       expect(statusSelect).toBeInTheDocument();
     });
 
-    it('should maintain keyboard navigation', async () => {
+    it(&apos;should maintain keyboard navigation&apos;, async () => {
       const user = userEvent.setup();
       render(<AssetMap {...defaultProps} />);
 
@@ -416,55 +416,55 @@ describe('AssetMap Component', () => {
     });
   });
 
-  describe('Map Loading', () => {
-    it('should handle map loading state', () => {
+  describe(&apos;Map Loading&apos;, () => {
+    it(&apos;should handle map loading state&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
       // Should render without crashing while map loads
-      expect(screen.getByText('Live Asset Map')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Live Asset Map&apos;)).toBeInTheDocument();
     });
 
-    it('should handle map loading errors gracefully', () => {
+    it(&apos;should handle map loading errors gracefully&apos;, () => {
       // Mock map loading error
       const consoleError = vi
-        .spyOn(console, 'error')
+        .spyOn(console, &apos;error&apos;)
         .mockImplementation(() => {});
 
       render(<AssetMap {...defaultProps} />);
 
       // Should still render the component
-      expect(screen.getByText('Live Asset Map')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Live Asset Map&apos;)).toBeInTheDocument();
 
       consoleError.mockRestore();
     });
   });
 
-  describe('Responsive Design', () => {
-    it('should render properly on different screen sizes', () => {
+  describe(&apos;Responsive Design&apos;, () => {
+    it(&apos;should render properly on different screen sizes&apos;, () => {
       render(<AssetMap {...defaultProps} />);
 
       // Check that responsive classes are applied
-      const container = document.querySelector('.h-screen');
+      const container = document.querySelector(&apos;.h-screen&apos;);
       expect(container).toBeInTheDocument();
     });
   });
 
-  describe('Performance', () => {
-    it('should handle large numbers of assets efficiently', () => {
+  describe(&apos;Performance&apos;, () => {
+    it(&apos;should handle large numbers of assets efficiently&apos;, () => {
       // Mock large dataset
       // const _largeAssetList = Array.from({ length: 1000 }, (_, i) => ({
       //   id: `AT-${i}`,
       //   name: `Asset ${i}`,
-      //   type: 'Equipment',
-      //   status: 'active',
+      //   type: &apos;Equipment&apos;,
+      //   status: &apos;active&apos;,
       //   coordinates: [30.2672 + i * 0.001, -97.7431 + i * 0.001],
       //   battery: 50 + (i % 50),
-      //   lastSeen: '2024-01-01T10:00:00Z',
+      //   lastSeen: &apos;2024-01-01T10:00:00Z&apos;,
       // }));
 
       // Should render without performance issues
       render(<AssetMap {...defaultProps} />);
-      expect(screen.getByText('Live Asset Map')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Live Asset Map&apos;)).toBeInTheDocument();
     });
   });
 });
