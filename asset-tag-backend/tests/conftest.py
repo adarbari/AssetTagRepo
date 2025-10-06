@@ -25,13 +25,13 @@ setup_uuid_compatibility()
 
 from config.database import Base, get_db
 from config.settings import settings
+
+# Import test database configuration from separate module
+from config.test_database import TestSessionLocal, test_engine
 from main import app
 
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
-
-# Import test database configuration from separate module
-from config.test_database import test_engine, TestSessionLocal
 
 
 @pytest.fixture(scope="session")
@@ -45,9 +45,9 @@ def event_loop() -> Generator:
 @pytest.fixture(scope="session", autouse=True)
 def mock_external_services():
     """Mock all external services for testing"""
-    import config.streaming
-    import config.elasticsearch
     import config.cache
+    import config.elasticsearch
+    import config.streaming
     import ml.serving.model_loader
     import streaming.stream_processor_coordinator
 

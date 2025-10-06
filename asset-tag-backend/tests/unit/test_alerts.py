@@ -262,8 +262,8 @@ class TestAlertRulesEngine:
         rule = engine.rules["theft_detection"]
 
         # Mock current time outside working hours (e.g., 2 AM)
-        from unittest.mock import patch
         import datetime
+        from unittest.mock import patch
 
         with patch("modules.alerts.rules_engine.datetime") as mock_datetime:
             mock_datetime.now.return_value = datetime.datetime(2024, 1, 1, 2, 0, 0)
