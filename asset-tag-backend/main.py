@@ -161,6 +161,7 @@ from modules.alerts.api import router as alerts_router
 from modules.jobs.api import router as jobs_router
 from modules.maintenance.api import router as maintenance_router
 from modules.analytics.api import router as analytics_router
+from modules.checkin_checkout.api import router as checkin_checkout_router
 
 # New API routes
 from modules.search.api import router as search_router
@@ -180,6 +181,7 @@ app.include_router(alerts_router, prefix=settings.api_v1_prefix, tags=["alerts"]
 app.include_router(jobs_router, prefix=settings.api_v1_prefix, tags=["jobs"])
 app.include_router(maintenance_router, prefix=settings.api_v1_prefix, tags=["maintenance"])
 app.include_router(analytics_router, prefix=settings.api_v1_prefix, tags=["analytics"])
+app.include_router(checkin_checkout_router, prefix=settings.api_v1_prefix, tags=["checkin-checkout"])
 
 # Include new routers
 app.include_router(search_router, prefix=settings.api_v1_prefix, tags=["search"])
