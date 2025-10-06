@@ -1,11 +1,12 @@
 """
 Asset Tag Backend - Simplified FastAPI Application for Testing
 """
+import logging
+import time
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-import logging
-import time
 
 # Configure logging
 logging.basicConfig(

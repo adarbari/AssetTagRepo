@@ -2,15 +2,16 @@
 MLflow client for model tracking and management
 """
 import logging
+import os
+import pickle
+import tempfile
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 import mlflow
+import mlflow.pytorch
 import mlflow.sklearn
 import mlflow.xgboost
-import mlflow.pytorch
-from typing import Dict, Any, Optional, List
-import os
-import tempfile
-import pickle
-from datetime import datetime
 
 from config.settings import settings
 

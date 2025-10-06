@@ -1,18 +1,18 @@
 """
 Enhanced geofence evaluation processor
 """
-import logging
 import asyncio
-from typing import Dict, Any, List, Optional, Set
-from datetime import datetime, timedelta
-from collections import defaultdict
+import logging
 import math
+from collections import defaultdict
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Set
 
-from config.database import get_db
 from config.cache import get_cache
-from modules.geofences.models import Geofence
+from config.database import get_db
 from modules.alerts.models import Alert
 from modules.assets.models import Asset
+from modules.geofences.models import Geofence
 
 logger = logging.getLogger(__name__)
 

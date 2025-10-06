@@ -1,17 +1,18 @@
 """
 Streaming processors API endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException, Query
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, Optional
 
-from streaming.stream_processor_coordinator import (
-    get_stream_coordinator,
-    StreamProcessorCoordinator,
-)
-from streaming.processors.location_processor import get_location_processor
+from fastapi import APIRouter, Depends, HTTPException, Query
+
 from streaming.processors.anomaly_processor import get_anomaly_processor
 from streaming.processors.geofence_processor import get_geofence_processor
+from streaming.processors.location_processor import get_location_processor
+from streaming.stream_processor_coordinator import (
+    StreamProcessorCoordinator,
+    get_stream_coordinator,
+)
 
 router = APIRouter()
 

@@ -5,8 +5,11 @@ import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from config.database import get_db
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import and_, func, or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from config.database import get_db
 from modules.observations.models import Observation, ObservationBatch
 from modules.observations.schemas import (
     ObservationBatchCreate,
@@ -19,8 +22,6 @@ from modules.observations.schemas import (
     ObservationStatsResponse,
     ObservationUpdate,
 )
-from sqlalchemy import and_, func, or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 

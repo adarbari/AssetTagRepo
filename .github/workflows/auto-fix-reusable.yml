@@ -70,6 +70,40 @@ jobs:
           cd asset-tag-backend
           python3 -m black modules tests
           echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "Imports are incorrectly sorted"; then
+          echo "🔧 Detected import sorting errors - applying fix"
+          cd asset-tag-backend
+          python3 -m isort .
+          python3 -m black .
+          echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "flake8"; then
+          echo "🔧 Detected flake8 linting errors - applying auto-fix"
+          ./scripts/auto-fix-imports.sh
+          echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "mypy"; then
+          echo "🔧 Detected mypy type checking errors - applying auto-fix"
+          ./scripts/auto-fix-imports.sh
+          echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "ESLint"; then
+          echo "🔧 Detected ESLint errors - applying auto-fix"
+          ./scripts/auto-fix-imports.sh
+          echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "TypeScript"; then
+          echo "🔧 Detected TypeScript errors - applying auto-fix"
+          ./scripts/auto-fix-imports.sh
+          echo "fix-applied=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "bandit"; then
+          echo "🔧 Detected bandit security issues - creating issue"
+          ./scripts/create-dependency-issue.sh "security_issue" "$ERROR_CONTEXT"
+          echo "issue-created=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "safety"; then
+          echo "🔧 Detected safety dependency issues - creating issue"
+          ./scripts/create-dependency-issue.sh "dependency_security" "$ERROR_CONTEXT"
+          echo "issue-created=true" >> $GITHUB_OUTPUT
+        elif echo "$LOGS_CONTENT" | grep -q "npm audit"; then
+          echo "🔧 Detected npm security issues - creating issue"
+          ./scripts/create-dependency-issue.sh "npm_security" "$ERROR_CONTEXT"
+          echo "issue-created=true" >> $GITHUB_OUTPUT
         elif echo "$LOGS_CONTENT" | grep -q "loadVirtual requires existing shrinkwrap file"; then
           echo "🔧 Detected npm workspace error - applying fix"
           # Generate root package-lock.json for npm workspaces

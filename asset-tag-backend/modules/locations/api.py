@@ -6,7 +6,6 @@ import json
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from config.database import get_db
 from fastapi import (
     APIRouter,
     Depends,
@@ -15,9 +14,11 @@ from fastapi import (
     WebSocket,
     WebSocketDisconnect,
 )
-from modules.locations.models import EstimatedLocation
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from config.database import get_db
+from modules.locations.models import EstimatedLocation
 
 router = APIRouter()
 

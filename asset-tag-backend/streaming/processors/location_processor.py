@@ -1,19 +1,20 @@
 """
 Enhanced location estimation processor
 """
-import logging
 import asyncio
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
+import logging
 from collections import defaultdict, deque
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
 import numpy as np
 
-from config.database import get_db
 from config.cache import get_cache
-from modules.locations.estimator import LocationEstimator, GatewayObservation
-from modules.locations.models import EstimatedLocation
+from config.database import get_db
 from modules.assets.models import Asset
 from modules.gateways.models import Gateway
+from modules.locations.estimator import GatewayObservation, LocationEstimator
+from modules.locations.models import EstimatedLocation
 
 logger = logging.getLogger(__name__)
 

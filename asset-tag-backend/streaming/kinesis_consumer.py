@@ -4,8 +4,9 @@ Kinesis/Redpanda consumer for Bluetooth observations
 import asyncio
 import json
 import logging
-from typing import Dict, Any, AsyncGenerator
 from datetime import datetime
+from typing import Any, AsyncGenerator, Dict
+
 import boto3
 from aiokafka import AIOKafkaConsumer
 

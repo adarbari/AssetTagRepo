@@ -1,15 +1,16 @@
 """
 Feature store for ML model serving
 """
-import logging
-from typing import Dict, Any, List, Optional, Union
-from datetime import datetime, timedelta
-from dataclasses import dataclass, asdict
 import json
+import logging
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Union
 
-from config.database import get_db
-from config.cache import get_cache
 from sqlalchemy import text
+
+from config.cache import get_cache
+from config.database import get_db
 
 logger = logging.getLogger(__name__)
 

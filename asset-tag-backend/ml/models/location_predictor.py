@@ -2,14 +2,15 @@
 Location Prediction ML Model
 """
 import logging
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Tuple
+
+import joblib
 import numpy as np
 import pandas as pd
-from typing import Dict, List, Optional, Tuple
-from datetime import datetime, timedelta
-import joblib
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import StandardScaler
 
 logger = logging.getLogger(__name__)
 

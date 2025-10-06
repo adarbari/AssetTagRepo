@@ -1,12 +1,14 @@
 """
 Redis cache configuration and client management
 """
-import redis.asyncio as redis
-from config.settings import settings
-from config.cache_strategies import cache_key_manager, cache_metrics, CacheInvalidation
-import logging
 import json
-from typing import Any, Optional, Union, Dict, List
+import logging
+from typing import Any, Dict, List, Optional, Union
+
+import redis.asyncio as redis
+
+from config.cache_strategies import CacheInvalidation, cache_key_manager, cache_metrics
+from config.settings import settings
 
 logger = logging.getLogger(__name__)
 

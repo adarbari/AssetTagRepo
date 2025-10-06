@@ -2,9 +2,10 @@
 Geofence evaluation service
 """
 import logging
-from typing import List, Dict, Any
-from shapely.geometry import Point, Polygon
 from datetime import datetime
+from typing import Any, Dict, List
+
+from shapely.geometry import Point, Polygon
 
 from config.cache import get_cache
 from modules.locations.estimator import EstimatedLocation

@@ -1,12 +1,14 @@
 """
 Database configuration and connection management
 """
-import os
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import create_engine
-from config.settings import settings
 import logging
+import os
+
+from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import declarative_base
+
+from config.settings import settings
 
 # Check if we're in test environment early
 IS_TEST_ENV = os.getenv("ASSET_TAG_ENVIRONMENT") == "test"
@@ -43,6 +45,7 @@ async def get_db() -> AsyncSession:
     # Use test session if in test environment
     if IS_TEST_ENV:
         from config.test_database import get_test_db
+
         async for session in get_test_db():
             yield session
     else:
@@ -62,6 +65,7 @@ async def init_db():
     # Use test engine if in test environment
     if IS_TEST_ENV:
         from config.test_database import init_test_db
+
         await init_test_db()
         logger.info("Database tables created successfully")
     else:
@@ -77,6 +81,7 @@ async def close_db():
     """Close database connections"""
     if IS_TEST_ENV:
         from config.test_database import close_test_db
+
         await close_test_db()
     else:
         await async_engine.dispose()

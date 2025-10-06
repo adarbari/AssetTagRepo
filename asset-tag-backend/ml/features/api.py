@@ -1,15 +1,16 @@
 """
 Feature store API endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException, Query
-from typing import Optional, Dict, Any
 from datetime import datetime, timedelta
+from typing import Any, Dict, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from ml.features.feature_store import (
-    get_feature_store,
+    AssetBaseline,
     FeatureStore,
     FeatureVector,
-    AssetBaseline,
+    get_feature_store,
 )
 
 router = APIRouter()

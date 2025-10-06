@@ -1,12 +1,13 @@
 """
 ML model serving API endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException, Query
-from typing import Optional, Dict, Any, List
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from ml.serving.inference import get_inference_engine, InferenceEngine
-from ml.serving.model_loader import get_model_loader, ModelLoader
+from fastapi import APIRouter, Depends, HTTPException, Query
+
+from ml.serving.inference import InferenceEngine, get_inference_engine
+from ml.serving.model_loader import ModelLoader, get_model_loader
 
 router = APIRouter()
 

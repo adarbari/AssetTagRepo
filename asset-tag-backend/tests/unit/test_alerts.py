@@ -28,7 +28,7 @@ class TestAlertModel:
 
         alert = Alert(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **alert_data
+            **alert_data,
         )
 
         db_session.add(alert)
@@ -55,7 +55,7 @@ class TestAlertModel:
 
         alert = Alert(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **alert_data
+            **alert_data,
         )
 
         db_session.add(alert)
@@ -93,7 +93,7 @@ class TestAlertModel:
         alert = Alert(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
             **alert_data,
-            metadata=metadata
+            metadata=metadata,
         )
 
         db_session.add(alert)

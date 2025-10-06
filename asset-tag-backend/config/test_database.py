@@ -3,8 +3,10 @@ Test database configuration module
 Separate from main database.py to avoid circular imports
 """
 import os
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base
+
 from config.database import Base
 
 # Test database URL - use file-based SQLite to avoid UUID issues
@@ -41,7 +43,7 @@ async def init_test_db():
     async with test_engine.begin() as conn:
         # Import all models to ensure they're registered
         from modules.shared.database import models
-        
+
         await conn.run_sync(Base.metadata.create_all)
 
 

@@ -1,19 +1,20 @@
 """
 Train anomaly detection model
 """
+import asyncio
 import logging
+from datetime import datetime, timedelta
+
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
-import asyncio
-from datetime import datetime, timedelta
-
-from ml.mlflow_client import log_anomaly_detection_model
-from config.database import get_db
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sqlalchemy import text
+
+from config.database import get_db
+from ml.mlflow_client import log_anomaly_detection_model
 
 logger = logging.getLogger(__name__)
 
@@ -124,9 +125,9 @@ async def train_anomaly_detection_model():
         # Calculate metrics
         from sklearn.metrics import (
             accuracy_score,
+            f1_score,
             precision_score,
             recall_score,
-            f1_score,
         )
 
         accuracy = accuracy_score(y_test, y_pred_binary)

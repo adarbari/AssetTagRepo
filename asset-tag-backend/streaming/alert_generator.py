@@ -2,8 +2,8 @@
 Alert generation service
 """
 import logging
-from typing import Dict, Any
 from datetime import datetime
+from typing import Any, Dict
 
 from config.database import get_db
 from modules.alerts.models import Alert

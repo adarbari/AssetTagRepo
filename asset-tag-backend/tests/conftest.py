@@ -13,13 +13,13 @@ os.environ["ASSET_TAG_DATABASE_URL"] = "sqlite+aiosqlite:///./test_integration.d
 
 import pytest
 import pytest_asyncio
-
-# Set up UUID compatibility BEFORE importing models
-from config.uuid_compat import setup_uuid_compatibility
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+
+# Set up UUID compatibility BEFORE importing models
+from config.uuid_compat import setup_uuid_compatibility
 
 setup_uuid_compatibility()
 

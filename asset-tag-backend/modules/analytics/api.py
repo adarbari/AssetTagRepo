@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+
 from modules.analytics.aggregators import (
     CostAnalyzer,
     HeatmapAnalyzer,

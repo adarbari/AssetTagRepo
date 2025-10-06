@@ -1,13 +1,15 @@
 """
 Streaming configuration for Kafka/Redpanda and Kinesis
 """
-from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
-import boto3
-from config.settings import settings
-import logging
-import json
-from typing import Dict, Any, AsyncGenerator, Optional
 import asyncio
+import json
+import logging
+from typing import Any, AsyncGenerator, Dict, Optional
+
+import boto3
+from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
+
+from config.settings import settings
 
 logger = logging.getLogger(__name__)
 

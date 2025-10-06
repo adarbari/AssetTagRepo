@@ -1,20 +1,21 @@
 """
 ML model inference engine
 """
-import logging
-import numpy as np
-from typing import Dict, Any, Optional, List, Union
-from datetime import datetime
 import asyncio
+import logging
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
 
-from ml.serving.model_loader import get_model_loader, ModelLoader
+import numpy as np
+
+from config.cache import get_cache
 from ml.features.feature_store import (
-    get_feature_store,
+    AssetBaseline,
     FeatureStore,
     FeatureVector,
-    AssetBaseline,
+    get_feature_store,
 )
-from config.cache import get_cache
+from ml.serving.model_loader import ModelLoader, get_model_loader
 
 logger = logging.getLogger(__name__)
 

@@ -6,7 +6,6 @@ import uuid
 from datetime import datetime
 from typing import List, Optional
 
-from config.database import get_db
 from fastapi import (
     APIRouter,
     Depends,
@@ -15,10 +14,12 @@ from fastapi import (
     WebSocket,
     WebSocketDisconnect,
 )
-from modules.alerts.models import Alert
-from modules.alerts.schemas import AlertCreate, AlertResponse, AlertUpdate
 from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from config.database import get_db
+from modules.alerts.models import Alert
+from modules.alerts.schemas import AlertCreate, AlertResponse, AlertUpdate
 
 
 def alert_to_response(alert: Alert) -> AlertResponse:

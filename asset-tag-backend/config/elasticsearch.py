@@ -1,11 +1,12 @@
 """
 Elasticsearch configuration and client management
 """
-import logging
-from typing import Dict, Any, Optional, List
-from elasticsearch import AsyncElasticsearch
-from elasticsearch.exceptions import NotFoundError, ConnectionError
 import json
+import logging
+from typing import Any, Dict, List, Optional
+
+from elasticsearch import AsyncElasticsearch
+from elasticsearch.exceptions import ConnectionError, NotFoundError
 
 from config.settings import settings
 

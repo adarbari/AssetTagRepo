@@ -5,11 +5,15 @@ import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from config.database import get_db
-from config.settings import settings
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from passlib.context import CryptContext
+from sqlalchemy import and_, delete, func, or_, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from config.database import get_db
+from config.settings import settings
 from modules.shared.database.models import User
 from modules.users.schemas import (
     LoginRequest,
@@ -23,9 +27,6 @@ from modules.users.schemas import (
     UserStats,
     UserUpdate,
 )
-from passlib.context import CryptContext
-from sqlalchemy import and_, delete, func, or_, select, update
-from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 

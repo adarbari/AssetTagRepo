@@ -2,29 +2,30 @@
 Alembic environment configuration
 """
 import asyncio
+import os
+import sys
 from logging.config import fileConfig
+
+from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-from alembic import context
-import os
-import sys
 
 # Add the project root to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 # Import your models
 from config.database import Base
-from modules.shared.database.models import *
-from modules.assets.models import *
-from modules.sites.models import *
-from modules.gateways.models import *
-from modules.observations.models import *
-from modules.locations.models import *
-from modules.geofences.models import *
 from modules.alerts.models import *
+from modules.assets.models import *
+from modules.gateways.models import *
+from modules.geofences.models import *
 from modules.jobs.models import *
+from modules.locations.models import *
 from modules.maintenance.models import *
+from modules.observations.models import *
+from modules.shared.database.models import *
+from modules.sites.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

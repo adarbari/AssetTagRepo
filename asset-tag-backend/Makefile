@@ -1,6 +1,6 @@
 # Asset Tag Backend Makefile
 
-.PHONY: help install install-dev test test-cov lint format clean run run-dev migrate migrate-up migrate-down docker-build docker-run
+.PHONY: help install install-dev test test-cov lint format clean run run-dev migrate migrate-up migrate-down docker-build docker-run verify-lint auto-fix-lint
 
 help: ## Show this help message
 	@echo "Available commands:"
@@ -75,5 +75,13 @@ docker-compose-down: ## Stop services with docker-compose
 	docker-compose down
 
 setup-dev: install-dev migrate-up ## Set up development environment
+
+verify-lint: ## Verify all lint checks pass (same as CI)
+	@echo "🔍 Verifying all lint checks..."
+	@cd .. && ./scripts/verify-lint-checks.sh
+
+auto-fix-lint: ## Auto-fix lint and formatting issues
+	@echo "🔧 Auto-fixing lint and formatting issues..."
+	@cd .. && ./scripts/auto-fix-imports.sh
 
 ci: lint test-cov ## Run CI pipeline (lint + test with coverage)

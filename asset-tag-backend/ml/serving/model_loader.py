@@ -1,15 +1,15 @@
 """
 Model loader for ML model serving
 """
-import logging
 import asyncio
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timedelta
+import logging
 import threading
 import time
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
-from ml.mlflow_client import get_mlflow_client, MLflowClient
 from config.cache import get_cache
+from ml.mlflow_client import MLflowClient, get_mlflow_client
 
 logger = logging.getLogger(__name__)
 

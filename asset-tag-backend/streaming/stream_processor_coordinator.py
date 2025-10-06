@@ -1,16 +1,11 @@
 """
 Stream processor coordinator for managing all streaming processors
 """
-import logging
 import asyncio
-from typing import Dict, Any, List, Optional
+import logging
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from streaming.processors.location_processor import (
-    get_location_processor,
-    start_location_processor,
-    stop_location_processor,
-)
 from streaming.processors.anomaly_processor import (
     get_anomaly_processor,
     start_anomaly_processor,
@@ -20,6 +15,11 @@ from streaming.processors.geofence_processor import (
     get_geofence_processor,
     start_geofence_processor,
     stop_geofence_processor,
+)
+from streaming.processors.location_processor import (
+    get_location_processor,
+    start_location_processor,
+    stop_location_processor,
 )
 
 logger = logging.getLogger(__name__)

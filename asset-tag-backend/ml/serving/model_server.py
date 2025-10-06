@@ -1,17 +1,18 @@
 """
 ML Model Serving Server
 """
-import logging
 import asyncio
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta
-import os
 import json
+import logging
+import os
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
+from sqlalchemy import text
+
+from config.database import get_db
 from ml.models.location_predictor import LocationPredictor
 from ml.models.maintenance_predictor import MaintenancePredictor
-from config.database import get_db
-from sqlalchemy import text
 
 logger = logging.getLogger(__name__)
 

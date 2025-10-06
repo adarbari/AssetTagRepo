@@ -2,9 +2,10 @@
 Configuration settings for Asset Tag Backend
 Supports local development with free alternatives and production AWS services
 """
-from pydantic_settings import BaseSettings
 from enum import Enum
 from typing import Optional
+
+from pydantic_settings import BaseSettings
 
 
 class Environment(str, Enum):

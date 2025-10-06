@@ -128,9 +128,9 @@ def test_schemas():
     try:
         # Test key schemas
         from modules.assets.schemas import AssetCreate, AssetResponse
-        from modules.sites.schemas import SiteCreate, SiteResponse
         from modules.geofences.schemas import GeofenceCreate, GeofenceResponse
         from modules.observations.schemas import ObservationCreate, ObservationResponse
+        from modules.sites.schemas import SiteCreate, SiteResponse
 
         print("✅ Core schemas imported successfully")
 
@@ -163,9 +163,9 @@ def test_models():
 
     try:
         from modules.assets.models import Asset
-        from modules.sites.models import Site, Personnel
         from modules.geofences.models import Geofence
         from modules.observations.models import Observation
+        from modules.sites.models import Personnel, Site
 
         print("✅ Core models imported successfully")
 

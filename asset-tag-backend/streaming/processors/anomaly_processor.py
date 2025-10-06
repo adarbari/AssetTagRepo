@@ -1,16 +1,16 @@
 """
 Enhanced anomaly detection processor
 """
-import logging
 import asyncio
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
+import logging
 from collections import defaultdict, deque
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
-from config.database import get_db
 from config.cache import get_cache
-from ml.serving.inference import get_inference_engine, InferenceEngine
-from ml.features.feature_store import get_feature_store, FeatureStore
+from config.database import get_db
+from ml.features.feature_store import FeatureStore, get_feature_store
+from ml.serving.inference import InferenceEngine, get_inference_engine
 from modules.alerts.models import Alert
 from modules.assets.models import Asset
 

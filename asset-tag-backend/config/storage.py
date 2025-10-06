@@ -1,12 +1,14 @@
 """
 Storage configuration for S3/MinIO
 """
+import io
+import logging
+from typing import BinaryIO, Optional
+
 import boto3
 from botocore.config import Config
+
 from config.settings import settings
-import logging
-from typing import Optional, BinaryIO
-import io
 
 logger = logging.getLogger(__name__)
 

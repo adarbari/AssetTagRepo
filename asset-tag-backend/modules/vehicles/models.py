@@ -1,7 +1,6 @@
 """
 Vehicle models
 """
-from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 from sqlalchemy import (
     JSON,
     Boolean,
@@ -15,6 +14,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Vehicle(BaseModel, OrganizationMixin, SoftDeleteMixin):

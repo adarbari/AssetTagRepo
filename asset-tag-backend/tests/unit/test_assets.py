@@ -19,7 +19,7 @@ class TestAssetModel:
         """Test creating an asset"""
         asset = Asset(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_asset_data
+            **sample_asset_data,
         )
 
         db_session.add(asset)
@@ -37,7 +37,7 @@ class TestAssetModel:
         """Test soft delete functionality"""
         asset = Asset(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_asset_data
+            **sample_asset_data,
         )
 
         db_session.add(asset)
@@ -55,7 +55,7 @@ class TestAssetModel:
         """Test asset metadata handling"""
         asset = Asset(
             organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_asset_data
+            **sample_asset_data,
         )
 
         db_session.add(asset)

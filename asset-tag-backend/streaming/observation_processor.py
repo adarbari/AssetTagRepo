@@ -3,19 +3,19 @@ Observation processing pipeline
 """
 import asyncio
 import logging
-from typing import Dict, Any, List
-from datetime import datetime, timedelta
 from collections import defaultdict
+from datetime import datetime, timedelta
+from typing import Any, Dict, List
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from config.cache import get_cache
 from config.database import get_db
-from modules.observations.models import Observation
 from modules.assets.models import Asset
 from modules.gateways.models import Gateway
-from modules.locations.estimator import LocationEstimator, GatewayObservation
-from config.cache import get_cache
+from modules.locations.estimator import GatewayObservation, LocationEstimator
+from modules.observations.models import Observation
 
 logger = logging.getLogger(__name__)
 

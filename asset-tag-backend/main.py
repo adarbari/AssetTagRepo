@@ -1,23 +1,24 @@
 """
 Asset Tag Backend - FastAPI Application
 """
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.responses import JSONResponse
 import logging
 import time
 from contextlib import asynccontextmanager
 
-from config.settings import settings
-from config.database import init_db, close_db
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.responses import JSONResponse
+
 from config.cache import close_cache
-from config.streaming import start_streaming, stop_streaming
+from config.database import close_db, init_db
 from config.elasticsearch import close_elasticsearch
+from config.settings import settings
+from config.streaming import start_streaming, stop_streaming
 from ml.serving.model_loader import (
+    preload_common_models,
     start_model_refresh_scheduler,
     stop_model_refresh_scheduler,
-    preload_common_models,
 )
 from streaming.stream_processor_coordinator import (
     start_all_stream_processors,
@@ -44,6 +45,7 @@ async def lifespan(app: FastAPI):
 
     # Skip external services in test environment
     from config.settings import settings
+
     if settings.environment.value != "test":
         # Start streaming services
         await start_streaming()
@@ -166,29 +168,30 @@ async def health_check():
     }
 
 
+from ml.features.api import router as features_router
+from ml.serving.api import router as ml_serving_router
+from modules.alerts.api import router as alerts_router
+from modules.analytics.api import router as analytics_router
+
 # API v1 routes
 from modules.assets.api import router as assets_router
-from modules.sites.api import router as sites_router
-from modules.gateways.api import router as gateways_router
-from modules.observations.api import router as observations_router
-from modules.locations.api import router as locations_router
-from modules.geofences.api import router as geofences_router
-from modules.alerts.api import router as alerts_router
-from modules.jobs.api import router as jobs_router
-from modules.maintenance.api import router as maintenance_router
-from modules.analytics.api import router as analytics_router
+from modules.audit.api import router as audit_router
 from modules.checkin_checkout.api import router as checkin_checkout_router
-from modules.vehicles.api import router as vehicles_router
-from modules.users.api import router as users_router
-from modules.issues.api import router as issues_router
 from modules.compliance.api import router as compliance_router
+from modules.gateways.api import router as gateways_router
+from modules.geofences.api import router as geofences_router
+from modules.issues.api import router as issues_router
+from modules.jobs.api import router as jobs_router
+from modules.locations.api import router as locations_router
+from modules.maintenance.api import router as maintenance_router
+from modules.observations.api import router as observations_router
 from modules.reports.api import router as reports_router
 
 # New API routes
 from modules.search.api import router as search_router
-from ml.features.api import router as features_router
-from ml.serving.api import router as ml_serving_router
-from modules.audit.api import router as audit_router
+from modules.sites.api import router as sites_router
+from modules.users.api import router as users_router
+from modules.vehicles.api import router as vehicles_router
 from streaming.api import router as streaming_router
 
 # Include routers

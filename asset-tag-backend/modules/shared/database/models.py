@@ -1,6 +1,10 @@
 """
 Shared database models
 """
+from sqlalchemy import JSON, Boolean, Column, ForeignKey, Index, Integer, String, Text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+
 from modules.alerts.models import Alert
 
 # Import all models to ensure they're registered with SQLAlchemy
@@ -15,9 +19,6 @@ from modules.observations.models import Observation
 from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 from modules.sites.models import Site
 from modules.vehicles.models import Vehicle, VehicleAssetPairing
-from sqlalchemy import JSON, Boolean, Column, ForeignKey, Index, Integer, String, Text
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
 
 
 class Organization(BaseModel, SoftDeleteMixin):

@@ -5,12 +5,13 @@ import uuid
 from datetime import datetime
 from typing import List, Optional
 
-from config.database import get_db
 from fastapi import APIRouter, Depends, HTTPException, Query
-from modules.gateways.models import Gateway
-from modules.gateways.schemas import GatewayCreate, GatewayResponse, GatewayUpdate
 from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from config.database import get_db
+from modules.gateways.models import Gateway
+from modules.gateways.schemas import GatewayCreate, GatewayResponse, GatewayUpdate
 
 router = APIRouter()
 

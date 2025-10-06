@@ -2,12 +2,13 @@
 Asset Tag Backend - FastAPI Application for Documentation
 This version works without database dependencies for API documentation
 """
+import logging
+import time
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
-import logging
-import time
 
 # Configure logging
 logging.basicConfig(
@@ -78,30 +79,30 @@ async def root():
 # Import and include all API routers
 try:
     # Core API routes
-    from modules.assets.api import router as assets_router
-    from modules.sites.api import router as sites_router
-    from modules.gateways.api import router as gateways_router
-    from modules.observations.api import router as observations_router
-    from modules.locations.api import router as locations_router
-    from modules.geofences.api import router as geofences_router
+    from ml.features.api import router as features_router
+    from ml.serving.api import router as ml_serving_router
     from modules.alerts.api import router as alerts_router
-    from modules.jobs.api import router as jobs_router
-    from modules.maintenance.api import router as maintenance_router
     from modules.analytics.api import router as analytics_router
+    from modules.assets.api import router as assets_router
+    from modules.audit.api import router as audit_router
     from modules.checkin_checkout.api import router as checkin_checkout_router
-    from modules.vehicles.api import router as vehicles_router
-    from modules.users.api import router as users_router
-    from modules.issues.api import router as issues_router
     from modules.compliance.api import router as compliance_router
+    from modules.gateways.api import router as gateways_router
+    from modules.geofences.api import router as geofences_router
+    from modules.issues.api import router as issues_router
+    from modules.jobs.api import router as jobs_router
+    from modules.locations.api import router as locations_router
+    from modules.maintenance.api import router as maintenance_router
+    from modules.observations.api import router as observations_router
     from modules.reports.api import router as reports_router
 
     # Advanced API routes
     from modules.search.api import router as search_router
-    from ml.features.api import router as features_router
-    from ml.serving.api import router as ml_serving_router
-    from modules.audit.api import router as audit_router
-    from streaming.api import router as streaming_router
+    from modules.sites.api import router as sites_router
+    from modules.users.api import router as users_router
+    from modules.vehicles.api import router as vehicles_router
     from modules.websocket.api import router as websocket_router
+    from streaming.api import router as streaming_router
 
     # Include all routers
     app.include_router(assets_router, prefix="/api/v1", tags=["assets"])
