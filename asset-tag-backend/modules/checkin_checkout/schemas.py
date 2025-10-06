@@ -74,9 +74,7 @@ class CheckInOutResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        json_encoders = {
-            datetime: lambda v: v.isoformat()
-        }
+        json_encoders = {datetime: lambda v: v.isoformat()}
         str_strip_whitespace = True
 
 

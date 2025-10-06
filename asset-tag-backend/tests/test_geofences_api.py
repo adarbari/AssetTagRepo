@@ -200,9 +200,7 @@ class TestGeofencesAPI:
     def test_get_vehicles(self, client: TestClient, sample_vehicle_data: dict):
         """Test getting vehicles list"""
         # Create vehicle first
-        create_response = client.post(
-            "/api/v1/vehicles", json=sample_vehicle_data
-        )
+        create_response = client.post("/api/v1/vehicles", json=sample_vehicle_data)
         assert create_response.status_code == 200
 
         # Get vehicles list
@@ -216,9 +214,7 @@ class TestGeofencesAPI:
     def test_get_vehicle_by_id(self, client: TestClient, sample_vehicle_data: dict):
         """Test getting a specific vehicle by ID"""
         # Create vehicle first
-        create_response = client.post(
-            "/api/v1/vehicles", json=sample_vehicle_data
-        )
+        create_response = client.post("/api/v1/vehicles", json=sample_vehicle_data)
         assert create_response.status_code == 200
         vehicle_id = create_response.json()["id"]
 
@@ -232,17 +228,13 @@ class TestGeofencesAPI:
     def test_update_vehicle(self, client: TestClient, sample_vehicle_data: dict):
         """Test updating a vehicle"""
         # Create vehicle first
-        create_response = client.post(
-            "/api/v1/vehicles", json=sample_vehicle_data
-        )
+        create_response = client.post("/api/v1/vehicles", json=sample_vehicle_data)
         assert create_response.status_code == 200
         vehicle_id = create_response.json()["id"]
 
         # Update vehicle
         update_data = {"name": "Updated Vehicle Name", "status": "inactive"}
-        response = client.put(
-            f"/api/v1/vehicles/{vehicle_id}", json=update_data
-        )
+        response = client.put(f"/api/v1/vehicles/{vehicle_id}", json=update_data)
         assert response.status_code == 201
         data = response.json()
         assert data["name"] == "Updated Vehicle Name"
@@ -251,9 +243,7 @@ class TestGeofencesAPI:
     def test_delete_vehicle(self, client: TestClient, sample_vehicle_data: dict):
         """Test deleting a vehicle"""
         # Create vehicle first
-        create_response = client.post(
-            "/api/v1/vehicles", json=sample_vehicle_data
-        )
+        create_response = client.post("/api/v1/vehicles", json=sample_vehicle_data)
         assert create_response.status_code == 200
         vehicle_id = create_response.json()["id"]
 

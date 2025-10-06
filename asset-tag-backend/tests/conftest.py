@@ -50,30 +50,30 @@ def mock_external_services():
     import config.cache
     import ml.serving.model_loader
     import streaming.stream_processor_coordinator
-    
+
     # Mock all async startup/shutdown functions
     async def mock_async_noop(*args, **kwargs):
         pass
-    
+
     # Mock streaming services
     config.streaming.start_streaming = mock_async_noop
     config.streaming.stop_streaming = mock_async_noop
-    
+
     # Mock Elasticsearch
     class MockESManager:
         async def close(self):
             pass
-    
+
     config.elasticsearch.get_elasticsearch_manager = lambda: MockESManager()
-    
+
     # Mock cache
     config.cache.close_cache = mock_async_noop
-    
+
     # Mock ML services
     ml.serving.model_loader.start_model_refresh_scheduler = mock_async_noop
     ml.serving.model_loader.stop_model_refresh_scheduler = mock_async_noop
     ml.serving.model_loader.preload_common_models = mock_async_noop
-    
+
     # Mock stream processors
     streaming.stream_processor_coordinator.start_all_stream_processors = mock_async_noop
     streaming.stream_processor_coordinator.stop_all_stream_processors = mock_async_noop
@@ -98,17 +98,19 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 @pytest.fixture(scope="function")
 def client():
     """Create a test client - database override handled by environment configuration."""
+
     # Clean up database before each test
     async def cleanup_db():
         async with test_engine.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)
         async with test_engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-    
+
     # Run cleanup synchronously
     import asyncio
+
     asyncio.run(cleanup_db())
-    
+
     with TestClient(app) as tc:
         yield tc
 

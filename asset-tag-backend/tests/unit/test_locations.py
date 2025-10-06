@@ -44,9 +44,10 @@ class TestLocationModel:
         assert location.id is not None
         assert location.asset_id == uuid.UUID("550e8400-e29b-41d4-a716-446655440000")
         from decimal import Decimal
-        assert location.latitude == Decimal('40.7128')
-        assert location.longitude == Decimal('-74.0060')
-        assert location.confidence == Decimal('0.85')
+
+        assert location.latitude == Decimal("40.7128")
+        assert location.longitude == Decimal("-74.0060")
+        assert location.confidence == Decimal("0.85")
         assert len(location.gateway_ids) == 2
 
     @pytest.mark.asyncio

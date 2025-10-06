@@ -590,7 +590,9 @@ async def delete_personnel(personnel_id: str, db: AsyncSession = Depends(get_db)
 
 # Personnel endpoint aliases under sites namespace
 @router.post("/sites/personnel", response_model=PersonnelResponse, status_code=201)
-async def create_site_personnel(personnel_data: PersonnelCreate, db: AsyncSession = Depends(get_db)):
+async def create_site_personnel(
+    personnel_data: PersonnelCreate, db: AsyncSession = Depends(get_db)
+):
     """Alias for creating personnel under sites namespace"""
     return await create_personnel(personnel_data, db)
 
