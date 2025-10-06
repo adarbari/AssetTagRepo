@@ -1,7 +1,7 @@
-import React from &apos;react&apos;;
-import { describe, it, expect, vi } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
+import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   Card,
   CardHeader,
@@ -10,29 +10,29 @@ import {
   CardContent,
   CardFooter,
   CardAction,
-} from &apos;../card&apos;;
-import { Button } from &apos;../button&apos;;
-import { render } from &apos;../../../test/test-utils&apos;;
-import { Plus, Edit, Trash2 } from &apos;lucide-react&apos;;
+} from '../card';
+import { Button } from '../button';
+import { render } from '../../../test/test-utils';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 
-describe(&apos;Card Component - Click Tests&apos;, () => {
-  describe(&apos;Basic Card Structure&apos;, () => {
-    it(&apos;should render basic card&apos;, () => {
+describe('Card Component - Click Tests', () => {
+  describe('Basic Card Structure', () => {
+    it('should render basic card', () => {
       render(
         <Card>
           <CardContent>Card Content</CardContent>
         </Card>
       );
 
-      const card = document.querySelector(&apos;[data-slot=&quot;card&quot;]&apos;);
-      const content = document.querySelector(&apos;[data-slot=&quot;card-content&quot;]&apos;);
+      const card = document.querySelector('[data-slot=&quot;card&quot;]');
+      const content = document.querySelector('[data-slot=&quot;card-content&quot;]');
 
       expect(card).toBeInTheDocument();
       expect(content).toBeInTheDocument();
-      expect(content).toHaveTextContent(&apos;Card Content&apos;);
+      expect(content).toHaveTextContent('Card Content');
     });
 
-    it(&apos;should render complete card structure&apos;, () => {
+    it('should render complete card structure', () => {
       render(
         <Card>
           <CardHeader>
@@ -44,27 +44,27 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      expect(document.querySelector(&apos;[data-slot=&quot;card&quot;]&apos;)).toBeInTheDocument();
+      expect(document.querySelector('[data-slot=&quot;card&quot;]')).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-header&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-header&quot;]')
       ).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-title&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-title&quot;]')
       ).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-description&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-description&quot;]')
       ).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-content&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-content&quot;]')
       ).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-footer&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-footer&quot;]')
       ).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Card with Interactive Elements&apos;, () => {
-    it(&apos;should handle clicks on buttons in card content&apos;, async () => {
+  describe('Card with Interactive Elements', () => {
+    it('should handle clicks on buttons in card content', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
@@ -76,13 +76,13 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /click me/i });
+      const button = screen.getByRole('button', { name: /click me/i });
       await user.click(button);
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle multiple buttons in card&apos;, async () => {
+    it('should handle multiple buttons in card', async () => {
       const user = userEvent.setup();
       const mockEdit = vi.fn();
       const mockDelete = vi.fn();
@@ -90,9 +90,9 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
       render(
         <Card>
           <CardContent>
-            <div className=&apos;flex gap-2&apos;>
+            <div className='flex gap-2'>
               <Button onClick={mockEdit}>Edit</Button>
-              <Button onClick={mockDelete} variant=&apos;destructive&apos;>
+              <Button onClick={mockDelete} variant='destructive'>
                 Delete
               </Button>
             </div>
@@ -100,8 +100,8 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit/i });
-      const deleteButton = screen.getByRole(&apos;button&apos;, { name: /delete/i });
+      const editButton = screen.getByRole('button', { name: /edit/i });
+      const deleteButton = screen.getByRole('button', { name: /delete/i });
 
       await user.click(editButton);
       await user.click(deleteButton);
@@ -110,7 +110,7 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
       expect(mockDelete).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle keyboard navigation in card&apos;, async () => {
+    it('should handle keyboard navigation in card', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
@@ -122,23 +122,23 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /keyboard button/i });
+      const button = screen.getByRole('button', { name: /keyboard button/i });
       button.focus();
-      await user.keyboard(&apos;{Enter}&apos;);
+      await user.keyboard('{Enter}');
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Card with Actions&apos;, () => {
-    it(&apos;should render card with action button&apos;, () => {
+  describe('Card with Actions', () => {
+    it('should render card with action button', () => {
       render(
         <Card>
           <CardHeader>
             <CardTitle>Card with Action</CardTitle>
             <CardAction>
-              <Button size=&apos;sm&apos;>
-                <Plus className=&apos;h-4 w-4&apos; />
+              <Button size='sm'>
+                <Plus className='h-4 w-4' />
                 Add
               </Button>
             </CardAction>
@@ -147,15 +147,15 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /add/i });
+      const actionButton = screen.getByRole('button', { name: /add/i });
       expect(actionButton).toBeInTheDocument();
 
       // Check that action is properly positioned
-      const cardAction = document.querySelector(&apos;[data-slot=&quot;card-action&quot;]&apos;);
+      const cardAction = document.querySelector('[data-slot=&quot;card-action&quot;]');
       expect(cardAction).toBeInTheDocument();
     });
 
-    it(&apos;should handle clicks on card action buttons&apos;, async () => {
+    it('should handle clicks on card action buttons', async () => {
       const user = userEvent.setup();
       const mockAction = vi.fn();
 
@@ -164,8 +164,8 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
           <CardHeader>
             <CardTitle>Action Card</CardTitle>
             <CardAction>
-              <Button onClick={mockAction} size=&apos;sm&apos;>
-                <Edit className=&apos;h-4 w-4&apos; />
+              <Button onClick={mockAction} size='sm'>
+                <Edit className='h-4 w-4' />
                 Edit
               </Button>
             </CardAction>
@@ -174,13 +174,13 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit/i });
+      const editButton = screen.getByRole('button', { name: /edit/i });
       await user.click(editButton);
 
       expect(mockAction).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle multiple actions in card header&apos;, async () => {
+    it('should handle multiple actions in card header', async () => {
       const user = userEvent.setup();
       const mockEdit = vi.fn();
       const mockDelete = vi.fn();
@@ -190,22 +190,22 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
           <CardHeader>
             <CardTitle>Multi Action Card</CardTitle>
             <CardAction>
-              <div className=&apos;flex gap-1&apos;>
+              <div className='flex gap-1'>
                 <Button
                   onClick={mockEdit}
-                  size=&apos;sm&apos;
-                  variant=&apos;outline&apos;
-                  aria-label=&apos;Edit&apos;
+                  size='sm'
+                  variant='outline'
+                  aria-label='Edit'
                 >
-                  <Edit className=&apos;h-4 w-4&apos; />
+                  <Edit className='h-4 w-4' />
                 </Button>
                 <Button
                   onClick={mockDelete}
-                  size=&apos;sm&apos;
-                  variant=&apos;destructive&apos;
-                  aria-label=&apos;Delete&apos;
+                  size='sm'
+                  variant='destructive'
+                  aria-label='Delete'
                 >
-                  <Trash2 className=&apos;h-4 w-4&apos; />
+                  <Trash2 className='h-4 w-4' />
                 </Button>
               </div>
             </CardAction>
@@ -214,8 +214,8 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const editButton = screen.getByRole(&apos;button&apos;, { name: /edit/i });
-      const deleteButton = screen.getByRole(&apos;button&apos;, { name: /delete/i });
+      const editButton = screen.getByRole('button', { name: /edit/i });
+      const deleteButton = screen.getByRole('button', { name: /delete/i });
 
       await user.click(editButton);
       await user.click(deleteButton);
@@ -225,8 +225,8 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Card Footer Interactions&apos;, () => {
-    it(&apos;should handle buttons in card footer&apos;, async () => {
+  describe('Card Footer Interactions', () => {
+    it('should handle buttons in card footer', async () => {
       const user = userEvent.setup();
       const mockSave = vi.fn();
       const mockCancel = vi.fn();
@@ -235,8 +235,8 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         <Card>
           <CardContent>Form content</CardContent>
           <CardFooter>
-            <div className=&apos;flex gap-2 ml-auto&apos;>
-              <Button onClick={mockCancel} variant=&apos;outline&apos;>
+            <div className='flex gap-2 ml-auto'>
+              <Button onClick={mockCancel} variant='outline'>
                 Cancel
               </Button>
               <Button onClick={mockSave}>Save</Button>
@@ -245,8 +245,8 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save/i });
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
+      const saveButton = screen.getByRole('button', { name: /save/i });
 
       await user.click(cancelButton);
       await user.click(saveButton);
@@ -255,32 +255,32 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
       expect(mockSave).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle form submission in card footer&apos;, async () => {
+    it('should handle form submission in card footer', async () => {
       const user = userEvent.setup();
       const mockSubmit = vi.fn();
 
       render(
         <Card>
           <CardContent>
-            <input type=&apos;text&apos; placeholder=&apos;Enter text&apos; />
+            <input type='text' placeholder='Enter text' />
           </CardContent>
           <CardFooter>
-            <Button type=&apos;submit&apos; onClick={mockSubmit}>
+            <Button type='submit' onClick={mockSubmit}>
               Submit
             </Button>
           </CardFooter>
         </Card>
       );
 
-      const submitButton = screen.getByRole(&apos;button&apos;, { name: /submit/i });
+      const submitButton = screen.getByRole('button', { name: /submit/i });
       await user.click(submitButton);
 
       expect(mockSubmit).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Card Accessibility&apos;, () => {
-    it(&apos;should have proper data attributes&apos;, () => {
+  describe('Card Accessibility', () => {
+    it('should have proper data attributes', () => {
       render(
         <Card>
           <CardHeader>
@@ -291,24 +291,24 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      expect(document.querySelector(&apos;[data-slot=&quot;card&quot;]&apos;)).toBeInTheDocument();
+      expect(document.querySelector('[data-slot=&quot;card&quot;]')).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-header&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-header&quot;]')
       ).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-title&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-title&quot;]')
       ).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-description&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-description&quot;]')
       ).toBeInTheDocument();
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-content&quot;]&apos;)
+        document.querySelector('[data-slot=&quot;card-content&quot;]')
       ).toBeInTheDocument();
     });
 
-    it(&apos;should support custom aria attributes&apos;, () => {
+    it('should support custom aria attributes', () => {
       render(
-        <Card role=&apos;article&apos; aria-label=&apos;Product card&apos;>
+        <Card role='article' aria-label='Product card'>
           <CardHeader>
             <CardTitle>Product Name</CardTitle>
           </CardHeader>
@@ -316,11 +316,11 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const card = screen.getByRole(&apos;article&apos;);
-      expect(card).toHaveAttribute(&apos;aria-label&apos;, &apos;Product card&apos;);
+      const card = screen.getByRole('article');
+      expect(card).toHaveAttribute('aria-label', 'Product card');
     });
 
-    it(&apos;should support keyboard navigation between interactive elements&apos;, async () => {
+    it('should support keyboard navigation between interactive elements', async () => {
       const user = userEvent.setup();
       const mockAction1 = vi.fn();
       const mockAction2 = vi.fn();
@@ -328,7 +328,7 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
       render(
         <Card>
           <CardContent>
-            <div className=&apos;flex gap-2&apos;>
+            <div className='flex gap-2'>
               <Button onClick={mockAction1}>First Button</Button>
               <Button onClick={mockAction2}>Second Button</Button>
             </div>
@@ -336,65 +336,65 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const firstButton = screen.getByRole(&apos;button&apos;, { name: /first button/i });
-      const secondButton = screen.getByRole(&apos;button&apos;, {
+      const firstButton = screen.getByRole('button', { name: /first button/i });
+      const secondButton = screen.getByRole('button', {
         name: /second button/i,
       });
 
       // Tab navigation
       firstButton.focus();
-      await user.keyboard(&apos;{Tab}&apos;);
+      await user.keyboard('{Tab}');
 
       expect(secondButton).toHaveFocus();
     });
   });
 
-  describe(&apos;Card Custom Styling&apos;, () => {
-    it(&apos;should apply custom className to card&apos;, () => {
+  describe('Card Custom Styling', () => {
+    it('should apply custom className to card', () => {
       render(
-        <Card className=&apos;custom-card-class&apos;>
+        <Card className='custom-card-class'>
           <CardContent>Custom styled card</CardContent>
         </Card>
       );
 
-      const card = document.querySelector(&apos;[data-slot=&quot;card&quot;]&apos;);
-      expect(card).toHaveClass(&apos;custom-card-class&apos;);
+      const card = document.querySelector('[data-slot=&quot;card&quot;]');
+      expect(card).toHaveClass('custom-card-class');
     });
 
-    it(&apos;should apply custom className to card components&apos;, () => {
+    it('should apply custom className to card components', () => {
       render(
         <Card>
-          <CardHeader className=&apos;custom-header&apos;>
-            <CardTitle className=&apos;custom-title&apos;>Custom Title</CardTitle>
-            <CardDescription className=&apos;custom-description&apos;>
+          <CardHeader className='custom-header'>
+            <CardTitle className='custom-title'>Custom Title</CardTitle>
+            <CardDescription className='custom-description'>
               Custom Description
             </CardDescription>
           </CardHeader>
-          <CardContent className=&apos;custom-content&apos;>Custom Content</CardContent>
-          <CardFooter className=&apos;custom-footer&apos;>Custom Footer</CardFooter>
+          <CardContent className='custom-content'>Custom Content</CardContent>
+          <CardFooter className='custom-footer'>Custom Footer</CardFooter>
         </Card>
       );
 
-      expect(document.querySelector(&apos;[data-slot=&quot;card-header&quot;]&apos;)).toHaveClass(
-        &apos;custom-header&apos;
+      expect(document.querySelector('[data-slot=&quot;card-header&quot;]')).toHaveClass(
+        'custom-header'
       );
-      expect(document.querySelector(&apos;[data-slot=&quot;card-title&quot;]&apos;)).toHaveClass(
-        &apos;custom-title&apos;
+      expect(document.querySelector('[data-slot=&quot;card-title&quot;]')).toHaveClass(
+        'custom-title'
       );
       expect(
-        document.querySelector(&apos;[data-slot=&quot;card-description&quot;]&apos;)
-      ).toHaveClass(&apos;custom-description&apos;);
-      expect(document.querySelector(&apos;[data-slot=&quot;card-content&quot;]&apos;)).toHaveClass(
-        &apos;custom-content&apos;
+        document.querySelector('[data-slot=&quot;card-description&quot;]')
+      ).toHaveClass('custom-description');
+      expect(document.querySelector('[data-slot=&quot;card-content&quot;]')).toHaveClass(
+        'custom-content'
       );
-      expect(document.querySelector(&apos;[data-slot=&quot;card-footer&quot;]&apos;)).toHaveClass(
-        &apos;custom-footer&apos;
+      expect(document.querySelector('[data-slot=&quot;card-footer&quot;]')).toHaveClass(
+        'custom-footer'
       );
     });
   });
 
-  describe(&apos;Card Event Handling&apos;, () => {
-    it(&apos;should handle card click events&apos;, async () => {
+  describe('Card Event Handling', () => {
+    it('should handle card click events', async () => {
       const user = userEvent.setup();
       const mockCardClick = vi.fn();
 
@@ -404,13 +404,13 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const card = document.querySelector(&apos;[data-slot=&quot;card&quot;]&apos;);
+      const card = document.querySelector('[data-slot=&quot;card&quot;]');
       await user.click(card);
 
       expect(mockCardClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle mouse events on card&apos;, async () => {
+    it('should handle mouse events on card', async () => {
       const user = userEvent.setup();
       const mockOnMouseEnter = vi.fn();
       const mockOnMouseLeave = vi.fn();
@@ -421,7 +421,7 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const card = document.querySelector(&apos;[data-slot=&quot;card&quot;]&apos;);
+      const card = document.querySelector('[data-slot=&quot;card&quot;]');
 
       await user.hover(card);
       expect(mockOnMouseEnter).toHaveBeenCalledTimes(1);
@@ -431,15 +431,15 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Card Edge Cases&apos;, () => {
-    it(&apos;should handle empty card&apos;, () => {
+  describe('Card Edge Cases', () => {
+    it('should handle empty card', () => {
       render(<Card></Card>);
 
-      const card = document.querySelector(&apos;[data-slot=&quot;card&quot;]&apos;);
+      const card = document.querySelector('[data-slot=&quot;card&quot;]');
       expect(card).toBeInTheDocument();
     });
 
-    it(&apos;should handle card with only title&apos;, () => {
+    it('should handle card with only title', () => {
       render(
         <Card>
           <CardHeader>
@@ -448,20 +448,20 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      expect(screen.getByText(&apos;Title Only&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Title Only')).toBeInTheDocument();
     });
 
-    it(&apos;should handle card with only content&apos;, () => {
+    it('should handle card with only content', () => {
       render(
         <Card>
           <CardContent>Content Only</CardContent>
         </Card>
       );
 
-      expect(screen.getByText(&apos;Content Only&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Content Only')).toBeInTheDocument();
     });
 
-    it(&apos;should handle nested interactive elements&apos;, async () => {
+    it('should handle nested interactive elements', async () => {
       const user = userEvent.setup();
       const mockOuter = vi.fn();
       const mockInner = vi.fn();
@@ -474,7 +474,7 @@ describe(&apos;Card Component - Click Tests&apos;, () => {
         </Card>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /nested button/i });
+      const button = screen.getByRole('button', { name: /nested button/i });
       await user.click(button);
 
       // Both handlers should be called

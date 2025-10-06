@@ -1,13 +1,13 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { EditAssetDialog } from &apos;../assets/EditAssetDialog&apos;;
-import { render } from &apos;../../test/test-utils&apos;;
-import { mockAssets } from &apos;../../data/mockData&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { EditAssetDialog } from '../assets/EditAssetDialog';
+import { render } from '../../test/test-utils';
+import { mockAssets } from '../../data/mockData';
 
 // Mock toast
-vi.mock(&apos;sonner&apos;, () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock(&apos;sonner&apos;, () => ({
 }));
 
 // Mock useAssetMutations hook
-vi.mock(&apos;../../hooks/useAssetDetails&apos;, () => ({
+vi.mock('../../hooks/useAssetDetails', () => ({
   useAssetMutations: () => ({
     updateAsset: vi.fn().mockResolvedValue({ success: true }),
     deleteAsset: vi.fn().mockResolvedValue({ success: true }),
@@ -24,7 +24,7 @@ vi.mock(&apos;../../hooks/useAssetDetails&apos;, () => ({
   }),
 }));
 
-describe(&apos;EditAssetDialog Component - Basic Tests&apos;, () => {
+describe('EditAssetDialog Component - Basic Tests', () => {
   const mockAsset = mockAssets[0];
   const mockProps = {
     open: true,
@@ -36,75 +36,75 @@ describe(&apos;EditAssetDialog Component - Basic Tests&apos;, () => {
     vi.clearAllMocks();
   });
 
-  describe(&apos;Dialog Rendering&apos;, () => {
-    it(&apos;should render dialog when open prop is true&apos;, () => {
+  describe('Dialog Rendering', () => {
+    it('should render dialog when open prop is true', () => {
       render(<EditAssetDialog {...mockProps} />);
 
-      expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
 
-    it(&apos;should not render dialog when open prop is false&apos;, () => {
+    it('should not render dialog when open prop is false', () => {
       render(<EditAssetDialog {...mockProps} open={false} />);
 
-      expect(screen.queryByRole(&apos;dialog&apos;)).not.toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
   });
 
-  describe(&apos;Dialog Content&apos;, () => {
-    it(&apos;should render asset information&apos;, () => {
+  describe('Dialog Content', () => {
+    it('should render asset information', () => {
       render(<EditAssetDialog {...mockProps} />);
 
-      expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
 
-    it(&apos;should render form elements&apos;, () => {
+    it('should render form elements', () => {
       render(<EditAssetDialog {...mockProps} />);
 
-      expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Dialog Controls&apos;, () => {
-    it(&apos;should close dialog when close button is clicked&apos;, async () => {
+  describe('Dialog Controls', () => {
+    it('should close dialog when close button is clicked', async () => {
       const user = userEvent.setup();
       render(<EditAssetDialog {...mockProps} />);
 
-      const closeButton = screen.getByRole(&apos;button&apos;, { name: /close/i });
+      const closeButton = screen.getByRole('button', { name: /close/i });
       await user.click(closeButton);
 
       expect(mockProps.onOpenChange).toHaveBeenCalledWith(false);
     });
 
-    it(&apos;should render save button&apos;, () => {
+    it('should render save button', () => {
       render(<EditAssetDialog {...mockProps} />);
 
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save/i });
+      const saveButton = screen.getByRole('button', { name: /save/i });
       expect(saveButton).toBeInTheDocument();
     });
 
-    it(&apos;should render cancel button&apos;, () => {
+    it('should render cancel button', () => {
       render(<EditAssetDialog {...mockProps} />);
 
-      const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
       expect(cancelButton).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Form Interactions&apos;, () => {
-    it(&apos;should handle form input changes&apos;, async () => {
+  describe('Form Interactions', () => {
+    it('should handle form input changes', async () => {
       // const _user = userEvent.setup();
       render(<EditAssetDialog {...mockProps} />);
 
       // Find and interact with form inputs
-      const dialog = screen.getByRole(&apos;dialog&apos;);
+      const dialog = screen.getByRole('dialog');
       expect(dialog).toBeInTheDocument();
     });
 
-    it(&apos;should handle form submission&apos;, async () => {
+    it('should handle form submission', async () => {
       const user = userEvent.setup();
       render(<EditAssetDialog {...mockProps} />);
 
-      const saveButton = screen.getByRole(&apos;button&apos;, { name: /save/i });
+      const saveButton = screen.getByRole('button', { name: /save/i });
       await user.click(saveButton);
 
       // Should handle form submission
@@ -112,16 +112,16 @@ describe(&apos;EditAssetDialog Component - Basic Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper ARIA attributes&apos;, () => {
+  describe('Accessibility', () => {
+    it('should have proper ARIA attributes', () => {
       render(<EditAssetDialog {...mockProps} />);
 
-      const dialog = screen.getByRole(&apos;dialog&apos;);
+      const dialog = screen.getByRole('dialog');
       expect(dialog).toBeInTheDocument();
       // Dialog may not have aria-modal attribute set by default
     });
 
-    it(&apos;should be keyboard accessible&apos;, async () => {
+    it('should be keyboard accessible', async () => {
       const user = userEvent.setup();
       render(<EditAssetDialog {...mockProps} />);
 
@@ -131,15 +131,15 @@ describe(&apos;EditAssetDialog Component - Basic Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Error Handling&apos;, () => {
-    it(&apos;should handle missing asset data gracefully&apos;, () => {
-      // Don&apos;t render with null asset to avoid crashes
+  describe('Error Handling', () => {
+    it('should handle missing asset data gracefully', () => {
+      // Don't render with null asset to avoid crashes
       expect(() =>
         render(<EditAssetDialog {...mockProps} asset={null} />)
       ).toThrow();
     });
 
-    it(&apos;should handle onOpenChange callback&apos;, () => {
+    it('should handle onOpenChange callback', () => {
       const mockOnOpenChange = vi.fn();
       render(
         <EditAssetDialog {...mockProps} onOpenChange={mockOnOpenChange} />

@@ -1,11 +1,11 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach, afterEach } from &apos;vitest&apos;;
-import { render, screen, fireEvent, waitFor } from &apos;../../test/test-utils&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { Settings } from &apos;../settings/Settings&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
+import userEvent from '@testing-library/user-event';
+import { Settings } from '../settings/Settings';
 
 // Mock toast
-vi.mock(&apos;sonner&apos;, () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -19,7 +19,7 @@ Object.assign(navigator, {
   },
 });
 
-describe(&apos;Settings&apos;, () => {
+describe('Settings', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -28,415 +28,415 @@ describe(&apos;Settings&apos;, () => {
     vi.resetAllMocks();
   });
 
-  describe(&apos;Component Rendering&apos;, () => {
-    it(&apos;renders the settings page with correct title and description&apos;, () => {
+  describe('Component Rendering', () => {
+    it('renders the settings page with correct title and description', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;Settings&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Settings')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Manage system configuration, users, and integrations&apos;)
+        screen.getByText('Manage system configuration, users, and integrations')
       ).toBeInTheDocument();
     });
 
-    it(&apos;renders all tab options&apos;, () => {
+    it('renders all tab options', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;Users & Roles&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Organization&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;System Config&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;API & Integrations&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Audit Logs&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Users & Roles')).toBeInTheDocument();
+      expect(screen.getByText('Organization')).toBeInTheDocument();
+      expect(screen.getByText('System Config')).toBeInTheDocument();
+      expect(screen.getByText('API & Integrations')).toBeInTheDocument();
+      expect(screen.getByText('Audit Logs')).toBeInTheDocument();
     });
 
-    it(&apos;starts with Users & Roles tab selected by default&apos;, () => {
+    it('starts with Users & Roles tab selected by default', () => {
       render(<Settings />);
 
-      const usersTab = screen.getByText(&apos;Users & Roles&apos;);
-      expect(usersTab).toHaveClass(&apos;data-[state=active]&apos;);
+      const usersTab = screen.getByText('Users & Roles');
+      expect(usersTab).toHaveClass('data-[state=active]');
     });
   });
 
-  describe(&apos;Users & Roles Tab&apos;, () => {
-    it(&apos;displays user management section&apos;, () => {
+  describe('Users & Roles Tab', () => {
+    it('displays user management section', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;User Management&apos;)).toBeInTheDocument();
+      expect(screen.getByText('User Management')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Manage users and their permissions&apos;)
+        screen.getByText('Manage users and their permissions')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays the Add User button&apos;, () => {
+    it('displays the Add User button', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;Add User&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Add User')).toBeInTheDocument();
     });
 
-    it(&apos;displays users table with correct headers&apos;, () => {
+    it('displays users table with correct headers', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;User&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Role&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Last Active&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Actions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('User')).toBeInTheDocument();
+      expect(screen.getByText('Role')).toBeInTheDocument();
+      expect(screen.getByText('Status')).toBeInTheDocument();
+      expect(screen.getByText('Last Active')).toBeInTheDocument();
+      expect(screen.getByText('Actions')).toBeInTheDocument();
     });
 
-    it(&apos;displays mock users in the table&apos;, () => {
+    it('displays mock users in the table', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;John Smith&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;john.smith@company.com&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Sarah Johnson&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;sarah.j@company.com&apos;)).toBeInTheDocument();
+      expect(screen.getByText('John Smith')).toBeInTheDocument();
+      expect(screen.getByText('john.smith@company.com')).toBeInTheDocument();
+      expect(screen.getByText('Sarah Johnson')).toBeInTheDocument();
+      expect(screen.getByText('sarah.j@company.com')).toBeInTheDocument();
     });
 
-    it(&apos;displays role badges with correct colors&apos;, () => {
+    it('displays role badges with correct colors', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;admin&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;manager&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;operator&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;viewer&apos;)).toBeInTheDocument();
+      expect(screen.getByText('admin')).toBeInTheDocument();
+      expect(screen.getByText('manager')).toBeInTheDocument();
+      expect(screen.getByText('operator')).toBeInTheDocument();
+      expect(screen.getByText('viewer')).toBeInTheDocument();
     });
 
-    it(&apos;displays status badges&apos;, () => {
+    it('displays status badges', () => {
       render(<Settings />);
 
-      expect(screen.getAllByText(&apos;active&apos;)).toHaveLength(3);
-      expect(screen.getByText(&apos;inactive&apos;)).toBeInTheDocument();
+      expect(screen.getAllByText('active')).toHaveLength(3);
+      expect(screen.getByText('inactive')).toBeInTheDocument();
     });
 
-    it(&apos;displays role permissions section&apos;, () => {
+    it('displays role permissions section', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;Role Permissions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Role Permissions')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Define what each role can do&apos;)
+        screen.getByText('Define what each role can do')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays all role permission cards&apos;, () => {
+    it('displays all role permission cards', () => {
       render(<Settings />);
 
-      expect(screen.getByText(&apos;admin&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;manager&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;operator&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;viewer&apos;)).toBeInTheDocument();
+      expect(screen.getByText('admin')).toBeInTheDocument();
+      expect(screen.getByText('manager')).toBeInTheDocument();
+      expect(screen.getByText('operator')).toBeInTheDocument();
+      expect(screen.getByText('viewer')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;User Management Actions&apos;, () => {
-    it(&apos;opens Add User dialog when Add User button is clicked&apos;, () => {
+  describe('User Management Actions', () => {
+    it('opens Add User dialog when Add User button is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Add User&apos;));
+      fireEvent.click(screen.getByText('Add User'));
 
-      expect(screen.getByText(&apos;Add New User&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Add New User')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Invite a new user to your organization&apos;)
+        screen.getByText('Invite a new user to your organization')
       ).toBeInTheDocument();
     });
 
-    it(&apos;opens Edit User dialog when Edit button is clicked&apos;, () => {
+    it('opens Edit User dialog when Edit button is clicked', () => {
       render(<Settings />);
 
-      const editButtons = screen.getAllByRole(&apos;button&apos;);
+      const editButtons = screen.getAllByRole('button');
       const editButton = editButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Edit icon
+        button => button.querySelector('svg') // Look for the Edit icon
       );
 
       if (editButton) {
         fireEvent.click(editButton);
-        expect(screen.getByText(&apos;Edit User&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Edit User')).toBeInTheDocument();
       }
     });
 
-    it(&apos;opens Delete User confirmation dialog when Delete button is clicked&apos;, () => {
+    it('opens Delete User confirmation dialog when Delete button is clicked', () => {
       render(<Settings />);
 
-      const deleteButtons = screen.getAllByRole(&apos;button&apos;);
+      const deleteButtons = screen.getAllByRole('button');
       const deleteButton = deleteButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Trash2 icon
+        button => button.querySelector('svg') // Look for the Trash2 icon
       );
 
       if (deleteButton) {
         fireEvent.click(deleteButton);
-        expect(screen.getByText(&apos;Are you sure?&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Are you sure?')).toBeInTheDocument();
         expect(
-          screen.getByText(&apos;This will permanently delete the user&apos;)
+          screen.getByText('This will permanently delete the user')
         ).toBeInTheDocument();
       }
     });
 
-    it(&apos;opens Edit Permissions dialog when Edit Permissions button is clicked&apos;, () => {
+    it('opens Edit Permissions dialog when Edit Permissions button is clicked', () => {
       render(<Settings />);
 
-      const editPermissionsButtons = screen.getAllByText(&apos;Edit Permissions&apos;);
+      const editPermissionsButtons = screen.getAllByText('Edit Permissions');
       fireEvent.click(editPermissionsButtons[0]);
 
-      expect(screen.getByText(&apos;Edit Role Permissions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Edit Role Permissions')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Organization Tab&apos;, () => {
-    it(&apos;displays organization settings when tab is clicked&apos;, () => {
+  describe('Organization Tab', () => {
+    it('displays organization settings when tab is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Organization&apos;));
+      fireEvent.click(screen.getByText('Organization'));
 
-      expect(screen.getByText(&apos;Organization Settings&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Organization Settings')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Manage your organization details&apos;)
+        screen.getByText('Manage your organization details')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays organization form fields&apos;, () => {
+    it('displays organization form fields', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Organization&apos;));
+      fireEvent.click(screen.getByText('Organization'));
 
       expect(
-        screen.getByDisplayValue(&apos;Acme Construction Co.&apos;)
+        screen.getByDisplayValue('Acme Construction Co.')
       ).toBeInTheDocument();
-      expect(screen.getByDisplayValue(&apos;ORG-12345&apos;)).toBeInTheDocument();
-      expect(screen.getByDisplayValue(&apos;America/Chicago&apos;)).toBeInTheDocument();
+      expect(screen.getByDisplayValue('ORG-12345')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('America/Chicago')).toBeInTheDocument();
     });
 
-    it(&apos;displays SSO integration toggle&apos;, () => {
+    it('displays SSO integration toggle', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Organization&apos;));
+      fireEvent.click(screen.getByText('Organization'));
 
-      expect(screen.getByText(&apos;SSO Integration&apos;)).toBeInTheDocument();
+      expect(screen.getByText('SSO Integration')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Enable single sign-on with SAML/OIDC&apos;)
+        screen.getByText('Enable single sign-on with SAML/OIDC')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays Save Changes button&apos;, () => {
+    it('displays Save Changes button', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Organization&apos;));
+      fireEvent.click(screen.getByText('Organization'));
 
-      expect(screen.getByText(&apos;Save Changes&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Save Changes')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;System Config Tab&apos;, () => {
-    it(&apos;displays system configuration when tab is clicked&apos;, () => {
+  describe('System Config Tab', () => {
+    it('displays system configuration when tab is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;System Config&apos;));
+      fireEvent.click(screen.getByText('System Config'));
 
-      expect(screen.getByText(&apos;Location Settings&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Location Settings')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Configure location tracking parameters&apos;)
+        screen.getByText('Configure location tracking parameters')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays location settings form fields&apos;, () => {
+    it('displays location settings form fields', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;System Config&apos;));
+      fireEvent.click(screen.getByText('System Config'));
 
-      expect(screen.getByText(&apos;Location Update Frequency&apos;)).toBeInTheDocument();
-      expect(screen.getByDisplayValue(&apos;60&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Data Retention Period&apos;)).toBeInTheDocument();
-      expect(screen.getByDisplayValue(&apos;90&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Location Update Frequency')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('60')).toBeInTheDocument();
+      expect(screen.getByText('Data Retention Period')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('90')).toBeInTheDocument();
     });
 
-    it(&apos;displays high-precision mode toggle&apos;, () => {
+    it('displays high-precision mode toggle', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;System Config&apos;));
+      fireEvent.click(screen.getByText('System Config'));
 
-      expect(screen.getByText(&apos;High-Precision Mode&apos;)).toBeInTheDocument();
+      expect(screen.getByText('High-Precision Mode')).toBeInTheDocument();
       expect(
         screen.getByText(
-          &apos;Use more gateways for improved accuracy (higher cost)&apos;
+          'Use more gateways for improved accuracy (higher cost)'
         )
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays alert settings section&apos;, () => {
+    it('displays alert settings section', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;System Config&apos;));
+      fireEvent.click(screen.getByText('System Config'));
 
-      expect(screen.getByText(&apos;Alert Settings&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Alert Settings')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Configure alert thresholds and delivery&apos;)
+        screen.getByText('Configure alert thresholds and delivery')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays alert configuration fields&apos;, () => {
+    it('displays alert configuration fields', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;System Config&apos;));
+      fireEvent.click(screen.getByText('System Config'));
 
-      expect(screen.getByText(&apos;Low Battery Threshold&apos;)).toBeInTheDocument();
-      expect(screen.getByDisplayValue(&apos;20&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Geofence Alert Delay&apos;)).toBeInTheDocument();
-      expect(screen.getByDisplayValue(&apos;2&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Low Battery Threshold')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('20')).toBeInTheDocument();
+      expect(screen.getByText('Geofence Alert Delay')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('2')).toBeInTheDocument();
     });
 
-    it(&apos;displays alert deduplication toggle&apos;, () => {
+    it('displays alert deduplication toggle', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;System Config&apos;));
+      fireEvent.click(screen.getByText('System Config'));
 
-      expect(screen.getByText(&apos;Alert Deduplication&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Alert Deduplication')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Prevent duplicate alerts within 1 hour&apos;)
+        screen.getByText('Prevent duplicate alerts within 1 hour')
       ).toBeInTheDocument();
     });
   });
 
-  describe(&apos;API & Integrations Tab&apos;, () => {
-    it(&apos;displays API & Integrations when tab is clicked&apos;, () => {
+  describe('API & Integrations Tab', () => {
+    it('displays API & Integrations when tab is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;API Keys&apos;)).toBeInTheDocument();
+      expect(screen.getByText('API Keys')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Manage API keys for integrations&apos;)
+        screen.getByText('Manage API keys for integrations')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays Create API Key button&apos;, () => {
+    it('displays Create API Key button', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;Create API Key&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Create API Key')).toBeInTheDocument();
     });
 
-    it(&apos;displays API keys table with correct headers&apos;, () => {
+    it('displays API keys table with correct headers', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;Name&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Key&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Created&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Last Used&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Actions&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Name')).toBeInTheDocument();
+      expect(screen.getByText('Key')).toBeInTheDocument();
+      expect(screen.getByText('Created')).toBeInTheDocument();
+      expect(screen.getByText('Last Used')).toBeInTheDocument();
+      expect(screen.getByText('Status')).toBeInTheDocument();
+      expect(screen.getByText('Actions')).toBeInTheDocument();
     });
 
-    it(&apos;displays mock API keys in the table&apos;, () => {
+    it('displays mock API keys in the table', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;Production API Key&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Development API Key&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Mobile App Key&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Production API Key')).toBeInTheDocument();
+      expect(screen.getByText('Development API Key')).toBeInTheDocument();
+      expect(screen.getByText('Mobile App Key')).toBeInTheDocument();
     });
 
-    it(&apos;displays webhooks section&apos;, () => {
+    it('displays webhooks section', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;Webhooks&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Webhooks')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Configure webhook endpoints for real-time events&apos;)
+        screen.getByText('Configure webhook endpoints for real-time events')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays Add Webhook button&apos;, () => {
+    it('displays Add Webhook button', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;Add Webhook&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Add Webhook')).toBeInTheDocument();
     });
 
-    it(&apos;displays mock webhooks&apos;, () => {
+    it('displays mock webhooks', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;Asset Events Webhook&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Maintenance Alerts&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Asset Events Webhook')).toBeInTheDocument();
+      expect(screen.getByText('Maintenance Alerts')).toBeInTheDocument();
     });
 
-    it(&apos;displays ERP/CMMS integrations section&apos;, () => {
+    it('displays ERP/CMMS integrations section', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;ERP/CMMS Integrations&apos;)).toBeInTheDocument();
+      expect(screen.getByText('ERP/CMMS Integrations')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Connect with enterprise systems&apos;)
+        screen.getByText('Connect with enterprise systems')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays integration options&apos;, () => {
+    it('displays integration options', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      expect(screen.getByText(&apos;SAP&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;ServiceNow&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Procore&apos;)).toBeInTheDocument();
+      expect(screen.getByText('SAP')).toBeInTheDocument();
+      expect(screen.getByText('ServiceNow')).toBeInTheDocument();
+      expect(screen.getByText('Procore')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;API Key Management&apos;, () => {
-    it(&apos;opens Create API Key dialog when Create API Key button is clicked&apos;, () => {
+  describe('API Key Management', () => {
+    it('opens Create API Key dialog when Create API Key button is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
-      fireEvent.click(screen.getByText(&apos;Create API Key&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
+      fireEvent.click(screen.getByText('Create API Key'));
 
-      expect(screen.getByText(&apos;Create API Key&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Create API Key')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Generate a new API key for integrations&apos;)
+        screen.getByText('Generate a new API key for integrations')
       ).toBeInTheDocument();
     });
 
-    it(&apos;shows API key form fields in create dialog&apos;, () => {
+    it('shows API key form fields in create dialog', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
-      fireEvent.click(screen.getByText(&apos;Create API Key&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
+      fireEvent.click(screen.getByText('Create API Key'));
 
-      expect(screen.getByText(&apos;Key Name&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Permissions (Scopes)&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Key Name')).toBeInTheDocument();
+      expect(screen.getByText('Permissions (Scopes)')).toBeInTheDocument();
     });
 
-    it(&apos;copies API key to clipboard when copy button is clicked&apos;, async () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('copies API key to clipboard when copy button is clicked', async () => {
+      const { toast } = require('sonner');
 
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      const copyButtons = screen.getAllByRole(&apos;button&apos;);
+      const copyButtons = screen.getAllByRole('button');
       const copyButton = copyButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Copy icon
+        button => button.querySelector('svg') // Look for the Copy icon
       );
 
       if (copyButton) {
         fireEvent.click(copyButton);
 
         expect(navigator.clipboard.writeText).toHaveBeenCalled();
-        expect(toast.success).toHaveBeenCalledWith(&apos;Copied to clipboard&apos;);
+        expect(toast.success).toHaveBeenCalledWith('Copied to clipboard');
       }
     });
 
-    it(&apos;shows/hides API key when eye button is clicked&apos;, () => {
+    it('shows/hides API key when eye button is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      const eyeButtons = screen.getAllByRole(&apos;button&apos;);
+      const eyeButtons = screen.getAllByRole('button');
       const eyeButton = eyeButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Eye icon
+        button => button.querySelector('svg') // Look for the Eye icon
       );
 
       if (eyeButton) {
@@ -444,228 +444,228 @@ describe(&apos;Settings&apos;, () => {
         // Key should be visible now
         expect(
           screen.getByText(
-            &apos;ak_prod_abc123def456ghi789jklmno012pqr345stu678vwx901yz234&apos;
+            'ak_prod_abc123def456ghi789jklmno012pqr345stu678vwx901yz234'
           )
         ).toBeInTheDocument();
       }
     });
 
-    it(&apos;regenerates API key when regenerate button is clicked&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('regenerates API key when regenerate button is clicked', () => {
+      const { toast } = require('sonner');
 
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      const regenerateButtons = screen.getAllByRole(&apos;button&apos;);
+      const regenerateButtons = screen.getAllByRole('button');
       const regenerateButton = regenerateButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the RefreshCw icon
+        button => button.querySelector('svg') // Look for the RefreshCw icon
       );
 
       if (regenerateButton) {
         fireEvent.click(regenerateButton);
-        expect(toast.success).toHaveBeenCalledWith(&apos;API key regenerated&apos;);
+        expect(toast.success).toHaveBeenCalledWith('API key regenerated');
       }
     });
 
-    it(&apos;deletes API key when delete button is clicked&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('deletes API key when delete button is clicked', () => {
+      const { toast } = require('sonner');
 
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      const deleteButtons = screen.getAllByRole(&apos;button&apos;);
+      const deleteButtons = screen.getAllByRole('button');
       const deleteButton = deleteButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Trash2 icon
+        button => button.querySelector('svg') // Look for the Trash2 icon
       );
 
       if (deleteButton) {
         fireEvent.click(deleteButton);
-        expect(toast.success).toHaveBeenCalledWith(&apos;API key deleted&apos;);
+        expect(toast.success).toHaveBeenCalledWith('API key deleted');
       }
     });
   });
 
-  describe(&apos;Webhook Management&apos;, () => {
-    it(&apos;opens Add Webhook dialog when Add Webhook button is clicked&apos;, () => {
+  describe('Webhook Management', () => {
+    it('opens Add Webhook dialog when Add Webhook button is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
-      fireEvent.click(screen.getByText(&apos;Add Webhook&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
+      fireEvent.click(screen.getByText('Add Webhook'));
 
-      expect(screen.getByText(&apos;Add Webhook&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Add Webhook')).toBeInTheDocument();
       expect(
         screen.getByText(
-          &apos;Configure a new webhook endpoint for real-time events&apos;
+          'Configure a new webhook endpoint for real-time events'
         )
       ).toBeInTheDocument();
     });
 
-    it(&apos;shows webhook form fields in add dialog&apos;, () => {
+    it('shows webhook form fields in add dialog', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
-      fireEvent.click(screen.getByText(&apos;Add Webhook&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
+      fireEvent.click(screen.getByText('Add Webhook'));
 
-      expect(screen.getByText(&apos;Webhook Name&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Endpoint URL&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Events to Subscribe&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Webhook Name')).toBeInTheDocument();
+      expect(screen.getByText('Endpoint URL')).toBeInTheDocument();
+      expect(screen.getByText('Events to Subscribe')).toBeInTheDocument();
     });
 
-    it(&apos;tests webhook when Test button is clicked&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('tests webhook when Test button is clicked', () => {
+      const { toast } = require('sonner');
 
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      const testButtons = screen.getAllByText(&apos;Test&apos;);
+      const testButtons = screen.getAllByText('Test');
       if (testButtons.length > 0) {
         fireEvent.click(testButtons[0]);
-        expect(toast.success).toHaveBeenCalledWith(&apos;Test event sent&apos;);
+        expect(toast.success).toHaveBeenCalledWith('Test event sent');
       }
     });
 
-    it(&apos;edits webhook when Edit button is clicked&apos;, () => {
+    it('edits webhook when Edit button is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      const editButtons = screen.getAllByRole(&apos;button&apos;);
+      const editButtons = screen.getAllByRole('button');
       const editButton = editButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Edit icon
+        button => button.querySelector('svg') // Look for the Edit icon
       );
 
       if (editButton) {
         fireEvent.click(editButton);
-        expect(screen.getByText(&apos;Edit Webhook&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Edit Webhook')).toBeInTheDocument();
       }
     });
 
-    it(&apos;deletes webhook when Delete button is clicked&apos;, () => {
+    it('deletes webhook when Delete button is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;API & Integrations&apos;));
+      fireEvent.click(screen.getByText('API & Integrations'));
 
-      const deleteButtons = screen.getAllByRole(&apos;button&apos;);
+      const deleteButtons = screen.getAllByRole('button');
       const deleteButton = deleteButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Trash2 icon
+        button => button.querySelector('svg') // Look for the Trash2 icon
       );
 
       if (deleteButton) {
         fireEvent.click(deleteButton);
-        expect(screen.getByText(&apos;Delete Webhook?&apos;)).toBeInTheDocument();
+        expect(screen.getByText('Delete Webhook?')).toBeInTheDocument();
       }
     });
   });
 
-  describe(&apos;Audit Logs Tab&apos;, () => {
-    it(&apos;displays audit logs when tab is clicked&apos;, () => {
+  describe('Audit Logs Tab', () => {
+    it('displays audit logs when tab is clicked', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Audit Logs&apos;));
+      fireEvent.click(screen.getByText('Audit Logs'));
 
-      expect(screen.getByText(&apos;Audit Logs&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Audit Logs')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Track all system activities and changes&apos;)
+        screen.getByText('Track all system activities and changes')
       ).toBeInTheDocument();
     });
 
-    it(&apos;displays search and filter controls&apos;, () => {
+    it('displays search and filter controls', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Audit Logs&apos;));
+      fireEvent.click(screen.getByText('Audit Logs'));
 
-      expect(screen.getByPlaceholderText(&apos;Search logs...&apos;)).toBeInTheDocument();
-      expect(screen.getByDisplayValue(&apos;All Events&apos;)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Search logs...')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('All Events')).toBeInTheDocument();
     });
 
-    it(&apos;displays audit logs table with correct headers&apos;, () => {
+    it('displays audit logs table with correct headers', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Audit Logs&apos;));
+      fireEvent.click(screen.getByText('Audit Logs'));
 
-      expect(screen.getByText(&apos;Timestamp&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;User&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Event&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Details&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;IP Address&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Timestamp')).toBeInTheDocument();
+      expect(screen.getByText('User')).toBeInTheDocument();
+      expect(screen.getByText('Event')).toBeInTheDocument();
+      expect(screen.getByText('Details')).toBeInTheDocument();
+      expect(screen.getByText('IP Address')).toBeInTheDocument();
     });
 
-    it(&apos;displays mock audit log entries&apos;, () => {
+    it('displays mock audit log entries', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Audit Logs&apos;));
+      fireEvent.click(screen.getByText('Audit Logs'));
 
-      expect(screen.getByText(&apos;john.smith@company.com&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Asset Checkout&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Checked out Generator-045&apos;)).toBeInTheDocument();
+      expect(screen.getByText('john.smith@company.com')).toBeInTheDocument();
+      expect(screen.getByText('Asset Checkout')).toBeInTheDocument();
+      expect(screen.getByText('Checked out Generator-045')).toBeInTheDocument();
     });
 
-    it(&apos;displays pagination controls&apos;, () => {
+    it('displays pagination controls', () => {
       render(<Settings />);
 
-      fireEvent.click(screen.getByText(&apos;Audit Logs&apos;));
+      fireEvent.click(screen.getByText('Audit Logs'));
 
-      expect(screen.getByText(&apos;Showing 3 of 1,247 events&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Previous&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Next&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Showing 3 of 1,247 events')).toBeInTheDocument();
+      expect(screen.getByText('Previous')).toBeInTheDocument();
+      expect(screen.getByText('Next')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Form Interactions&apos;, () => {
-    it(&apos;allows editing user information in edit dialog&apos;, async () => {
+  describe('Form Interactions', () => {
+    it('allows editing user information in edit dialog', async () => {
       const user = userEvent.setup();
       render(<Settings />);
 
       // Use specific query for edit button
-      const editButton = screen.getByRole(&apos;button&apos;, {
+      const editButton = screen.getByRole('button', {
         name: /edit user john smith/i,
       });
       await user.click(editButton);
 
       // Wait for dialog to open
       await waitFor(() => {
-        expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
       });
 
-      const nameInput = screen.getByDisplayValue(&apos;John Smith&apos;);
+      const nameInput = screen.getByDisplayValue('John Smith');
       await user.clear(nameInput);
-      await user.type(nameInput, &apos;John Updated&apos;);
+      await user.type(nameInput, 'John Updated');
 
-      expect(nameInput).toHaveValue(&apos;John Updated&apos;);
+      expect(nameInput).toHaveValue('John Updated');
     });
 
-    it(&apos;allows changing user role in edit dialog&apos;, async () => {
+    it('allows changing user role in edit dialog', async () => {
       const user = userEvent.setup();
       render(<Settings />);
 
       // Use specific query for edit button
-      const editButton = screen.getByRole(&apos;button&apos;, {
+      const editButton = screen.getByRole('button', {
         name: /edit user john smith/i,
       });
       await user.click(editButton);
 
       // Wait for dialog to open
       await waitFor(() => {
-        expect(screen.getByRole(&apos;dialog&apos;)).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
       });
 
-      const roleSelect = screen.getByDisplayValue(&apos;admin&apos;);
+      const roleSelect = screen.getByDisplayValue('admin');
       await user.click(roleSelect);
-      await user.click(screen.getByText(&apos;manager&apos;));
+      await user.click(screen.getByText('manager'));
 
-      expect(screen.getByDisplayValue(&apos;manager&apos;)).toBeInTheDocument();
+      expect(screen.getByDisplayValue('manager')).toBeInTheDocument();
     });
 
-    it(&apos;allows toggling permissions in permissions dialog&apos;, () => {
+    it('allows toggling permissions in permissions dialog', () => {
       render(<Settings />);
 
-      const editPermissionsButtons = screen.getAllByText(&apos;Edit Permissions&apos;);
+      const editPermissionsButtons = screen.getAllByText('Edit Permissions');
       fireEvent.click(editPermissionsButtons[0]);
 
-      const permissionSwitches = screen.getAllByRole(&apos;checkbox&apos;);
+      const permissionSwitches = screen.getAllByRole('checkbox');
       if (permissionSwitches.length > 0) {
         const firstSwitch = permissionSwitches[0];
         const initialState = firstSwitch.checked;
@@ -676,59 +676,59 @@ describe(&apos;Settings&apos;, () => {
     });
   });
 
-  describe(&apos;Toast Notifications&apos;, () => {
-    it(&apos;shows success toast when user is deleted&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+  describe('Toast Notifications', () => {
+    it('shows success toast when user is deleted', () => {
+      const { toast } = require('sonner');
 
       render(<Settings />);
 
-      const deleteButtons = screen.getAllByRole(&apos;button&apos;);
+      const deleteButtons = screen.getAllByRole('button');
       const deleteButton = deleteButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Trash2 icon
+        button => button.querySelector('svg') // Look for the Trash2 icon
       );
 
       if (deleteButton) {
         fireEvent.click(deleteButton);
 
-        const confirmButton = screen.getByText(&apos;Delete User&apos;);
+        const confirmButton = screen.getByText('Delete User');
         fireEvent.click(confirmButton);
 
-        expect(toast.success).toHaveBeenCalledWith(&apos;User deleted&apos;);
+        expect(toast.success).toHaveBeenCalledWith('User deleted');
       }
     });
 
-    it(&apos;shows success toast when user is updated&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('shows success toast when user is updated', () => {
+      const { toast } = require('sonner');
 
       render(<Settings />);
 
-      const editButtons = screen.getAllByRole(&apos;button&apos;);
+      const editButtons = screen.getAllByRole('button');
       const editButton = editButtons.find(
-        button => button.querySelector(&apos;svg&apos;) // Look for the Edit icon
+        button => button.querySelector('svg') // Look for the Edit icon
       );
 
       if (editButton) {
         fireEvent.click(editButton);
 
-        const saveButton = screen.getByText(&apos;Save Changes&apos;);
+        const saveButton = screen.getByText('Save Changes');
         fireEvent.click(saveButton);
 
-        expect(toast.success).toHaveBeenCalledWith(&apos;User updated&apos;);
+        expect(toast.success).toHaveBeenCalledWith('User updated');
       }
     });
 
-    it(&apos;shows success toast when permissions are saved&apos;, () => {
-      const { toast } = require(&apos;sonner&apos;);
+    it('shows success toast when permissions are saved', () => {
+      const { toast } = require('sonner');
 
       render(<Settings />);
 
-      const editPermissionsButtons = screen.getAllByText(&apos;Edit Permissions&apos;);
+      const editPermissionsButtons = screen.getAllByText('Edit Permissions');
       fireEvent.click(editPermissionsButtons[0]);
 
-      const saveButton = screen.getByText(&apos;Save Permissions&apos;);
+      const saveButton = screen.getByText('Save Permissions');
       fireEvent.click(saveButton);
 
-      expect(toast.success).toHaveBeenCalledWith(&apos;Permissions updated&apos;);
+      expect(toast.success).toHaveBeenCalledWith('Permissions updated');
     });
   });
 });

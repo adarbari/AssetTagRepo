@@ -1230,7 +1230,7 @@ export function getGeofenceExpectedAssets(geofenceId: string): Asset[] {
   }
 
   return mockAssets.filter(asset =>
-    geofence.expectedAssetIds!.includes(asset.id)
+    geofence.expectedAssetIds?.includes(asset.id)
   );
 }
 

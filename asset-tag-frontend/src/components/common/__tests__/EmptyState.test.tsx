@@ -1,137 +1,137 @@
-import React from &apos;react&apos;;
-import { describe, it, expect, vi } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { EmptyState } from &apos;../EmptyState&apos;;
-import { render } from &apos;../../../test/test-utils&apos;;
-import { AlertTriangle, Plus } from &apos;lucide-react&apos;;
+import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { EmptyState } from '../EmptyState';
+import { render } from '../../../test/test-utils';
+import { AlertTriangle, Plus } from 'lucide-react';
 
-describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
-  describe(&apos;Action Button Functionality&apos;, () => {
-    it(&apos;should render action button when action is provided&apos;, () => {
+describe('EmptyState Component - Button Click Tests', () => {
+  describe('Action Button Functionality', () => {
+    it('should render action button when action is provided', () => {
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
       expect(actionButton).toBeInTheDocument();
     });
 
-    it(&apos;should not render action button when action is not provided&apos;, () => {
-      render(<EmptyState title=&apos;No items found&apos; />);
+    it('should not render action button when action is not provided', () => {
+      render(<EmptyState title='No items found' />);
 
-      const actionButton = screen.queryByRole(&apos;button&apos;);
+      const actionButton = screen.queryByRole('button');
       expect(actionButton).not.toBeInTheDocument();
     });
 
-    it(&apos;should call action.onClick when action button is clicked&apos;, async () => {
+    it('should call action.onClick when action button is clicked', async () => {
       const user = userEvent.setup();
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
       await user.click(actionButton);
 
       expect(mockAction).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should render action button with icon when provided&apos;, () => {
+    it('should render action button with icon when provided', () => {
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Add New&apos;,
+            label: 'Add New',
             onClick: mockAction,
             icon: Plus,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /add new/i });
+      const actionButton = screen.getByRole('button', { name: /add new/i });
       expect(actionButton).toBeInTheDocument();
 
-      // Icon should be present (SVG elements don&apos;t have img role by default)
-      const iconElement = document.querySelector(&apos;svg&apos;);
+      // Icon should be present (SVG elements don't have img role by default)
+      const iconElement = document.querySelector('svg');
       expect(iconElement).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Content Display&apos;, () => {
-    it(&apos;should render title&apos;, () => {
-      render(<EmptyState title=&apos;No items found&apos; />);
+  describe('Content Display', () => {
+    it('should render title', () => {
+      render(<EmptyState title='No items found' />);
 
-      expect(screen.getByText(&apos;No items found&apos;)).toBeInTheDocument();
+      expect(screen.getByText('No items found')).toBeInTheDocument();
     });
 
-    it(&apos;should render description when provided&apos;, () => {
+    it('should render description when provided', () => {
       render(
         <EmptyState
-          title=&apos;No items found&apos;
-          description=&apos;There are no items to display at this time.&apos;
+          title='No items found'
+          description='There are no items to display at this time.'
         />
       );
 
       expect(
-        screen.getByText(&apos;There are no items to display at this time.&apos;)
+        screen.getByText('There are no items to display at this time.')
       ).toBeInTheDocument();
     });
 
-    it(&apos;should not render description when not provided&apos;, () => {
-      render(<EmptyState title=&apos;No items found&apos; />);
+    it('should not render description when not provided', () => {
+      render(<EmptyState title='No items found' />);
 
       // Should not have description paragraph
-      const description = document.querySelector(&apos;p.text-muted-foreground&apos;);
+      const description = document.querySelector('p.text-muted-foreground');
       expect(description).not.toBeInTheDocument();
     });
 
-    it(&apos;should render icon when provided&apos;, () => {
-      render(<EmptyState title=&apos;No items found&apos; icon={AlertTriangle} />);
+    it('should render icon when provided', () => {
+      render(<EmptyState title='No items found' icon={AlertTriangle} />);
 
-      // Icon should be rendered (SVG elements don&apos;t have img role by default)
-      const iconElement = document.querySelector(&apos;svg&apos;);
+      // Icon should be rendered (SVG elements don't have img role by default)
+      const iconElement = document.querySelector('svg');
       expect(iconElement).toBeInTheDocument();
     });
 
-    it(&apos;should not render icon container when icon is not provided&apos;, () => {
-      render(<EmptyState title=&apos;No items found&apos; />);
+    it('should not render icon container when icon is not provided', () => {
+      render(<EmptyState title='No items found' />);
 
       // Should not have icon container
-      const iconContainer = document.querySelector(&apos;.bg-muted&apos;);
+      const iconContainer = document.querySelector('.bg-muted');
       expect(iconContainer).not.toBeInTheDocument();
     });
   });
 
-  describe(&apos;Combined Functionality&apos;, () => {
-    it(&apos;should work with all props together&apos;, async () => {
+  describe('Combined Functionality', () => {
+    it('should work with all props together', async () => {
       const user = userEvent.setup();
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;Complete Empty State&apos;
-          description=&apos;This is a complete empty state with all features&apos;
+          title='Complete Empty State'
+          description='This is a complete empty state with all features'
           icon={AlertTriangle}
           action={{
-            label: &apos;Complete Action&apos;,
+            label: 'Complete Action',
             onClick: mockAction,
             icon: Plus,
           }}
@@ -139,12 +139,12 @@ describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
       );
 
       // Check all elements are present
-      expect(screen.getByText(&apos;Complete Empty State&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Complete Empty State')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;This is a complete empty state with all features&apos;)
+        screen.getByText('This is a complete empty state with all features')
       ).toBeInTheDocument();
 
-      const actionButton = screen.getByRole(&apos;button&apos;, {
+      const actionButton = screen.getByRole('button', {
         name: /complete action/i,
       });
       expect(actionButton).toBeInTheDocument();
@@ -155,24 +155,24 @@ describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper heading structure&apos;, () => {
-      render(<EmptyState title=&apos;No items found&apos; />);
+  describe('Accessibility', () => {
+    it('should have proper heading structure', () => {
+      render(<EmptyState title='No items found' />);
 
-      const heading = screen.getByRole(&apos;heading&apos;, { level: 3 });
+      const heading = screen.getByRole('heading', { level: 3 });
       expect(heading).toBeInTheDocument();
-      expect(heading).toHaveTextContent(&apos;No items found&apos;);
+      expect(heading).toHaveTextContent('No items found');
     });
 
-    it(&apos;should support keyboard navigation&apos;, async () => {
+    it('should support keyboard navigation', async () => {
       const user = userEvent.setup();
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
@@ -180,63 +180,63 @@ describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
 
       // Tab to action button
       await user.tab();
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
       expect(document.activeElement).toBe(actionButton);
     });
 
-    it(&apos;should have proper button roles and labels&apos;, () => {
+    it('should have proper button roles and labels', () => {
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
       expect(actionButton).toBeInTheDocument();
       expect(actionButton).toHaveAccessibleName();
     });
 
-    it(&apos;should be focusable when action is provided&apos;, () => {
+    it('should be focusable when action is provided', () => {
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
       actionButton.focus();
       expect(document.activeElement).toBe(actionButton);
     });
   });
 
-  describe(&apos;Button State Management&apos;, () => {
-    it(&apos;should handle multiple rapid clicks&apos;, async () => {
+  describe('Button State Management', () => {
+    it('should handle multiple rapid clicks', async () => {
       const user = userEvent.setup();
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
 
       // Click multiple times rapidly
       await user.click(actionButton);
@@ -246,21 +246,21 @@ describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
       expect(mockAction).toHaveBeenCalledTimes(3);
     });
 
-    it(&apos;should maintain button state during interactions&apos;, async () => {
+    it('should maintain button state during interactions', async () => {
       const user = userEvent.setup();
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
 
       // Button should remain enabled
       expect(actionButton).not.toBeDisabled();
@@ -272,27 +272,27 @@ describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Error Handling&apos;, () => {
-    it(&apos;should handle action errors gracefully&apos;, async () => {
+  describe('Error Handling', () => {
+    it('should handle action errors gracefully', async () => {
       const user = userEvent.setup();
-      const mockAction = vi.fn().mockRejectedValue(new Error(&apos;Action failed&apos;));
+      const mockAction = vi.fn().mockRejectedValue(new Error('Action failed'));
 
       // Mock console.error to prevent error from showing in test output
       const consoleSpy = vi
-        .spyOn(console, &apos;error&apos;)
+        .spyOn(console, 'error')
         .mockImplementation(() => {});
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
+          title='No items found'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
 
       // Should call the action function even if it throws
       try {
@@ -308,37 +308,37 @@ describe(&apos;EmptyState Component - Button Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Visual Layout&apos;, () => {
-    it(&apos;should center content properly&apos;, () => {
-      render(<EmptyState title=&apos;No items found&apos; />);
+  describe('Visual Layout', () => {
+    it('should center content properly', () => {
+      render(<EmptyState title='No items found' />);
 
       const container = document.querySelector(
-        &apos;.flex.flex-col.items-center.justify-center&apos;
+        '.flex.flex-col.items-center.justify-center'
       );
       expect(container).toBeInTheDocument();
     });
 
-    it(&apos;should have proper spacing for action button&apos;, () => {
+    it('should have proper spacing for action button', () => {
       const mockAction = vi.fn();
 
       render(
         <EmptyState
-          title=&apos;No items found&apos;
-          description=&apos;Description text&apos;
+          title='No items found'
+          description='Description text'
           action={{
-            label: &apos;Create Item&apos;,
+            label: 'Create Item',
             onClick: mockAction,
           }}
         />
       );
 
-      const actionButton = screen.getByRole(&apos;button&apos;, { name: /create item/i });
+      const actionButton = screen.getByRole('button', { name: /create item/i });
       expect(actionButton).toBeInTheDocument();
 
       // Button should have proper margin (check if button has proper spacing)
       expect(actionButton).toBeInTheDocument();
       // The button should be properly positioned within the component
-      expect(actionButton.closest(&apos;div&apos;)).toBeTruthy();
+      expect(actionButton.closest('div')).toBeTruthy();
     });
   });
 });

@@ -94,6 +94,7 @@ describe('API Service', () => {
         USE_MOCK_DATA: false,
       });
 
+      // The function should return false because USE_MOCK_DATA is false and API_BASE_URL doesn't contain localhost
       expect(shouldUseMockData()).toBe(false);
     });
   });

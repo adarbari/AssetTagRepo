@@ -1,7 +1,7 @@
-import React from &apos;react&apos;;
-import { describe, it, expect, vi } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
+import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   Select,
   SelectTrigger,
@@ -11,45 +11,45 @@ import {
   SelectItem,
   SelectLabel,
   SelectSeparator,
-} from &apos;../select&apos;;
-import { render as customRender } from &apos;../../../test/test-utils&apos;;
+} from '../select';
+import { render as customRender } from '../../../test/test-utils';
 
-describe(&apos;Select Component - Click Tests&apos;, () => {
+describe('Select Component - Click Tests', () => {
   // Basic Select Functionality
-  it(&apos;should render select trigger&apos;, () => {
+  it('should render select trigger', () => {
     customRender(
       <Select>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Select a fruit&apos; />
+          <SelectValue placeholder='Select a fruit' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;apple&apos;>Apple</SelectItem>
-          <SelectItem value=&apos;banana&apos;>Banana</SelectItem>
+          <SelectItem value='apple'>Apple</SelectItem>
+          <SelectItem value='banana'>Banana</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     expect(trigger).toBeInTheDocument();
-    expect(trigger).toHaveAttribute(&apos;data-state&apos;, &apos;closed&apos;);
+    expect(trigger).toHaveAttribute('data-state', 'closed');
   });
 
-  it(&apos;should handle trigger click&apos;, async () => {
+  it('should handle trigger click', async () => {
     const user = userEvent.setup();
     const mockOnChange = vi.fn();
     customRender(
       <Select onValueChange={mockOnChange}>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Select a fruit&apos; />
+          <SelectValue placeholder='Select a fruit' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;apple&apos;>Apple</SelectItem>
-          <SelectItem value=&apos;banana&apos;>Banana</SelectItem>
+          <SelectItem value='apple'>Apple</SelectItem>
+          <SelectItem value='banana'>Banana</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     await user.click(trigger);
 
     // In JSDOM, the dropdown content may not render properly due to portal issues
@@ -58,238 +58,238 @@ describe(&apos;Select Component - Click Tests&apos;, () => {
   });
 
   // Select States
-  it(&apos;should render a disabled select&apos;, () => {
+  it('should render a disabled select', () => {
     customRender(
       <Select disabled>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Select a fruit&apos; />
+          <SelectValue placeholder='Select a fruit' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;apple&apos;>Apple</SelectItem>
+          <SelectItem value='apple'>Apple</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     expect(trigger).toBeDisabled();
   });
 
-  it(&apos;should render a select with a default value&apos;, () => {
+  it('should render a select with a default value', () => {
     customRender(
-      <Select defaultValue=&apos;banana&apos;>
+      <Select defaultValue='banana'>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Select a fruit&apos; />
+          <SelectValue placeholder='Select a fruit' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;apple&apos;>Apple</SelectItem>
-          <SelectItem value=&apos;banana&apos;>Banana</SelectItem>
+          <SelectItem value='apple'>Apple</SelectItem>
+          <SelectItem value='banana'>Banana</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    expect(screen.getByText(&apos;Banana&apos;)).toBeInTheDocument(); // Default value displayed
+    expect(screen.getByText('Banana')).toBeInTheDocument(); // Default value displayed
   });
 
   // Select Groups and Labels
-  it(&apos;should render select with groups and labels&apos;, () => {
+  it('should render select with groups and labels', () => {
     customRender(
       <Select>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Select a category&apos; />
+          <SelectValue placeholder='Select a category' />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Fruits</SelectLabel>
-            <SelectItem value=&apos;apple&apos;>Apple</SelectItem>
-            <SelectItem value=&apos;banana&apos;>Banana</SelectItem>
+            <SelectItem value='apple'>Apple</SelectItem>
+            <SelectItem value='banana'>Banana</SelectItem>
           </SelectGroup>
           <SelectSeparator />
           <SelectGroup>
             <SelectLabel>Vegetables</SelectLabel>
-            <SelectItem value=&apos;carrot&apos;>Carrot</SelectItem>
+            <SelectItem value='carrot'>Carrot</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     expect(trigger).toBeInTheDocument();
   });
 
   // Select Accessibility
-  it(&apos;should have proper ARIA attributes&apos;, () => {
+  it('should have proper ARIA attributes', () => {
     customRender(
       <Select>
-        <SelectTrigger aria-label=&apos;Fruit selection&apos;>
-          <SelectValue placeholder=&apos;Select a fruit&apos; />
+        <SelectTrigger aria-label='Fruit selection'>
+          <SelectValue placeholder='Select a fruit' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;apple&apos;>Apple</SelectItem>
+          <SelectItem value='apple'>Apple</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;, { name: /fruit selection/i });
-    expect(trigger).toHaveAttribute(&apos;aria-expanded&apos;, &apos;false&apos;);
+    const trigger = screen.getByRole('combobox', { name: /fruit selection/i });
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
   });
 
   // Select Custom Styling
-  it(&apos;should apply custom className to trigger&apos;, () => {
+  it('should apply custom className to trigger', () => {
     customRender(
       <Select>
-        <SelectTrigger className=&apos;custom-trigger-class&apos;>
-          <SelectValue placeholder=&apos;Styled Trigger&apos; />
+        <SelectTrigger className='custom-trigger-class'>
+          <SelectValue placeholder='Styled Trigger' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;item&apos;>Item</SelectItem>
+          <SelectItem value='item'>Item</SelectItem>
         </SelectContent>
       </Select>
     );
-    const trigger = screen.getByRole(&apos;combobox&apos;);
-    expect(trigger).toHaveClass(&apos;custom-trigger-class&apos;);
+    const trigger = screen.getByRole('combobox');
+    expect(trigger).toHaveClass('custom-trigger-class');
   });
 
-  it(&apos;should handle different trigger sizes&apos;, () => {
+  it('should handle different trigger sizes', () => {
     customRender(
       <div>
         <Select>
-          <SelectTrigger size=&apos;sm&apos;>
-            <SelectValue placeholder=&apos;Small select&apos; />
+          <SelectTrigger size='sm'>
+            <SelectValue placeholder='Small select' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value=&apos;item&apos;>Item</SelectItem>
+            <SelectItem value='item'>Item</SelectItem>
           </SelectContent>
         </Select>
         <Select>
           <SelectTrigger>
-            <SelectValue placeholder=&apos;Default select&apos; />
+            <SelectValue placeholder='Default select' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value=&apos;item&apos;>Item</SelectItem>
+            <SelectItem value='item'>Item</SelectItem>
           </SelectContent>
         </Select>
       </div>
     );
 
-    const triggers = screen.getAllByRole(&apos;combobox&apos;);
-    expect(triggers[0]).toHaveAttribute(&apos;data-size&apos;, &apos;sm&apos;);
-    expect(triggers[1]).toHaveAttribute(&apos;data-size&apos;, &apos;default&apos;);
+    const triggers = screen.getAllByRole('combobox');
+    expect(triggers[0]).toHaveAttribute('data-size', 'sm');
+    expect(triggers[1]).toHaveAttribute('data-size', 'default');
   });
 
   // Select Keyboard Interaction
-  it(&apos;should handle keyboard navigation&apos;, async () => {
+  it('should handle keyboard navigation', async () => {
     customRender(
       <Select>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Navigate&apos; />
+          <SelectValue placeholder='Navigate' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;one&apos;>One</SelectItem>
-          <SelectItem value=&apos;two&apos;>Two</SelectItem>
-          <SelectItem value=&apos;three&apos;>Three</SelectItem>
+          <SelectItem value='one'>One</SelectItem>
+          <SelectItem value='two'>Two</SelectItem>
+          <SelectItem value='three'>Three</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     trigger.focus();
     expect(trigger).toHaveFocus();
   });
 
-  it(&apos;should close on Escape key&apos;, async () => {
+  it('should close on Escape key', async () => {
     const user = userEvent.setup();
     customRender(
       <Select>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Escape Test&apos; />
+          <SelectValue placeholder='Escape Test' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;item&apos;>Item</SelectItem>
+          <SelectItem value='item'>Item</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     await user.click(trigger);
-    await user.keyboard(&apos;{Escape}&apos;);
+    await user.keyboard('{Escape}');
 
     // Verify trigger is still in document (dropdown closed)
     expect(trigger).toBeInTheDocument();
   });
 
   // Select Edge Cases
-  it(&apos;should handle onValueChange callback&apos;, () => {
+  it('should handle onValueChange callback', () => {
     const mockOnValueChange = vi.fn();
     customRender(
       <Select onValueChange={mockOnValueChange}>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Callback Test&apos; />
+          <SelectValue placeholder='Callback Test' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;item&apos;>Item</SelectItem>
+          <SelectItem value='item'>Item</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     expect(trigger).toBeInTheDocument();
   });
 
   // Select Custom Styling
-  it(&apos;should apply custom className to content&apos;, () => {
+  it('should apply custom className to content', () => {
     customRender(
       <Select>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Styled Content&apos; />
+          <SelectValue placeholder='Styled Content' />
         </SelectTrigger>
-        <SelectContent className=&apos;custom-content-class&apos;>
-          <SelectItem value=&apos;item&apos;>Item</SelectItem>
+        <SelectContent className='custom-content-class'>
+          <SelectItem value='item'>Item</SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     expect(trigger).toBeInTheDocument();
   });
 
-  it(&apos;should apply custom className to item&apos;, () => {
+  it('should apply custom className to item', () => {
     customRender(
       <Select>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Styled Item&apos; />
+          <SelectValue placeholder='Styled Item' />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value=&apos;item&apos; className=&apos;custom-item-class&apos;>
+          <SelectItem value='item' className='custom-item-class'>
             Item
           </SelectItem>
         </SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     expect(trigger).toBeInTheDocument();
   });
 
   // Select Edge Cases
-  it(&apos;should handle empty select&apos;, () => {
+  it('should handle empty select', () => {
     customRender(
       <Select>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Empty&apos; />
+          <SelectValue placeholder='Empty' />
         </SelectTrigger>
         <SelectContent></SelectContent>
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     expect(trigger).toBeInTheDocument();
   });
 
-  it(&apos;should handle select with many options&apos;, () => {
+  it('should handle select with many options', () => {
     customRender(
       <Select>
         <SelectTrigger>
-          <SelectValue placeholder=&apos;Many Options&apos; />
+          <SelectValue placeholder='Many Options' />
         </SelectTrigger>
         <SelectContent>
           {Array.from({ length: 10 }, (_, i) => (
@@ -301,7 +301,7 @@ describe(&apos;Select Component - Click Tests&apos;, () => {
       </Select>
     );
 
-    const trigger = screen.getByRole(&apos;combobox&apos;);
+    const trigger = screen.getByRole('combobox');
     expect(trigger).toBeInTheDocument();
   });
 });
