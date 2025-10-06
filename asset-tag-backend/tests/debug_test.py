@@ -6,14 +6,13 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-@pytest.mark.asyncio
-async def test_client_fixture(client: AsyncClient):
+def test_client_fixture(client):
     """Test that client fixture works correctly"""
     print(f"Client type: {type(client)}")
     print(f"Client has post method: {hasattr(client, 'post')}")
 
     # Test a simple request
-    response = await client.get("/health")
+    response = client.get("/health")
     print(f"Response status: {response.status_code}")
     print(f"Response data: {response.json()}")
 
