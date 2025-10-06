@@ -314,23 +314,13 @@ async def create_asset(asset_data: AssetCreate, db: AsyncSession = Depends(get_d
             raise HTTPException(status_code=400, detail="Asset with this serial number already exists")
 
         # Create new asset
-        print(f"DEBUG: asset_data.current_site_id = {asset_data.current_site_id} (type: {type(asset_data.current_site_id)})")
-        current_site_id_uuid = None
-        if asset_data.current_site_id:
-            try:
-                current_site_id_uuid = uuid.UUID(asset_data.current_site_id)
-                print(f"DEBUG: Successfully converted to UUID: {current_site_id_uuid}")
-            except Exception as e:
-                print(f"DEBUG: Error converting current_site_id to UUID: {e}")
-                raise
-        
         asset = Asset(
             organization_id=uuid.UUID("00000000-0000-0000-0000-000000000000"),  # Default org for now
             name=asset_data.name,
             serial_number=asset_data.serial_number,
             asset_type=asset_data.asset_type,
             status=asset_data.status or "active",
-            current_site_id=current_site_id_uuid,
+            current_site_id=uuid.UUID(asset_data.current_site_id) if asset_data.current_site_id else None,
             location_description=asset_data.location_description,
             battery_level=asset_data.battery_level,
             temperature=asset_data.temperature,
