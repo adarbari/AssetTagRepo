@@ -179,10 +179,10 @@ describe('Card Component - Click Tests', () => {
             <CardTitle>Multi Action Card</CardTitle>
             <CardAction>
               <div className="flex gap-1">
-                <Button onClick={mockEdit} size="sm" variant="outline">
+                <Button onClick={mockEdit} size="sm" variant="outline" aria-label="Edit">
                   <Edit className="h-4 w-4" />
                 </Button>
-                <Button onClick={mockDelete} size="sm" variant="destructive">
+                <Button onClick={mockDelete} size="sm" variant="destructive" aria-label="Delete">
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -192,8 +192,8 @@ describe('Card Component - Click Tests', () => {
         </Card>
       )
       
-      const editButton = screen.getByRole('button')
-      const deleteButton = screen.getByRole('button', { name: '' }) // Icon button
+      const editButton = screen.getByRole('button', { name: /edit/i })
+      const deleteButton = screen.getByRole('button', { name: /delete/i })
       
       await user.click(editButton)
       await user.click(deleteButton)

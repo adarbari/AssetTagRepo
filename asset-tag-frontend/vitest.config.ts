@@ -10,6 +10,12 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    env: {
+      VITE_API_BASE_URL: 'http://localhost:3000',
+      VITE_API_VERSION: 'v1',
+      VITE_USE_MOCK_DATA: 'true',
+      VITE_API_TIMEOUT: '30000',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'clover', 'json-summary'],

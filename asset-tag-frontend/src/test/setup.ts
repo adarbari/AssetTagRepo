@@ -2,6 +2,22 @@ import '@testing-library/jest-dom'
 import { vi } from 'vitest'
 import React from 'react'
 
+// Mock fetch globally with proper response structure
+global.fetch = vi.fn((url: string) => 
+  Promise.resolve({
+    ok: true,
+    status: 200,
+    statusText: 'OK',
+    headers: new Headers(),
+    json: async () => ({ data: 'mock data' }),
+    text: async () => 'mock text',
+    blob: async () => new Blob(),
+    arrayBuffer: async () => new ArrayBuffer(0),
+    formData: async () => new FormData(),
+    clone: vi.fn(),
+  } as Response)
+) as any
+
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -151,4 +167,30 @@ vi.mock('../contexts/NavigationContext', () => ({
     handleViewHistoricalPlayback: vi.fn(),
   }),
   NavigationProvider: ({ children }: { children: React.ReactNode }) => children,
+}))
+
+// Mock common layout components
+vi.mock('../components/common/PageLayout', () => ({
+  PageLayout: ({ children, header }: { children: React.ReactNode, header?: React.ReactNode }) => (
+    React.createElement('div', { 'data-testid': 'page-layout' }, 
+      header,
+      children
+    )
+  ),
+}))
+
+vi.mock('../components/common/PageHeader', () => ({
+  PageHeader: ({ title, description, actions, onBack }: { title: string, description?: string, actions?: React.ReactNode, onBack?: () => void }) => (
+    React.createElement('div', { 'data-testid': 'page-header' }, 
+      React.createElement('h1', null, title),
+      description && React.createElement('p', null, description),
+      actions && React.createElement('div', { 'data-testid': 'page-header-actions' }, actions)
+    )
+  ),
+}))
+
+vi.mock('../components/common/PageContainer', () => ({
+  PageContainer: ({ children }: { children: React.ReactNode }) => (
+    React.createElement('div', { 'data-testid': 'page-container' }, children)
+  ),
 }))

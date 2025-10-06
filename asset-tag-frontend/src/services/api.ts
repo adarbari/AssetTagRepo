@@ -20,7 +20,7 @@
  */
 
 // API Configuration - Safe access to environment variables
-const getEnvVar = (key: string, defaultValue: string = ''): string => {
+export const getEnvVar = (key: string, defaultValue: string = ''): string => {
   try {
     return import.meta?.env?.[key] ?? defaultValue;
   } catch {
@@ -28,6 +28,15 @@ const getEnvVar = (key: string, defaultValue: string = ''): string => {
   }
 };
 
+// Export getter functions for testability
+export const getApiConfig = () => ({
+  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'http://localhost:3000'),
+  API_VERSION: getEnvVar('VITE_API_VERSION', 'v1'),
+  API_TIMEOUT: parseInt(getEnvVar('VITE_API_TIMEOUT', '30000')),
+  USE_MOCK_DATA: getEnvVar('VITE_USE_MOCK_DATA', 'true') !== 'false',
+})
+
+// Module-level constants (can be overridden by mocking getApiConfig)
 const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', 'http://localhost:3000');
 const API_VERSION = getEnvVar('VITE_API_VERSION', 'v1');
 const API_TIMEOUT = parseInt(getEnvVar('VITE_API_TIMEOUT', '30000'));
@@ -258,8 +267,8 @@ export const apiClient = {
  * Helper to check if we should use mock data
  */
 export function shouldUseMockData(): boolean {
-  const useMockData = getEnvVar('VITE_USE_MOCK_DATA', 'true') !== 'false';
-  return useMockData || !API_BASE_URL || API_BASE_URL.includes('localhost');
+  const config = getApiConfig();
+  return config.USE_MOCK_DATA || !config.API_BASE_URL || config.API_BASE_URL.includes('localhost');
 }
 
 // ============================================================================

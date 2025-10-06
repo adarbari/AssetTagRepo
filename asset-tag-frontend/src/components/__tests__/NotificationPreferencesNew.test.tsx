@@ -27,84 +27,92 @@ vi.mock('sonner', () => ({
 
 const mockNotificationConfigs: Record<string, NotificationPreferences> = {
   'user:default': {
+    id: 'user-default-1',
     level: 'user',
     entityId: 'default',
-    entityName: 'Default User',
     channels: {
       email: {
         enabled: true,
-        address: 'user@example.com',
+        addresses: ['user@example.com'],
         verified: true,
       },
       sms: {
         enabled: false,
-        number: '',
+        phoneNumbers: [],
         verified: false,
       },
       push: {
         enabled: true,
-        verified: true,
+        devices: ['device-1'],
       },
       webhook: {
         enabled: false,
-        url: '',
-        verified: false,
+        endpoints: [],
       },
+    },
+    filters: {
+      types: ['theft', 'battery', 'compliance'],
+      severities: ['medium', 'high', 'critical'],
     },
     quietHours: {
       enabled: true,
       start: '22:00',
       end: '08:00',
       timezone: 'America/New_York',
+      excludeCritical: true,
     },
-    alertFiltering: {
-      minSeverity: 'medium',
-      alertTypes: ['theft', 'battery', 'compliance'],
-    },
-    frequencyLimits: {
+    frequency: {
       maxPerHour: 10,
       maxPerDay: 50,
+      digestMode: false,
     },
+    isOverride: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   'site:SITE-001': {
+    id: 'site-SITE-001-1',
     level: 'site',
     entityId: 'SITE-001',
-    entityName: 'Construction Site A',
     channels: {
       email: {
         enabled: true,
-        address: 'site@example.com',
+        addresses: ['site@example.com'],
         verified: true,
       },
       sms: {
         enabled: true,
-        number: '+1234567890',
+        phoneNumbers: ['+1234567890'],
         verified: true,
       },
       push: {
         enabled: false,
-        verified: false,
+        devices: [],
       },
       webhook: {
         enabled: true,
-        url: 'https://api.example.com/webhooks/site',
-        verified: true,
+        endpoints: ['https://api.example.com/webhooks/site'],
       },
+    },
+    filters: {
+      types: ['theft', 'geofence_entry', 'geofence_exit'],
+      severities: ['high', 'critical'],
     },
     quietHours: {
       enabled: false,
       start: '22:00',
       end: '08:00',
       timezone: 'America/New_York',
+      excludeCritical: true,
     },
-    alertFiltering: {
-      minSeverity: 'high',
-      alertTypes: ['theft', 'geofence_entry', 'geofence_exit'],
-    },
-    frequencyLimits: {
+    frequency: {
       maxPerHour: 5,
       maxPerDay: 25,
+      digestMode: false,
     },
+    isOverride: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
 }
 

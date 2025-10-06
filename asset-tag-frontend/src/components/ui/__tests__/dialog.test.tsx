@@ -391,7 +391,8 @@ describe('Dialog Component - Click Tests', () => {
         expect(screen.getByRole('dialog')).toBeInTheDocument()
       })
       
-      const closeButton = screen.getByRole('button', { name: /close/i })
+      // Click the footer close button (not the X button)
+      const closeButton = screen.getByRole('button', { name: 'Close' })
       await user.click(closeButton)
       
       await waitFor(() => {
