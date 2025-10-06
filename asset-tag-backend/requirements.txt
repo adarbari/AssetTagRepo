@@ -13,7 +13,7 @@ psycopg2-binary==2.9.9
 asyncpg==0.29.0
 
 # Redis
-redis==5.0.1
+redis==6.4.0
 aioredis==2.0.1
 
 # AWS Services (with local alternatives)
