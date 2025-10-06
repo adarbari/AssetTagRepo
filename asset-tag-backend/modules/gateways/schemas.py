@@ -1,13 +1,15 @@
 """
 Gateway Pydantic schemas
 """
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, Optional
+
+from pydantic import BaseModel, Field
 
 
 class GatewayBase(BaseModel):
     """Base gateway schema"""
+
     name: str = Field(..., min_length=1, max_length=255)
     gateway_id: str = Field(..., min_length=1, max_length=100)
     status: Optional[str] = Field("active", max_length=50)
@@ -27,11 +29,13 @@ class GatewayBase(BaseModel):
 
 class GatewayCreate(GatewayBase):
     """Schema for creating a gateway"""
+
     pass
 
 
 class GatewayUpdate(BaseModel):
     """Schema for updating a gateway"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     status: Optional[str] = Field(None, max_length=50)
     site_id: Optional[str] = None
@@ -50,6 +54,7 @@ class GatewayUpdate(BaseModel):
 
 class GatewayResponse(GatewayBase):
     """Schema for gateway response"""
+
     id: str
     organization_id: str
     is_online: bool
@@ -57,6 +62,6 @@ class GatewayResponse(GatewayBase):
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True

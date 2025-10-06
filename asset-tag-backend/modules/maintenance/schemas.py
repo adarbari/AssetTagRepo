@@ -1,13 +1,15 @@
 """
 Maintenance Pydantic schemas
 """
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, Optional
+
+from pydantic import BaseModel, Field
 
 
 class MaintenanceBase(BaseModel):
     """Base maintenance schema"""
+
     asset_id: str = Field(..., min_length=1)
     maintenance_type: str = Field(..., min_length=1, max_length=100)
     status: Optional[str] = Field("pending", max_length=50)
@@ -24,11 +26,13 @@ class MaintenanceBase(BaseModel):
 
 class MaintenanceCreate(MaintenanceBase):
     """Schema for creating a maintenance record"""
+
     pass
 
 
 class MaintenanceUpdate(BaseModel):
     """Schema for updating a maintenance record"""
+
     maintenance_type: Optional[str] = Field(None, min_length=1, max_length=100)
     status: Optional[str] = Field(None, max_length=50)
     priority: Optional[str] = Field(None, max_length=50)
@@ -48,6 +52,7 @@ class MaintenanceUpdate(BaseModel):
 
 class MaintenanceResponse(MaintenanceBase):
     """Schema for maintenance response"""
+
     id: str
     organization_id: str
     actual_duration_hours: Optional[float] = None
@@ -57,13 +62,14 @@ class MaintenanceResponse(MaintenanceBase):
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
 
 
 class MaintenanceStats(BaseModel):
     """Schema for maintenance statistics"""
+
     by_status: Dict[str, int]
     overdue: int
     total: int

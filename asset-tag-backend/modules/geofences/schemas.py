@@ -1,90 +1,94 @@
 """
 Geofence Pydantic schemas
 """
-from pydantic import BaseModel, Field, field_validator
-from typing import Optional, Dict, Any, List
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, Field, field_validator
 
 
 class GeofenceBase(BaseModel):
     """Base geofence schema"""
+
     name: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
     geofence_type: str = Field(..., pattern="^(circular|polygon)$")
     status: Optional[str] = Field("active", max_length=50)
-    
+
     # Geometric definition
     center_latitude: Optional[float] = Field(None, ge=-90, le=90)
     center_longitude: Optional[float] = Field(None, ge=-180, le=180)
     radius: Optional[int] = Field(None, ge=0)
     coordinates: Optional[List[List[float]]] = Field(None, description="Array of [lat, lng] pairs for polygon geofences")
-    
+
     # Site association
     site_id: Optional[str] = None
     site_name: Optional[str] = Field(None, max_length=255)
-    
+
     # Alert configuration
     alert_on_entry: Optional[bool] = True
     alert_on_exit: Optional[bool] = True
     geofence_classification: Optional[str] = Field("authorized", max_length=50)
-    
+
     # Tolerance and buffer
     tolerance: Optional[int] = Field(None, ge=0)
-    
+
     # Vehicle-based geofencing
     location_mode: Optional[str] = Field("static", max_length=50)
     vehicle_id: Optional[str] = None
     vehicle_name: Optional[str] = Field(None, max_length=255)
-    
+
     # Asset attachment
     asset_id: Optional[str] = None
     asset_name: Optional[str] = Field(None, max_length=255)
     attachment_type: Optional[str] = Field("site", max_length=50)
-    
+
     # Expected assets
     expected_asset_ids: Optional[List[str]] = None
-    
+
     # Metadata
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
-    
-    @field_validator('coordinates')
+
+    @field_validator("coordinates")
     @classmethod
     def validate_coordinates(cls, v, info):
         """Validate coordinates based on geofence type"""
-        if v is not None and info.data.get('geofence_type') == 'polygon':
+        if v is not None and info.data.get("geofence_type") == "polygon":
             if len(v) < 3:
-                raise ValueError('Polygon geofences must have at least 3 coordinate pairs')
+                raise ValueError("Polygon geofences must have at least 3 coordinate pairs")
             for coord in v:
                 if len(coord) != 2:
-                    raise ValueError('Each coordinate must be [latitude, longitude]')
+                    raise ValueError("Each coordinate must be [latitude, longitude]")
                 if not (-90 <= coord[0] <= 90):
-                    raise ValueError('Latitude must be between -90 and 90')
+                    raise ValueError("Latitude must be between -90 and 90")
                 if not (-180 <= coord[1] <= 180):
-                    raise ValueError('Longitude must be between -180 and 180')
+                    raise ValueError("Longitude must be between -180 and 180")
         return v
-    
-    @field_validator('center_latitude', 'center_longitude', 'radius')
+
+    @field_validator("center_latitude", "center_longitude", "radius")
     @classmethod
     def validate_circular_geofence(cls, v, info):
         """Validate circular geofence parameters"""
-        if info.data.get('geofence_type') == 'circular':
+        if info.data.get("geofence_type") == "circular":
             field_name = info.field_name
-            if field_name == 'center_latitude' and v is None:
-                raise ValueError('Center latitude is required for circular geofences')
-            if field_name == 'center_longitude' and v is None:
-                raise ValueError('Center longitude is required for circular geofences')
-            if field_name == 'radius' and v is None:
-                raise ValueError('Radius is required for circular geofences')
+            if field_name == "center_latitude" and v is None:
+                raise ValueError("Center latitude is required for circular geofences")
+            if field_name == "center_longitude" and v is None:
+                raise ValueError("Center longitude is required for circular geofences")
+            if field_name == "radius" and v is None:
+                raise ValueError("Radius is required for circular geofences")
         return v
 
 
 class GeofenceCreate(GeofenceBase):
     """Schema for creating a geofence"""
+
     pass
 
 
 class GeofenceUpdate(BaseModel):
     """Schema for updating a geofence"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = None
     status: Optional[str] = Field(None, max_length=50)
@@ -110,18 +114,20 @@ class GeofenceUpdate(BaseModel):
 
 class GeofenceResponse(GeofenceBase):
     """Schema for geofence response"""
+
     id: str
     organization_id: str
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
 
 
 class GeofenceEventBase(BaseModel):
     """Base geofence event schema"""
+
     geofence_id: str = Field(..., description="Geofence ID")
     asset_id: str = Field(..., description="Asset ID")
     event_type: str = Field(..., pattern="^(entry|exit)$")
@@ -134,24 +140,25 @@ class GeofenceEventBase(BaseModel):
 
 class GeofenceEventCreate(GeofenceEventBase):
     """Schema for creating a geofence event"""
+
     pass
 
 
 class GeofenceEventResponse(GeofenceEventBase):
     """Schema for geofence event response"""
+
     id: str
     organization_id: str
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True
 
 
-
-
 class GeofenceEvaluationRequest(BaseModel):
     """Schema for geofence evaluation request"""
+
     asset_id: str = Field(..., description="Asset ID to evaluate")
     latitude: float = Field(..., ge=-90, le=90)
     longitude: float = Field(..., ge=-180, le=180)
@@ -161,6 +168,7 @@ class GeofenceEvaluationRequest(BaseModel):
 
 class GeofenceEvaluationResponse(BaseModel):
     """Schema for geofence evaluation response"""
+
     asset_id: str
     latitude: float
     longitude: float
@@ -171,6 +179,7 @@ class GeofenceEvaluationResponse(BaseModel):
 
 class GeofenceStatsResponse(BaseModel):
     """Schema for geofence statistics"""
+
     total_geofences: int
     active_geofences: int
     inactive_geofences: int

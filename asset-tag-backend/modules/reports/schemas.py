@@ -1,14 +1,16 @@
 """
 Reports schemas
 """
-from pydantic import BaseModel, Field, validator
-from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, Field, validator
 
 
 class ReportFormat(str, Enum):
     """Report format options"""
+
     CSV = "csv"
     PDF = "pdf"
     EXCEL = "excel"
@@ -16,6 +18,7 @@ class ReportFormat(str, Enum):
 
 class ReportStatusEnum(str, Enum):
     """Report status options"""
+
     PENDING = "pending"
     PROCESSING = "processing"
     COMPLETED = "completed"
@@ -24,6 +27,7 @@ class ReportStatusEnum(str, Enum):
 
 class ScheduleFrequency(str, Enum):
     """Schedule frequency options"""
+
     DAILY = "daily"
     WEEKLY = "weekly"
     MONTHLY = "monthly"
@@ -32,6 +36,7 @@ class ScheduleFrequency(str, Enum):
 
 class ReportTemplate(BaseModel):
     """Report template schema"""
+
     id: str = Field(..., description="Template ID")
     name: str = Field(..., description="Template name")
     description: str = Field(..., description="Template description")
@@ -41,11 +46,12 @@ class ReportTemplate(BaseModel):
 
 class ReportGenerationRequest(BaseModel):
     """Schema for report generation request"""
+
     template_id: str = Field(..., description="Report template ID")
     parameters: Dict[str, Any] = Field(default_factory=dict, description="Report parameters")
     format: ReportFormat = Field(default=ReportFormat.CSV, description="Output format")
-    
-    @validator('template_id')
+
+    @validator("template_id")
     def validate_template_id(cls, v):
         # This would be validated against available templates
         return v
@@ -53,6 +59,7 @@ class ReportGenerationRequest(BaseModel):
 
 class ReportGenerationResponse(BaseModel):
     """Schema for report generation response"""
+
     report_id: str = Field(..., description="Generated report ID")
     status: str = Field(..., description="Generation status")
     message: str = Field(..., description="Status message")
@@ -60,6 +67,7 @@ class ReportGenerationResponse(BaseModel):
 
 class ReportStatus(BaseModel):
     """Schema for report status"""
+
     id: str = Field(..., description="Report ID")
     template_id: str = Field(..., description="Template ID used")
     status: ReportStatusEnum = Field(..., description="Current status")
@@ -75,6 +83,7 @@ class ReportStatus(BaseModel):
 
 class ReportDownloadResponse(BaseModel):
     """Schema for report download response"""
+
     report_id: str = Field(..., description="Report ID")
     download_url: str = Field(..., description="Download URL")
     filename: str = Field(..., description="Filename")
@@ -83,6 +92,7 @@ class ReportDownloadResponse(BaseModel):
 
 class ScheduledReportRequest(BaseModel):
     """Schema for scheduling a report"""
+
     template_id: str = Field(..., description="Report template ID")
     schedule: ScheduleFrequency = Field(..., description="Schedule frequency")
     parameters: Dict[str, Any] = Field(default_factory=dict, description="Report parameters")
@@ -93,6 +103,7 @@ class ScheduledReportRequest(BaseModel):
 
 class ScheduledReportResponse(BaseModel):
     """Schema for scheduled report response"""
+
     id: str = Field(..., description="Scheduled report ID")
     template_id: str = Field(..., description="Template ID")
     schedule: ScheduleFrequency = Field(..., description="Schedule frequency")
@@ -107,14 +118,15 @@ class ScheduledReportResponse(BaseModel):
 
 class ExportRequest(BaseModel):
     """Schema for data export request"""
+
     export_type: str = Field(..., description="Export type (assets, jobs, maintenance, etc.)")
     format: str = Field(default="csv", description="Export format")
     filters: Dict[str, Any] = Field(default_factory=dict, description="Export filters")
     fields: Optional[List[str]] = Field(None, description="Specific fields to export")
-    
-    @validator('format')
+
+    @validator("format")
     def validate_format(cls, v):
-        allowed_formats = ['csv', 'json', 'excel']
+        allowed_formats = ["csv", "json", "excel"]
         if v not in allowed_formats:
             raise ValueError(f'Format must be one of: {", ".join(allowed_formats)}')
         return v
@@ -122,6 +134,7 @@ class ExportRequest(BaseModel):
 
 class ExportResponse(BaseModel):
     """Schema for export response"""
+
     export_id: str = Field(..., description="Export ID")
     filename: str = Field(..., description="Generated filename")
     content: str = Field(..., description="Export content")
@@ -131,6 +144,7 @@ class ExportResponse(BaseModel):
 
 class ReportMetrics(BaseModel):
     """Schema for report metrics"""
+
     total_reports_generated: int
     reports_by_template: Dict[str, int]
     reports_by_format: Dict[str, int]

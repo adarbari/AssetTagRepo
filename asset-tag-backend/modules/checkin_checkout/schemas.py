@@ -1,13 +1,15 @@
 """
 Check-in/Check-out Pydantic schemas
 """
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, Optional
+
+from pydantic import BaseModel, Field
 
 
 class CheckInBase(BaseModel):
     """Base check-in schema"""
+
     asset_id: str = Field(..., min_length=1)
     user_id: str = Field(..., min_length=1)
     user_name: str = Field(..., min_length=1, max_length=255)
@@ -22,11 +24,13 @@ class CheckInBase(BaseModel):
 
 class CheckInCreate(CheckInBase):
     """Schema for creating a check-in record"""
+
     pass
 
 
 class CheckOutBase(BaseModel):
     """Base check-out schema"""
+
     asset_id: str = Field(..., min_length=1)
     check_out_location_lat: Optional[float] = Field(None, ge=-90, le=90)
     check_out_location_lng: Optional[float] = Field(None, ge=-180, le=180)
@@ -38,11 +42,13 @@ class CheckOutBase(BaseModel):
 
 class CheckOutCreate(CheckOutBase):
     """Schema for creating a check-out record"""
+
     pass
 
 
 class CheckInOutResponse(BaseModel):
     """Schema for check-in/check-out response"""
+
     id: str
     organization_id: str
     asset_id: str
@@ -65,13 +71,14 @@ class CheckInOutResponse(BaseModel):
     metadata: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True
 
 
 class CheckInStatus(BaseModel):
     """Schema for current check-in status"""
+
     asset_id: str
     status: str  # "checked_in" or "checked_out"
     check_in_time: Optional[datetime] = None

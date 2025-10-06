@@ -1,15 +1,16 @@
 """
 Job API endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, delete
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import delete, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.jobs.models import Job, JobAsset
-from modules.jobs.schemas import JobCreate, JobUpdate, JobResponse
+from modules.jobs.schemas import JobCreate, JobResponse, JobUpdate
 
 router = APIRouter()
 
@@ -22,12 +23,12 @@ async def get_jobs(
     priority: Optional[str] = None,
     assigned_to_user_id: Optional[str] = None,
     site_id: Optional[str] = None,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Get list of jobs with optional filtering"""
     try:
         query = select(Job)
-        
+
         # Apply filters
         if status:
             query = query.where(Job.status == status)
@@ -37,34 +38,31 @@ async def get_jobs(
             query = query.where(Job.assigned_to_user_id == assigned_to_user_id)
         if site_id:
             query = query.where(Job.site_id == site_id)
-        
+
         # Apply pagination
         query = query.offset(skip).limit(limit)
-        
+
         result = await db.execute(query)
         jobs = result.scalars().all()
-        
+
         return [JobResponse.from_orm(job) for job in jobs]
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching jobs: {str(e)}")
 
 
 @router.get("/jobs/{job_id}", response_model=JobResponse)
-async def get_job(
-    job_id: str,
-    db: AsyncSession = Depends(get_db)
-):
+async def get_job(job_id: str, db: AsyncSession = Depends(get_db)):
     """Get job by ID"""
     try:
         result = await db.execute(select(Job).where(Job.id == job_id))
         job = result.scalar_one_or_none()
-        
+
         if not job:
             raise HTTPException(status_code=404, detail="Job not found")
-        
+
         return JobResponse.from_orm(job)
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -72,10 +70,7 @@ async def get_job(
 
 
 @router.post("/jobs", response_model=JobResponse)
-async def create_job(
-    job_data: JobCreate,
-    db: AsyncSession = Depends(get_db)
-):
+async def create_job(job_data: JobCreate, db: AsyncSession = Depends(get_db)):
     """Create a new job"""
     try:
         job = Job(
@@ -94,47 +89,43 @@ async def create_job(
             location_description=job_data.location_description,
             estimated_duration_hours=job_data.estimated_duration_hours,
             estimated_cost=job_data.estimated_cost,
-            metadata=job_data.metadata or {}
+            metadata=job_data.metadata or {},
         )
-        
+
         db.add(job)
         await db.commit()
         await db.refresh(job)
-        
+
         return JobResponse.from_orm(job)
-        
+
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=f"Error creating job: {str(e)}")
 
 
 @router.put("/jobs/{job_id}", response_model=JobResponse)
-async def update_job(
-    job_id: str,
-    job_data: JobUpdate,
-    db: AsyncSession = Depends(get_db)
-):
+async def update_job(job_id: str, job_data: JobUpdate, db: AsyncSession = Depends(get_db)):
     """Update an existing job"""
     try:
         result = await db.execute(select(Job).where(Job.id == job_id))
         job = result.scalar_one_or_none()
-        
+
         if not job:
             raise HTTPException(status_code=404, detail="Job not found")
-        
+
         # Update fields
         update_data = job_data.dict(exclude_unset=True)
         for field, value in update_data.items():
-            if field in ['scheduled_start', 'scheduled_end'] and value:
+            if field in ["scheduled_start", "scheduled_end"] and value:
                 setattr(job, field, datetime.fromisoformat(value))
             else:
                 setattr(job, field, value)
-        
+
         await db.commit()
         await db.refresh(job)
-        
+
         return JobResponse.from_orm(job)
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -143,24 +134,21 @@ async def update_job(
 
 
 @router.delete("/jobs/{job_id}")
-async def delete_job(
-    job_id: str,
-    db: AsyncSession = Depends(get_db)
-):
+async def delete_job(job_id: str, db: AsyncSession = Depends(get_db)):
     """Delete a job (soft delete)"""
     try:
         result = await db.execute(select(Job).where(Job.id == job_id))
         job = result.scalar_one_or_none()
-        
+
         if not job:
             raise HTTPException(status_code=404, detail="Job not found")
-        
+
         # Soft delete
         job.deleted_at = datetime.now()
         await db.commit()
-        
+
         return {"message": "Job deleted successfully"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -169,12 +157,7 @@ async def delete_job(
 
 
 @router.post("/jobs/{job_id}/assign-asset")
-async def assign_asset_to_job(
-    job_id: str,
-    asset_id: str,
-    notes: Optional[str] = None,
-    db: AsyncSession = Depends(get_db)
-):
+async def assign_asset_to_job(job_id: str, asset_id: str, notes: Optional[str] = None, db: AsyncSession = Depends(get_db)):
     """Assign an asset to a job"""
     try:
         # Check if job exists
@@ -182,18 +165,14 @@ async def assign_asset_to_job(
         job = job_result.scalar_one_or_none()
         if not job:
             raise HTTPException(status_code=404, detail="Job not found")
-        
+
         # Check if asset is already assigned to this job
         existing = await db.execute(
-            select(JobAsset).where(
-                JobAsset.job_id == job_id,
-                JobAsset.asset_id == asset_id,
-                JobAsset.unassigned_at.is_(None)
-            )
+            select(JobAsset).where(JobAsset.job_id == job_id, JobAsset.asset_id == asset_id, JobAsset.unassigned_at.is_(None))
         )
         if existing.scalar_one_or_none():
             raise HTTPException(status_code=400, detail="Asset is already assigned to this job")
-        
+
         # Create job-asset assignment
         job_asset = JobAsset(
             organization_id="00000000-0000-0000-0000-000000000000",  # Default org
@@ -201,14 +180,14 @@ async def assign_asset_to_job(
             asset_id=asset_id,
             assigned_at=datetime.now(),
             status="assigned",
-            notes=notes
+            notes=notes,
         )
-        
+
         db.add(job_asset)
         await db.commit()
-        
+
         return {"message": "Asset assigned to job successfully"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -217,32 +196,24 @@ async def assign_asset_to_job(
 
 
 @router.delete("/jobs/{job_id}/unassign-asset/{asset_id}")
-async def unassign_asset_from_job(
-    job_id: str,
-    asset_id: str,
-    db: AsyncSession = Depends(get_db)
-):
+async def unassign_asset_from_job(job_id: str, asset_id: str, db: AsyncSession = Depends(get_db)):
     """Unassign an asset from a job"""
     try:
         result = await db.execute(
-            select(JobAsset).where(
-                JobAsset.job_id == job_id,
-                JobAsset.asset_id == asset_id,
-                JobAsset.unassigned_at.is_(None)
-            )
+            select(JobAsset).where(JobAsset.job_id == job_id, JobAsset.asset_id == asset_id, JobAsset.unassigned_at.is_(None))
         )
         job_asset = result.scalar_one_or_none()
-        
+
         if not job_asset:
             raise HTTPException(status_code=404, detail="Asset assignment not found")
-        
+
         job_asset.unassigned_at = datetime.now()
         job_asset.status = "removed"
-        
+
         await db.commit()
-        
+
         return {"message": "Asset unassigned from job successfully"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -251,20 +222,12 @@ async def unassign_asset_from_job(
 
 
 @router.get("/jobs/{job_id}/assets")
-async def get_job_assets(
-    job_id: str,
-    db: AsyncSession = Depends(get_db)
-):
+async def get_job_assets(job_id: str, db: AsyncSession = Depends(get_db)):
     """Get assets assigned to a job"""
     try:
-        result = await db.execute(
-            select(JobAsset).where(
-                JobAsset.job_id == job_id,
-                JobAsset.unassigned_at.is_(None)
-            )
-        )
+        result = await db.execute(select(JobAsset).where(JobAsset.job_id == job_id, JobAsset.unassigned_at.is_(None)))
         job_assets = result.scalars().all()
-        
+
         return [
             {
                 "id": str(ja.id),
@@ -274,10 +237,10 @@ async def get_job_assets(
                 "usage_start": ja.usage_start.isoformat() if ja.usage_start else None,
                 "usage_end": ja.usage_end.isoformat() if ja.usage_end else None,
                 "usage_hours": float(ja.usage_hours) if ja.usage_hours else None,
-                "notes": ja.notes
+                "notes": ja.notes,
             }
             for ja in job_assets
         ]
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching job assets: {str(e)}")

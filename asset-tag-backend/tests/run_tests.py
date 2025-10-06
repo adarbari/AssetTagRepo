@@ -2,24 +2,26 @@
 """
 Test runner script for Asset Tag Backend
 """
-import sys
-import subprocess
 import os
+import subprocess
+import sys
 from pathlib import Path
 
 
 def run_tests():
     """Run all tests with pytest"""
-    
+
     # Get the project root directory
     project_root = Path(__file__).parent.parent
-    
+
     # Change to project root directory
     os.chdir(project_root)
-    
+
     # Test command
     test_command = [
-        sys.executable, "-m", "pytest",
+        sys.executable,
+        "-m",
+        "pytest",
         "tests/",
         "-v",  # Verbose output
         "--tb=short",  # Short traceback format
@@ -29,11 +31,11 @@ def run_tests():
         "--asyncio-mode=auto",  # Auto async mode
         "-x",  # Stop on first failure
     ]
-    
+
     print("Running tests for Asset Tag Backend...")
     print(f"Command: {' '.join(test_command)}")
     print("-" * 50)
-    
+
     try:
         result = subprocess.run(test_command, check=True)
         print("\n" + "=" * 50)
@@ -49,22 +51,24 @@ def run_tests():
 
 def run_unit_tests():
     """Run only unit tests"""
-    
+
     project_root = Path(__file__).parent.parent
     os.chdir(project_root)
-    
+
     test_command = [
-        sys.executable, "-m", "pytest",
+        sys.executable,
+        "-m",
+        "pytest",
         "tests/unit/",
         "-v",
         "--tb=short",
         "--asyncio-mode=auto",
     ]
-    
+
     print("Running unit tests...")
     print(f"Command: {' '.join(test_command)}")
     print("-" * 50)
-    
+
     try:
         result = subprocess.run(test_command, check=True)
         print("\n" + "=" * 50)
@@ -78,22 +82,24 @@ def run_unit_tests():
 
 def run_integration_tests():
     """Run only integration tests"""
-    
+
     project_root = Path(__file__).parent.parent
     os.chdir(project_root)
-    
+
     test_command = [
-        sys.executable, "-m", "pytest",
+        sys.executable,
+        "-m",
+        "pytest",
         "tests/integration/",
         "-v",
         "--tb=short",
         "--asyncio-mode=auto",
     ]
-    
+
     print("Running integration tests...")
     print(f"Command: {' '.join(test_command)}")
     print("-" * 50)
-    
+
     try:
         result = subprocess.run(test_command, check=True)
         print("\n" + "=" * 50)
@@ -107,22 +113,24 @@ def run_integration_tests():
 
 def run_specific_test(test_path):
     """Run a specific test file or test function"""
-    
+
     project_root = Path(__file__).parent.parent
     os.chdir(project_root)
-    
+
     test_command = [
-        sys.executable, "-m", "pytest",
+        sys.executable,
+        "-m",
+        "pytest",
         test_path,
         "-v",
         "--tb=short",
         "--asyncio-mode=auto",
     ]
-    
+
     print(f"Running specific test: {test_path}")
     print(f"Command: {' '.join(test_command)}")
     print("-" * 50)
-    
+
     try:
         result = subprocess.run(test_command, check=True)
         print("\n" + "=" * 50)
@@ -136,10 +144,10 @@ def run_specific_test(test_path):
 
 def main():
     """Main function to handle command line arguments"""
-    
+
     if len(sys.argv) > 1:
         command = sys.argv[1]
-        
+
         if command == "unit":
             return run_unit_tests()
         elif command == "integration":

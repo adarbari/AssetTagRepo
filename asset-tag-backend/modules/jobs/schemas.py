@@ -1,13 +1,15 @@
 """
 Job Pydantic schemas
 """
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, Optional
+
+from pydantic import BaseModel, Field
 
 
 class JobBase(BaseModel):
     """Base job schema"""
+
     name: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
     job_type: str = Field(..., min_length=1, max_length=100)
@@ -27,11 +29,13 @@ class JobBase(BaseModel):
 
 class JobCreate(JobBase):
     """Schema for creating a job"""
+
     pass
 
 
 class JobUpdate(BaseModel):
     """Schema for updating a job"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = None
     job_type: Optional[str] = Field(None, min_length=1, max_length=100)
@@ -56,6 +60,7 @@ class JobUpdate(BaseModel):
 
 class JobResponse(JobBase):
     """Schema for job response"""
+
     id: str
     organization_id: str
     actual_start: Optional[datetime] = None
@@ -66,19 +71,21 @@ class JobResponse(JobBase):
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
 
 
 class JobAssetAssignment(BaseModel):
     """Schema for job asset assignment"""
+
     asset_id: str
     notes: Optional[str] = None
 
 
 class JobAssetResponse(BaseModel):
     """Schema for job asset response"""
+
     id: str
     asset_id: str
     assigned_at: datetime
@@ -88,6 +95,6 @@ class JobAssetResponse(BaseModel):
     usage_end: Optional[datetime] = None
     usage_hours: Optional[float] = None
     notes: Optional[str] = None
-    
+
     class Config:
         from_attributes = True

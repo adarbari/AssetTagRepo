@@ -1,19 +1,19 @@
 """
 Pytest configuration and fixtures
 """
-import pytest
 import asyncio
 from typing import AsyncGenerator, Generator
+
+import pytest
+import pytest_asyncio
+from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from httpx import AsyncClient
-from fastapi.testclient import TestClient
-import pytest_asyncio
 
-from config.database import get_db, Base
-from main import app
+from config.database import Base, get_db
 from config.settings import settings
-
+from main import app
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
 
@@ -21,19 +21,10 @@ from modules.shared.database import models
 TEST_DATABASE_URL = "sqlite+aiosqlite:///./test_integration.db"
 
 # Create test engine with SQLite-specific configuration
-test_engine = create_async_engine(
-    TEST_DATABASE_URL,
-    echo=False,
-    future=True,
-    connect_args={"check_same_thread": False}
-)
+test_engine = create_async_engine(TEST_DATABASE_URL, echo=False, future=True, connect_args={"check_same_thread": False})
 
 # Create test session factory
-TestSessionLocal = sessionmaker(
-    test_engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
+TestSessionLocal = sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
 
 
 @pytest.fixture(scope="session")
@@ -50,11 +41,11 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
     # Create tables
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    
+
     # Create session
     async with TestSessionLocal() as session:
         yield session
-    
+
     # Clean up
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
@@ -63,7 +54,7 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 @pytest.fixture(scope="function")
 def client():
     """Create a test client with database dependency override."""
-    
+
     # Create a new test session for this test
     async def override_get_db():
         async with TestSessionLocal() as session:
@@ -74,13 +65,14 @@ def client():
                 raise
             finally:
                 await session.close()
-    
+
     app.dependency_overrides[get_db] = override_get_db
-    
+
     # Create a test app with minimal lifespan
-    from fastapi import FastAPI
     from contextlib import asynccontextmanager
-    
+
+    from fastapi import FastAPI
+
     @asynccontextmanager
     async def test_lifespan(app):
         # Create tables for testing
@@ -90,22 +82,23 @@ def client():
         # Clean up tables after testing
         async with test_engine.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)
-    
+
     # Create a new test app instance
     test_app = FastAPI(lifespan=test_lifespan)
-    
+
     # Copy all routes from the main app
     for route in app.routes:
         test_app.router.routes.append(route)
-    
+
     # Copy middleware
     for middleware in app.user_middleware:
         test_app.add_middleware(middleware.cls, **middleware.kwargs)
-    
+
     from fastapi.testclient import TestClient
+
     with TestClient(test_app) as tc:
         yield tc
-    
+
     app.dependency_overrides.clear()
 
 
@@ -127,7 +120,7 @@ def sample_asset_data():
         "assigned_to_user_id": "550e8400-e29b-41d4-a716-446655440002",
         "battery_level": 85,
         "last_seen": "2024-01-01T12:00:00Z",
-        "asset_metadata": {"model": "CAT 320", "year": 2020}
+        "asset_metadata": {"model": "CAT 320", "year": 2020},
     }
 
 
@@ -141,7 +134,7 @@ def sample_site_data():
         "address": "123 Test St, Test City, TC 12345",
         "latitude": 40.7128,
         "longitude": -74.0060,
-        "metadata": {"project_id": "PROJ-001"}
+        "metadata": {"project_id": "PROJ-001"},
     }
 
 
@@ -155,7 +148,7 @@ def sample_observation_data():
         "battery_level": 80,
         "temperature": 25.5,
         "observed_at": "2024-01-01T12:00:00Z",
-        "metadata": {"signal_quality": "good"}
+        "metadata": {"signal_quality": "good"},
     }
 
 
@@ -169,7 +162,7 @@ def sample_alert_data():
         "asset_name": "Test Asset",
         "message": "Battery level is low",
         "description": "Asset battery has dropped below 20%",
-        "triggered_at": "2024-01-01T12:00:00Z"
+        "triggered_at": "2024-01-01T12:00:00Z",
     }
 
 
@@ -185,7 +178,7 @@ def sample_job_data():
         "scheduled_start": "2024-01-01T09:00:00Z",
         "scheduled_end": "2024-01-01T17:00:00Z",
         "assigned_to_user_id": "test-user-1",
-        "site_id": "test-site-1"
+        "site_id": "test-site-1",
     }
 
 
@@ -199,7 +192,7 @@ def sample_maintenance_data():
         "priority": "medium",
         "scheduled_date": "2024-01-01T10:00:00Z",
         "assigned_to_user_id": "test-user-1",
-        "description": "Regular maintenance check"
+        "description": "Regular maintenance check",
     }
 
 
@@ -212,13 +205,9 @@ def sample_geofence_data():
         "status": "active",
         "geometry": {
             "type": "Polygon",
-            "coordinates": [[
-                [-74.0060, 40.7128],
-                [-74.0050, 40.7128],
-                [-74.0050, 40.7138],
-                [-74.0060, 40.7138],
-                [-74.0060, 40.7128]
-            ]]
+            "coordinates": [
+                [[-74.0060, 40.7128], [-74.0050, 40.7128], [-74.0050, 40.7138], [-74.0060, 40.7138], [-74.0060, 40.7128]]
+            ],
         },
-        "site_id": "test-site-1"
+        "site_id": "test-site-1",
     }

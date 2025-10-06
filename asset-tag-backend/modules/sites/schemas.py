@@ -1,13 +1,15 @@
 """
 Site Pydantic schemas
 """
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any, List
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, Field
 
 
 class SiteBase(BaseModel):
     """Base site schema"""
+
     name: str = Field(..., min_length=1, max_length=255)
     location: Optional[str] = Field(None, max_length=500)
     area: Optional[str] = Field(None, max_length=100)
@@ -28,11 +30,13 @@ class SiteBase(BaseModel):
 
 class SiteCreate(SiteBase):
     """Schema for creating a site"""
+
     pass
 
 
 class SiteUpdate(BaseModel):
     """Schema for updating a site"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     location: Optional[str] = Field(None, max_length=500)
     area: Optional[str] = Field(None, max_length=100)
@@ -53,18 +57,20 @@ class SiteUpdate(BaseModel):
 
 class SiteResponse(SiteBase):
     """Schema for site response"""
+
     id: str
     organization_id: str
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
 
 
 class PersonnelBase(BaseModel):
     """Base personnel schema"""
+
     name: str = Field(..., min_length=1, max_length=255)
     role: str = Field(..., min_length=1, max_length=100)
     status: Optional[str] = Field("on-duty", max_length=50)
@@ -76,11 +82,13 @@ class PersonnelBase(BaseModel):
 
 class PersonnelCreate(PersonnelBase):
     """Schema for creating personnel"""
+
     pass
 
 
 class PersonnelUpdate(BaseModel):
     """Schema for updating personnel"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     role: Optional[str] = Field(None, min_length=1, max_length=100)
     status: Optional[str] = Field(None, max_length=50)
@@ -92,18 +100,20 @@ class PersonnelUpdate(BaseModel):
 
 class PersonnelResponse(PersonnelBase):
     """Schema for personnel response"""
+
     id: str
     organization_id: str
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
 
 
 class PersonnelActivityResponse(BaseModel):
     """Schema for personnel activity response"""
+
     id: str
     personnel_id: str
     site_id: str
@@ -111,13 +121,14 @@ class PersonnelActivityResponse(BaseModel):
     activity_type: str
     timestamp: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
 
 class SiteWithAssetsResponse(SiteResponse):
     """Schema for site response with assets"""
+
     assets: List[Dict[str, Any]] = []
     personnel: List[Dict[str, Any]] = []
     gateways: List[Dict[str, Any]] = []

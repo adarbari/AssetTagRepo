@@ -1,13 +1,15 @@
 """
 Asset Pydantic schemas
 """
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, Optional
+
+from pydantic import BaseModel, Field
 
 
 class AssetBase(BaseModel):
     """Base asset schema"""
+
     name: str = Field(..., min_length=1, max_length=255)
     serial_number: str = Field(..., min_length=1, max_length=100)
     asset_type: str = Field(..., min_length=1, max_length=100)
@@ -27,11 +29,13 @@ class AssetBase(BaseModel):
 
 class AssetCreate(AssetBase):
     """Schema for creating an asset"""
+
     pass
 
 
 class AssetUpdate(BaseModel):
     """Schema for updating an asset"""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     asset_type: Optional[str] = Field(None, min_length=1, max_length=100)
     status: Optional[str] = Field(None, max_length=50)
@@ -49,6 +53,7 @@ class AssetUpdate(BaseModel):
 
 class AssetResponse(AssetBase):
     """Schema for asset response"""
+
     id: str
     organization_id: str
     current_site_id: Optional[str] = None
@@ -61,6 +66,6 @@ class AssetResponse(AssetBase):
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True

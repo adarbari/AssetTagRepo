@@ -1,28 +1,35 @@
 """
 Alert API endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, text
-from typing import List, Optional
 import json
 import uuid
 from datetime import datetime
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
+from sqlalchemy import select, text, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.alerts.models import Alert
-from modules.alerts.schemas import AlertCreate, AlertUpdate, AlertResponse
+from modules.alerts.schemas import AlertCreate, AlertResponse, AlertUpdate
 
 
 def alert_to_response(alert: Alert) -> AlertResponse:
     """Convert Alert SQLAlchemy model to AlertResponse manually to avoid serialization issues"""
     return AlertResponse(
-        id=str(alert.id) if '-' in str(alert.id) else f"{str(alert.id)[:8]}-{str(alert.id)[8:12]}-{str(alert.id)[12:16]}-{str(alert.id)[16:20]}-{str(alert.id)[20:]}",
-        organization_id=str(alert.organization_id) if '-' in str(alert.organization_id) else f"{str(alert.organization_id)[:8]}-{str(alert.organization_id)[8:12]}-{str(alert.organization_id)[12:16]}-{str(alert.organization_id)[16:20]}-{str(alert.organization_id)[20:]}",
+        id=str(alert.id)
+        if "-" in str(alert.id)
+        else f"{str(alert.id)[:8]}-{str(alert.id)[8:12]}-{str(alert.id)[12:16]}-{str(alert.id)[16:20]}-{str(alert.id)[20:]}",
+        organization_id=str(alert.organization_id)
+        if "-" in str(alert.organization_id)
+        else f"{str(alert.organization_id)[:8]}-{str(alert.organization_id)[8:12]}-{str(alert.organization_id)[12:16]}-{str(alert.organization_id)[16:20]}-{str(alert.organization_id)[20:]}",
         alert_type=alert.alert_type,
         severity=alert.severity,
         status=alert.status,
-        asset_id=str(alert.asset_id) if '-' in str(alert.asset_id) else f"{str(alert.asset_id)[:8]}-{str(alert.asset_id)[8:12]}-{str(alert.asset_id)[12:16]}-{str(alert.asset_id)[16:20]}-{str(alert.asset_id)[20:]}",
+        asset_id=str(alert.asset_id)
+        if "-" in str(alert.asset_id)
+        else f"{str(alert.asset_id)[:8]}-{str(alert.asset_id)[8:12]}-{str(alert.asset_id)[12:16]}-{str(alert.asset_id)[16:20]}-{str(alert.asset_id)[20:]}",
         asset_name=alert.asset_name,
         message=alert.message,
         description=alert.description,
@@ -31,23 +38,40 @@ def alert_to_response(alert: Alert) -> AlertResponse:
         location_description=alert.location_description,
         latitude=alert.latitude,
         longitude=alert.longitude,
-        geofence_id=str(alert.geofence_id) if alert.geofence_id and '-' in str(alert.geofence_id) else (f"{str(alert.geofence_id)[:8]}-{str(alert.geofence_id)[8:12]}-{str(alert.geofence_id)[12:16]}-{str(alert.geofence_id)[16:20]}-{str(alert.geofence_id)[20:]}" if alert.geofence_id else None),
+        geofence_id=str(alert.geofence_id)
+        if alert.geofence_id and "-" in str(alert.geofence_id)
+        else (
+            f"{str(alert.geofence_id)[:8]}-{str(alert.geofence_id)[8:12]}-{str(alert.geofence_id)[12:16]}-{str(alert.geofence_id)[16:20]}-{str(alert.geofence_id)[20:]}"
+            if alert.geofence_id
+            else None
+        ),
         geofence_name=alert.geofence_name,
-        triggered_at=alert.triggered_at.isoformat() if hasattr(alert.triggered_at, 'isoformat') else str(alert.triggered_at),
+        triggered_at=alert.triggered_at.isoformat() if hasattr(alert.triggered_at, "isoformat") else str(alert.triggered_at),
         auto_resolvable=alert.auto_resolvable,
         metadata=json.loads(alert.alert_metadata) if isinstance(alert.alert_metadata, str) else (alert.alert_metadata or {}),
-        acknowledged_at=alert.acknowledged_at.isoformat() if alert.acknowledged_at and hasattr(alert.acknowledged_at, 'isoformat') else alert.acknowledged_at,
-        resolved_at=alert.resolved_at.isoformat() if alert.resolved_at and hasattr(alert.resolved_at, 'isoformat') else alert.resolved_at,
+        acknowledged_at=alert.acknowledged_at.isoformat()
+        if alert.acknowledged_at and hasattr(alert.acknowledged_at, "isoformat")
+        else alert.acknowledged_at,
+        resolved_at=alert.resolved_at.isoformat()
+        if alert.resolved_at and hasattr(alert.resolved_at, "isoformat")
+        else alert.resolved_at,
         resolution_notes=alert.resolution_notes,
-        resolved_by_user_id=str(alert.resolved_by_user_id) if alert.resolved_by_user_id and '-' in str(alert.resolved_by_user_id) else (f"{str(alert.resolved_by_user_id)[:8]}-{str(alert.resolved_by_user_id)[8:12]}-{str(alert.resolved_by_user_id)[12:16]}-{str(alert.resolved_by_user_id)[16:20]}-{str(alert.resolved_by_user_id)[20:]}" if alert.resolved_by_user_id else None),
+        resolved_by_user_id=str(alert.resolved_by_user_id)
+        if alert.resolved_by_user_id and "-" in str(alert.resolved_by_user_id)
+        else (
+            f"{str(alert.resolved_by_user_id)[:8]}-{str(alert.resolved_by_user_id)[8:12]}-{str(alert.resolved_by_user_id)[12:16]}-{str(alert.resolved_by_user_id)[16:20]}-{str(alert.resolved_by_user_id)[20:]}"
+            if alert.resolved_by_user_id
+            else None
+        ),
         auto_resolved=alert.auto_resolved,
         workflow_actions=alert.workflow_actions,
-        created_at=alert.created_at.isoformat() if hasattr(alert.created_at, 'isoformat') else str(alert.created_at),
-        updated_at=alert.updated_at.isoformat() if hasattr(alert.updated_at, 'isoformat') else str(alert.updated_at)
+        created_at=alert.created_at.isoformat() if hasattr(alert.created_at, "isoformat") else str(alert.created_at),
+        updated_at=alert.updated_at.isoformat() if hasattr(alert.updated_at, "isoformat") else str(alert.updated_at),
     )
 
 
 router = APIRouter()
+
 
 # WebSocket connection manager for alerts
 class AlertConnectionManager:
@@ -70,6 +94,7 @@ class AlertConnectionManager:
                 # Remove broken connections
                 self.active_connections.remove(connection)
 
+
 alert_manager = AlertConnectionManager()
 
 
@@ -84,7 +109,7 @@ async def get_alerts(
     status: Optional[str] = None,
     asset_id: Optional[str] = None,
     geofence_id: Optional[str] = None,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Get list of alerts with optional filtering"""
     try:
@@ -92,7 +117,7 @@ async def get_alerts(
         if page is not None and size is not None:
             skip = (page - 1) * size
             limit = size
-        
+
         # Use raw SQL to avoid UUID serialization issues with SQLite
         raw_query = """
         SELECT id, organization_id, alert_type, severity, status, asset_id, asset_name, 
@@ -103,11 +128,11 @@ async def get_alerts(
                created_at, updated_at
         FROM alerts
         """
-        
+
         # Add WHERE clauses for filters
         where_conditions = []
         params = {}
-        
+
         if alert_type:
             where_conditions.append("alert_type = :alert_type")
             params["alert_type"] = alert_type
@@ -123,16 +148,16 @@ async def get_alerts(
         if geofence_id:
             where_conditions.append("geofence_id = :geofence_id")
             params["geofence_id"] = geofence_id
-        
+
         if where_conditions:
             raw_query += " WHERE " + " AND ".join(where_conditions)
-        
+
         # Add pagination
         raw_query += f" LIMIT {limit} OFFSET {skip}"
-        
+
         result = await db.execute(text(raw_query), params)
         rows = result.fetchall()
-        
+
         # Convert rows to Alert objects manually
         alerts = []
         for row in rows:
@@ -165,17 +190,15 @@ async def get_alerts(
             alert.created_at = row[25]
             alert.updated_at = row[26]
             alerts.append(alert)
-        
+
         return [alert_to_response(alert) for alert in alerts]
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching alerts: {str(e)}")
 
 
 @router.get("/alerts/statistics")
-async def get_alert_stats(
-    db: AsyncSession = Depends(get_db)
-):
+async def get_alert_stats(db: AsyncSession = Depends(get_db)):
     """Get alert statistics summary"""
     try:
         # Use raw SQL to avoid UUID serialization issues with SQLite
@@ -183,57 +206,46 @@ async def get_alert_stats(
         active_query = "SELECT COUNT(*) FROM alerts WHERE status = 'active'"
         active_result = await db.execute(text(active_query))
         active_count = active_result.scalar()
-        
+
         acknowledged_query = "SELECT COUNT(*) FROM alerts WHERE status = 'acknowledged'"
         acknowledged_result = await db.execute(text(acknowledged_query))
         acknowledged_count = acknowledged_result.scalar()
-        
+
         resolved_query = "SELECT COUNT(*) FROM alerts WHERE status = 'resolved'"
         resolved_result = await db.execute(text(resolved_query))
         resolved_count = resolved_result.scalar()
-        
+
         # Get counts by severity
         critical_query = "SELECT COUNT(*) FROM alerts WHERE severity = 'critical'"
         critical_result = await db.execute(text(critical_query))
         critical_count = critical_result.scalar()
-        
+
         warning_query = "SELECT COUNT(*) FROM alerts WHERE severity = 'warning'"
         warning_result = await db.execute(text(warning_query))
         warning_count = warning_result.scalar()
-        
+
         # Get counts by alert type
         battery_low_query = "SELECT COUNT(*) FROM alerts WHERE alert_type = 'battery_low'"
         battery_low_result = await db.execute(text(battery_low_query))
         battery_low_count = battery_low_result.scalar()
-        
+
         total_alerts = active_count + acknowledged_count + resolved_count
-        
+
         return {
             "total_alerts": total_alerts,
             "active_alerts": active_count,
             "acknowledged_alerts": acknowledged_count,
             "resolved_alerts": resolved_count,
-            "alerts_by_type": {
-                "battery_low": battery_low_count,
-                "geofence_breach": 0,
-                "maintenance_due": 0
-            },
-            "alerts_by_severity": {
-                "critical": critical_count,
-                "warning": warning_count,
-                "info": 0
-            }
+            "alerts_by_type": {"battery_low": battery_low_count, "geofence_breach": 0, "maintenance_due": 0},
+            "alerts_by_severity": {"critical": critical_count, "warning": warning_count, "info": 0},
         }
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching alert stats: {str(e)}")
 
 
 @router.get("/alerts/{alert_id}", response_model=AlertResponse)
-async def get_alert(
-    alert_id: str,
-    db: AsyncSession = Depends(get_db)
-):
+async def get_alert(alert_id: str, db: AsyncSession = Depends(get_db)):
     """Get alert by ID"""
     try:
         # Use raw SQL to avoid UUID serialization issues with SQLite
@@ -248,13 +260,13 @@ async def get_alert(
         FROM alerts
         WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
         """
-        
+
         result = await db.execute(text(raw_query), {"alert_id": alert_id})
         row = result.fetchone()
-        
+
         if not row:
             raise HTTPException(status_code=404, detail="Alert not found")
-        
+
         # Convert row to Alert object manually
         alert = Alert()
         alert.id = row[0]
@@ -284,9 +296,9 @@ async def get_alert(
         alert.workflow_actions = row[24]
         alert.created_at = row[25]
         alert.updated_at = row[26]
-        
+
         return alert_to_response(alert)
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -294,18 +306,15 @@ async def get_alert(
 
 
 @router.post("/alerts", response_model=AlertResponse)
-async def create_alert(
-    alert_data: AlertCreate,
-    db: AsyncSession = Depends(get_db)
-):
+async def create_alert(alert_data: AlertCreate, db: AsyncSession = Depends(get_db)):
     """Create a new alert"""
     try:
         # Parse triggered_at
         if isinstance(alert_data.triggered_at, datetime):
             triggered_at = alert_data.triggered_at
         else:
-            triggered_at = datetime.fromisoformat(str(alert_data.triggered_at).replace('Z', '+00:00'))
-        
+            triggered_at = datetime.fromisoformat(str(alert_data.triggered_at).replace("Z", "+00:00"))
+
         alert = Alert(
             organization_id=uuid.UUID("00000000-0000-0000-0000-000000000000"),  # Default org for now
             alert_type=alert_data.alert_type,
@@ -324,38 +333,32 @@ async def create_alert(
             geofence_name=alert_data.geofence_name,
             triggered_at=triggered_at,
             auto_resolvable=alert_data.auto_resolvable or False,
-            alert_metadata=alert_data.metadata or {}
+            alert_metadata=alert_data.metadata or {},
         )
-        
+
         db.add(alert)
         await db.commit()
         # Skip refresh for now due to SQLite UUID compatibility issues
         # await db.refresh(alert)
-        
+
         # Create response using helper function
         alert_response = alert_to_response(alert)
-        
+
         try:
-            await alert_manager.send_alert_update({
-                "type": "new_alert",
-                "alert": alert_response.model_dump()
-            })
+            await alert_manager.send_alert_update({"type": "new_alert", "alert": alert_response.model_dump()})
         except Exception as e:
             # Don't raise here, just log the error
             pass
-        
+
         return alert_response
-        
+
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=f"Error creating alert: {str(e)}")
 
 
 @router.patch("/alerts/{alert_id}/acknowledge", response_model=AlertResponse)
-async def acknowledge_alert(
-    alert_id: str,
-    db: AsyncSession = Depends(get_db)
-):
+async def acknowledge_alert(alert_id: str, db: AsyncSession = Depends(get_db)):
     """Acknowledge an alert"""
     try:
         # Use raw SQL to update the alert
@@ -366,19 +369,15 @@ async def acknowledge_alert(
             updated_at = :updated_at
         WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
         """
-        
+
         now = datetime.now()
-        result = await db.execute(text(update_query), {
-            "alert_id": alert_id,
-            "acknowledged_at": now,
-            "updated_at": now
-        })
-        
+        result = await db.execute(text(update_query), {"alert_id": alert_id, "acknowledged_at": now, "updated_at": now})
+
         if result.rowcount == 0:
             raise HTTPException(status_code=404, detail="Alert not found")
-        
+
         await db.commit()
-        
+
         # Fetch the updated alert using raw SQL
         fetch_query = """
         SELECT id, organization_id, alert_type, severity, status, asset_id, asset_name, 
@@ -390,13 +389,13 @@ async def acknowledge_alert(
         FROM alerts
         WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
         """
-        
+
         fetch_result = await db.execute(text(fetch_query), {"alert_id": alert_id})
         row = fetch_result.fetchone()
-        
+
         if not row:
             raise HTTPException(status_code=404, detail="Alert not found")
-        
+
         # Convert row to Alert object manually
         alert = Alert()
         alert.id = row[0]
@@ -426,16 +425,13 @@ async def acknowledge_alert(
         alert.workflow_actions = row[24]
         alert.created_at = row[25]
         alert.updated_at = row[26]
-        
+
         # Send real-time update via WebSocket
         alert_response = alert_to_response(alert)
-        await alert_manager.send_alert_update({
-            "type": "alert_acknowledged",
-            "alert": alert_response.model_dump()
-        })
-        
+        await alert_manager.send_alert_update({"type": "alert_acknowledged", "alert": alert_response.model_dump()})
+
         return alert_response
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -444,11 +440,7 @@ async def acknowledge_alert(
 
 
 @router.patch("/alerts/{alert_id}/resolve", response_model=AlertResponse)
-async def resolve_alert(
-    alert_id: str,
-    resolution_notes: Optional[str] = None,
-    db: AsyncSession = Depends(get_db)
-):
+async def resolve_alert(alert_id: str, resolution_notes: Optional[str] = None, db: AsyncSession = Depends(get_db)):
     """Resolve an alert"""
     try:
         # Use raw SQL to update the alert
@@ -460,20 +452,18 @@ async def resolve_alert(
             updated_at = :updated_at
         WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
         """
-        
+
         now = datetime.now()
-        result = await db.execute(text(update_query), {
-            "alert_id": alert_id,
-            "resolved_at": now,
-            "resolution_notes": resolution_notes,
-            "updated_at": now
-        })
-        
+        result = await db.execute(
+            text(update_query),
+            {"alert_id": alert_id, "resolved_at": now, "resolution_notes": resolution_notes, "updated_at": now},
+        )
+
         if result.rowcount == 0:
             raise HTTPException(status_code=404, detail="Alert not found")
-        
+
         await db.commit()
-        
+
         # Fetch the updated alert using raw SQL
         fetch_query = """
         SELECT id, organization_id, alert_type, severity, status, asset_id, asset_name, 
@@ -485,13 +475,13 @@ async def resolve_alert(
         FROM alerts
         WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
         """
-        
+
         fetch_result = await db.execute(text(fetch_query), {"alert_id": alert_id})
         row = fetch_result.fetchone()
-        
+
         if not row:
             raise HTTPException(status_code=404, detail="Alert not found")
-        
+
         # Convert row to Alert object manually
         alert = Alert()
         alert.id = row[0]
@@ -521,16 +511,13 @@ async def resolve_alert(
         alert.workflow_actions = row[24]
         alert.created_at = row[25]
         alert.updated_at = row[26]
-        
+
         # Send real-time update via WebSocket
         alert_response = alert_to_response(alert)
-        await alert_manager.send_alert_update({
-            "type": "alert_resolved",
-            "alert": alert_response.model_dump()
-        })
-        
+        await alert_manager.send_alert_update({"type": "alert_resolved", "alert": alert_response.model_dump()})
+
         return alert_response
-        
+
     except HTTPException:
         raise
     except Exception as e:
