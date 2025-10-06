@@ -177,7 +177,7 @@ function AppContent() {
           <AssetMap
             onAssetClick={handleAssetClick}
             onTrackHistory={handleTrackHistory}
-            highlightAsset={highlightedAsset}
+            highlightAsset={navigation.highlightAsset}
             onClearHighlight={handleClearHighlight}
             onBack={handleBackToDashboard}
           />
@@ -454,7 +454,7 @@ function AppContent() {
               // Return a default configuration with correct structure
               return {
                 id: `${level}-${entityId}`,
-                level: level as string,
+                level: level as 'user' | 'site' | 'asset' | 'job',
                 entityId,
                 entityName:
                   entityId === 'current-user' ? 'Your Account' : entityId,
