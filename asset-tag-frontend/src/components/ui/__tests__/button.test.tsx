@@ -334,14 +334,13 @@ describe('Button Component - Click Tests', () => {
 
       render(<Button onFocus={mockOnFocus}>Focus Button</Button>);
 
-      const button = screen.getByRole('button', { name: /focus button/i });
+      screen.getByRole('button', { name: /focus button/i });
       await user.tab();
 
       expect(mockOnFocus).toHaveBeenCalledTimes(1);
     });
 
     it('should handle onBlur', async () => {
-      const user = userEvent.setup();
       const mockOnBlur = vi.fn();
 
       render(

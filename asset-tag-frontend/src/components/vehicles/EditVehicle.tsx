@@ -11,7 +11,7 @@ import {
 } from '../ui/select';
 import { Card, CardContent } from '../ui/card';
 import { PageHeader, LoadingState, PageLayout } from '../common';
-import { Truck, ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { vehicleTypes, drivers } from '../../data/dropdownOptions';
 

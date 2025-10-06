@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   Select,
@@ -178,7 +178,6 @@ describe('Select Component - Click Tests', () => {
 
   // Select Keyboard Interaction
   it('should handle keyboard navigation', async () => {
-    const user = userEvent.setup();
     customRender(
       <Select>
         <SelectTrigger>

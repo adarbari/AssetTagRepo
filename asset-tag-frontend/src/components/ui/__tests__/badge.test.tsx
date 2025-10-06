@@ -267,7 +267,6 @@ describe('Badge Component - Click Tests', () => {
     });
 
     it('should handle focus and blur events', async () => {
-      const user = userEvent.setup();
       const mockOnFocus = vi.fn();
       const mockOnBlur = vi.fn();
 
