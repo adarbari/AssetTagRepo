@@ -98,7 +98,7 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 
 @pytest.fixture(scope="function")
 def client():
-    """Create a test client - database override handled by environment configuration."""
+    """Create a test client with database override."""
 
     # Clean up database before each test
     async def cleanup_db():
@@ -112,8 +112,15 @@ def client():
 
     asyncio.run(cleanup_db())
 
+    # Override database dependency
+    from config.test_database import get_test_db
+    app.dependency_overrides[get_db] = get_test_db
+
     with TestClient(app) as tc:
         yield tc
+    
+    # Clean up override
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture(scope="function")
