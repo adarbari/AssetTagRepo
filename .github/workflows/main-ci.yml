@@ -6,15 +6,49 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+# Cancel outdated workflow runs to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   PYTHON_VERSION: '3.11'
   NODE_VERSION: '20.x'
 
 jobs:
+  # Detect which components have changed
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+      docs: ${{ steps.changes.outputs.docs }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Detect changes
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          backend:
+            - 'asset-tag-backend/**'
+            - '.github/workflows/main-ci.yml'
+          frontend:
+            - 'asset-tag-frontend/**'
+            - '.github/workflows/main-ci.yml'
+          docs:
+            - 'docs/**'
+            - '*.md'
+
   # Backend Jobs
   backend-lint:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
     
     steps:
     - name: Checkout code
@@ -61,7 +95,8 @@ jobs:
 
   backend-test:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
     
     strategy:
       fail-fast: false
@@ -104,7 +139,8 @@ jobs:
 
   backend-security:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    needs: changes
+    if: needs.changes.outputs.backend == 'true' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     
     steps:
     - name: Checkout code
@@ -138,86 +174,10 @@ jobs:
           asset-tag-backend/bandit-report.json
           asset-tag-backend/safety-report.json
 
-  # Frontend Jobs
-  frontend-test:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        registry-url: 'https://registry.npmjs.org'
-        cache: 'npm'
-        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
-
-    - name: Verify npm compatibility
-      run: |
-        NPM_VERSION=$(npm --version | cut -d. -f1)
-        if [ "$NPM_VERSION" -lt 10 ]; then
-          echo "Error: npm version $NPM_VERSION is too old. Requires npm 10+"
-          exit 1
-        fi
-        echo "✅ npm version $(npm --version) is compatible"
-      working-directory: asset-tag-frontend
-
-    - name: Install dependencies
-      run: |
-        npm --version
-        echo "Installing dependencies with npm ci..."
-        npm ci --verbose
-      working-directory: asset-tag-frontend
-
-    - name: Run security audit
-      run: npm audit --audit-level=moderate
-      working-directory: asset-tag-frontend
-      continue-on-error: true
-
-    - name: Run tests
-      run: npm run test:run
-      working-directory: asset-tag-frontend
-
-  frontend-build:
-    runs-on: ubuntu-latest
-    needs: [frontend-test]
-    if: always() && needs.frontend-test.result == 'success'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        registry-url: 'https://registry.npmjs.org'
-        cache: 'npm'
-        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
-
-    - name: Install dependencies
-      run: |
-        npm ci --verbose
-      working-directory: asset-tag-frontend
-
-    - name: Build frontend
-      run: npm run build
-      working-directory: asset-tag-frontend
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: frontend-build
-        path: asset-tag-frontend/build/
-
-  # Coverage Jobs
   backend-coverage:
     runs-on: ubuntu-latest
-    needs: [backend-test]
-    if: always() && needs.backend-test.result == 'success'
+    needs: [changes, backend-test]
+    if: always() && needs.changes.outputs.backend == 'true' && needs.backend-test.result == 'success'
     
     steps:
     - name: Checkout code
@@ -299,10 +259,86 @@ jobs:
             console.log('Could not read backend coverage summary:', error.message);
           }
 
+  # Frontend Jobs
+  frontend-test:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        registry-url: 'https://registry.npmjs.org'
+        cache: 'npm'
+        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
+
+    - name: Verify npm compatibility
+      run: |
+        NPM_VERSION=$(npm --version | cut -d. -f1)
+        if [ "$NPM_VERSION" -lt 10 ]; then
+          echo "Error: npm version $NPM_VERSION is too old. Requires npm 10+"
+          exit 1
+        fi
+        echo "✅ npm version $(npm --version) is compatible"
+      working-directory: asset-tag-frontend
+
+    - name: Install dependencies
+      run: |
+        npm --version
+        echo "Installing dependencies with npm ci..."
+        npm ci --verbose
+      working-directory: asset-tag-frontend
+
+    - name: Run security audit
+      run: npm audit --audit-level=moderate
+      working-directory: asset-tag-frontend
+      continue-on-error: true
+
+    - name: Run tests
+      run: npm run test:run
+      working-directory: asset-tag-frontend
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    needs: [changes, frontend-test]
+    if: always() && needs.changes.outputs.frontend == 'true' && needs.frontend-test.result == 'success'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        registry-url: 'https://registry.npmjs.org'
+        cache: 'npm'
+        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
+
+    - name: Install dependencies
+      run: |
+        npm ci --verbose
+      working-directory: asset-tag-frontend
+
+    - name: Build frontend
+      run: npm run build
+      working-directory: asset-tag-frontend
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: asset-tag-frontend/build/
+
   frontend-coverage:
     runs-on: ubuntu-latest
-    needs: [frontend-test]
-    if: always() && needs.frontend-test.result == 'success'
+    needs: [changes, frontend-test]
+    if: always() && needs.changes.outputs.frontend == 'true' && needs.frontend-test.result == 'success'
     
     steps:
     - name: Checkout code
@@ -381,9 +417,213 @@ jobs:
             console.log('Could not read frontend coverage summary:', error.message);
           }
 
-  # Auto-fix integration
+  # Combined Coverage Summary (runs if any coverage job succeeded)
+  combined-coverage:
+    runs-on: ubuntu-latest
+    needs: [changes, backend-coverage, frontend-coverage]
+    if: always() && (needs.backend-coverage.result == 'success' || needs.frontend-coverage.result == 'success')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download backend coverage
+      uses: actions/download-artifact@v3
+      with:
+        name: backend-coverage
+        path: ./backend-coverage/
+      continue-on-error: true
+
+    - name: Download frontend coverage
+      uses: actions/download-artifact@v3
+      with:
+        name: frontend-coverage
+        path: ./frontend-coverage/
+      continue-on-error: true
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        # Install frontend dependencies for coverage processing
+        cd asset-tag-frontend
+        npm ci || npm install
+        
+        # Install backend dependencies for coverage processing
+        cd ../asset-tag-backend
+        pip install -r requirements-dev.txt
+
+    - name: Generate combined coverage report
+      run: |
+        echo "Generating combined coverage report..."
+        
+        # Create combined coverage directory
+        mkdir -p combined-coverage
+        
+        # Process frontend coverage
+        if [ -f "asset-tag-frontend/coverage/coverage-summary.json" ]; then
+          echo "Processing frontend coverage..."
+          node -e "
+            const fs = require('fs');
+            const frontendCoverage = JSON.parse(fs.readFileSync('asset-tag-frontend/coverage/coverage-summary.json', 'utf8'));
+            const frontendSummary = frontendCoverage.total;
+            
+            const combinedReport = {
+              frontend: {
+                statements: frontendSummary.statements,
+                branches: frontendSummary.branches,
+                functions: frontendSummary.functions,
+                lines: frontendSummary.lines
+              },
+              timestamp: new Date().toISOString(),
+              workflow_run: process.env.GITHUB_RUN_ID
+            };
+            
+            fs.writeFileSync('combined-coverage/frontend-coverage.json', JSON.stringify(frontendSummary, null, 2));
+            fs.writeFileSync('combined-coverage/combined-report.json', JSON.stringify(combinedReport, null, 2));
+            
+            console.log('Frontend Coverage Summary:');
+            console.log(\`  Statements: \${frontendSummary.statements.pct}%\`);
+            console.log(\`  Branches: \${frontendSummary.branches.pct}%\`);
+            console.log(\`  Functions: \${frontendSummary.functions.pct}%\`);
+            console.log(\`  Lines: \${frontendSummary.lines.pct}%\`);
+          "
+        else
+          echo "Frontend coverage not found"
+        fi
+        
+        # Process backend coverage
+        if [ -f "asset-tag-backend/coverage.json" ]; then
+          echo "Processing backend coverage..."
+          node -e "
+            const fs = require('fs');
+            const backendCoverage = JSON.parse(fs.readFileSync('asset-tag-backend/coverage.json', 'utf8'));
+            const backendSummary = backendCoverage.totals;
+            
+            const combinedReport = JSON.parse(fs.readFileSync('combined-coverage/combined-report.json', 'utf8'));
+            combinedReport.backend = {
+              lines: {
+                covered: backendSummary.covered_lines,
+                total: backendSummary.num_statements,
+                pct: backendSummary.percent_covered
+              },
+              branches: {
+                covered: backendSummary.covered_branches,
+                total: backendSummary.num_branches,
+                pct: backendSummary.percent_covered
+              },
+              files: backendSummary.num_files
+            };
+            
+            fs.writeFileSync('combined-coverage/backend-coverage.json', JSON.stringify(backendSummary, null, 2));
+            fs.writeFileSync('combined-coverage/combined-report.json', JSON.stringify(combinedReport, null, 2));
+            
+            console.log('Backend Coverage Summary:');
+            console.log(\`  Lines: \${backendSummary.percent_covered_display}%\`);
+            console.log(\`  Branches: \${backendSummary.percent_covered_display}%\`);
+            console.log(\`  Files: \${backendSummary.num_files}\`);
+          "
+        else
+          echo "Backend coverage not found"
+        fi
+
+    - name: Upload combined coverage artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: combined-coverage-report
+        path: combined-coverage/
+
+    - name: Post combined coverage summary
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          try {
+            if (fs.existsSync('combined-coverage/combined-report.json')) {
+              const report = JSON.parse(fs.readFileSync('combined-coverage/combined-report.json', 'utf8'));
+              
+              let comment = `## 📊 Combined Test Coverage Report
+              
+              ### 🎨 Frontend Coverage
+              | Metric | Coverage | Threshold |
+              |--------|----------|-----------|
+              | **Statements** | ${report.frontend?.statements?.pct || 'N/A'}% | 50% |
+              | **Branches** | ${report.frontend?.branches?.pct || 'N/A'}% | 50% |
+              | **Functions** | ${report.frontend?.functions?.pct || 'N/A'}% | 50% |
+              | **Lines** | ${report.frontend?.lines?.pct || 'N/A'}% | 50% |
+              
+              ### 🐍 Backend Coverage
+              | Metric | Coverage | Threshold |
+              |--------|----------|-----------|
+              | **Lines** | ${report.backend?.lines?.pct || 'N/A'}% | 50% |
+              | **Branches** | ${report.backend?.branches?.pct || 'N/A'}% | 50% |
+              | **Files** | ${report.backend?.files || 'N/A'} | - |
+              
+              ### 📈 Overall Health
+              `;
+              
+              // Calculate overall health
+              const frontendAvg = report.frontend ? 
+                (report.frontend.statements.pct + report.frontend.branches.pct + 
+                 report.frontend.functions.pct + report.frontend.lines.pct) / 4 : 0;
+              
+              const backendAvg = report.backend ? 
+                (report.backend.lines.pct + report.backend.branches.pct) / 2 : 0;
+              
+              const overallAvg = (frontendAvg + backendAvg) / 2;
+              
+              comment += `
+              - **Frontend Average**: ${frontendAvg.toFixed(1)}%
+              - **Backend Average**: ${backendAvg.toFixed(1)}%
+              - **Overall Project**: ${overallAvg.toFixed(1)}%
+              
+              ${overallAvg >= 50 ? 
+                '✅ **Overall project coverage meets threshold!**' : 
+                '⚠️ **Overall project coverage below threshold. Consider adding more tests.**'}
+              
+              <details>
+              <summary>Detailed Breakdown</summary>
+              
+              **Frontend Details:**
+              - Statements: ${report.frontend?.statements?.covered || 0}/${report.frontend?.statements?.total || 0}
+              - Branches: ${report.frontend?.branches?.covered || 0}/${report.frontend?.branches?.total || 0}
+              - Functions: ${report.frontend?.functions?.covered || 0}/${report.frontend?.functions?.total || 0}
+              - Lines: ${report.frontend?.lines?.covered || 0}/${report.frontend?.lines?.total || 0}
+              
+              **Backend Details:**
+              - Lines: ${report.backend?.lines?.covered || 0}/${report.backend?.lines?.total || 0}
+              - Branches: ${report.backend?.branches?.covered || 0}/${report.backend?.branches?.total || 0}
+              - Files: ${report.backend?.files || 0}
+              
+              </details>
+              
+              ---
+              *Generated by Main CI Pipeline - Run ID: ${report.workflow_run}*`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+          } catch (error) {
+            console.log('Could not generate combined coverage report:', error.message);
+          }
+
+  # Single auto-fix integration
   auto-fix:
-    needs: [backend-lint, backend-test, backend-security, frontend-test, frontend-build]
+    needs: [changes, backend-lint, backend-test, backend-security, frontend-test, frontend-build]
     if: always() && (needs.backend-lint.result == 'failure' || needs.backend-test.result == 'failure' || needs.backend-security.result == 'failure' || needs.frontend-test.result == 'failure' || needs.frontend-build.result == 'failure')
     uses: ./.github/workflows/auto-fix-reusable.yml
     with:
