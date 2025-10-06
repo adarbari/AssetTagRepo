@@ -255,7 +255,7 @@ async def update_geofence(
             raise HTTPException(status_code=404, detail="Geofence not found")
 
         # Update fields
-        update_data = geofence_data.dict(exclude_unset=True)
+        update_data = geofence_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(geofence, field, value)
 

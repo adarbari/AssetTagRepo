@@ -234,7 +234,7 @@ export function HistoricalPlayback({
       }).addTo(mapInstanceRef.current);
 
       // Add event markers
-      pathUpToCurrent.forEach((point) => {
+      pathUpToCurrent.forEach((point, _idx) => {
         if (point.event) {
           const eventMarker = L.circleMarker([point.lat, point.lng], {
             radius: 6,

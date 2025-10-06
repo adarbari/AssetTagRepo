@@ -1,8 +1,8 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { JobManagement } from '../job/JobManagement';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
+import { screen, waitFor } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { JobManagement } from &apos;../job/JobManagement&apos;;
 import {
   render,
   mockJobs,
@@ -15,10 +15,10 @@ import {
   mockOnNavigateToCreateJob,
   mockOnNavigateToJobDetails,
   createMockNavigation,
-} from '../../test/test-utils';
+} from &apos;../../test/test-utils&apos;;
 
 // Mock the toast function
-vi.mock('sonner', () => ({
+vi.mock(&apos;sonner&apos;, () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -26,18 +26,18 @@ vi.mock('sonner', () => ({
 }));
 
 // Mock the navigation context
-vi.mock('../../contexts/NavigationContext', () => ({
+vi.mock(&apos;../../contexts/NavigationContext&apos;, () => ({
   useNavigation: () => createMockNavigation(),
 }));
 
 // Mock window.confirm
 const mockConfirm = vi.fn();
-Object.defineProperty(window, 'confirm', {
+Object.defineProperty(window, &apos;confirm&apos;, {
   value: mockConfirm,
   writable: true,
 });
 
-describe('JobManagement Component - Button Click Tests', () => {
+describe(&apos;JobManagement Component - Button Click Tests&apos;, () => {
   const defaultProps = {
     jobs: mockJobs,
     onCreateJob: mockOnCreateJob,
@@ -55,17 +55,17 @@ describe('JobManagement Component - Button Click Tests', () => {
     mockConfirm.mockReturnValue(true); // Default to confirming actions
   });
 
-  describe('Create Job Button', () => {
-    it('should call onNavigateToCreateJob when Create Job button is clicked', async () => {
+  describe(&apos;Create Job Button&apos;, () => {
+    it(&apos;should call onNavigateToCreateJob when Create Job button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Find and click Create Job button
-      const createJobButton = screen.getByRole('button', {
+      const createJobButton = screen.getByRole(&apos;button&apos;, {
         name: /create job/i,
       });
       await user.click(createJobButton);
@@ -73,12 +73,12 @@ describe('JobManagement Component - Button Click Tests', () => {
       expect(mockOnNavigateToCreateJob).toHaveBeenCalledTimes(1);
     });
 
-    it('should use navigation context when onNavigateToCreateJob is not provided', async () => {
+    it(&apos;should use navigation context when onNavigateToCreateJob is not provided&apos;, async () => {
       const user = userEvent.setup();
       const mockNavigation = createMockNavigation();
 
       vi.mocked(
-        require('../../contexts/NavigationContext').useNavigation
+        require(&apos;../../contexts/NavigationContext&apos;).useNavigation
       ).mockReturnValue(mockNavigation);
 
       const propsWithoutCallback = {
@@ -89,11 +89,11 @@ describe('JobManagement Component - Button Click Tests', () => {
       render(<JobManagement {...propsWithoutCallback} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Find and click Create Job button
-      const createJobButton = screen.getByRole('button', {
+      const createJobButton = screen.getByRole(&apos;button&apos;, {
         name: /create job/i,
       });
       await user.click(createJobButton);
@@ -102,13 +102,13 @@ describe('JobManagement Component - Button Click Tests', () => {
     });
   });
 
-  describe('Search and Filter Buttons', () => {
-    it('should filter jobs when search input changes', async () => {
+  describe(&apos;Search and Filter Buttons&apos;, () => {
+    it(&apos;should filter jobs when search input changes&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Find search input
@@ -116,92 +116,92 @@ describe('JobManagement Component - Button Click Tests', () => {
       expect(searchInput).toBeInTheDocument();
 
       // Type in search
-      await user.type(searchInput, 'Test');
+      await user.type(searchInput, &apos;Test&apos;);
 
       // Should still show the test job
       await waitFor(() => {
-        expect(screen.getByText('JOB-001')).toBeInTheDocument();
+        expect(screen.getByText(&apos;JOB-001&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should filter by status when status dropdown changes', async () => {
+    it(&apos;should filter by status when status dropdown changes&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Find status filter dropdown
-      const statusFilter = screen.getByRole('combobox', {
+      const statusFilter = screen.getByRole(&apos;combobox&apos;, {
         name: /filter by status/i,
       });
       await user.click(statusFilter);
 
       // Select &quot;Active&quot; status
-      const activeOption = screen.getByText('Active');
+      const activeOption = screen.getByText(&apos;Active&apos;);
       await user.click(activeOption);
 
-      // Should show the job (since it's active)
+      // Should show the job (since it&apos;s active)
       await waitFor(() => {
-        expect(screen.getByText('JOB-001')).toBeInTheDocument();
+        expect(screen.getByText(&apos;JOB-001&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should filter by priority when priority dropdown changes', async () => {
+    it(&apos;should filter by priority when priority dropdown changes&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Find priority filter dropdown
-      const priorityFilter = screen.getByRole('combobox', {
+      const priorityFilter = screen.getByRole(&apos;combobox&apos;, {
         name: /filter by priority/i,
       });
       await user.click(priorityFilter);
 
       // Select &quot;High&quot; priority
-      const highOption = screen.getByText('High');
+      const highOption = screen.getByText(&apos;High&apos;);
       await user.click(highOption);
 
-      // Should show the job (since it's high priority)
+      // Should show the job (since it&apos;s high priority)
       await waitFor(() => {
-        expect(screen.getByText('JOB-001')).toBeInTheDocument();
+        expect(screen.getByText(&apos;JOB-001&apos;)).toBeInTheDocument();
       });
     });
   });
 
-  describe('Table Row Click Actions', () => {
-    it('should navigate to job details when table row is clicked', async () => {
+  describe(&apos;Table Row Click Actions&apos;, () => {
+    it(&apos;should navigate to job details when table row is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Click on the table row
-      const tableRow = screen.getByText('JOB-001').closest('tr');
+      const tableRow = screen.getByText(&apos;JOB-001&apos;).closest(&apos;tr&apos;);
       expect(tableRow).toBeInTheDocument();
 
       if (tableRow) {
         await user.click(tableRow);
         expect(mockOnNavigateToJobDetails).toHaveBeenCalledWith(
           expect.objectContaining({
-            id: 'JOB-001',
+            id: &apos;JOB-001&apos;,
           })
         );
       }
     });
 
-    it('should use navigation context when onNavigateToJobDetails is not provided', async () => {
+    it(&apos;should use navigation context when onNavigateToJobDetails is not provided&apos;, async () => {
       const user = userEvent.setup();
       const mockNavigation = createMockNavigation();
 
       vi.mocked(
-        require('../../contexts/NavigationContext').useNavigation
+        require(&apos;../../contexts/NavigationContext&apos;).useNavigation
       ).mockReturnValue(mockNavigation);
 
       const propsWithoutCallback = {
@@ -212,11 +212,11 @@ describe('JobManagement Component - Button Click Tests', () => {
       render(<JobManagement {...propsWithoutCallback} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Click on the table row
-      const tableRow = screen.getByText('JOB-001').closest('tr');
+      const tableRow = screen.getByText(&apos;JOB-001&apos;).closest(&apos;tr&apos;);
       expect(tableRow).toBeInTheDocument();
 
       if (tableRow) {
@@ -226,107 +226,107 @@ describe('JobManagement Component - Button Click Tests', () => {
     });
   });
 
-  describe('Dropdown Menu Actions', () => {
-    it('should open dropdown menu when more actions button is clicked', async () => {
+  describe(&apos;Dropdown Menu Actions&apos;, () => {
+    it(&apos;should open dropdown menu when more actions button is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Find and click the more actions button
-      const moreActionsButton = screen.getByRole('button', { name: /more/i });
+      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
       await user.click(moreActionsButton);
 
       // Should show dropdown menu items
       await waitFor(() => {
-        expect(screen.getByText('View Details')).toBeInTheDocument();
-        expect(screen.getByText('Delete Job')).toBeInTheDocument();
+        expect(screen.getByText(&apos;View Details&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Delete Job&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should navigate to job details when View Details is clicked', async () => {
+    it(&apos;should navigate to job details when View Details is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole('button', { name: /more/i });
+      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click View Details
-      const viewDetailsButton = screen.getByText('View Details');
+      const viewDetailsButton = screen.getByText(&apos;View Details&apos;);
       await user.click(viewDetailsButton);
 
       // Should navigate to job details
       expect(mockOnNavigateToJobDetails).toHaveBeenCalledWith(
         expect.objectContaining({
-          id: 'JOB-001',
+          id: &apos;JOB-001&apos;,
         })
       );
     });
 
-    it('should call onDeleteJob when Delete Job is clicked and confirmed', async () => {
+    it(&apos;should call onDeleteJob when Delete Job is clicked and confirmed&apos;, async () => {
       const user = userEvent.setup();
       mockConfirm.mockReturnValue(true); // User confirms deletion
 
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole('button', { name: /more/i });
+      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click Delete Job
-      const deleteJobButton = screen.getByText('Delete Job');
+      const deleteJobButton = screen.getByText(&apos;Delete Job&apos;);
       await user.click(deleteJobButton);
 
       // Should show confirmation dialog and call onDeleteJob
       expect(mockConfirm).toHaveBeenCalledWith(
-        'Are you sure you want to delete this job?'
+        &apos;Are you sure you want to delete this job?&apos;
       );
-      expect(mockOnDeleteJob).toHaveBeenCalledWith('JOB-001');
+      expect(mockOnDeleteJob).toHaveBeenCalledWith(&apos;JOB-001&apos;);
     });
 
-    it('should not call onDeleteJob when Delete Job is clicked but user cancels', async () => {
+    it(&apos;should not call onDeleteJob when Delete Job is clicked but user cancels&apos;, async () => {
       const user = userEvent.setup();
       mockConfirm.mockReturnValue(false); // User cancels deletion
 
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole('button', { name: /more/i });
+      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click Delete Job
-      const deleteJobButton = screen.getByText('Delete Job');
+      const deleteJobButton = screen.getByText(&apos;Delete Job&apos;);
       await user.click(deleteJobButton);
 
       // Should show confirmation dialog but not call onDeleteJob
       expect(mockConfirm).toHaveBeenCalledWith(
-        'Are you sure you want to delete this job?'
+        &apos;Are you sure you want to delete this job?&apos;
       );
       expect(mockOnDeleteJob).not.toHaveBeenCalled();
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle delete job errors gracefully', async () => {
+  describe(&apos;Error Handling&apos;, () => {
+    it(&apos;should handle delete job errors gracefully&apos;, async () => {
       const user = userEvent.setup();
       const mockOnDeleteJobError = vi.fn().mockResolvedValue({
         success: false,
-        error: 'Delete failed',
+        error: &apos;Delete failed&apos;,
       });
 
       render(
@@ -334,34 +334,34 @@ describe('JobManagement Component - Button Click Tests', () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole('button', { name: /more/i });
+      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click Delete Job
-      const deleteJobButton = screen.getByText('Delete Job');
+      const deleteJobButton = screen.getByText(&apos;Delete Job&apos;);
       await user.click(deleteJobButton);
 
       // Should call onDeleteJob but handle error
       await waitFor(() => {
-        expect(mockOnDeleteJobError).toHaveBeenCalledWith('JOB-001');
+        expect(mockOnDeleteJobError).toHaveBeenCalledWith(&apos;JOB-001&apos;);
       });
     });
   });
 
-  describe('Button Accessibility', () => {
-    it('should have proper ARIA labels and roles for all interactive elements', async () => {
+  describe(&apos;Button Accessibility&apos;, () => {
+    it(&apos;should have proper ARIA labels and roles for all interactive elements&apos;, async () => {
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Check Create Job button
-      const createJobButton = screen.getByRole('button', {
+      const createJobButton = screen.getByRole(&apos;button&apos;, {
         name: /create job/i,
       });
       expect(createJobButton).toBeInTheDocument();
@@ -371,30 +371,30 @@ describe('JobManagement Component - Button Click Tests', () => {
       expect(searchInput).toBeInTheDocument();
 
       // Check filter dropdowns
-      const statusFilter = screen.getByRole('combobox', {
+      const statusFilter = screen.getByRole(&apos;combobox&apos;, {
         name: /filter by status/i,
       });
-      const priorityFilter = screen.getByRole('combobox', {
+      const priorityFilter = screen.getByRole(&apos;combobox&apos;, {
         name: /filter by priority/i,
       });
       expect(statusFilter).toBeInTheDocument();
       expect(priorityFilter).toBeInTheDocument();
 
       // Check table
-      const table = screen.getByRole('table');
+      const table = screen.getByRole(&apos;table&apos;);
       expect(table).toBeInTheDocument();
 
       // Check action buttons
-      const moreActionsButton = screen.getByRole('button', { name: /more/i });
+      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
       expect(moreActionsButton).toBeInTheDocument();
     });
 
-    it('should support keyboard navigation for all buttons', async () => {
+    it(&apos;should support keyboard navigation for all buttons&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Tab through interactive elements
@@ -409,7 +409,7 @@ describe('JobManagement Component - Button Click Tests', () => {
       await user.tab();
 
       // Should be able to focus on Create Job button
-      const createJobButton = screen.getByRole('button', {
+      const createJobButton = screen.getByRole(&apos;button&apos;, {
         name: /create job/i,
       });
       createJobButton.focus();
@@ -417,101 +417,101 @@ describe('JobManagement Component - Button Click Tests', () => {
     });
   });
 
-  describe('Empty State Handling', () => {
-    it('should show empty state when no jobs exist', async () => {
+  describe(&apos;Empty State Handling&apos;, () => {
+    it(&apos;should show empty state when no jobs exist&apos;, async () => {
       render(<JobManagement {...defaultProps} jobs={{}} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Should show empty state message
       await waitFor(() => {
         expect(
-          screen.getByText('No jobs yet. Create your first job to get started.')
+          screen.getByText(&apos;No jobs yet. Create your first job to get started.&apos;)
         ).toBeInTheDocument();
       });
     });
 
-    it('should show empty state when search returns no results', async () => {
+    it(&apos;should show empty state when search returns no results&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
-      // Search for something that doesn't exist
+      // Search for something that doesn&apos;t exist
       const searchInput = screen.getByPlaceholderText(/search jobs/i);
-      await user.type(searchInput, 'nonexistent');
+      await user.type(searchInput, &apos;nonexistent&apos;);
 
       // Should show empty state
       await waitFor(() => {
         expect(
-          screen.getByText('No jobs match your filters')
+          screen.getByText(&apos;No jobs match your filters&apos;)
         ).toBeInTheDocument();
       });
     });
 
-    it('should show empty state when status filter returns no results', async () => {
+    it(&apos;should show empty state when status filter returns no results&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
-      // Filter by status that doesn't exist
-      const statusFilter = screen.getByRole('combobox', {
+      // Filter by status that doesn&apos;t exist
+      const statusFilter = screen.getByRole(&apos;combobox&apos;, {
         name: /filter by status/i,
       });
       await user.click(statusFilter);
 
-      const planningOption = screen.getByText('Planning');
+      const planningOption = screen.getByText(&apos;Planning&apos;);
       await user.click(planningOption);
 
       // Should show empty state
       await waitFor(() => {
         expect(
-          screen.getByText('No jobs match your filters')
+          screen.getByText(&apos;No jobs match your filters&apos;)
         ).toBeInTheDocument();
       });
     });
   });
 
-  describe('Statistics Cards', () => {
-    it('should display correct statistics', async () => {
+  describe(&apos;Statistics Cards&apos;, () => {
+    it(&apos;should display correct statistics&apos;, async () => {
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Check that statistics are displayed
-      expect(screen.getByText('Total Jobs')).toBeInTheDocument();
-      expect(screen.getByText('Total Budget')).toBeInTheDocument();
-      expect(screen.getByText('Actual Costs')).toBeInTheDocument();
-      expect(screen.getByText('Active Alerts')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Total Jobs&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Total Budget&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Actual Costs&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Active Alerts&apos;)).toBeInTheDocument();
 
       // Check that values are displayed
-      expect(screen.getByText('1')).toBeInTheDocument(); // Total jobs
-      expect(screen.getByText('$10,000.00')).toBeInTheDocument(); // Total budget
-      expect(screen.getByText('$8,000.00')).toBeInTheDocument(); // Actual costs
-      expect(screen.getByText('0')).toBeInTheDocument(); // Active alerts
+      expect(screen.getByText(&apos;1&apos;)).toBeInTheDocument(); // Total jobs
+      expect(screen.getByText(&apos;$10,000.00&apos;)).toBeInTheDocument(); // Total budget
+      expect(screen.getByText(&apos;$8,000.00&apos;)).toBeInTheDocument(); // Actual costs
+      expect(screen.getByText(&apos;0&apos;)).toBeInTheDocument(); // Active alerts
     });
   });
 
-  describe('Dropdown Menu Event Handling', () => {
-    it('should prevent row click when dropdown menu is opened', async () => {
+  describe(&apos;Dropdown Menu Event Handling&apos;, () => {
+    it(&apos;should prevent row click when dropdown menu is opened&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Find the more actions button
-      const moreActionsButton = screen.getByRole('button', { name: /more/i });
+      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
 
       // Click the button (should not trigger row click)
       await user.click(moreActionsButton);
@@ -521,24 +521,24 @@ describe('JobManagement Component - Button Click Tests', () => {
 
       // Should show dropdown menu
       await waitFor(() => {
-        expect(screen.getByText('View Details')).toBeInTheDocument();
+        expect(screen.getByText(&apos;View Details&apos;)).toBeInTheDocument();
       });
     });
 
-    it('should prevent row click when dropdown menu item is clicked', async () => {
+    it(&apos;should prevent row click when dropdown menu item is clicked&apos;, async () => {
       const user = userEvent.setup();
       render(<JobManagement {...defaultProps} />);
 
       await waitFor(() => {
-        expect(screen.getByText('Job Management')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Job Management&apos;)).toBeInTheDocument();
       });
 
       // Open dropdown menu
-      const moreActionsButton = screen.getByRole('button', { name: /more/i });
+      const moreActionsButton = screen.getByRole(&apos;button&apos;, { name: /more/i });
       await user.click(moreActionsButton);
 
       // Click View Details
-      const viewDetailsButton = screen.getByText('View Details');
+      const viewDetailsButton = screen.getByText(&apos;View Details&apos;);
       await user.click(viewDetailsButton);
 
       // Should call onNavigateToJobDetails only once (not from row click)

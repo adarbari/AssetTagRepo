@@ -306,7 +306,7 @@ export function AssetInventory({
     }
   };
 
-  const handleAssetAdded = (_Asset) => {
+  const handleAssetAdded = (_asset: Asset) => {
     // Force re-render by updating refresh key
     setRefreshKey(prev => prev + 1);
   };

@@ -25,6 +25,70 @@ from modules.vehicles.schemas import (
 router = APIRouter()
 
 
+def _vehicle_to_response(vehicle: Vehicle) -> VehicleResponse:
+    """Convert Vehicle model to VehicleResponse schema"""
+    return VehicleResponse(
+        id=str(vehicle.id),
+        organization_id=str(vehicle.organization_id),
+        name=vehicle.name,
+        description=vehicle.description,
+        vehicle_type=vehicle.vehicle_type,
+        license_plate=vehicle.license_plate,
+        vin=vehicle.vin,
+        make=vehicle.make,
+        model=vehicle.model,
+        year=vehicle.year,
+        color=vehicle.color,
+        status=vehicle.status,
+        location=vehicle.location,
+        metadata=vehicle.metadata or {},
+        created_at=vehicle.created_at,
+        updated_at=vehicle.updated_at,
+        deleted_at=vehicle.deleted_at,
+    )
+
+
+def _vehicle_with_assets_to_response(vehicle: Vehicle) -> VehicleWithAssets:
+    """Convert Vehicle model to VehicleWithAssets schema"""
+    return VehicleWithAssets(
+        id=str(vehicle.id),
+        organization_id=str(vehicle.organization_id),
+        name=vehicle.name,
+        description=vehicle.description,
+        vehicle_type=vehicle.vehicle_type,
+        license_plate=vehicle.license_plate,
+        vin=vehicle.vin,
+        make=vehicle.make,
+        model=vehicle.model,
+        year=vehicle.year,
+        color=vehicle.color,
+        status=vehicle.status,
+        location=vehicle.location,
+        metadata=vehicle.metadata or {},
+        assets=[],  # Will be populated separately
+        created_at=vehicle.created_at,
+        updated_at=vehicle.updated_at,
+        deleted_at=vehicle.deleted_at,
+    )
+
+
+def _vehicle_asset_pairing_to_response(pairing: VehicleAssetPairing) -> VehicleAssetPairingResponse:
+    """Convert VehicleAssetPairing model to VehicleAssetPairingResponse schema"""
+    return VehicleAssetPairingResponse(
+        id=str(pairing.id),
+        organization_id=str(pairing.organization_id),
+        vehicle_id=str(pairing.vehicle_id),
+        asset_id=str(pairing.asset_id),
+        paired_at=pairing.paired_at.isoformat() if pairing.paired_at else None,
+        unpaired_at=pairing.unpaired_at.isoformat() if pairing.unpaired_at else None,
+        status=pairing.status,
+        notes=pairing.notes,
+        metadata=pairing.metadata or {},
+        created_at=pairing.created_at,
+        updated_at=pairing.updated_at,
+    )
+
+
 @router.get("/vehicles", response_model=List[VehicleResponse])
 async def get_vehicles(
     skip: int = Query(0, ge=0),
@@ -60,7 +124,7 @@ async def get_vehicles(
         result = await db.execute(query)
         vehicles = result.scalars().all()
 
-        return [VehicleResponse.from_orm(vehicle) for vehicle in vehicles]
+        return [_vehicle_to_response(vehicle) for vehicle in vehicles]
 
     except Exception as e:
         raise HTTPException(
@@ -82,7 +146,7 @@ async def get_vehicle(vehicle_id: str, db: AsyncSession = Depends(get_db)):
         if not vehicle:
             raise HTTPException(status_code=404, detail="Vehicle not found")
 
-        return VehicleWithAssets.from_orm(vehicle)
+        return _vehicle_with_assets_to_response(vehicle)
 
     except HTTPException:
         raise
@@ -131,7 +195,7 @@ async def create_vehicle(
         await db.commit()
         await db.refresh(vehicle)
 
-        return VehicleResponse.from_orm(vehicle)
+        return _vehicle_to_response(vehicle)
 
     except HTTPException:
         raise
@@ -182,7 +246,7 @@ async def update_vehicle(
         await db.commit()
         await db.refresh(vehicle)
 
-        return VehicleResponse.from_orm(vehicle)
+        return _vehicle_to_response(vehicle)
 
     except HTTPException:
         raise
@@ -257,7 +321,7 @@ async def get_vehicle_assets(
         result = await db.execute(query)
         pairings = result.scalars().all()
 
-        return [VehicleAssetPairingResponse.from_orm(pairing) for pairing in pairings]
+        return [_vehicle_asset_pairing_to_response(pairing) for pairing in pairings]
 
     except HTTPException:
         raise
@@ -319,7 +383,7 @@ async def pair_asset_to_vehicle(
         await db.commit()
         await db.refresh(pairing)
 
-        return VehicleAssetPairingResponse.from_orm(pairing)
+        return _vehicle_asset_pairing_to_response(pairing)
 
     except HTTPException:
         raise

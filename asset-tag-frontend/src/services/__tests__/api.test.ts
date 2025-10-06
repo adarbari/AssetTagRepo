@@ -65,10 +65,10 @@ describe('API Service', () => {
     it('should return true when VITE_USE_MOCK_DATA is not set', () => {
       // Mock getApiConfig to return default values
       vi.spyOn(apiModule, 'getApiConfig').mockReturnValue({
-        API_BASE_'http://localhost:3000',
-        API_'v1',
-        API_30000,
-        USE_MOCK_true,
+        API_BASE_URL: 'http://localhost:3000',
+        API_VERSION: 'v1',
+        API_TIMEOUT: 30000,
+        USE_MOCK_DATA: true,
       });
 
       expect(shouldUseMockData()).toBe(true);
@@ -76,10 +76,10 @@ describe('API Service', () => {
 
     it('should return true when VITE_USE_MOCK_DATA is "true"', () => {
       vi.spyOn(apiModule, 'getApiConfig').mockReturnValue({
-        API_BASE_'http://localhost:3000',
-        API_'v1',
-        API_30000,
-        USE_MOCK_true,
+        API_BASE_URL: 'http://localhost:3000',
+        API_VERSION: 'v1',
+        API_TIMEOUT: 30000,
+        USE_MOCK_DATA: true,
       });
 
       expect(shouldUseMockData()).toBe(true);
@@ -88,10 +88,10 @@ describe('API Service', () => {
     it('should return false when VITE_USE_MOCK_DATA is "false" and API_BASE_URL is not localhost', () => {
       // Mock getApiConfig to return USE_MOCK_DATA as false with non-localhost URL
       vi.spyOn(apiModule, 'getApiConfig').mockReturnValue({
-        API_BASE_'https://api.production.com',
-        API_'v1',
-        API_30000,
-        USE_MOCK_false,
+        API_BASE_URL: 'https://api.production.com',
+        API_VERSION: 'v1',
+        API_TIMEOUT: 30000,
+        USE_MOCK_DATA: false,
       });
 
       // The function should return false because USE_MOCK_DATA is false and API_BASE_URL doesn't contain localhost
@@ -240,7 +240,7 @@ describe('API Service', () => {
   describe('Request Configuration', () => {
     it('should use correct base URL from environment', async () => {
       Object.defineProperty(import.meta, 'env', {
-        value: { VITE_API_BASE_'https://api.example.com' },
+        value: { VITE_API_BASE_URL: 'https://api.example.com' },
         writable: true,
       });
 
@@ -268,7 +268,7 @@ describe('API Service', () => {
 
     it('should include API version in URL', async () => {
       Object.defineProperty(import.meta, 'env', {
-        value: { VITE_API_'v2' },
+        value: { VITE_API_VERSION: 'v2' },
         writable: true,
       });
 

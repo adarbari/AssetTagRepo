@@ -218,7 +218,7 @@ async def create_observations_bulk(
 
             except Exception as e:
                 failed_count += 1
-                errors.append({"index": i, "error": str(e), "data": obs_data.dict()})
+                errors.append({"index": i, "error": str(e), "data": obs_data.model_dump()})
 
         # Update batch status
         batch.end_time = datetime.now()
@@ -260,7 +260,7 @@ async def update_observation(
             raise HTTPException(status_code=404, detail="Observation not found")
 
         # Update fields
-        update_data = observation_data.dict(exclude_unset=True)
+        update_data = observation_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(observation, field, value)
 

@@ -426,7 +426,7 @@ function AppContent() {
               // Handle saving alert configuration
               return { success: true };
             }}
-            onDeleteConfig={async (_level) => {
+            onDeleteConfig={async (_level, _entityId, _alertType) => {
               // Handle deleting alert configuration
               return { success: true };
             }}
@@ -445,7 +445,7 @@ function AppContent() {
               // Handle saving notification configuration
               return { success: true };
             }}
-            onDeleteConfig={async (_level) => {
+            onDeleteConfig={async (_level, _entityId) => {
               // Handle deleting notification configuration
               return { success: true };
             }}

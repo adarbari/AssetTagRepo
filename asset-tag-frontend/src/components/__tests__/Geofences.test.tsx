@@ -1,41 +1,41 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
-import { Geofences } from '../geofences/Geofences';
-// import { mockGeofences } from '../../data/mockData';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach, afterEach } from &apos;vitest&apos;;
+import { render, screen, fireEvent, waitFor } from &apos;../../test/test-utils&apos;;
+import { Geofences } from &apos;../geofences/Geofences&apos;;
+// import { mockGeofences } from &apos;../../data/mockData&apos;;
 
 // Mock the data functions
-vi.mock('../../data/mockData', () => ({
+vi.mock(&apos;../../data/mockData&apos;, () => ({
   mockGeofences: [
     {
-      id: 'GEO-001',
-      name: 'Construction Site A',
-      type: 'restricted',
-      shape: 'circle',
+      id: &apos;GEO-001&apos;,
+      name: &apos;Construction Site A&apos;,
+      type: &apos;restricted&apos;,
+      shape: &apos;circle&apos;,
       center: { lat: 40.7128, lng: -74.006 },
       radius: 100,
-      status: 'active',
-      siteId: 'SITE-001',
-      siteName: 'Downtown Construction',
+      status: &apos;active&apos;,
+      siteId: &apos;SITE-001&apos;,
+      siteName: &apos;Downtown Construction&apos;,
       alertOnEntry: true,
       alertOnExit: true,
       tolerance: 5,
-      attachmentType: 'site',
+      attachmentType: &apos;site&apos;,
     },
     {
-      id: 'GEO-002',
-      name: 'Equipment Storage',
-      type: 'allowed',
-      shape: 'polygon',
+      id: &apos;GEO-002&apos;,
+      name: &apos;Equipment Storage&apos;,
+      type: &apos;allowed&apos;,
+      shape: &apos;polygon&apos;,
       center: { lat: 40.7589, lng: -73.9851 },
       radius: 50,
-      status: 'active',
-      siteId: 'SITE-002',
-      siteName: 'Storage Facility',
+      status: &apos;active&apos;,
+      siteId: &apos;SITE-002&apos;,
+      siteName: &apos;Storage Facility&apos;,
       alertOnEntry: false,
       alertOnExit: true,
       tolerance: 10,
-      attachmentType: 'site',
+      attachmentType: &apos;site&apos;,
     },
   ],
   getGeofenceViolatingAssets: vi.fn().mockReturnValue([]),
@@ -50,14 +50,14 @@ vi.mock('../../data/mockData', () => ({
 }));
 
 // Mock toast
-vi.mock('sonner', () => ({
+vi.mock(&apos;sonner&apos;, () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
   },
 }));
 
-describe('Geofences', () => {
+describe(&apos;Geofences&apos;, () => {
   const mockOnCreateGeofence = vi.fn();
   const mockOnEditGeofence = vi.fn();
   const mockOnViewViolatingAssets = vi.fn();
@@ -70,8 +70,8 @@ describe('Geofences', () => {
     vi.resetAllMocks();
   });
 
-  describe('Component Rendering', () => {
-    it('renders the geofences page with correct title', () => {
+  describe(&apos;Component Rendering&apos;, () => {
+    it(&apos;renders the geofences page with correct title&apos;, () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -80,10 +80,10 @@ describe('Geofences', () => {
         />
       );
 
-      expect(screen.getByText('Geofences')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Geofences&apos;)).toBeInTheDocument();
     });
 
-    it('renders the create geofence button', () => {
+    it(&apos;renders the create geofence button&apos;, () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -92,10 +92,10 @@ describe('Geofences', () => {
         />
       );
 
-      expect(screen.getByText('Create Geofence')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Create Geofence&apos;)).toBeInTheDocument();
     });
 
-    it('renders the geofences table with correct headers', () => {
+    it(&apos;renders the geofences table with correct headers&apos;, () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -104,80 +104,18 @@ describe('Geofences', () => {
         />
       );
 
-      expect(screen.getByText('Name')).toBeInTheDocument();
-      expect(screen.getByText('Type')).toBeInTheDocument();
-      expect(screen.getByText('Shape')).toBeInTheDocument();
-      expect(screen.getByText('Site')).toBeInTheDocument();
-      expect(screen.getByText('Status')).toBeInTheDocument();
-      expect(screen.getByText('Assets')).toBeInTheDocument();
-      expect(screen.getByText('Actions')).toBeInTheDocument();
-    });
-  });
-
-  describe('Data Display', () => {
-    it('displays geofence data in the table', async () => {
-      render(
-        <Geofences
-          onCreateGeofence={mockOnCreateGeofence}
-          onEditGeofence={mockOnEditGeofence}
-          onViewViolatingAssets={mockOnViewViolatingAssets}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('Construction Site A')).toBeInTheDocument();
-        expect(screen.getByText('Equipment Storage')).toBeInTheDocument();
-      });
-    });
-
-    it('displays correct geofence types', async () => {
-      render(
-        <Geofences
-          onCreateGeofence={mockOnCreateGeofence}
-          onEditGeofence={mockOnEditGeofence}
-          onViewViolatingAssets={mockOnViewViolatingAssets}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('Restricted')).toBeInTheDocument();
-        expect(screen.getByText('Allowed')).toBeInTheDocument();
-      });
-    });
-
-    it('displays correct geofence shapes', async () => {
-      render(
-        <Geofences
-          onCreateGeofence={mockOnCreateGeofence}
-          onEditGeofence={mockOnEditGeofence}
-          onViewViolatingAssets={mockOnViewViolatingAssets}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('Circle')).toBeInTheDocument();
-        expect(screen.getByText('Polygon')).toBeInTheDocument();
-      });
-    });
-
-    it('displays site names', async () => {
-      render(
-        <Geofences
-          onCreateGeofence={mockOnCreateGeofence}
-          onEditGeofence={mockOnEditGeofence}
-          onViewViolatingAssets={mockOnViewViolatingAssets}
-        />
-      );
-
-      await waitFor(() => {
-        expect(screen.getByText('Downtown Construction')).toBeInTheDocument();
-        expect(screen.getByText('Storage Facility')).toBeInTheDocument();
-      });
+      expect(screen.getByText(&apos;Name&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Type&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Shape&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Site&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Assets&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Actions&apos;)).toBeInTheDocument();
     });
   });
 
-  describe('Search Functionality', () => {
-    it('filters geofences based on search term', async () => {
+  describe(&apos;Data Display&apos;, () => {
+    it(&apos;displays geofence data in the table&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -186,16 +124,13 @@ describe('Geofences', () => {
         />
       );
 
-      const searchInput = screen.getByPlaceholderText('Search geofences...');
-      fireEvent.change(searchInput, { target: { value: 'Construction' } });
-
       await waitFor(() => {
-        expect(screen.getByText('Construction Site A')).toBeInTheDocument();
-        expect(screen.queryByText('Equipment Storage')).not.toBeInTheDocument();
+        expect(screen.getByText(&apos;Construction Site A&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Equipment Storage&apos;)).toBeInTheDocument();
       });
     });
 
-    it('shows no results when search yields no matches', async () => {
+    it(&apos;displays correct geofence types&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -204,17 +139,45 @@ describe('Geofences', () => {
         />
       );
 
-      const searchInput = screen.getByPlaceholderText('Search geofences...');
-      fireEvent.change(searchInput, { target: { value: 'NonExistent' } });
+      await waitFor(() => {
+        expect(screen.getByText(&apos;Restricted&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Allowed&apos;)).toBeInTheDocument();
+      });
+    });
+
+    it(&apos;displays correct geofence shapes&apos;, async () => {
+      render(
+        <Geofences
+          onCreateGeofence={mockOnCreateGeofence}
+          onEditGeofence={mockOnEditGeofence}
+          onViewViolatingAssets={mockOnViewViolatingAssets}
+        />
+      );
 
       await waitFor(() => {
-        expect(screen.getByText('No geofences found')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Circle&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Polygon&apos;)).toBeInTheDocument();
+      });
+    });
+
+    it(&apos;displays site names&apos;, async () => {
+      render(
+        <Geofences
+          onCreateGeofence={mockOnCreateGeofence}
+          onEditGeofence={mockOnEditGeofence}
+          onViewViolatingAssets={mockOnViewViolatingAssets}
+        />
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText(&apos;Downtown Construction&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Storage Facility&apos;)).toBeInTheDocument();
       });
     });
   });
 
-  describe('Filtering', () => {
-    it('renders filter controls', () => {
+  describe(&apos;Search Functionality&apos;, () => {
+    it(&apos;filters geofences based on search term&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -223,10 +186,16 @@ describe('Geofences', () => {
         />
       );
 
-      expect(screen.getByText('Filters')).toBeInTheDocument();
+      const searchInput = screen.getByPlaceholderText(&apos;Search geofences...&apos;);
+      fireEvent.change(searchInput, { target: { value: &apos;Construction&apos; } });
+
+      await waitFor(() => {
+        expect(screen.getByText(&apos;Construction Site A&apos;)).toBeInTheDocument();
+        expect(screen.queryByText(&apos;Equipment Storage&apos;)).not.toBeInTheDocument();
+      });
     });
 
-    it('shows and hides filters when filter button is clicked', () => {
+    it(&apos;shows no results when search yields no matches&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -235,16 +204,47 @@ describe('Geofences', () => {
         />
       );
 
-      const filterButton = screen.getByText('Filters');
+      const searchInput = screen.getByPlaceholderText(&apos;Search geofences...&apos;);
+      fireEvent.change(searchInput, { target: { value: &apos;NonExistent&apos; } });
+
+      await waitFor(() => {
+        expect(screen.getByText(&apos;No geofences found&apos;)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe(&apos;Filtering&apos;, () => {
+    it(&apos;renders filter controls&apos;, () => {
+      render(
+        <Geofences
+          onCreateGeofence={mockOnCreateGeofence}
+          onEditGeofence={mockOnEditGeofence}
+          onViewViolatingAssets={mockOnViewViolatingAssets}
+        />
+      );
+
+      expect(screen.getByText(&apos;Filters&apos;)).toBeInTheDocument();
+    });
+
+    it(&apos;shows and hides filters when filter button is clicked&apos;, () => {
+      render(
+        <Geofences
+          onCreateGeofence={mockOnCreateGeofence}
+          onEditGeofence={mockOnEditGeofence}
+          onViewViolatingAssets={mockOnViewViolatingAssets}
+        />
+      );
+
+      const filterButton = screen.getByText(&apos;Filters&apos;);
       fireEvent.click(filterButton);
 
       // Should show filter options
-      expect(screen.getByText('Type')).toBeInTheDocument();
-      expect(screen.getByText('Status')).toBeInTheDocument();
-      expect(screen.getByText('Shape')).toBeInTheDocument();
+      expect(screen.getByText(&apos;Type&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
+      expect(screen.getByText(&apos;Shape&apos;)).toBeInTheDocument();
     });
 
-    it('filters by type', async () => {
+    it(&apos;filters by type&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -254,20 +254,20 @@ describe('Geofences', () => {
       );
 
       // Open filters
-      fireEvent.click(screen.getByText('Filters'));
+      fireEvent.click(screen.getByText(&apos;Filters&apos;));
 
       // Select restricted type
-      const typeSelect = screen.getByDisplayValue('All Types');
+      const typeSelect = screen.getByDisplayValue(&apos;All Types&apos;);
       fireEvent.click(typeSelect);
-      fireEvent.click(screen.getByText('Restricted'));
+      fireEvent.click(screen.getByText(&apos;Restricted&apos;));
 
       await waitFor(() => {
-        expect(screen.getByText('Construction Site A')).toBeInTheDocument();
-        expect(screen.queryByText('Equipment Storage')).not.toBeInTheDocument();
+        expect(screen.getByText(&apos;Construction Site A&apos;)).toBeInTheDocument();
+        expect(screen.queryByText(&apos;Equipment Storage&apos;)).not.toBeInTheDocument();
       });
     });
 
-    it('filters by status', async () => {
+    it(&apos;filters by status&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -277,22 +277,22 @@ describe('Geofences', () => {
       );
 
       // Open filters
-      fireEvent.click(screen.getByText('Filters'));
+      fireEvent.click(screen.getByText(&apos;Filters&apos;));
 
       // Select active status
-      const statusSelect = screen.getByDisplayValue('All Statuses');
+      const statusSelect = screen.getByDisplayValue(&apos;All Statuses&apos;);
       fireEvent.click(statusSelect);
-      fireEvent.click(screen.getByText('Active'));
+      fireEvent.click(screen.getByText(&apos;Active&apos;));
 
       await waitFor(() => {
-        expect(screen.getByText('Construction Site A')).toBeInTheDocument();
-        expect(screen.getByText('Equipment Storage')).toBeInTheDocument();
+        expect(screen.getByText(&apos;Construction Site A&apos;)).toBeInTheDocument();
+        expect(screen.getByText(&apos;Equipment Storage&apos;)).toBeInTheDocument();
       });
     });
   });
 
-  describe('User Interactions', () => {
-    it('calls onCreateGeofence when Create Geofence button is clicked', () => {
+  describe(&apos;User Interactions&apos;, () => {
+    it(&apos;calls onCreateGeofence when Create Geofence button is clicked&apos;, () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -301,12 +301,12 @@ describe('Geofences', () => {
         />
       );
 
-      fireEvent.click(screen.getByText('Create Geofence'));
+      fireEvent.click(screen.getByText(&apos;Create Geofence&apos;));
 
       expect(mockOnCreateGeofence).toHaveBeenCalled();
     });
 
-    it('calls onEditGeofence when Edit button is clicked', async () => {
+    it(&apos;calls onEditGeofence when Edit button is clicked&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -316,19 +316,19 @@ describe('Geofences', () => {
       );
 
       await waitFor(() => {
-        const editButtons = screen.getAllByRole('button');
+        const editButtons = screen.getAllByRole(&apos;button&apos;);
         const editButton = editButtons.find(
-          button => button.querySelector('svg') // Look for the Edit icon
+          button => button.querySelector(&apos;svg&apos;) // Look for the Edit icon
         );
 
         if (editButton) {
           fireEvent.click(editButton);
-          expect(mockOnEditGeofence).toHaveBeenCalledWith('GEO-001');
+          expect(mockOnEditGeofence).toHaveBeenCalledWith(&apos;GEO-001&apos;);
         }
       });
     });
 
-    it('shows delete confirmation dialog when Delete button is clicked', async () => {
+    it(&apos;shows delete confirmation dialog when Delete button is clicked&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -338,22 +338,22 @@ describe('Geofences', () => {
       );
 
       await waitFor(() => {
-        const deleteButtons = screen.getAllByRole('button');
+        const deleteButtons = screen.getAllByRole(&apos;button&apos;);
         const deleteButton = deleteButtons.find(
-          button => button.querySelector('svg') // Look for the Trash2 icon
+          button => button.querySelector(&apos;svg&apos;) // Look for the Trash2 icon
         );
 
         if (deleteButton) {
           fireEvent.click(deleteButton);
-          expect(screen.getByText('Are you sure?')).toBeInTheDocument();
+          expect(screen.getByText(&apos;Are you sure?&apos;)).toBeInTheDocument();
           expect(
-            screen.getByText('This will permanently delete the geofence')
+            screen.getByText(&apos;This will permanently delete the geofence&apos;)
           ).toBeInTheDocument();
         }
       });
     });
 
-    it('calls onViewViolatingAssets when View Violations button is clicked', async () => {
+    it(&apos;calls onViewViolatingAssets when View Violations button is clicked&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -363,7 +363,7 @@ describe('Geofences', () => {
       );
 
       await waitFor(() => {
-        const viewButtons = screen.getAllByText('View Violations');
+        const viewButtons = screen.getAllByText(&apos;View Violations&apos;);
         if (viewButtons.length > 0) {
           fireEvent.click(viewButtons[0]);
           expect(mockOnViewViolatingAssets).toHaveBeenCalled();
@@ -372,9 +372,9 @@ describe('Geofences', () => {
     });
   });
 
-  describe('Delete Functionality', () => {
-    it('confirms deletion and removes geofence from list', async () => {
-      const { toast } = require('sonner');
+  describe(&apos;Delete Functionality&apos;, () => {
+    it(&apos;confirms deletion and removes geofence from list&apos;, async () => {
+      const { toast } = require(&apos;sonner&apos;);
 
       render(
         <Geofences
@@ -385,26 +385,26 @@ describe('Geofences', () => {
       );
 
       await waitFor(() => {
-        const deleteButtons = screen.getAllByRole('button');
+        const deleteButtons = screen.getAllByRole(&apos;button&apos;);
         const deleteButton = deleteButtons.find(
-          button => button.querySelector('svg') // Look for the Trash2 icon
+          button => button.querySelector(&apos;svg&apos;) // Look for the Trash2 icon
         );
 
         if (deleteButton) {
           fireEvent.click(deleteButton);
 
           // Confirm deletion
-          const confirmButton = screen.getByText('Delete');
+          const confirmButton = screen.getByText(&apos;Delete&apos;);
           fireEvent.click(confirmButton);
 
           expect(toast.success).toHaveBeenCalledWith(
-            'Geofence deleted successfully'
+            &apos;Geofence deleted successfully&apos;
           );
         }
       });
     });
 
-    it('cancels deletion when Cancel button is clicked', async () => {
+    it(&apos;cancels deletion when Cancel button is clicked&apos;, async () => {
       render(
         <Geofences
           onCreateGeofence={mockOnCreateGeofence}
@@ -414,29 +414,29 @@ describe('Geofences', () => {
       );
 
       await waitFor(() => {
-        const deleteButtons = screen.getAllByRole('button');
+        const deleteButtons = screen.getAllByRole(&apos;button&apos;);
         const deleteButton = deleteButtons.find(
-          button => button.querySelector('svg') // Look for the Trash2 icon
+          button => button.querySelector(&apos;svg&apos;) // Look for the Trash2 icon
         );
 
         if (deleteButton) {
           fireEvent.click(deleteButton);
 
           // Cancel deletion
-          const cancelButton = screen.getByText('Cancel');
+          const cancelButton = screen.getByText(&apos;Cancel&apos;);
           fireEvent.click(cancelButton);
 
           // Dialog should be closed
-          expect(screen.queryByText('Are you sure?')).not.toBeInTheDocument();
+          expect(screen.queryByText(&apos;Are you sure?&apos;)).not.toBeInTheDocument();
         }
       });
     });
   });
 
-  describe('Empty States', () => {
-    it('shows empty state when no geofences are available', () => {
+  describe(&apos;Empty States&apos;, () => {
+    it(&apos;shows empty state when no geofences are available&apos;, () => {
       // Mock empty geofences
-      vi.mocked(require('../../data/mockData').mockGeofences).mockReturnValue(
+      vi.mocked(require(&apos;../../data/mockData&apos;).mockGeofences).mockReturnValue(
         []
       );
 
@@ -448,17 +448,17 @@ describe('Geofences', () => {
         />
       );
 
-      expect(screen.getByText('No geofences found')).toBeInTheDocument();
+      expect(screen.getByText(&apos;No geofences found&apos;)).toBeInTheDocument();
       expect(
-        screen.getByText('Get started by creating your first geofence')
+        screen.getByText(&apos;Get started by creating your first geofence&apos;)
       ).toBeInTheDocument();
     });
   });
 
-  describe('Loading States', () => {
-    it('shows loading state while geofences are being loaded', () => {
+  describe(&apos;Loading States&apos;, () => {
+    it(&apos;shows loading state while geofences are being loaded&apos;, () => {
       // Mock loading state
-      vi.mocked(require('../../data/mockData').mockGeofences).mockReturnValue(
+      vi.mocked(require(&apos;../../data/mockData&apos;).mockGeofences).mockReturnValue(
         []
       );
 
@@ -471,7 +471,7 @@ describe('Geofences', () => {
       );
 
       // Should show loading or empty state
-      expect(screen.getByText('No geofences found')).toBeInTheDocument();
+      expect(screen.getByText(&apos;No geofences found&apos;)).toBeInTheDocument();
     });
   });
 });

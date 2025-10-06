@@ -5,7 +5,7 @@ import * as RechartsPrimitive from &apos;recharts&apos;;
 
 import { cn } from &apos;./utils&apos;;
 
-// Format: { THEME_CSS_SELECTOR }
+// Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: &apos;&apos;, dark: &apos;.dark&apos; } as const;
 
 export type ChartConfig = {
@@ -81,7 +81,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   return (
     <style
       dangerouslySetInnerHTML={{
-        __Object.entries(THEMES)
+        __html: Object.entries(THEMES)
           .map(
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {

@@ -1,13 +1,13 @@
-// import React from 'react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { EditIssue } from '../issues/EditIssue';
-import { render } from '../../test/test-utils';
-import { mockIssue } from '../../test/test-utils';
+// import React from &apos;react&apos;;
+import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
+import { screen, waitFor } from &apos;@testing-library/react&apos;;
+import userEvent from &apos;@testing-library/user-event&apos;;
+import { EditIssue } from &apos;../issues/EditIssue&apos;;
+import { render } from &apos;../../test/test-utils&apos;;
+import { mockIssue } from &apos;../../test/test-utils&apos;;
 
 // Mock toast
-vi.mock('sonner', () => ({
+vi.mock(&apos;sonner&apos;, () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -16,11 +16,11 @@ vi.mock('sonner', () => ({
 }));
 
 // Mock getIssueById
-vi.mock('../../data/mockIssueData', () => ({
+vi.mock(&apos;../../data/mockIssueData&apos;, () => ({
   getIssueById: vi.fn(),
 }));
 
-describe('EditIssue Component - Basic Tests', () => {
+describe(&apos;EditIssue Component - Basic Tests&apos;, () => {
   const mockProps = {
     issueId: mockIssue.id,
     onBack: vi.fn(),
@@ -32,12 +32,12 @@ describe('EditIssue Component - Basic Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock getIssueById implementation
-    const { getIssueById } = require('../../data/mockIssueData');
+    const { getIssueById } = require(&apos;../../data/mockIssueData&apos;);
     getIssueById.mockResolvedValue(mockIssue);
   });
 
-  describe('Basic Rendering', () => {
-    it('should render the component without crashing', async () => {
+  describe(&apos;Basic Rendering&apos;, () => {
+    it(&apos;should render the component without crashing&apos;, async () => {
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
@@ -45,20 +45,20 @@ describe('EditIssue Component - Basic Tests', () => {
       });
     });
 
-    it('should render back button and handle click', async () => {
+    it(&apos;should render back button and handle click&apos;, async () => {
       const user = userEvent.setup();
       render(<EditIssue {...mockProps} />);
 
       await waitFor(async () => {
-        const backButton = screen.getByRole('button', { name: /back/i });
+        const backButton = screen.getByRole(&apos;button&apos;, { name: /back/i });
         await user.click(backButton);
         expect(mockProps.onBack).toHaveBeenCalledTimes(1);
       });
     });
   });
 
-  describe('Form Structure', () => {
-    it('should render form with proper structure', async () => {
+  describe(&apos;Form Structure&apos;, () => {
+    it(&apos;should render form with proper structure&apos;, async () => {
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
@@ -66,7 +66,7 @@ describe('EditIssue Component - Basic Tests', () => {
       });
     });
 
-    it('should render issue information', async () => {
+    it(&apos;should render issue information&apos;, async () => {
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
@@ -75,8 +75,8 @@ describe('EditIssue Component - Basic Tests', () => {
     });
   });
 
-  describe('Form Inputs', () => {
-    it('should render issue title input', async () => {
+  describe(&apos;Form Inputs&apos;, () => {
+    it(&apos;should render issue title input&apos;, async () => {
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
@@ -84,50 +84,50 @@ describe('EditIssue Component - Basic Tests', () => {
       });
     });
 
-    it('should handle title input typing', async () => {
+    it(&apos;should handle title input typing&apos;, async () => {
       const user = userEvent.setup();
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
         const descriptionInput = screen.getByLabelText(/description/i);
-        user.type(descriptionInput, 'Updated Issue');
-        expect(descriptionInput).toHaveValue('Updated Issue');
+        user.type(descriptionInput, &apos;Updated Issue&apos;);
+        expect(descriptionInput).toHaveValue(&apos;Updated Issue&apos;);
       });
     });
   });
 
-  describe('Button Interactions', () => {
-    it('should render save button', async () => {
+  describe(&apos;Button Interactions&apos;, () => {
+    it(&apos;should render save button&apos;, async () => {
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
-        const saveButton = screen.getByRole('button', { name: /save/i });
+        const saveButton = screen.getByRole(&apos;button&apos;, { name: /save/i });
         expect(saveButton).toBeInTheDocument();
       });
     });
 
-    it('should handle cancel button click', async () => {
+    it(&apos;should handle cancel button click&apos;, async () => {
       const user = userEvent.setup();
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
-        const cancelButton = screen.getByRole('button', { name: /cancel/i });
+        const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
         user.click(cancelButton);
         expect(mockProps.onBack).toHaveBeenCalledTimes(1);
       });
     });
   });
 
-  describe('Form Validation', () => {
-    it('should handle form submission with valid data', async () => {
+  describe(&apos;Form Validation&apos;, () => {
+    it(&apos;should handle form submission with valid data&apos;, async () => {
       const user = userEvent.setup();
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
         const descriptionInput = screen.getByLabelText(/description/i);
-        user.type(descriptionInput, 'Updated Issue');
+        user.type(descriptionInput, &apos;Updated Issue&apos;);
 
-        const saveButton = screen.getByRole('button', { name: /save/i });
+        const saveButton = screen.getByRole(&apos;button&apos;, { name: /save/i });
         user.click(saveButton);
 
         expect(mockProps.onUpdateIssue).toHaveBeenCalled();
@@ -135,17 +135,17 @@ describe('EditIssue Component - Basic Tests', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper form structure', async () => {
+  describe(&apos;Accessibility&apos;, () => {
+    it(&apos;should have proper form structure&apos;, async () => {
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
-        const form = document.querySelector('form');
+        const form = document.querySelector(&apos;form&apos;);
         expect(form).toBeInTheDocument();
       });
     });
 
-    it('should have proper labels for inputs', async () => {
+    it(&apos;should have proper labels for inputs&apos;, async () => {
       render(<EditIssue {...mockProps} />);
 
       await waitFor(() => {
@@ -154,9 +154,9 @@ describe('EditIssue Component - Basic Tests', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle missing issue data gracefully', async () => {
-      const { getIssueById } = require('../../data/mockIssueData');
+  describe(&apos;Error Handling&apos;, () => {
+    it(&apos;should handle missing issue data gracefully&apos;, async () => {
+      const { getIssueById } = require(&apos;../../data/mockIssueData&apos;);
       getIssueById.mockResolvedValue(null);
 
       render(<EditIssue {...mockProps} />);
@@ -167,7 +167,7 @@ describe('EditIssue Component - Basic Tests', () => {
       });
     });
 
-    it('should handle onUpdateIssue callback', () => {
+    it(&apos;should handle onUpdateIssue callback&apos;, () => {
       expect(mockProps.onUpdateIssue).toBeDefined();
     });
   });

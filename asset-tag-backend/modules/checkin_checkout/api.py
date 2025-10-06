@@ -20,6 +20,26 @@ from modules.checkin_checkout.schemas import (
 router = APIRouter()
 
 
+def _checkin_out_to_response(record: CheckInOutRecord) -> CheckInOutResponse:
+    """Convert CheckInOutRecord model to CheckInOutResponse schema"""
+    return CheckInOutResponse(
+        id=str(record.id),
+        organization_id=str(record.organization_id),
+        asset_id=str(record.asset_id),
+        personnel_id=str(record.personnel_id) if record.personnel_id else None,
+        site_id=str(record.site_id) if record.site_id else None,
+        check_in_time=record.check_in_time.isoformat() if record.check_in_time else None,
+        check_out_time=record.check_out_time.isoformat() if record.check_out_time else None,
+        expected_check_out_time=record.expected_check_out_time.isoformat() if record.expected_check_out_time else None,
+        status=record.status,
+        notes=record.notes,
+        location=record.location,
+        metadata=record.metadata or {},
+        created_at=record.created_at,
+        updated_at=record.updated_at,
+    )
+
+
 @router.post(
     "/checkin-checkout/checkin", response_model=CheckInOutResponse, status_code=201
 )
@@ -164,7 +184,7 @@ async def get_checkin_checkout_records(
         result = await db.execute(query)
         records = result.scalars().all()
 
-        return [CheckInOutResponse.from_orm(record) for record in records]
+        return [_checkin_out_to_response(record) for record in records]
 
     except Exception as e:
         raise HTTPException(
