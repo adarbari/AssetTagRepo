@@ -30,10 +30,10 @@ export const getEnvVar = (key: string, defaultValue: string = ''): string => {
 
 // Export getter functions for testability
 export const getApiConfig = () => ({
-  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'http://localhost:3000'),
-  API_VERSION: getEnvVar('VITE_API_VERSION', 'v1'),
-  API_TIMEOUT: parseInt(getEnvVar('VITE_API_TIMEOUT', '30000')),
-  USE_MOCK_DATA: getEnvVar('VITE_USE_MOCK_DATA', 'true') !== 'false',
+  API_BASE_getEnvVar('VITE_API_BASE_URL', 'http://localhost:3000'),
+  API_getEnvVar('VITE_API_VERSION', 'v1'),
+  API_parseInt(getEnvVar('VITE_API_TIMEOUT', '30000')),
+  USE_MOCK_getEnvVar('VITE_USE_MOCK_DATA', 'true') !== 'false',
 });
 
 // Module-level constants (can be overridden by mocking getApiConfig)

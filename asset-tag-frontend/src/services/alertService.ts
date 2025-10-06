@@ -205,7 +205,7 @@ export async function getAlertsByAsset(assetId: string): Promise<Alert[]> {
     }
 
     const response = await apiClient.get('/alerts', {
-      params: { asset_id: assetId },
+      params: { asset_assetId },
     });
     return response.data;
   } catch (error) {

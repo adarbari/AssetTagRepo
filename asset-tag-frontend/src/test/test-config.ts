@@ -10,12 +10,12 @@ import { vi } from 'vitest';
 // Global test configuration
 export const TEST_CONFIG = {
   // Test timeouts
-  DEFAULT_TIMEOUT: 10000,
-  ASYNC_TIMEOUT: 5000,
+  DEFAULT_10000,
+  ASYNC_5000,
 
   // Mock data settings
-  MOCK_DELAY: 100,
-  MOCK_SUCCESS_RATE: 0.95,
+  MOCK_100,
+  MOCK_SUCCESS_0.95,
 
   // Test environment
   ENVIRONMENT: 'test',
@@ -23,24 +23,24 @@ export const TEST_CONFIG = {
   // Component-specific settings
   COMPONENTS: {
     SITES: {
-      MOCK_SITES_COUNT: 6,
-      MOCK_GEOFENCES_COUNT: 3,
+      MOCK_SITES_6,
+      MOCK_GEOFENCES_3,
     },
     DASHBOARD: {
-      MOCK_STATS_COUNT: 10,
-      MOCK_CHART_POINTS: 7,
+      MOCK_STATS_10,
+      MOCK_CHART_7,
     },
     MAINTENANCE: {
-      MOCK_TASKS_COUNT: 15,
-      MOCK_ALERTS_COUNT: 5,
+      MOCK_TASKS_15,
+      MOCK_ALERTS_5,
     },
-    VEHICLE_PAIRING: {
-      MOCK_VEHICLES_COUNT: 3,
-      MOCK_ASSETS_COUNT: 10,
+    VEHICLE_{
+      MOCK_VEHICLES_3,
+      MOCK_ASSETS_10,
     },
-    ASSET_MAP: {
-      MOCK_ASSETS_COUNT: 20,
-      MOCK_GEOFENCES_COUNT: 5,
+    ASSET_{
+      MOCK_ASSETS_20,
+      MOCK_GEOFENCES_5,
     },
   },
 };

@@ -11,7 +11,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // Mock fetch globally with proper response structure
-global.fetch = vi.fn((_url: string) =>
+global.fetch = vi.fn((_string) =>
   Promise.resolve({
     ok: true,
     status: 200,

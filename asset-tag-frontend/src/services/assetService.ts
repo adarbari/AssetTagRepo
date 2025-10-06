@@ -475,7 +475,7 @@ export class AssetService {
 
     try {
       const response = await apiClient.get(`/alerts`, {
-        params: { asset_id: assetId, ...filters },
+        params: { asset_assetId, ...filters },
       });
       return response.data;
     } catch (error) {
@@ -509,7 +509,7 @@ export class AssetService {
 
     try {
       const response = await apiClient.post(`/checkin`, {
-        asset_id: assetId,
+        asset_assetId,
         ...data,
       });
       return response.data;
@@ -533,7 +533,7 @@ export class AssetService {
 
     try {
       const response = await apiClient.post(`/checkout`, {
-        asset_id: assetId,
+        asset_assetId,
         ...data,
       });
       return response.data;

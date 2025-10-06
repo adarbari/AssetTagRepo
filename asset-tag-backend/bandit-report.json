@@ -1,6 +1,6 @@
 {
   "errors": [],
-  "generated_at": "2025-10-06T06:41:39Z",
+  "generated_at": "2025-10-06T07:03:21Z",
   "metrics": {
     "./config/cache.py": {
       "CONFIDENCE.HIGH": 0,
@@ -921,7 +921,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 154,
+      "loc": 185,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -1389,7 +1389,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 475,
+      "loc": 533,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -1948,7 +1948,7 @@
       "SEVERITY.LOW": 632,
       "SEVERITY.MEDIUM": 6,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 23420,
+      "loc": 23509,
       "nosec": 0,
       "skipped_tests": 0
     }

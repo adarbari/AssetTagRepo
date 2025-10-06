@@ -21,16 +21,16 @@ const Calendar = React.forwardRef<
           months: &apos;flex flex-col sm:flex-row gap-2&apos;,
           month: &apos;flex flex-col gap-4&apos;,
           caption: &apos;flex justify-center pt-1 relative items-center w-full&apos;,
-          caption_label: &apos;text-sm font-medium&apos;,
+          caption_&apos;text-sm font-medium&apos;,
           nav: &apos;flex items-center gap-1&apos;,
-          nav_button: cn(
+          nav_cn(
             buttonVariants({ variant: &apos;outline&apos; }),
             &apos;size-7 bg-transparent p-0 opacity-50 hover:opacity-100&apos;
           ),
-          nav_button_previous: &apos;absolute left-1&apos;,
-          nav_button_next: &apos;absolute right-1&apos;,
+          nav_button_&apos;absolute left-1&apos;,
+          nav_button_&apos;absolute right-1&apos;,
           table: &apos;w-full border-collapse space-x-1&apos;,
-          head_row: &apos;flex&apos;,
+          head_&apos;flex&apos;,
           head_cell:
             &apos;text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]&apos;,
           row: &apos;flex w-full mt-2&apos;,
@@ -50,13 +50,13 @@ const Calendar = React.forwardRef<
             &apos;day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground&apos;,
           day_selected:
             &apos;bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground&apos;,
-          day_today: &apos;bg-accent text-accent-foreground&apos;,
+          day_&apos;bg-accent text-accent-foreground&apos;,
           day_outside:
             &apos;day-outside text-muted-foreground aria-selected:text-muted-foreground&apos;,
-          day_disabled: &apos;text-muted-foreground opacity-50&apos;,
+          day_&apos;text-muted-foreground opacity-50&apos;,
           day_range_middle:
             &apos;aria-selected:bg-accent aria-selected:text-accent-foreground&apos;,
-          day_hidden: &apos;invisible&apos;,
+          day_&apos;invisible&apos;,
           ...classNames,
         }}
         components={{

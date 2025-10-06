@@ -211,7 +211,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
  * In production, this would be an API call with date range parameters
  */
 export async function getLocationData(
-  _timeRange: '24h' | '7d' | '30d' = '24h'
+  _'24h' | '7d' | '30d' = '24h'
 ): Promise<LocationDataPoint[]> {
   await new Promise(resolve => setTimeout(resolve, 100));
   return locationData;

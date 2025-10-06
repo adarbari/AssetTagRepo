@@ -54,7 +54,7 @@ import { AuditLogList, PageLayout } from &apos;../common&apos;;
 // Data will be loaded from service
 
 interface MaintenanceProps {
-  onAssetClick: (_asset: any) => void;
+  onAssetClick: (_any) => void;
 }
 
 export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
@@ -168,7 +168,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
     }
   };
 
-  const handleStartWork = async (taskId: string, _taskName: string) => {
+  const handleStartWork = async (taskId: string: string) => {
     try {
       const updatedTask = await updateMaintenanceTask(
         taskId,
@@ -218,7 +218,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
     setIsAuditLogDialogOpen(true);
   };
 
-  const handleCancelTask = async (taskId: string, _taskName: string) => {
+  const handleCancelTask = async (taskId: string: string) => {
     try {
       const updatedTask = await updateMaintenanceTask(
         taskId,
@@ -256,7 +256,7 @@ export function Maintenance({ onAssetClick: _onAssetClick }: MaintenanceProps) {
     });
   };
 
-  const handleViewAssetDetails = (assetId: string, _assetName: string) => {
+  const handleViewAssetDetails = (assetId: string: string) => {
     // Pass full asset context
     import(&apos;../../data/mockData&apos;).then(({ mockAssets }) => {
       const asset = mockAssets.find(a => a.id === assetId);
