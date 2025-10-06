@@ -14,13 +14,20 @@ from config.database import init_db, close_db
 from config.cache import close_cache
 from config.streaming import start_streaming, stop_streaming
 from config.elasticsearch import close_elasticsearch
-from ml.serving.model_loader import start_model_refresh_scheduler, stop_model_refresh_scheduler, preload_common_models
-from streaming.stream_processor_coordinator import start_all_stream_processors, stop_all_stream_processors
+from ml.serving.model_loader import (
+    start_model_refresh_scheduler,
+    stop_model_refresh_scheduler,
+    preload_common_models,
+)
+from streaming.stream_processor_coordinator import (
+    start_all_stream_processors,
+    stop_all_stream_processors,
+)
 
 # Configure logging
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper()),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -30,58 +37,59 @@ async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     # Startup
     logger.info("Starting Asset Tag Backend...")
-    
+
     # Initialize database
     await init_db()
     logger.info("Database initialized")
-    
+
     # Start streaming services
     await start_streaming()
     logger.info("Streaming services started")
-    
+
     # Start enhanced stream processors
     await start_all_stream_processors()
     logger.info("Enhanced stream processors started")
-    
+
     # Initialize Elasticsearch indices
     from config.elasticsearch import get_elasticsearch_manager
+
     es_manager = await get_elasticsearch_manager()
     await es_manager.create_indices()
     logger.info("Elasticsearch indices initialized")
-    
+
     # Start ML model refresh scheduler
     await start_model_refresh_scheduler()
     logger.info("ML model refresh scheduler started")
-    
+
     # Preload common ML models
     await preload_common_models()
     logger.info("Common ML models preloaded")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Asset Tag Backend...")
-    
+
     # Stop ML model refresh scheduler
     await stop_model_refresh_scheduler()
     logger.info("ML model refresh scheduler stopped")
-    
+
     # Stop enhanced stream processors
     await stop_all_stream_processors()
     logger.info("Enhanced stream processors stopped")
-    
+
     # Stop streaming services
     await stop_streaming()
     logger.info("Streaming services stopped")
-    
+
     # Close database connections
     await close_db()
     logger.info("Database connections closed")
-    
+
     # Close cache connections
     await close_cache()
     logger.info("Cache connections closed")
-    
+
     # Close Elasticsearch connections
     await close_elasticsearch()
     logger.info("Elasticsearch connections closed")
@@ -94,7 +102,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs" if settings.environment == "local" else None,
     redoc_url="/redoc" if settings.environment == "local" else None,
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
@@ -109,8 +117,7 @@ app.add_middleware(
 # Add trusted host middleware for production
 if settings.environment == "production":
     app.add_middleware(
-        TrustedHostMiddleware,
-        allowed_hosts=["*.yourdomain.com", "yourdomain.com"]
+        TrustedHostMiddleware, allowed_hosts=["*.yourdomain.com", "yourdomain.com"]
     )
 
 
@@ -134,8 +141,10 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={
             "error": "Internal server error",
-            "message": "An unexpected error occurred" if settings.environment == "production" else str(exc)
-        }
+            "message": "An unexpected error occurred"
+            if settings.environment == "production"
+            else str(exc),
+        },
     )
 
 
@@ -146,7 +155,7 @@ async def health_check():
     return {
         "status": "healthy",
         "environment": settings.environment,
-        "timestamp": time.time()
+        "timestamp": time.time(),
     }
 
 
@@ -179,18 +188,26 @@ from streaming.api import router as streaming_router
 app.include_router(assets_router, prefix=settings.api_v1_prefix, tags=["assets"])
 app.include_router(sites_router, prefix=settings.api_v1_prefix, tags=["sites"])
 app.include_router(gateways_router, prefix=settings.api_v1_prefix, tags=["gateways"])
-app.include_router(observations_router, prefix=settings.api_v1_prefix, tags=["observations"])
+app.include_router(
+    observations_router, prefix=settings.api_v1_prefix, tags=["observations"]
+)
 app.include_router(locations_router, prefix=settings.api_v1_prefix, tags=["locations"])
 app.include_router(geofences_router, prefix=settings.api_v1_prefix, tags=["geofences"])
 app.include_router(alerts_router, prefix=settings.api_v1_prefix, tags=["alerts"])
 app.include_router(jobs_router, prefix=settings.api_v1_prefix, tags=["jobs"])
-app.include_router(maintenance_router, prefix=settings.api_v1_prefix, tags=["maintenance"])
+app.include_router(
+    maintenance_router, prefix=settings.api_v1_prefix, tags=["maintenance"]
+)
 app.include_router(analytics_router, prefix=settings.api_v1_prefix, tags=["analytics"])
-app.include_router(checkin_checkout_router, prefix=settings.api_v1_prefix, tags=["checkin-checkout"])
+app.include_router(
+    checkin_checkout_router, prefix=settings.api_v1_prefix, tags=["checkin-checkout"]
+)
 app.include_router(vehicles_router, prefix=settings.api_v1_prefix, tags=["vehicles"])
 app.include_router(users_router, prefix=settings.api_v1_prefix, tags=["users"])
 app.include_router(issues_router, prefix=settings.api_v1_prefix, tags=["issues"])
-app.include_router(compliance_router, prefix=settings.api_v1_prefix, tags=["compliance"])
+app.include_router(
+    compliance_router, prefix=settings.api_v1_prefix, tags=["compliance"]
+)
 app.include_router(reports_router, prefix=settings.api_v1_prefix, tags=["reports"])
 
 # Include new routers
@@ -209,16 +226,17 @@ async def root():
         "message": "Asset Tag Backend API",
         "version": "1.0.0",
         "environment": settings.environment,
-        "docs_url": "/docs" if settings.environment == "local" else None
+        "docs_url": "/docs" if settings.environment == "local" else None,
     }
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
         port=8000,
         reload=settings.environment == "local",
-        log_level=settings.log_level.lower()
+        log_level=settings.log_level.lower(),
     )

@@ -52,7 +52,9 @@ class UtilizationAnalyzer:
             self.db = await get_db()
         return self.db
 
-    async def calculate_daily_utilization(self, asset_id: str, date: datetime) -> UtilizationMetrics:
+    async def calculate_daily_utilization(
+        self, asset_id: str, date: datetime
+    ) -> UtilizationMetrics:
         """Calculate daily utilization metrics for an asset"""
         try:
             db = await self._get_db()
@@ -76,7 +78,10 @@ class UtilizationAnalyzer:
             """
             )
 
-            result = await db.execute(query, {"asset_id": asset_id, "start_time": start_time, "end_time": end_time})
+            result = await db.execute(
+                query,
+                {"asset_id": asset_id, "start_time": start_time, "end_time": end_time},
+            )
 
             row = result.fetchone()
 
@@ -106,7 +111,9 @@ class UtilizationAnalyzer:
             )
 
         except Exception as e:
-            logger.error(f"Error calculating daily utilization for asset {asset_id}: {e}")
+            logger.error(
+                f"Error calculating daily utilization for asset {asset_id}: {e}"
+            )
             return UtilizationMetrics(
                 asset_id=asset_id,
                 date=date,
@@ -117,7 +124,9 @@ class UtilizationAnalyzer:
                 movement_events=0,
             )
 
-    async def calculate_weekly_utilization(self, asset_id: str, week_start: datetime) -> Dict[str, Any]:
+    async def calculate_weekly_utilization(
+        self, asset_id: str, week_start: datetime
+    ) -> Dict[str, Any]:
         """Calculate weekly utilization metrics"""
         try:
             daily_metrics = []
@@ -160,10 +169,14 @@ class UtilizationAnalyzer:
             }
 
         except Exception as e:
-            logger.error(f"Error calculating weekly utilization for asset {asset_id}: {e}")
+            logger.error(
+                f"Error calculating weekly utilization for asset {asset_id}: {e}"
+            )
             return {"asset_id": asset_id, "error": str(e)}
 
-    async def calculate_monthly_utilization(self, asset_id: str, month: int, year: int) -> Dict[str, Any]:
+    async def calculate_monthly_utilization(
+        self, asset_id: str, month: int, year: int
+    ) -> Dict[str, Any]:
         """Calculate monthly utilization metrics"""
         try:
             start_date = datetime(year, month, 1)
@@ -190,7 +203,10 @@ class UtilizationAnalyzer:
             """
             )
 
-            result = await db.execute(query, {"asset_id": asset_id, "start_date": start_date, "end_date": end_date})
+            result = await db.execute(
+                query,
+                {"asset_id": asset_id, "start_date": start_date, "end_date": end_date},
+            )
 
             row = result.fetchone()
 
@@ -225,7 +241,9 @@ class UtilizationAnalyzer:
             }
 
         except Exception as e:
-            logger.error(f"Error calculating monthly utilization for asset {asset_id}: {e}")
+            logger.error(
+                f"Error calculating monthly utilization for asset {asset_id}: {e}"
+            )
             return {"asset_id": asset_id, "month": month, "year": year, "error": str(e)}
 
 
@@ -241,7 +259,9 @@ class CostAnalyzer:
             self.db = await get_db()
         return self.db
 
-    async def calculate_asset_costs(self, asset_id: str, start_date: datetime, end_date: datetime) -> CostMetrics:
+    async def calculate_asset_costs(
+        self, asset_id: str, start_date: datetime, end_date: datetime
+    ) -> CostMetrics:
         """Calculate total costs for an asset over a period"""
         try:
             db = await self._get_db()
@@ -259,9 +279,12 @@ class CostAnalyzer:
             )
 
             maintenance_result = await db.execute(
-                maintenance_query, {"asset_id": asset_id, "start_date": start_date, "end_date": end_date}
+                maintenance_query,
+                {"asset_id": asset_id, "start_date": start_date, "end_date": end_date},
             )
-            maintenance_cost = float(maintenance_result.fetchone().maintenance_cost or 0)
+            maintenance_cost = float(
+                maintenance_result.fetchone().maintenance_cost or 0
+            )
 
             # Get utilization costs (based on hours used)
             utilization_query = text(
@@ -277,11 +300,14 @@ class CostAnalyzer:
             )
 
             utilization_result = await db.execute(
-                utilization_query, {"asset_id": asset_id, "start_date": start_date, "end_date": end_date}
+                utilization_query,
+                {"asset_id": asset_id, "start_date": start_date, "end_date": end_date},
             )
             utilization_row = utilization_result.fetchone()
 
-            hours_active = float(utilization_row.hours_active or 0) if utilization_row else 0.0
+            hours_active = (
+                float(utilization_row.hours_active or 0) if utilization_row else 0.0
+            )
             hourly_rate = 50.0  # Default hourly rate, should be configurable
             utilization_cost = hours_active * hourly_rate
 
@@ -298,20 +324,25 @@ class CostAnalyzer:
             )
 
             distance_result = await db.execute(
-                distance_query, {"asset_id": asset_id, "start_date": start_date, "end_date": end_date}
+                distance_query,
+                {"asset_id": asset_id, "start_date": start_date, "end_date": end_date},
             )
             total_distance = float(distance_result.fetchone().total_distance or 0)
 
             fuel_efficiency = 10.0  # km per liter, should be configurable
             fuel_price = 1.5  # per liter, should be configurable
-            fuel_cost = (total_distance / 1000) / fuel_efficiency * fuel_price  # Convert to km
+            fuel_cost = (
+                (total_distance / 1000) / fuel_efficiency * fuel_price
+            )  # Convert to km
 
             # Depreciation cost (simplified)
             days_in_period = (end_date - start_date).days
             annual_depreciation = 10000.0  # Should be configurable per asset
             depreciation_cost = (annual_depreciation / 365) * days_in_period
 
-            total_cost = maintenance_cost + utilization_cost + fuel_cost + depreciation_cost
+            total_cost = (
+                maintenance_cost + utilization_cost + fuel_cost + depreciation_cost
+            )
 
             return CostMetrics(
                 asset_id=asset_id,
@@ -352,7 +383,9 @@ class CostAnalyzer:
             """
             )
 
-            assets_result = await db.execute(assets_query, {"organization_id": organization_id})
+            assets_result = await db.execute(
+                assets_query, {"organization_id": organization_id}
+            )
             asset_ids = [str(row.id) for row in assets_result.fetchall()]
 
             total_costs = {
@@ -366,7 +399,9 @@ class CostAnalyzer:
             }
 
             for asset_id in asset_ids:
-                asset_cost = await self.calculate_asset_costs(asset_id, start_date, end_date)
+                asset_cost = await self.calculate_asset_costs(
+                    asset_id, start_date, end_date
+                )
                 total_costs["total_cost"] += asset_cost.total_cost
                 total_costs["utilization_cost"] += asset_cost.utilization_cost
                 total_costs["maintenance_cost"] += asset_cost.maintenance_cost
@@ -404,7 +439,11 @@ class HeatmapAnalyzer:
         return self.db
 
     async def generate_location_heatmap(
-        self, organization_id: str, start_date: datetime, end_date: datetime, grid_size: float = 0.001  # Grid size in degrees
+        self,
+        organization_id: str,
+        start_date: datetime,
+        end_date: datetime,
+        grid_size: float = 0.001,  # Grid size in degrees
     ) -> Dict[str, Any]:
         """Generate location heatmap data"""
         try:
@@ -430,7 +469,12 @@ class HeatmapAnalyzer:
 
             result = await db.execute(
                 query,
-                {"organization_id": organization_id, "start_date": start_date, "end_date": end_date, "grid_size": grid_size},
+                {
+                    "organization_id": organization_id,
+                    "start_date": start_date,
+                    "end_date": end_date,
+                    "grid_size": grid_size,
+                },
             )
 
             heatmap_data = []
@@ -455,4 +499,8 @@ class HeatmapAnalyzer:
 
         except Exception as e:
             logger.error(f"Error generating location heatmap: {e}")
-            return {"organization_id": organization_id, "error": str(e), "heatmap_data": []}
+            return {
+                "organization_id": organization_id,
+                "error": str(e),
+                "heatmap_data": [],
+            }

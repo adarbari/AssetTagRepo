@@ -5,13 +5,23 @@ import json
 import logging
 from typing import Any, Dict, Optional
 
-from fastapi import (APIRouter, Depends, HTTPException, Query, WebSocket,
-                     WebSocketDisconnect)
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Query,
+    WebSocket,
+    WebSocketDisconnect,
+)
 
 from modules.websocket.connection_manager import manager
-from modules.websocket.handlers import (AlertHandler, DashboardHandler,
-                                        GeofenceHandler, LocationHandler,
-                                        SystemHandler)
+from modules.websocket.handlers import (
+    AlertHandler,
+    DashboardHandler,
+    GeofenceHandler,
+    LocationHandler,
+    SystemHandler,
+)
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -20,8 +30,12 @@ logger = logging.getLogger(__name__)
 @router.websocket("/ws/locations")
 async def websocket_locations(
     websocket: WebSocket,
-    asset_ids: Optional[str] = Query(None, description="Comma-separated asset IDs to filter"),
-    site_ids: Optional[str] = Query(None, description="Comma-separated site IDs to filter"),
+    asset_ids: Optional[str] = Query(
+        None, description="Comma-separated asset IDs to filter"
+    ),
+    site_ids: Optional[str] = Query(
+        None, description="Comma-separated site IDs to filter"
+    ),
 ):
     """WebSocket endpoint for real-time location updates"""
     # Parse filters
@@ -50,9 +64,15 @@ async def websocket_locations(
 @router.websocket("/ws/alerts")
 async def websocket_alerts(
     websocket: WebSocket,
-    alert_types: Optional[str] = Query(None, description="Comma-separated alert types to filter"),
-    severity_levels: Optional[str] = Query(None, description="Comma-separated severity levels to filter"),
-    asset_ids: Optional[str] = Query(None, description="Comma-separated asset IDs to filter"),
+    alert_types: Optional[str] = Query(
+        None, description="Comma-separated alert types to filter"
+    ),
+    severity_levels: Optional[str] = Query(
+        None, description="Comma-separated severity levels to filter"
+    ),
+    asset_ids: Optional[str] = Query(
+        None, description="Comma-separated asset IDs to filter"
+    ),
 ):
     """WebSocket endpoint for real-time alert notifications"""
     # Parse filters
@@ -83,9 +103,15 @@ async def websocket_alerts(
 @router.websocket("/ws/geofences")
 async def websocket_geofences(
     websocket: WebSocket,
-    geofence_ids: Optional[str] = Query(None, description="Comma-separated geofence IDs to filter"),
-    asset_ids: Optional[str] = Query(None, description="Comma-separated asset IDs to filter"),
-    event_types: Optional[str] = Query(None, description="Comma-separated event types (entry,exit) to filter"),
+    geofence_ids: Optional[str] = Query(
+        None, description="Comma-separated geofence IDs to filter"
+    ),
+    asset_ids: Optional[str] = Query(
+        None, description="Comma-separated asset IDs to filter"
+    ),
+    event_types: Optional[str] = Query(
+        None, description="Comma-separated event types (entry,exit) to filter"
+    ),
 ):
     """WebSocket endpoint for real-time geofence events"""
     # Parse filters
@@ -116,8 +142,12 @@ async def websocket_geofences(
 @router.websocket("/ws/dashboard")
 async def websocket_dashboard(
     websocket: WebSocket,
-    metrics: Optional[str] = Query(None, description="Comma-separated metric names to filter"),
-    refresh_interval: Optional[int] = Query(30, description="Refresh interval in seconds"),
+    metrics: Optional[str] = Query(
+        None, description="Comma-separated metric names to filter"
+    ),
+    refresh_interval: Optional[int] = Query(
+        30, description="Refresh interval in seconds"
+    ),
 ):
     """WebSocket endpoint for real-time dashboard metrics"""
     # Parse filters
@@ -150,14 +180,21 @@ async def get_websocket_stats():
 
 @router.post("/ws/broadcast/location")
 async def broadcast_location_update(
-    asset_id: str, latitude: float, longitude: float, additional_data: Optional[Dict[str, Any]] = None
+    asset_id: str,
+    latitude: float,
+    longitude: float,
+    additional_data: Optional[Dict[str, Any]] = None,
 ):
     """Manually broadcast a location update (for testing)"""
     try:
-        await LocationHandler.broadcast_location_update(asset_id, latitude, longitude, additional_data)
+        await LocationHandler.broadcast_location_update(
+            asset_id, latitude, longitude, additional_data
+        )
         return {"message": "Location update broadcasted successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error broadcasting location update: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error broadcasting location update: {str(e)}"
+        )
 
 
 @router.post("/ws/broadcast/alert")
@@ -171,10 +208,14 @@ async def broadcast_alert_update(
 ):
     """Manually broadcast an alert (for testing)"""
     try:
-        await AlertHandler.broadcast_alert(alert_id, alert_type, severity, asset_id, message, additional_data)
+        await AlertHandler.broadcast_alert(
+            alert_id, alert_type, severity, asset_id, message, additional_data
+        )
         return {"message": "Alert broadcasted successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error broadcasting alert: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error broadcasting alert: {str(e)}"
+        )
 
 
 @router.post("/ws/broadcast/geofence")
@@ -188,22 +229,33 @@ async def broadcast_geofence_event(
 ):
     """Manually broadcast a geofence event (for testing)"""
     try:
-        await GeofenceHandler.broadcast_geofence_event(asset_id, geofence_id, event_type, latitude, longitude, additional_data)
+        await GeofenceHandler.broadcast_geofence_event(
+            asset_id, geofence_id, event_type, latitude, longitude, additional_data
+        )
         return {"message": "Geofence event broadcasted successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error broadcasting geofence event: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error broadcasting geofence event: {str(e)}"
+        )
 
 
 @router.post("/ws/broadcast/metric")
 async def broadcast_metric_update(
-    metric_name: str, value: Any, unit: Optional[str] = None, additional_data: Optional[Dict[str, Any]] = None
+    metric_name: str,
+    value: Any,
+    unit: Optional[str] = None,
+    additional_data: Optional[Dict[str, Any]] = None,
 ):
     """Manually broadcast a metric update (for testing)"""
     try:
-        await DashboardHandler.broadcast_metric_update(metric_name, value, unit, additional_data)
+        await DashboardHandler.broadcast_metric_update(
+            metric_name, value, unit, additional_data
+        )
         return {"message": "Metric update broadcasted successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error broadcasting metric update: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error broadcasting metric update: {str(e)}"
+        )
 
 
 @router.post("/ws/broadcast/maintenance")
@@ -221,31 +273,51 @@ async def broadcast_maintenance_notification(
         if scheduled_time:
             scheduled_dt = datetime.fromisoformat(scheduled_time)
 
-        await SystemHandler.broadcast_maintenance_notification(asset_id, maintenance_type, message, scheduled_dt)
+        await SystemHandler.broadcast_maintenance_notification(
+            asset_id, maintenance_type, message, scheduled_dt
+        )
         return {"message": "Maintenance notification broadcasted successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error broadcasting maintenance notification: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error broadcasting maintenance notification: {str(e)}",
+        )
 
 
 @router.post("/ws/broadcast/job")
-async def broadcast_job_update(job_id: str, status: str, message: str = "", additional_data: Optional[Dict[str, Any]] = None):
+async def broadcast_job_update(
+    job_id: str,
+    status: str,
+    message: str = "",
+    additional_data: Optional[Dict[str, Any]] = None,
+):
     """Manually broadcast a job update (for testing)"""
     try:
-        await SystemHandler.broadcast_job_update(job_id, status, message, additional_data)
+        await SystemHandler.broadcast_job_update(
+            job_id, status, message, additional_data
+        )
         return {"message": "Job update broadcasted successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error broadcasting job update: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error broadcasting job update: {str(e)}"
+        )
 
 
 @router.post("/ws/broadcast/compliance")
-async def broadcast_compliance_reminder(compliance_id: str, compliance_type: str, due_date: str, message: str = ""):
+async def broadcast_compliance_reminder(
+    compliance_id: str, compliance_type: str, due_date: str, message: str = ""
+):
     """Manually broadcast a compliance reminder (for testing)"""
     try:
         from datetime import datetime
 
         due_dt = datetime.fromisoformat(due_date)
 
-        await SystemHandler.broadcast_compliance_reminder(compliance_id, compliance_type, due_dt, message)
+        await SystemHandler.broadcast_compliance_reminder(
+            compliance_id, compliance_type, due_dt, message
+        )
         return {"message": "Compliance reminder broadcasted successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error broadcasting compliance reminder: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error broadcasting compliance reminder: {str(e)}"
+        )

@@ -12,7 +12,9 @@ class TestCheckInCheckOutAPI:
 
     def test_check_in_asset(self, client: TestClient, sample_checkin_data: dict):
         """Test checking in an asset"""
-        response = client.post("/api/v1/checkin-checkout/checkin", json=sample_checkin_data)
+        response = client.post(
+            "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
+        )
         assert response.status_code == 201
         data = response.json()
         assert data["asset_id"] == sample_checkin_data["asset_id"]
@@ -28,7 +30,9 @@ class TestCheckInCheckOutAPI:
             "asset_name": "Test Asset",
             "action": "checkout",
             "checked_out_by": "user-001",
-            "expected_return_date": (datetime.utcnow() + timedelta(days=7)).date().isoformat(),
+            "expected_return_date": (datetime.utcnow() + timedelta(days=7))
+            .date()
+            .isoformat(),
             "location": "Test location",
             "notes": "Test checkout",
             "metadata": {"test": True},
@@ -50,12 +54,16 @@ class TestCheckInCheckOutAPI:
             "asset_name": "Test Asset 2",
             "action": "checkout",
             "checked_out_by": "user-001",
-            "expected_return_date": (datetime.utcnow() + timedelta(days=7)).date().isoformat(),
+            "expected_return_date": (datetime.utcnow() + timedelta(days=7))
+            .date()
+            .isoformat(),
             "location": "Test location",
             "notes": "Test checkout",
         }
 
-        checkout_response = client.post("/api/v1/checkin-checkout/checkout", json=checkout_data)
+        checkout_response = client.post(
+            "/api/v1/checkin-checkout/checkout", json=checkout_data
+        )
         assert checkout_response.status_code == 201
 
         # Then check it back in
@@ -75,10 +83,14 @@ class TestCheckInCheckOutAPI:
         assert data["action"] == checkin_data["action"]
         assert data["checked_in_by"] == checkin_data["checked_in_by"]
 
-    def test_get_checkin_checkout_records(self, client: TestClient, sample_checkin_data: dict):
+    def test_get_checkin_checkout_records(
+        self, client: TestClient, sample_checkin_data: dict
+    ):
         """Test getting check-in/check-out records"""
         # Create a record first
-        create_response = client.post("/api/v1/checkin-checkout/checkin", json=sample_checkin_data)
+        create_response = client.post(
+            "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
+        )
         assert create_response.status_code == 201
 
         # Get all records
@@ -89,30 +101,42 @@ class TestCheckInCheckOutAPI:
         assert len(data) == 1
         assert data[0]["asset_id"] == sample_checkin_data["asset_id"]
 
-    def test_get_checkin_checkout_records_with_filters(self, client: TestClient, sample_checkin_data: dict):
+    def test_get_checkin_checkout_records_with_filters(
+        self, client: TestClient, sample_checkin_data: dict
+    ):
         """Test getting check-in/check-out records with filters"""
         # Create a record first
-        create_response = client.post("/api/v1/checkin-checkout/checkin", json=sample_checkin_data)
+        create_response = client.post(
+            "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
+        )
         assert create_response.status_code == 201
 
         # Filter by asset_id
-        response = client.get(f"/api/v1/checkin-checkout/records?asset_id={sample_checkin_data['asset_id']}")
+        response = client.get(
+            f"/api/v1/checkin-checkout/records?asset_id={sample_checkin_data['asset_id']}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 1
         assert data[0]["asset_id"] == sample_checkin_data["asset_id"]
 
         # Filter by action
-        response = client.get(f"/api/v1/checkin-checkout/records?action={sample_checkin_data['action']}")
+        response = client.get(
+            f"/api/v1/checkin-checkout/records?action={sample_checkin_data['action']}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 1
         assert data[0]["action"] == sample_checkin_data["action"]
 
-    def test_get_checkin_checkout_record_by_id(self, client: TestClient, sample_checkin_data: dict):
+    def test_get_checkin_checkout_record_by_id(
+        self, client: TestClient, sample_checkin_data: dict
+    ):
         """Test getting a specific check-in/check-out record by ID"""
         # Create a record first
-        create_response = client.post("/api/v1/checkin-checkout/checkin", json=sample_checkin_data)
+        create_response = client.post(
+            "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
+        )
         assert create_response.status_code == 201
         record_id = create_response.json()["id"]
 
@@ -141,14 +165,20 @@ class TestCheckInCheckOutAPI:
         assert isinstance(data["checked_out_assets"], list)
         assert isinstance(data["checked_in_assets"], list)
 
-    def test_get_current_status_for_asset(self, client: TestClient, sample_checkin_data: dict):
+    def test_get_current_status_for_asset(
+        self, client: TestClient, sample_checkin_data: dict
+    ):
         """Test getting current status for a specific asset"""
         # Create a record first
-        create_response = client.post("/api/v1/checkin-checkout/checkin", json=sample_checkin_data)
+        create_response = client.post(
+            "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
+        )
         assert create_response.status_code == 201
 
         # Get status for specific asset
-        response = client.get(f"/api/v1/checkin-checkout/status/{sample_checkin_data['asset_id']}")
+        response = client.get(
+            f"/api/v1/checkin-checkout/status/{sample_checkin_data['asset_id']}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert data["asset_id"] == sample_checkin_data["asset_id"]
@@ -164,12 +194,16 @@ class TestCheckInCheckOutAPI:
             "asset_name": "Overdue Asset",
             "action": "checkout",
             "checked_out_by": "user-001",
-            "expected_return_date": (datetime.utcnow() - timedelta(days=1)).date().isoformat(),
+            "expected_return_date": (datetime.utcnow() - timedelta(days=1))
+            .date()
+            .isoformat(),
             "location": "Test location",
             "notes": "Overdue checkout",
         }
 
-        create_response = client.post("/api/v1/checkin-checkout/checkout", json=overdue_data)
+        create_response = client.post(
+            "/api/v1/checkin-checkout/checkout", json=overdue_data
+        )
         assert create_response.status_code == 201
 
         # Get overdue check-ins
@@ -180,10 +214,14 @@ class TestCheckInCheckOutAPI:
         assert len(data) == 1
         assert data[0]["asset_id"] == overdue_data["asset_id"]
 
-    def test_get_checkin_checkout_stats(self, client: TestClient, sample_checkin_data: dict):
+    def test_get_checkin_checkout_stats(
+        self, client: TestClient, sample_checkin_data: dict
+    ):
         """Test getting check-in/check-out statistics"""
         # Create a record first
-        create_response = client.post("/api/v1/checkin-checkout/checkin", json=sample_checkin_data)
+        create_response = client.post(
+            "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
+        )
         assert create_response.status_code == 201
 
         # Get statistics
@@ -201,17 +239,23 @@ class TestCheckInCheckOutAPI:
         assert isinstance(data["most_active_users"], list)
         assert isinstance(data["checkout_trends"], list)
 
-    def test_get_checkin_checkout_stats_with_date_range(self, client: TestClient, sample_checkin_data: dict):
+    def test_get_checkin_checkout_stats_with_date_range(
+        self, client: TestClient, sample_checkin_data: dict
+    ):
         """Test getting check-in/check-out statistics with date range"""
         # Create a record first
-        create_response = client.post("/api/v1/checkin-checkout/checkin", json=sample_checkin_data)
+        create_response = client.post(
+            "/api/v1/checkin-checkout/checkin", json=sample_checkin_data
+        )
         assert create_response.status_code == 201
 
         # Get statistics with date range
         start_date = "2025-01-01"
         end_date = "2025-12-31"
 
-        response = client.get(f"/api/v1/checkin-checkout/stats?start_date={start_date}&end_date={end_date}")
+        response = client.get(
+            f"/api/v1/checkin-checkout/stats?start_date={start_date}&end_date={end_date}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert "total_records" in data
@@ -248,7 +292,9 @@ class TestCheckInCheckOutAPI:
                 "asset_name": f"Asset {i}",
                 "action": "checkout",
                 "checked_out_by": f"user-{i}",
-                "expected_return_date": (datetime.utcnow() + timedelta(days=7)).date().isoformat(),
+                "expected_return_date": (datetime.utcnow() + timedelta(days=7))
+                .date()
+                .isoformat(),
                 "location": f"Location {i}",
                 "notes": f"Test checkout {i}",
             }

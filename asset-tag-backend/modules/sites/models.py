@@ -1,13 +1,21 @@
 """
 Site models
 """
-from sqlalchemy import (JSON, Boolean, Column, ForeignKey, Index, Integer,
-                        Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Site(BaseModel, OrganizationMixin, SoftDeleteMixin):
@@ -47,8 +55,14 @@ class Site(BaseModel, OrganizationMixin, SoftDeleteMixin):
     organization = relationship("Organization", back_populates="sites")
     manager = relationship("User", foreign_keys=[manager_id])
     geofence = relationship("Geofence", foreign_keys=[geofence_id])
-    assets = relationship("Asset", foreign_keys="Asset.current_site_id", back_populates="current_site")
-    personnel = relationship("Personnel", foreign_keys="Personnel.current_site_id", back_populates="current_site")
+    assets = relationship(
+        "Asset", foreign_keys="Asset.current_site_id", back_populates="current_site"
+    )
+    personnel = relationship(
+        "Personnel",
+        foreign_keys="Personnel.current_site_id",
+        back_populates="current_site",
+    )
     gateways = relationship("Gateway", back_populates="site")
 
     # Indexes
@@ -67,7 +81,9 @@ class Personnel(BaseModel, OrganizationMixin, SoftDeleteMixin):
     # Basic information
     name = Column(String(255), nullable=False)
     role = Column(String(100), nullable=False)
-    status = Column(String(50), default="on-duty", index=True)  # on-duty, off-duty, on-break
+    status = Column(
+        String(50), default="on-duty", index=True
+    )  # on-duty, off-duty, on-break
 
     # Location
     current_site_id = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True)
@@ -80,7 +96,9 @@ class Personnel(BaseModel, OrganizationMixin, SoftDeleteMixin):
     site_metadata = Column(JSON, default={})
 
     # Relationships
-    current_site = relationship("Site", foreign_keys=[current_site_id], back_populates="personnel")
+    current_site = relationship(
+        "Site", foreign_keys=[current_site_id], back_populates="personnel"
+    )
     activity_history = relationship("PersonnelActivity", back_populates="personnel")
 
     # Indexes
@@ -96,7 +114,9 @@ class PersonnelActivity(BaseModel, OrganizationMixin):
 
     __tablename__ = "personnel_activities"
 
-    personnel_id = Column(UUID(as_uuid=True), ForeignKey("personnel.id"), nullable=False)
+    personnel_id = Column(
+        UUID(as_uuid=True), ForeignKey("personnel.id"), nullable=False
+    )
     site_id = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=False)
     site_name = Column(String(255), nullable=False)  # Denormalized for performance
     activity_type = Column(String(50), nullable=False)  # arrival, departure

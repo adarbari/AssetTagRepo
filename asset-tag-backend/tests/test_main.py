@@ -68,7 +68,10 @@ class TestMainApplication:
         for route in api_routes:
             response = client.get(route)
             # Should return 200 (empty list) or 404 (if route doesn't exist)
-            assert response.status_code in [200, 404], f"Route {route} returned {response.status_code}"
+            assert response.status_code in [
+                200,
+                404,
+            ], f"Route {route} returned {response.status_code}"
 
     def test_cors_headers(self, client: TestClient):
         """Test that CORS headers are properly set"""
@@ -139,4 +142,6 @@ class TestMainApplication:
         # Check that at least some expected tags are present
         found_tags = set(all_tags)
         expected_tags_set = set(expected_tags)
-        assert len(found_tags.intersection(expected_tags_set)) > 0, "No expected API tags found"
+        assert (
+            len(found_tags.intersection(expected_tags_set)) > 0
+        ), "No expected API tags found"

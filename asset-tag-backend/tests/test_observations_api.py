@@ -16,7 +16,9 @@ class TestObservationsAPI:
         assert response.status_code == 200
         assert response.json() == []
 
-    def test_create_observation(self, client: TestClient, sample_observation_data: dict):
+    def test_create_observation(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test creating a new observation"""
         response = client.post("/api/v1/observations", json=sample_observation_data)
         assert response.status_code == 201
@@ -62,10 +64,14 @@ class TestObservationsAPI:
         assert data["batch_id"] == "test-batch-001"
         assert len(data["errors"]) == 0
 
-    def test_get_observation_by_id(self, client: TestClient, sample_observation_data: dict):
+    def test_get_observation_by_id(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test getting a specific observation by ID"""
         # Create observation first
-        create_response = client.post("/api/v1/observations", json=sample_observation_data)
+        create_response = client.post(
+            "/api/v1/observations", json=sample_observation_data
+        )
         assert create_response.status_code == 201
         observation_id = create_response.json()["id"]
 
@@ -82,27 +88,37 @@ class TestObservationsAPI:
         response = client.get(f"/api/v1/observations/{fake_id}")
         assert response.status_code == 404
 
-    def test_update_observation(self, client: TestClient, sample_observation_data: dict):
+    def test_update_observation(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test updating an observation"""
         # Create observation first
-        create_response = client.post("/api/v1/observations", json=sample_observation_data)
+        create_response = client.post(
+            "/api/v1/observations", json=sample_observation_data
+        )
         assert create_response.status_code == 201
         observation_id = create_response.json()["id"]
 
         # Update observation
         update_data = {"rssi": -60, "battery_level": 95}
-        response = client.put(f"/api/v1/observations/{observation_id}", json=update_data)
+        response = client.put(
+            f"/api/v1/observations/{observation_id}", json=update_data
+        )
         assert response.status_code == 200
         data = response.json()
         assert data["rssi"] == -60
         assert data["battery_level"] == 95
 
-    def test_get_latest_observation_for_asset(self, client: TestClient, sample_observation_data: dict):
+    def test_get_latest_observation_for_asset(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test getting the latest observation for an asset"""
         asset_id = sample_observation_data["asset_id"]
 
         # Create observation first
-        create_response = client.post("/api/v1/observations", json=sample_observation_data)
+        create_response = client.post(
+            "/api/v1/observations", json=sample_observation_data
+        )
         assert create_response.status_code == 201
 
         # Get latest observation for asset
@@ -111,12 +127,16 @@ class TestObservationsAPI:
         data = response.json()
         assert data["asset_id"] == asset_id
 
-    def test_get_asset_observation_history(self, client: TestClient, sample_observation_data: dict):
+    def test_get_asset_observation_history(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test getting observation history for an asset"""
         asset_id = sample_observation_data["asset_id"]
 
         # Create observation first
-        create_response = client.post("/api/v1/observations", json=sample_observation_data)
+        create_response = client.post(
+            "/api/v1/observations", json=sample_observation_data
+        )
         assert create_response.status_code == 201
 
         # Get observation history for asset
@@ -127,12 +147,16 @@ class TestObservationsAPI:
         assert len(data) == 1
         assert data[0]["asset_id"] == asset_id
 
-    def test_get_recent_observations_for_gateway(self, client: TestClient, sample_observation_data: dict):
+    def test_get_recent_observations_for_gateway(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test getting recent observations for a gateway"""
         gateway_id = sample_observation_data["gateway_id"]
 
         # Create observation first
-        create_response = client.post("/api/v1/observations", json=sample_observation_data)
+        create_response = client.post(
+            "/api/v1/observations", json=sample_observation_data
+        )
         assert create_response.status_code == 201
 
         # Get recent observations for gateway
@@ -143,10 +167,14 @@ class TestObservationsAPI:
         assert len(data) == 1
         assert data[0]["gateway_id"] == gateway_id
 
-    def test_get_observation_stats(self, client: TestClient, sample_observation_data: dict):
+    def test_get_observation_stats(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test getting observation statistics"""
         # Create observation first
-        create_response = client.post("/api/v1/observations", json=sample_observation_data)
+        create_response = client.post(
+            "/api/v1/observations", json=sample_observation_data
+        )
         assert create_response.status_code == 201
 
         # Get observation stats
@@ -164,44 +192,60 @@ class TestObservationsAPI:
         assert "time_range" in data
         assert "signal_quality_distribution" in data
 
-    def test_get_observations_with_filters(self, client: TestClient, sample_observation_data: dict):
+    def test_get_observations_with_filters(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test getting observations with filters"""
         # Create observation first
-        create_response = client.post("/api/v1/observations", json=sample_observation_data)
+        create_response = client.post(
+            "/api/v1/observations", json=sample_observation_data
+        )
         assert create_response.status_code == 201
 
         # Filter by asset_id
-        response = client.get(f"/api/v1/observations?asset_id={sample_observation_data['asset_id']}")
+        response = client.get(
+            f"/api/v1/observations?asset_id={sample_observation_data['asset_id']}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 1
         assert data[0]["asset_id"] == sample_observation_data["asset_id"]
 
         # Filter by gateway_id
-        response = client.get(f"/api/v1/observations?gateway_id={sample_observation_data['gateway_id']}")
+        response = client.get(
+            f"/api/v1/observations?gateway_id={sample_observation_data['gateway_id']}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 1
         assert data[0]["gateway_id"] == sample_observation_data["gateway_id"]
 
         # Filter by signal_quality
-        response = client.get(f"/api/v1/observations?signal_quality={sample_observation_data['signal_quality']}")
+        response = client.get(
+            f"/api/v1/observations?signal_quality={sample_observation_data['signal_quality']}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 1
         assert data[0]["signal_quality"] == sample_observation_data["signal_quality"]
 
-    def test_get_observations_with_time_range(self, client: TestClient, sample_observation_data: dict):
+    def test_get_observations_with_time_range(
+        self, client: TestClient, sample_observation_data: dict
+    ):
         """Test getting observations with time range filters"""
         # Create observation first
-        create_response = client.post("/api/v1/observations", json=sample_observation_data)
+        create_response = client.post(
+            "/api/v1/observations", json=sample_observation_data
+        )
         assert create_response.status_code == 201
 
         # Filter by time range
         start_time = "2025-01-01T00:00:00Z"
         end_time = "2025-12-31T23:59:59Z"
 
-        response = client.get(f"/api/v1/observations?start_time={start_time}&end_time={end_time}")
+        response = client.get(
+            f"/api/v1/observations?start_time={start_time}&end_time={end_time}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 1

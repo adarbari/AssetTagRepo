@@ -11,12 +11,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.geofences.models import Geofence, GeofenceEvent
-from modules.geofences.schemas import (GeofenceCreate,
-                                       GeofenceEvaluationRequest,
-                                       GeofenceEvaluationResponse,
-                                       GeofenceEventCreate,
-                                       GeofenceEventResponse, GeofenceResponse,
-                                       GeofenceStatsResponse, GeofenceUpdate)
+from modules.geofences.schemas import (
+    GeofenceCreate,
+    GeofenceEvaluationRequest,
+    GeofenceEvaluationResponse,
+    GeofenceEventCreate,
+    GeofenceEventResponse,
+    GeofenceResponse,
+    GeofenceStatsResponse,
+    GeofenceUpdate,
+)
 
 router = APIRouter()
 
@@ -30,7 +34,10 @@ def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> fl
     delta_lat = math.radians(lat2 - lat1)
     delta_lon = math.radians(lon2 - lon1)
 
-    a = math.sin(delta_lat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
+    a = (
+        math.sin(delta_lat / 2) ** 2
+        + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
+    )
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     return R * c
@@ -96,7 +103,9 @@ async def get_geofences(
         return [GeofenceResponse.from_orm(geofence) for geofence in geofences]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching geofences: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching geofences: {str(e)}"
+        )
 
 
 @router.get("/geofences/{geofence_id}", response_model=GeofenceResponse)
@@ -114,22 +123,29 @@ async def get_geofence(geofence_id: str, db: AsyncSession = Depends(get_db)):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching geofence: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching geofence: {str(e)}"
+        )
 
 
 @router.post("/geofences", response_model=GeofenceResponse, status_code=201)
-async def create_geofence(geofence_data: GeofenceCreate, db: AsyncSession = Depends(get_db)):
+async def create_geofence(
+    geofence_data: GeofenceCreate, db: AsyncSession = Depends(get_db)
+):
     """Create a new geofence"""
     try:
         # Check if geofence name already exists in organization
         existing = await db.execute(
             select(Geofence).where(
                 Geofence.name == geofence_data.name,
-                Geofence.organization_id == "00000000-0000-0000-0000-000000000000",  # Default org
+                Geofence.organization_id
+                == "00000000-0000-0000-0000-000000000000",  # Default org
             )
         )
         if existing.scalar_one_or_none():
-            raise HTTPException(status_code=400, detail="Geofence with this name already exists")
+            raise HTTPException(
+                status_code=400, detail="Geofence with this name already exists"
+            )
 
         # Create new geofence
         geofence = Geofence(
@@ -168,11 +184,15 @@ async def create_geofence(geofence_data: GeofenceCreate, db: AsyncSession = Depe
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error creating geofence: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error creating geofence: {str(e)}"
+        )
 
 
 @router.put("/geofences/{geofence_id}", response_model=GeofenceResponse)
-async def update_geofence(geofence_id: str, geofence_data: GeofenceUpdate, db: AsyncSession = Depends(get_db)):
+async def update_geofence(
+    geofence_id: str, geofence_data: GeofenceUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update an existing geofence"""
     try:
         # Get existing geofence
@@ -196,7 +216,9 @@ async def update_geofence(geofence_id: str, geofence_data: GeofenceUpdate, db: A
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating geofence: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating geofence: {str(e)}"
+        )
 
 
 @router.delete("/geofences/{geofence_id}")
@@ -211,11 +233,16 @@ async def delete_geofence(geofence_id: str, db: AsyncSession = Depends(get_db)):
             raise HTTPException(status_code=404, detail="Geofence not found")
 
         # Check if geofence has events
-        events_count = await db.execute(select(func.count(GeofenceEvent.id)).where(GeofenceEvent.geofence_id == geofence_id))
+        events_count = await db.execute(
+            select(func.count(GeofenceEvent.id)).where(
+                GeofenceEvent.geofence_id == geofence_id
+            )
+        )
 
         if events_count.scalar() > 0:
             raise HTTPException(
-                status_code=400, detail="Cannot delete geofence with existing events. Please archive it instead."
+                status_code=400,
+                detail="Cannot delete geofence with existing events. Please archive it instead.",
             )
 
         # Soft delete
@@ -228,11 +255,15 @@ async def delete_geofence(geofence_id: str, db: AsyncSession = Depends(get_db)):
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error deleting geofence: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error deleting geofence: {str(e)}"
+        )
 
 
 @router.post("/geofences/evaluate", response_model=GeofenceEvaluationResponse)
-async def evaluate_geofences(evaluation_request: GeofenceEvaluationRequest, db: AsyncSession = Depends(get_db)):
+async def evaluate_geofences(
+    evaluation_request: GeofenceEvaluationRequest, db: AsyncSession = Depends(get_db)
+):
     """Evaluate if an asset location triggers any geofence events"""
     try:
         timestamp = evaluation_request.timestamp or datetime.now().isoformat()
@@ -267,7 +298,11 @@ async def evaluate_geofences(evaluation_request: GeofenceEvaluationRequest, db: 
 
             elif geofence.geofence_type == "polygon" and geofence.coordinates:
                 # Check if point is inside polygon
-                is_inside = point_in_polygon(evaluation_request.latitude, evaluation_request.longitude, geofence.coordinates)
+                is_inside = point_in_polygon(
+                    evaluation_request.latitude,
+                    evaluation_request.longitude,
+                    geofence.coordinates,
+                )
 
             evaluation = {
                 "geofence_id": str(geofence.id),
@@ -342,10 +377,14 @@ async def evaluate_geofences(evaluation_request: GeofenceEvaluationRequest, db: 
 
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error evaluating geofences: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error evaluating geofences: {str(e)}"
+        )
 
 
-@router.get("/geofences/{geofence_id}/events", response_model=List[GeofenceEventResponse])
+@router.get(
+    "/geofences/{geofence_id}/events", response_model=List[GeofenceEventResponse]
+)
 async def get_geofence_events(
     geofence_id: str,
     skip: int = Query(0, ge=0),
@@ -373,7 +412,9 @@ async def get_geofence_events(
             query = query.where(GeofenceEvent.created_at <= end_dt)
 
         # Apply pagination and ordering
-        query = query.order_by(GeofenceEvent.created_at.desc()).offset(skip).limit(limit)
+        query = (
+            query.order_by(GeofenceEvent.created_at.desc()).offset(skip).limit(limit)
+        )
 
         result = await db.execute(query)
         events = result.scalars().all()
@@ -381,7 +422,9 @@ async def get_geofence_events(
         return [GeofenceEventResponse.from_orm(event) for event in events]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching geofence events: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching geofence events: {str(e)}"
+        )
 
 
 @router.get("/geofences/stats", response_model=GeofenceStatsResponse)
@@ -390,32 +433,52 @@ async def get_geofence_stats(db: AsyncSession = Depends(get_db)):
     try:
         # Get counts by status
         total_count = await db.execute(select(func.count(Geofence.id)))
-        active_count = await db.execute(select(func.count(Geofence.id)).where(Geofence.status == "active"))
-        inactive_count = await db.execute(select(func.count(Geofence.id)).where(Geofence.status == "inactive"))
+        active_count = await db.execute(
+            select(func.count(Geofence.id)).where(Geofence.status == "active")
+        )
+        inactive_count = await db.execute(
+            select(func.count(Geofence.id)).where(Geofence.status == "inactive")
+        )
 
         # Get counts by type
-        circular_count = await db.execute(select(func.count(Geofence.id)).where(Geofence.geofence_type == "circular"))
-        polygon_count = await db.execute(select(func.count(Geofence.id)).where(Geofence.geofence_type == "polygon"))
+        circular_count = await db.execute(
+            select(func.count(Geofence.id)).where(Geofence.geofence_type == "circular")
+        )
+        polygon_count = await db.execute(
+            select(func.count(Geofence.id)).where(Geofence.geofence_type == "polygon")
+        )
 
         # Get today's events
         today = datetime.now().date()
         today_events = await db.execute(
-            select(func.count(GeofenceEvent.id)).where(func.date(GeofenceEvent.created_at) == today)
+            select(func.count(GeofenceEvent.id)).where(
+                func.date(GeofenceEvent.created_at) == today
+            )
         )
         today_entry_events = await db.execute(
             select(func.count(GeofenceEvent.id)).where(
-                and_(func.date(GeofenceEvent.created_at) == today, GeofenceEvent.event_type == "entry")
+                and_(
+                    func.date(GeofenceEvent.created_at) == today,
+                    GeofenceEvent.event_type == "entry",
+                )
             )
         )
         today_exit_events = await db.execute(
             select(func.count(GeofenceEvent.id)).where(
-                and_(func.date(GeofenceEvent.created_at) == today, GeofenceEvent.event_type == "exit")
+                and_(
+                    func.date(GeofenceEvent.created_at) == today,
+                    GeofenceEvent.event_type == "exit",
+                )
             )
         )
 
         # Get most active geofences (by event count)
         most_active = await db.execute(
-            select(Geofence.id, Geofence.name, func.count(GeofenceEvent.id).label("event_count"))
+            select(
+                Geofence.id,
+                Geofence.name,
+                func.count(GeofenceEvent.id).label("event_count"),
+            )
             .join(GeofenceEvent, Geofence.id == GeofenceEvent.geofence_id)
             .group_by(Geofence.id, Geofence.name)
             .order_by(func.count(GeofenceEvent.id).desc())
@@ -432,9 +495,16 @@ async def get_geofence_stats(db: AsyncSession = Depends(get_db)):
             entry_events_today=today_entry_events.scalar(),
             exit_events_today=today_exit_events.scalar(),
             most_active_geofences=[
-                {"geofence_id": str(row.id), "geofence_name": row.name, "event_count": row.event_count} for row in most_active
+                {
+                    "geofence_id": str(row.id),
+                    "geofence_name": row.name,
+                    "event_count": row.event_count,
+                }
+                for row in most_active
             ],
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching geofence stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching geofence stats: {str(e)}"
+        )

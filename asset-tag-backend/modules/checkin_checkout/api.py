@@ -10,21 +10,28 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.checkin_checkout.models import CheckInOutRecord
-from modules.checkin_checkout.schemas import (CheckInCreate,
-                                              CheckInOutResponse,
-                                              CheckOutCreate)
+from modules.checkin_checkout.schemas import (
+    CheckInCreate,
+    CheckInOutResponse,
+    CheckOutCreate,
+)
 
 router = APIRouter()
 
 
-@router.post("/checkin-checkout/checkin", response_model=CheckInOutResponse, status_code=201)
-async def check_in_asset(checkin_data: CheckInCreate, db: AsyncSession = Depends(get_db)):
+@router.post(
+    "/checkin-checkout/checkin", response_model=CheckInOutResponse, status_code=201
+)
+async def check_in_asset(
+    checkin_data: CheckInCreate, db: AsyncSession = Depends(get_db)
+):
     """Check in an asset"""
     try:
         # Check if asset is already checked in
         existing = await db.execute(
             select(CheckInOutRecord).where(
-                CheckInOutRecord.asset_id == checkin_data.asset_id, CheckInOutRecord.check_out_time.is_(None)
+                CheckInOutRecord.asset_id == checkin_data.asset_id,
+                CheckInOutRecord.check_out_time.is_(None),
             )
         )
         if existing.scalar_one_or_none():
@@ -56,29 +63,40 @@ async def check_in_asset(checkin_data: CheckInCreate, db: AsyncSession = Depends
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error checking in asset: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error checking in asset: {str(e)}"
+        )
 
 
-@router.post("/checkin-checkout/checkout", response_model=CheckInOutResponse, status_code=201)
-async def check_out_asset(checkout_data: CheckOutCreate, db: AsyncSession = Depends(get_db)):
+@router.post(
+    "/checkin-checkout/checkout", response_model=CheckInOutResponse, status_code=201
+)
+async def check_out_asset(
+    checkout_data: CheckOutCreate, db: AsyncSession = Depends(get_db)
+):
     """Check out an asset"""
     try:
         # Find the active check-in record
         result = await db.execute(
             select(CheckInOutRecord).where(
-                CheckInOutRecord.asset_id == checkout_data.asset_id, CheckInOutRecord.check_out_time.is_(None)
+                CheckInOutRecord.asset_id == checkout_data.asset_id,
+                CheckInOutRecord.check_out_time.is_(None),
             )
         )
         record = result.scalar_one_or_none()
 
         if not record:
-            raise HTTPException(status_code=404, detail="No active check-in found for this asset")
+            raise HTTPException(
+                status_code=404, detail="No active check-in found for this asset"
+            )
 
         # Update with check-out information
         record.check_out_time = datetime.now()
         record.check_out_location_lat = checkout_data.check_out_location_lat
         record.check_out_location_lng = checkout_data.check_out_location_lng
-        record.check_out_location_description = checkout_data.check_out_location_description
+        record.check_out_location_description = (
+            checkout_data.check_out_location_description
+        )
         record.actual_duration_hours = checkout_data.actual_duration_hours
         record.condition_notes = checkout_data.condition_notes
         record.return_notes = checkout_data.return_notes
@@ -97,7 +115,9 @@ async def check_out_asset(checkout_data: CheckOutCreate, db: AsyncSession = Depe
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error checking out asset: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error checking out asset: {str(e)}"
+        )
 
 
 @router.get("/checkin-checkout/records", response_model=List[CheckInOutResponse])
@@ -134,7 +154,11 @@ async def get_checkin_checkout_records(
             query = query.where(CheckInOutRecord.check_in_time <= end_dt)
 
         # Apply pagination and ordering
-        query = query.order_by(CheckInOutRecord.check_in_time.desc()).offset(skip).limit(limit)
+        query = (
+            query.order_by(CheckInOutRecord.check_in_time.desc())
+            .offset(skip)
+            .limit(limit)
+        )
 
         result = await db.execute(query)
         records = result.scalars().all()
@@ -142,25 +166,37 @@ async def get_checkin_checkout_records(
         return [CheckInOutResponse.from_orm(record) for record in records]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching check-in/check-out records: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching check-in/check-out records: {str(e)}",
+        )
 
 
 @router.get("/checkin-checkout/records/{record_id}", response_model=CheckInOutResponse)
-async def get_checkin_checkout_record(record_id: str, db: AsyncSession = Depends(get_db)):
+async def get_checkin_checkout_record(
+    record_id: str, db: AsyncSession = Depends(get_db)
+):
     """Get check-in/check-out record by ID"""
     try:
-        result = await db.execute(select(CheckInOutRecord).where(CheckInOutRecord.id == record_id))
+        result = await db.execute(
+            select(CheckInOutRecord).where(CheckInOutRecord.id == record_id)
+        )
         record = result.scalar_one_or_none()
 
         if not record:
-            raise HTTPException(status_code=404, detail="Check-in/check-out record not found")
+            raise HTTPException(
+                status_code=404, detail="Check-in/check-out record not found"
+            )
 
         return CheckInOutResponse.from_orm(record)
 
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching check-in/check-out record: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching check-in/check-out record: {str(e)}",
+        )
 
 
 @router.get("/checkin-checkout/status")
@@ -172,11 +208,11 @@ async def get_checkin_checkout_status(db: AsyncSession = Depends(get_db)):
             select(CheckInOutRecord).where(CheckInOutRecord.check_out_time.is_(None))
         )
         checked_in_records = checked_in_count.scalars().all()
-        
+
         return {
             "total_checked_in": len(checked_in_records),
             "checked_in_assets": [record.asset_id for record in checked_in_records],
-            "status": "operational"
+            "status": "operational",
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching status: {str(e)}")
@@ -188,14 +224,21 @@ async def get_current_checkin_status(asset_id: str, db: AsyncSession = Depends(g
     try:
         result = await db.execute(
             select(CheckInOutRecord)
-            .where(CheckInOutRecord.asset_id == asset_id, CheckInOutRecord.check_out_time.is_(None))
+            .where(
+                CheckInOutRecord.asset_id == asset_id,
+                CheckInOutRecord.check_out_time.is_(None),
+            )
             .order_by(CheckInOutRecord.check_in_time.desc())
             .limit(1)
         )
         record = result.scalar_one_or_none()
 
         if not record:
-            return {"asset_id": asset_id, "status": "checked_out", "message": "Asset is currently checked out"}
+            return {
+                "asset_id": asset_id,
+                "status": "checked_out",
+                "message": "Asset is currently checked out",
+            }
 
         return {
             "asset_id": asset_id,
@@ -203,16 +246,24 @@ async def get_current_checkin_status(asset_id: str, db: AsyncSession = Depends(g
             "check_in_time": record.check_in_time.isoformat(),
             "user_name": record.user_name,
             "purpose": record.purpose,
-            "expected_duration_hours": float(record.expected_duration_hours) if record.expected_duration_hours else None,
+            "expected_duration_hours": float(record.expected_duration_hours)
+            if record.expected_duration_hours
+            else None,
             "check_in_location": {
-                "latitude": float(record.check_in_location_lat) if record.check_in_location_lat else None,
-                "longitude": float(record.check_in_location_lng) if record.check_in_location_lng else None,
+                "latitude": float(record.check_in_location_lat)
+                if record.check_in_location_lat
+                else None,
+                "longitude": float(record.check_in_location_lng)
+                if record.check_in_location_lng
+                else None,
                 "description": record.check_in_location_description,
             },
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching current check-in status: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching current check-in status: {str(e)}"
+        )
 
 
 @router.get("/checkin-checkout/overdue")
@@ -223,7 +274,8 @@ async def get_overdue_checkins(db: AsyncSession = Depends(get_db)):
 
         # Find records where expected duration has passed but asset is still checked in
         query = select(CheckInOutRecord).where(
-            CheckInOutRecord.check_out_time.is_(None), CheckInOutRecord.expected_duration_hours.isnot(None)
+            CheckInOutRecord.check_out_time.is_(None),
+            CheckInOutRecord.expected_duration_hours.isnot(None),
         )
 
         result = await db.execute(query)
@@ -231,25 +283,36 @@ async def get_overdue_checkins(db: AsyncSession = Depends(get_db)):
 
         overdue_records = []
         for record in records:
-            expected_end_time = record.check_in_time + timedelta(hours=record.expected_duration_hours)
+            expected_end_time = record.check_in_time + timedelta(
+                hours=record.expected_duration_hours
+            )
             if current_time > expected_end_time:
-                overdue_hours = (current_time - expected_end_time).total_seconds() / 3600
+                overdue_hours = (
+                    current_time - expected_end_time
+                ).total_seconds() / 3600
                 overdue_records.append(
                     {
                         "record_id": str(record.id),
                         "asset_id": str(record.asset_id),
                         "user_name": record.user_name,
                         "check_in_time": record.check_in_time.isoformat(),
-                        "expected_duration_hours": float(record.expected_duration_hours),
+                        "expected_duration_hours": float(
+                            record.expected_duration_hours
+                        ),
                         "overdue_hours": round(overdue_hours, 2),
                         "purpose": record.purpose,
                     }
                 )
 
-        return {"overdue_count": len(overdue_records), "overdue_records": overdue_records}
+        return {
+            "overdue_count": len(overdue_records),
+            "overdue_records": overdue_records,
+        }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching overdue check-ins: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching overdue check-ins: {str(e)}"
+        )
 
 
 @router.get("/checkin-checkout/stats")
@@ -261,13 +324,17 @@ async def get_checkin_checkout_stats(db: AsyncSession = Depends(get_db)):
         all_records = total_records.scalars().all()
 
         checked_in_count = len([r for r in all_records if r.check_out_time is None])
-        checked_out_count = len([r for r in all_records if r.check_out_time is not None])
+        checked_out_count = len(
+            [r for r in all_records if r.check_out_time is not None]
+        )
 
         # Get today's activity
         today = datetime.now().date()
         today_records = [r for r in all_records if r.check_in_time.date() == today]
         today_checkins = len(today_records)
-        today_checkouts = len([r for r in today_records if r.check_out_time is not None])
+        today_checkouts = len(
+            [r for r in today_records if r.check_out_time is not None]
+        )
 
         return {
             "total_records": len(all_records),
@@ -278,4 +345,6 @@ async def get_checkin_checkout_stats(db: AsyncSession = Depends(get_db)):
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching check-in/check-out stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching check-in/check-out stats: {str(e)}"
+        )

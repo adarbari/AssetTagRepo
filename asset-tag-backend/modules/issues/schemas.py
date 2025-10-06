@@ -13,25 +13,42 @@ class IssueBase(BaseModel):
 
     title: str = Field(..., min_length=1, max_length=500, description="Issue title")
     description: Optional[str] = Field(None, description="Detailed issue description")
-    issue_type: str = Field(..., description="Type of issue (mechanical, electrical, damage, safety, etc.)")
-    severity: str = Field(..., description="Issue severity (low, medium, high, critical)")
+    issue_type: str = Field(
+        ..., description="Type of issue (mechanical, electrical, damage, safety, etc.)"
+    )
+    severity: str = Field(
+        ..., description="Issue severity (low, medium, high, critical)"
+    )
     asset_id: Optional[UUID] = Field(None, description="Associated asset ID")
-    assigned_to_user_id: Optional[UUID] = Field(None, description="User assigned to resolve the issue")
+    assigned_to_user_id: Optional[UUID] = Field(
+        None, description="User assigned to resolve the issue"
+    )
     due_date: Optional[datetime] = Field(None, description="Due date for resolution")
     notes: Optional[str] = Field(None, description="Additional notes")
     tags: Optional[List[str]] = Field(default_factory=list, description="Issue tags")
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
+    metadata: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
     @validator("severity")
     def validate_severity(cls, v):
         allowed_severities = ["low", "medium", "high", "critical"]
         if v not in allowed_severities:
-            raise ValueError(f'Severity must be one of: {", ".join(allowed_severities)}')
+            raise ValueError(
+                f'Severity must be one of: {", ".join(allowed_severities)}'
+            )
         return v
 
     @validator("issue_type")
     def validate_issue_type(cls, v):
-        allowed_types = ["mechanical", "electrical", "damage", "safety", "software", "other"]
+        allowed_types = [
+            "mechanical",
+            "electrical",
+            "damage",
+            "safety",
+            "software",
+            "other",
+        ]
         if v not in allowed_types:
             raise ValueError(f'Issue type must be one of: {", ".join(allowed_types)}')
         return v
@@ -63,15 +80,26 @@ class IssueUpdate(BaseModel):
         if v is not None:
             allowed_severities = ["low", "medium", "high", "critical"]
             if v not in allowed_severities:
-                raise ValueError(f'Severity must be one of: {", ".join(allowed_severities)}')
+                raise ValueError(
+                    f'Severity must be one of: {", ".join(allowed_severities)}'
+                )
         return v
 
     @validator("status")
     def validate_status(cls, v):
         if v is not None:
-            allowed_statuses = ["open", "acknowledged", "in-progress", "resolved", "closed", "cancelled"]
+            allowed_statuses = [
+                "open",
+                "acknowledged",
+                "in-progress",
+                "resolved",
+                "closed",
+                "cancelled",
+            ]
             if v not in allowed_statuses:
-                raise ValueError(f'Status must be one of: {", ".join(allowed_statuses)}')
+                raise ValueError(
+                    f'Status must be one of: {", ".join(allowed_statuses)}'
+                )
         return v
 
 
@@ -83,7 +111,14 @@ class IssueStatusUpdate(BaseModel):
 
     @validator("status")
     def validate_status(cls, v):
-        allowed_statuses = ["open", "acknowledged", "in-progress", "resolved", "closed", "cancelled"]
+        allowed_statuses = [
+            "open",
+            "acknowledged",
+            "in-progress",
+            "resolved",
+            "closed",
+            "cancelled",
+        ]
         if v not in allowed_statuses:
             raise ValueError(f'Status must be one of: {", ".join(allowed_statuses)}')
         return v

@@ -1,13 +1,21 @@
 """
 Gateway models for Bluetooth gateways
 """
-from sqlalchemy import (JSON, Boolean, Column, ForeignKey, Index, Integer,
-                        Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Gateway(BaseModel, OrganizationMixin, SoftDeleteMixin):
@@ -17,8 +25,12 @@ class Gateway(BaseModel, OrganizationMixin, SoftDeleteMixin):
 
     # Basic information
     name = Column(String(255), nullable=False)
-    gateway_id = Column(String(100), unique=True, nullable=False, index=True)  # Hardware ID
-    status = Column(String(50), default="active", index=True)  # active, inactive, maintenance
+    gateway_id = Column(
+        String(100), unique=True, nullable=False, index=True
+    )  # Hardware ID
+    status = Column(
+        String(50), default="active", index=True
+    )  # active, inactive, maintenance
 
     # Location
     site_id = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True)

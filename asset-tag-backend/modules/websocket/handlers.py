@@ -16,7 +16,10 @@ class LocationHandler:
 
     @staticmethod
     async def broadcast_location_update(
-        asset_id: str, latitude: float, longitude: float, additional_data: Optional[Dict[str, Any]] = None
+        asset_id: str,
+        latitude: float,
+        longitude: float,
+        additional_data: Optional[Dict[str, Any]] = None,
     ):
         """Broadcast location update to all location subscribers"""
         message = {
@@ -34,7 +37,11 @@ class LocationHandler:
     @staticmethod
     async def broadcast_location_batch(updates: list):
         """Broadcast multiple location updates in a batch"""
-        message = {"type": "location_batch", "updates": updates, "timestamp": datetime.now().isoformat()}
+        message = {
+            "type": "location_batch",
+            "updates": updates,
+            "timestamp": datetime.now().isoformat(),
+        }
 
         await manager.broadcast_to_type(message, "locations")
         logger.debug(f"Broadcasted {len(updates)} location updates")
@@ -69,7 +76,9 @@ class AlertHandler:
 
     @staticmethod
     async def broadcast_alert_resolved(
-        alert_id: str, resolved_by: Optional[str] = None, resolution_notes: Optional[str] = None
+        alert_id: str,
+        resolved_by: Optional[str] = None,
+        resolution_notes: Optional[str] = None,
     ):
         """Broadcast alert resolution"""
         message = {
@@ -109,11 +118,17 @@ class GeofenceHandler:
         }
 
         await manager.broadcast_to_type(message, "geofences")
-        logger.info(f"Broadcasted geofence {event_type} for asset {asset_id} in geofence {geofence_id}")
+        logger.info(
+            f"Broadcasted geofence {event_type} for asset {asset_id} in geofence {geofence_id}"
+        )
 
     @staticmethod
     async def broadcast_geofence_violation(
-        asset_id: str, geofence_id: str, violation_type: str, message: str, additional_data: Optional[Dict[str, Any]] = None
+        asset_id: str,
+        geofence_id: str,
+        violation_type: str,
+        message: str,
+        additional_data: Optional[Dict[str, Any]] = None,
     ):
         """Broadcast geofence violation"""
         violation_message = {
@@ -135,7 +150,10 @@ class DashboardHandler:
 
     @staticmethod
     async def broadcast_metric_update(
-        metric_name: str, value: Any, unit: Optional[str] = None, additional_data: Optional[Dict[str, Any]] = None
+        metric_name: str,
+        value: Any,
+        unit: Optional[str] = None,
+        additional_data: Optional[Dict[str, Any]] = None,
     ):
         """Broadcast metric update to dashboard subscribers"""
         message = {
@@ -153,13 +171,19 @@ class DashboardHandler:
     @staticmethod
     async def broadcast_dashboard_summary(summary_data: Dict[str, Any]):
         """Broadcast dashboard summary data"""
-        message = {"type": "dashboard_summary", "summary": summary_data, "timestamp": datetime.now().isoformat()}
+        message = {
+            "type": "dashboard_summary",
+            "summary": summary_data,
+            "timestamp": datetime.now().isoformat(),
+        }
 
         await manager.broadcast_to_type(message, "dashboard")
         logger.debug("Broadcasted dashboard summary")
 
     @staticmethod
-    async def broadcast_system_status(status: str, message: str = "", additional_data: Optional[Dict[str, Any]] = None):
+    async def broadcast_system_status(
+        status: str, message: str = "", additional_data: Optional[Dict[str, Any]] = None
+    ):
         """Broadcast system status update"""
         status_message = {
             "type": "system_status",
@@ -198,7 +222,10 @@ class SystemHandler:
 
     @staticmethod
     async def broadcast_job_update(
-        job_id: str, status: str, message: str = "", additional_data: Optional[Dict[str, Any]] = None
+        job_id: str,
+        status: str,
+        message: str = "",
+        additional_data: Optional[Dict[str, Any]] = None,
     ):
         """Broadcast job status update"""
         job_message = {
@@ -214,7 +241,9 @@ class SystemHandler:
         logger.info(f"Broadcasted job update: {job_id} - {status}")
 
     @staticmethod
-    async def broadcast_compliance_reminder(compliance_id: str, compliance_type: str, due_date: datetime, message: str = ""):
+    async def broadcast_compliance_reminder(
+        compliance_id: str, compliance_type: str, due_date: datetime, message: str = ""
+    ):
         """Broadcast compliance reminder"""
         reminder = {
             "type": "compliance_reminder",
@@ -231,10 +260,15 @@ class SystemHandler:
 
 # Convenience functions for easy access
 async def broadcast_location_update(
-    asset_id: str, latitude: float, longitude: float, additional_data: Optional[Dict[str, Any]] = None
+    asset_id: str,
+    latitude: float,
+    longitude: float,
+    additional_data: Optional[Dict[str, Any]] = None,
 ):
     """Convenience function for broadcasting location updates"""
-    await LocationHandler.broadcast_location_update(asset_id, latitude, longitude, additional_data)
+    await LocationHandler.broadcast_location_update(
+        asset_id, latitude, longitude, additional_data
+    )
 
 
 async def broadcast_alert(
@@ -246,7 +280,9 @@ async def broadcast_alert(
     additional_data: Optional[Dict[str, Any]] = None,
 ):
     """Convenience function for broadcasting alerts"""
-    await AlertHandler.broadcast_alert(alert_id, alert_type, severity, asset_id, message, additional_data)
+    await AlertHandler.broadcast_alert(
+        alert_id, alert_type, severity, asset_id, message, additional_data
+    )
 
 
 async def broadcast_geofence_event(
@@ -258,11 +294,18 @@ async def broadcast_geofence_event(
     additional_data: Optional[Dict[str, Any]] = None,
 ):
     """Convenience function for broadcasting geofence events"""
-    await GeofenceHandler.broadcast_geofence_event(asset_id, geofence_id, event_type, latitude, longitude, additional_data)
+    await GeofenceHandler.broadcast_geofence_event(
+        asset_id, geofence_id, event_type, latitude, longitude, additional_data
+    )
 
 
 async def broadcast_metric_update(
-    metric_name: str, value: Any, unit: Optional[str] = None, additional_data: Optional[Dict[str, Any]] = None
+    metric_name: str,
+    value: Any,
+    unit: Optional[str] = None,
+    additional_data: Optional[Dict[str, Any]] = None,
 ):
     """Convenience function for broadcasting metric updates"""
-    await DashboardHandler.broadcast_metric_update(metric_name, value, unit, additional_data)
+    await DashboardHandler.broadcast_metric_update(
+        metric_name, value, unit, additional_data
+    )

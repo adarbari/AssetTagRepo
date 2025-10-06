@@ -48,7 +48,9 @@ class ReportGenerationRequest(BaseModel):
     """Schema for report generation request"""
 
     template_id: str = Field(..., description="Report template ID")
-    parameters: Dict[str, Any] = Field(default_factory=dict, description="Report parameters")
+    parameters: Dict[str, Any] = Field(
+        default_factory=dict, description="Report parameters"
+    )
     format: ReportFormat = Field(default=ReportFormat.CSV, description="Output format")
 
     @validator("template_id")
@@ -78,7 +80,9 @@ class ReportStatus(BaseModel):
     error_message: Optional[str] = Field(None, description="Error message if failed")
     download_url: Optional[str] = Field(None, description="Download URL if completed")
     filename: Optional[str] = Field(None, description="Generated filename")
-    parameters: Dict[str, Any] = Field(default_factory=dict, description="Report parameters")
+    parameters: Dict[str, Any] = Field(
+        default_factory=dict, description="Report parameters"
+    )
 
 
 class ReportDownloadResponse(BaseModel):
@@ -95,7 +99,9 @@ class ScheduledReportRequest(BaseModel):
 
     template_id: str = Field(..., description="Report template ID")
     schedule: ScheduleFrequency = Field(..., description="Schedule frequency")
-    parameters: Dict[str, Any] = Field(default_factory=dict, description="Report parameters")
+    parameters: Dict[str, Any] = Field(
+        default_factory=dict, description="Report parameters"
+    )
     format: ReportFormat = Field(default=ReportFormat.CSV, description="Output format")
     recipients: List[str] = Field(default_factory=list, description="Email recipients")
     enabled: bool = Field(default=True, description="Whether schedule is enabled")
@@ -119,7 +125,9 @@ class ScheduledReportResponse(BaseModel):
 class ExportRequest(BaseModel):
     """Schema for data export request"""
 
-    export_type: str = Field(..., description="Export type (assets, jobs, maintenance, etc.)")
+    export_type: str = Field(
+        ..., description="Export type (assets, jobs, maintenance, etc.)"
+    )
     format: str = Field(default="csv", description="Export format")
     filters: Dict[str, Any] = Field(default_factory=dict, description="Export filters")
     fields: Optional[List[str]] = Field(None, description="Specific fields to export")

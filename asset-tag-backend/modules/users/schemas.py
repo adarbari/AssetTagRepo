@@ -16,7 +16,9 @@ class UserBase(BaseModel):
     full_name: str = Field(..., min_length=1, max_length=255, description="Full name")
     role: str = Field(default="user", description="User role")
     is_active: bool = Field(default=True, description="Whether user is active")
-    preferences: Optional[Dict[str, Any]] = Field(default_factory=dict, description="User preferences")
+    preferences: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="User preferences"
+    )
 
     @validator("role")
     def validate_role(cls, v):

@@ -22,7 +22,13 @@ class AuditMiddleware(BaseHTTPMiddleware):
 
     def __init__(self, app, exclude_paths: Optional[List[str]] = None):
         super().__init__(app)
-        self.exclude_paths = exclude_paths or ["/health", "/docs", "/redoc", "/openapi.json", "/metrics"]
+        self.exclude_paths = exclude_paths or [
+            "/health",
+            "/docs",
+            "/redoc",
+            "/openapi.json",
+            "/metrics",
+        ]
 
     async def dispatch(self, request: Request, call_next):
         """Process request and log audit information"""
@@ -77,7 +83,9 @@ class AuditMiddleware(BaseHTTPMiddleware):
             logger.error(f"Error extracting request info: {e}")
             return {"error": str(e)}
 
-    async def _log_audit(self, request_info: Dict[str, Any], response: Response, start_time: datetime):
+    async def _log_audit(
+        self, request_info: Dict[str, Any], response: Response, start_time: datetime
+    ):
         """Log audit information to database"""
         try:
             # Only log for write operations
@@ -94,7 +102,8 @@ class AuditMiddleware(BaseHTTPMiddleware):
             response_info = {
                 "status_code": response.status_code,
                 "headers": dict(response.headers),
-                "processing_time_ms": (datetime.now() - start_time).total_seconds() * 1000,
+                "processing_time_ms": (datetime.now() - start_time).total_seconds()
+                * 1000,
             }
 
             # Create audit log entry
@@ -103,7 +112,8 @@ class AuditMiddleware(BaseHTTPMiddleware):
                 "entity_id": entity_id,
                 "action": self._map_method_to_action(request_info["method"]),
                 "user_id": request_info.get("user_id"),
-                "organization_id": request_info.get("organization_id") or "00000000-0000-0000-0000-000000000000",
+                "organization_id": request_info.get("organization_id")
+                or "00000000-0000-0000-0000-000000000000",
                 "changes": {
                     "request": {
                         "method": request_info["method"],
@@ -132,7 +142,11 @@ class AuditMiddleware(BaseHTTPMiddleware):
             # Parse path like /api/v1/assets/{asset_id}
             path_parts = path.strip("/").split("/")
 
-            if len(path_parts) >= 3 and path_parts[0] == "api" and path_parts[1] == "v1":
+            if (
+                len(path_parts) >= 3
+                and path_parts[0] == "api"
+                and path_parts[1] == "v1"
+            ):
                 entity_type = path_parts[2]
 
                 # Try to extract ID from path
@@ -159,11 +173,19 @@ class AuditMiddleware(BaseHTTPMiddleware):
         uuid_pattern = r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
         numeric_pattern = r"^\d+$"
 
-        return bool(re.match(uuid_pattern, value, re.IGNORECASE) or re.match(numeric_pattern, value))
+        return bool(
+            re.match(uuid_pattern, value, re.IGNORECASE)
+            or re.match(numeric_pattern, value)
+        )
 
     def _map_method_to_action(self, method: str) -> str:
         """Map HTTP method to audit action"""
-        mapping = {"POST": "create", "PUT": "update", "PATCH": "update", "DELETE": "delete"}
+        mapping = {
+            "POST": "create",
+            "PUT": "update",
+            "PATCH": "update",
+            "DELETE": "delete",
+        }
         return mapping.get(method, "unknown")
 
     async def _store_audit_log(self, audit_data: Dict[str, Any]):

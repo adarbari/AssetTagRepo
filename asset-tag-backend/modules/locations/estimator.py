@@ -59,7 +59,9 @@ class LocationEstimator:
         self.reference_distance = settings.rssi_reference_distance
         self.reference_power = settings.rssi_reference_power
 
-    async def estimate_location(self, asset_id: str, observations: List[GatewayObservation]) -> EstimatedLocation:
+    async def estimate_location(
+        self, asset_id: str, observations: List[GatewayObservation]
+    ) -> EstimatedLocation:
         """Main location estimation method"""
         if not observations:
             return await self._get_last_known_location(asset_id)
@@ -97,7 +99,9 @@ class LocationEstimator:
 
         return result
 
-    def _single_gateway_estimate(self, observation: GatewayObservation) -> EstimatedLocation:
+    def _single_gateway_estimate(
+        self, observation: GatewayObservation
+    ) -> EstimatedLocation:
         """Estimate location using single gateway (high uncertainty)"""
         # For single gateway, we can only estimate that the asset is within
         # the gateway's transmission range
@@ -110,10 +114,15 @@ class LocationEstimator:
             uncertainty_radius=estimated_distance * 2,  # High uncertainty
             confidence=30.0,  # Low confidence
             algorithm="SINGLE_GATEWAY",
-            metadata={"estimated_distance": estimated_distance, "gateway_rssi": observation.rssi},
+            metadata={
+                "estimated_distance": estimated_distance,
+                "gateway_rssi": observation.rssi,
+            },
         )
 
-    def _midpoint_estimate(self, observations: List[GatewayObservation]) -> EstimatedLocation:
+    def _midpoint_estimate(
+        self, observations: List[GatewayObservation]
+    ) -> EstimatedLocation:
         """Estimate location as midpoint between two gateways"""
         if len(observations) != 2:
             raise ValueError("Midpoint estimation requires exactly 2 observations")
@@ -125,7 +134,9 @@ class LocationEstimator:
         lng = (obs1.longitude + obs2.longitude) / 2
 
         # Calculate uncertainty based on distance between gateways
-        distance_between_gateways = self._calculate_distance(obs1.latitude, obs1.longitude, obs2.latitude, obs2.longitude)
+        distance_between_gateways = self._calculate_distance(
+            obs1.latitude, obs1.longitude, obs2.latitude, obs2.longitude
+        )
 
         # Weight by signal strength
         weight1 = self._rssi_to_weight(obs1.rssi)
@@ -143,10 +154,15 @@ class LocationEstimator:
             uncertainty_radius=distance_between_gateways / 2,
             confidence=60.0,  # Medium confidence
             algorithm="MIDPOINT",
-            metadata={"distance_between_gateways": distance_between_gateways, "gateway_weights": [weight1, weight2]},
+            metadata={
+                "distance_between_gateways": distance_between_gateways,
+                "gateway_weights": [weight1, weight2],
+            },
         )
 
-    def _trilateration_estimate(self, observations: List[GatewayObservation]) -> EstimatedLocation:
+    def _trilateration_estimate(
+        self, observations: List[GatewayObservation]
+    ) -> EstimatedLocation:
         """Estimate location using weighted trilateration"""
         if len(observations) < 3:
             raise ValueError("Trilateration requires at least 3 observations")
@@ -159,14 +175,23 @@ class LocationEstimator:
 
         # Weighted centroid calculation
         total_weight = sum(weights)
-        lat = sum(obs.latitude * weight for obs, weight in zip(observations, weights)) / total_weight
-        lng = sum(obs.longitude * weight for obs, weight in zip(observations, weights)) / total_weight
+        lat = (
+            sum(obs.latitude * weight for obs, weight in zip(observations, weights))
+            / total_weight
+        )
+        lng = (
+            sum(obs.longitude * weight for obs, weight in zip(observations, weights))
+            / total_weight
+        )
 
         # Calculate uncertainty based on distance variance and signal quality
         uncertainty = self._calculate_uncertainty(observations, distances)
 
         # Calculate confidence based on number of gateways and signal quality
-        confidence = min(95.0, len(observations) * 20 + self._calculate_signal_quality(observations) * 0.3)
+        confidence = min(
+            95.0,
+            len(observations) * 20 + self._calculate_signal_quality(observations) * 0.3,
+        )
 
         return EstimatedLocation(
             asset_id="",  # Will be set by caller
@@ -175,7 +200,11 @@ class LocationEstimator:
             uncertainty_radius=uncertainty,
             confidence=confidence,
             algorithm="TRILATERATION",
-            metadata={"distances": distances, "weights": weights, "gateway_count": len(observations)},
+            metadata={
+                "distances": distances,
+                "weights": weights,
+                "gateway_count": len(observations),
+            },
         )
 
     def _rssi_to_distance(self, rssi: int) -> float:
@@ -183,7 +212,9 @@ class LocationEstimator:
         # Path loss model: RSSI = -10 * n * log10(d) + A
         # Where A is RSSI at reference distance
         try:
-            distance = self.reference_distance * (10 ** ((self.reference_power - rssi) / (10 * self.path_loss_exponent)))
+            distance = self.reference_distance * (
+                10 ** ((self.reference_power - rssi) / (10 * self.path_loss_exponent))
+            )
             return max(0.1, min(distance, 1000))  # Clamp between 0.1m and 1000m
         except (ValueError, ZeroDivisionError):
             return 50.0  # Default fallback distance
@@ -196,7 +227,9 @@ class LocationEstimator:
         normalized_rssi = max(0, min(1, normalized_rssi))  # Clamp
         return 10 ** (normalized_rssi * 2)  # Exponential weight
 
-    def _calculate_distance(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    def _calculate_distance(
+        self, lat1: float, lng1: float, lat2: float, lng2: float
+    ) -> float:
         """Calculate distance between two points using Haversine formula"""
         R = 6371000  # Earth's radius in meters
 
@@ -205,18 +238,29 @@ class LocationEstimator:
         delta_lat = math.radians(lat2 - lat1)
         delta_lng = math.radians(lng2 - lng1)
 
-        a = math.sin(delta_lat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lng / 2) ** 2
+        a = (
+            math.sin(delta_lat / 2) ** 2
+            + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lng / 2) ** 2
+        )
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
         return R * c
 
-    def _calculate_uncertainty(self, observations: List[GatewayObservation], distances: List[float]) -> float:
+    def _calculate_uncertainty(
+        self, observations: List[GatewayObservation], distances: List[float]
+    ) -> float:
         """Calculate location uncertainty based on observations"""
         if not observations:
             return 100.0  # High uncertainty if no observations
 
         # Base uncertainty on distance variance
-        distance_variance = np.var(distances) if len(distances) > 1 else distances[0] if distances else 50.0
+        distance_variance = (
+            np.var(distances)
+            if len(distances) > 1
+            else distances[0]
+            if distances
+            else 50.0
+        )
 
         # Factor in signal quality
         signal_quality = self._calculate_signal_quality(observations)
@@ -228,7 +272,9 @@ class LocationEstimator:
         uncertainty = distance_variance * quality_factor * gateway_factor
         return max(5.0, min(uncertainty, 200.0))  # Clamp between 5m and 200m
 
-    def _calculate_signal_quality(self, observations: List[GatewayObservation]) -> float:
+    def _calculate_signal_quality(
+        self, observations: List[GatewayObservation]
+    ) -> float:
         """Calculate overall signal quality score (0-100)"""
         if not observations:
             return 0.0
@@ -285,7 +331,9 @@ class LocationEstimator:
             metadata={"source": "default"},
         )
 
-    async def _calculate_movement_metrics(self, asset_id: str, current_location: EstimatedLocation):
+    async def _calculate_movement_metrics(
+        self, asset_id: str, current_location: EstimatedLocation
+    ):
         """Calculate speed, bearing, and distance from previous location"""
         cache_key = f"last_location:{asset_id}"
         previous_location = await self.cache.get(cache_key)
@@ -303,7 +351,8 @@ class LocationEstimator:
             # Calculate speed (if we have timestamps)
             if previous_location.get("timestamp") and current_location.timestamp:
                 time_diff = (
-                    current_location.timestamp - datetime.fromisoformat(previous_location["timestamp"])
+                    current_location.timestamp
+                    - datetime.fromisoformat(previous_location["timestamp"])
                 ).total_seconds()
                 if time_diff > 0:
                     current_location.speed = distance / time_diff  # m/s
@@ -316,14 +365,18 @@ class LocationEstimator:
                 current_location.longitude,
             )
 
-    def _calculate_bearing(self, lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    def _calculate_bearing(
+        self, lat1: float, lng1: float, lat2: float, lng2: float
+    ) -> float:
         """Calculate bearing between two points"""
         lat1_rad = math.radians(lat1)
         lat2_rad = math.radians(lat2)
         delta_lng = math.radians(lng2 - lng1)
 
         y = math.sin(delta_lng) * math.cos(lat2_rad)
-        x = math.cos(lat1_rad) * math.sin(lat2_rad) - math.sin(lat1_rad) * math.cos(lat2_rad) * math.cos(delta_lng)
+        x = math.cos(lat1_rad) * math.sin(lat2_rad) - math.sin(lat1_rad) * math.cos(
+            lat2_rad
+        ) * math.cos(delta_lng)
 
         bearing = math.atan2(y, x)
         bearing = math.degrees(bearing)

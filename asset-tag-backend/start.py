@@ -16,7 +16,7 @@ from config.settings import settings
 # Configure logging
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper()),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -24,15 +24,17 @@ logger = logging.getLogger(__name__)
 async def start_services():
     """Start all backend services"""
     logger.info("Starting Asset Tag Backend services...")
-    
+
     # Start observation consumer
     if settings.environment == "local":
         logger.info("Starting mock observation producer for local development")
         from streaming.kinesis_consumer import start_mock_producer
+
         await start_mock_producer()
     else:
         logger.info("Starting observation consumer")
         from streaming.kinesis_consumer import start_observation_consumer
+
         await start_observation_consumer()
 
 

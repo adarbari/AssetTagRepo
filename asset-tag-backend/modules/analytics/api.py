@@ -6,15 +6,19 @@ from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from modules.analytics.aggregators import (CostAnalyzer, HeatmapAnalyzer,
-                                           UtilizationAnalyzer)
+from modules.analytics.aggregators import (
+    CostAnalyzer,
+    HeatmapAnalyzer,
+    UtilizationAnalyzer,
+)
 
 router = APIRouter()
 
 
 @router.get("/analytics/utilization/daily")
 async def get_daily_utilization(
-    asset_id: str = Query(..., description="Asset ID"), date: str = Query(..., description="Date in YYYY-MM-DD format")
+    asset_id: str = Query(..., description="Asset ID"),
+    date: str = Query(..., description="Date in YYYY-MM-DD format"),
 ):
     """Get daily utilization analytics for an asset"""
     try:
@@ -36,7 +40,9 @@ async def get_daily_utilization(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Invalid date format: {e}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error calculating daily utilization: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error calculating daily utilization: {str(e)}"
+        )
 
 
 @router.get("/analytics/utilization/weekly")
@@ -56,7 +62,9 @@ async def get_weekly_utilization(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Invalid date format: {e}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error calculating weekly utilization: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error calculating weekly utilization: {str(e)}"
+        )
 
 
 @router.get("/analytics/utilization/monthly")
@@ -74,7 +82,9 @@ async def get_monthly_utilization(
         return metrics
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error calculating monthly utilization: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error calculating monthly utilization: {str(e)}"
+        )
 
 
 @router.get("/analytics/cost-tracking/asset")
@@ -89,7 +99,9 @@ async def get_asset_costs(
         end_date_obj = datetime.fromisoformat(end_date)
 
         analyzer = CostAnalyzer()
-        costs = await analyzer.calculate_asset_costs(asset_id, start_date_obj, end_date_obj)
+        costs = await analyzer.calculate_asset_costs(
+            asset_id, start_date_obj, end_date_obj
+        )
 
         return {
             "asset_id": costs.asset_id,
@@ -105,7 +117,9 @@ async def get_asset_costs(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Invalid date format: {e}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error calculating asset costs: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error calculating asset costs: {str(e)}"
+        )
 
 
 @router.get("/analytics/cost-tracking/organization")
@@ -120,14 +134,18 @@ async def get_organization_costs(
         end_date_obj = datetime.fromisoformat(end_date)
 
         analyzer = CostAnalyzer()
-        costs = await analyzer.calculate_organization_costs(organization_id, start_date_obj, end_date_obj)
+        costs = await analyzer.calculate_organization_costs(
+            organization_id, start_date_obj, end_date_obj
+        )
 
         return costs
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Invalid date format: {e}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error calculating organization costs: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error calculating organization costs: {str(e)}"
+        )
 
 
 @router.get("/analytics/heatmap")
@@ -135,7 +153,9 @@ async def get_heatmap_data(
     organization_id: str = Query(..., description="Organization ID"),
     start_date: str = Query(..., description="Start date in YYYY-MM-DD format"),
     end_date: str = Query(..., description="End date in YYYY-MM-DD format"),
-    grid_size: float = Query(0.001, ge=0.0001, le=0.01, description="Grid size in degrees"),
+    grid_size: float = Query(
+        0.001, ge=0.0001, le=0.01, description="Grid size in degrees"
+    ),
 ):
     """Get location heatmap data"""
     try:
@@ -143,14 +163,18 @@ async def get_heatmap_data(
         end_date_obj = datetime.fromisoformat(end_date)
 
         analyzer = HeatmapAnalyzer()
-        heatmap = await analyzer.generate_location_heatmap(organization_id, start_date_obj, end_date_obj, grid_size)
+        heatmap = await analyzer.generate_location_heatmap(
+            organization_id, start_date_obj, end_date_obj, grid_size
+        )
 
         return heatmap
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Invalid date format: {e}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating heatmap: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error generating heatmap: {str(e)}"
+        )
 
 
 @router.get("/analytics/summary")
@@ -168,11 +192,15 @@ async def get_analytics_summary(
 
         # Get cost summary
         cost_analyzer = CostAnalyzer()
-        costs = await cost_analyzer.calculate_organization_costs(organization_id, start_date, end_date)
+        costs = await cost_analyzer.calculate_organization_costs(
+            organization_id, start_date, end_date
+        )
 
         # Get heatmap summary
         heatmap_analyzer = HeatmapAnalyzer()
-        heatmap = await heatmap_analyzer.generate_location_heatmap(organization_id, start_date, end_date, grid_size=0.01)
+        heatmap = await heatmap_analyzer.generate_location_heatmap(
+            organization_id, start_date, end_date, grid_size=0.01
+        )
 
         return {
             "organization_id": organization_id,
@@ -189,20 +217,30 @@ async def get_analytics_summary(
             },
             "heatmap": {
                 "total_points": heatmap.get("total_points", 0),
-                "top_locations": heatmap.get("heatmap_data", [])[:10],  # Top 10 locations
+                "top_locations": heatmap.get("heatmap_data", [])[
+                    :10
+                ],  # Top 10 locations
             },
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating analytics summary: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error generating analytics summary: {str(e)}"
+        )
 
 
 @router.post("/analytics/predict")
 async def get_ml_predictions(
-    prediction_type: str = Query(..., description="Type of prediction: utilization, maintenance, location"),
-    asset_id: Optional[str] = Query(None, description="Asset ID for asset-specific predictions"),
+    prediction_type: str = Query(
+        ..., description="Type of prediction: utilization, maintenance, location"
+    ),
+    asset_id: Optional[str] = Query(
+        None, description="Asset ID for asset-specific predictions"
+    ),
     organization_id: str = Query(..., description="Organization ID"),
-    prediction_days: int = Query(7, ge=1, le=30, description="Number of days to predict"),
+    prediction_days: int = Query(
+        7, ge=1, le=30, description="Number of days to predict"
+    ),
 ):
     """Get ML predictions"""
     try:
@@ -229,13 +267,18 @@ async def get_ml_predictions(
 
         elif prediction_type == "maintenance":
             if not asset_id:
-                raise HTTPException(status_code=400, detail="Asset ID required for maintenance predictions")
+                raise HTTPException(
+                    status_code=400,
+                    detail="Asset ID required for maintenance predictions",
+                )
 
             # Use actual ML model for maintenance prediction
             result = await model_server.predict_maintenance(asset_id)
 
             if not result["success"]:
-                raise HTTPException(status_code=500, detail=result.get("message", "Prediction failed"))
+                raise HTTPException(
+                    status_code=500, detail=result.get("message", "Prediction failed")
+                )
 
             return {
                 "prediction_type": "maintenance",
@@ -248,13 +291,17 @@ async def get_ml_predictions(
 
         elif prediction_type == "location":
             if not asset_id:
-                raise HTTPException(status_code=400, detail="Asset ID required for location predictions")
+                raise HTTPException(
+                    status_code=400, detail="Asset ID required for location predictions"
+                )
 
             # Use actual ML model for location prediction
             result = await model_server.predict_location(asset_id, prediction_days)
 
             if not result["success"]:
-                raise HTTPException(status_code=500, detail=result.get("message", "Prediction failed"))
+                raise HTTPException(
+                    status_code=500, detail=result.get("message", "Prediction failed")
+                )
 
             # Format predictions with dates
             formatted_predictions = []
@@ -284,13 +331,17 @@ async def get_ml_predictions(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating predictions: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error generating predictions: {str(e)}"
+        )
 
 
 @router.get("/analytics/trends")
 async def get_analytics_trends(
     organization_id: str = Query(..., description="Organization ID"),
-    trend_type: str = Query(..., description="Type of trend: utilization, cost, movement"),
+    trend_type: str = Query(
+        ..., description="Type of trend: utilization, cost, movement"
+    ),
     period_days: int = Query(30, ge=7, le=365, description="Period in days"),
 ):
     """Get analytics trends"""
@@ -306,7 +357,8 @@ async def get_analytics_trends(
                 trend_data.append(
                     {
                         "date": date.isoformat(),
-                        "average_utilization_rate": 0.6 + (i % 7) * 0.1,  # Mock weekly pattern
+                        "average_utilization_rate": 0.6
+                        + (i % 7) * 0.1,  # Mock weekly pattern
                         "total_assets_active": 25 + (i % 5) * 2,
                     }
                 )
@@ -367,13 +419,17 @@ async def get_analytics_trends(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating trends: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error generating trends: {str(e)}"
+        )
 
 
 @router.post("/analytics/ml/train/location")
 async def train_location_model(
     asset_id: str = Query(..., description="Asset ID to train model for"),
-    days_back: int = Query(30, ge=7, le=365, description="Days of historical data to use for training"),
+    days_back: int = Query(
+        30, ge=7, le=365, description="Days of historical data to use for training"
+    ),
 ):
     """Train location prediction model for an asset"""
     try:
@@ -382,7 +438,9 @@ async def train_location_model(
         result = await model_server.train_location_model(asset_id, days_back)
 
         if not result["success"]:
-            raise HTTPException(status_code=500, detail=result.get("message", "Training failed"))
+            raise HTTPException(
+                status_code=500, detail=result.get("message", "Training failed")
+            )
 
         return {
             "success": True,
@@ -395,11 +453,15 @@ async def train_location_model(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error training location model: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error training location model: {str(e)}"
+        )
 
 
 @router.post("/analytics/ml/train/maintenance")
-async def train_maintenance_model(organization_id: str = Query(..., description="Organization ID to train model for")):
+async def train_maintenance_model(
+    organization_id: str = Query(..., description="Organization ID to train model for")
+):
     """Train maintenance prediction model for an organization"""
     try:
         from ml.serving.model_server import model_server
@@ -407,7 +469,9 @@ async def train_maintenance_model(organization_id: str = Query(..., description=
         result = await model_server.train_maintenance_model(organization_id)
 
         if not result["success"]:
-            raise HTTPException(status_code=500, detail=result.get("message", "Training failed"))
+            raise HTTPException(
+                status_code=500, detail=result.get("message", "Training failed")
+            )
 
         return {
             "success": True,
@@ -420,7 +484,9 @@ async def train_maintenance_model(organization_id: str = Query(..., description=
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error training maintenance model: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error training maintenance model: {str(e)}"
+        )
 
 
 @router.get("/analytics/ml/status")
@@ -434,4 +500,6 @@ async def get_ml_model_status():
         return {"success": True, "models": status}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting model status: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error getting model status: {str(e)}"
+        )

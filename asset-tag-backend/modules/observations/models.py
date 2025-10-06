@@ -1,8 +1,18 @@
 """
 Observation models for Bluetooth signal data
 """
-from sqlalchemy import (JSON, Boolean, Column, DateTime, ForeignKey, Index,
-                        Integer, Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -24,7 +34,9 @@ class Observation(BaseModel, OrganizationMixin):
     temperature = Column(Numeric(5, 2), nullable=True)  # Asset temperature
 
     # Timing
-    observed_at = Column(DateTime(timezone=True), nullable=False, index=True)  # When observation was made
+    observed_at = Column(
+        DateTime(timezone=True), nullable=False, index=True
+    )  # When observation was made
     received_at = Column(DateTime(timezone=True), nullable=False)  # When we received it
 
     # Signal quality
@@ -56,7 +68,9 @@ class ObservationBatch(BaseModel, OrganizationMixin):
     start_time = Column(DateTime(timezone=True), nullable=False)
     end_time = Column(DateTime(timezone=True), nullable=False)
     observation_count = Column(Integer, nullable=False)
-    processing_status = Column(String(50), default="pending")  # pending, processing, completed, failed
+    processing_status = Column(
+        String(50), default="pending"
+    )  # pending, processing, completed, failed
     error_message = Column(Text, nullable=True)
 
     # Indexes

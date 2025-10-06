@@ -11,8 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.gateways.models import Gateway
-from modules.gateways.schemas import (GatewayCreate, GatewayResponse,
-                                      GatewayUpdate)
+from modules.gateways.schemas import GatewayCreate, GatewayResponse, GatewayUpdate
 
 router = APIRouter()
 
@@ -47,7 +46,9 @@ async def get_gateways(
         return [GatewayResponse.from_orm(gateway) for gateway in gateways]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching gateways: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching gateways: {str(e)}"
+        )
 
 
 @router.get("/gateways/{gateway_id}", response_model=GatewayResponse)
@@ -69,13 +70,19 @@ async def get_gateway(gateway_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/gateways", response_model=GatewayResponse)
-async def create_gateway(gateway_data: GatewayCreate, db: AsyncSession = Depends(get_db)):
+async def create_gateway(
+    gateway_data: GatewayCreate, db: AsyncSession = Depends(get_db)
+):
     """Create a new gateway"""
     try:
         # Check if gateway_id already exists
-        existing = await db.execute(select(Gateway).where(Gateway.gateway_id == gateway_data.gateway_id))
+        existing = await db.execute(
+            select(Gateway).where(Gateway.gateway_id == gateway_data.gateway_id)
+        )
         if existing.scalar_one_or_none():
-            raise HTTPException(status_code=400, detail="Gateway with this ID already exists")
+            raise HTTPException(
+                status_code=400, detail="Gateway with this ID already exists"
+            )
 
         # Create new gateway
         gateway = Gateway(
@@ -112,7 +119,9 @@ async def create_gateway(gateway_data: GatewayCreate, db: AsyncSession = Depends
 
 
 @router.put("/gateways/{gateway_id}", response_model=GatewayResponse)
-async def update_gateway(gateway_id: str, gateway_data: GatewayUpdate, db: AsyncSession = Depends(get_db)):
+async def update_gateway(
+    gateway_id: str, gateway_data: GatewayUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update an existing gateway"""
     try:
         # Get existing gateway
@@ -210,4 +219,6 @@ async def get_gateway_observations(
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching gateway observations: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching gateway observations: {str(e)}"
+        )

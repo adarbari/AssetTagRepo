@@ -123,7 +123,9 @@ class TestAssetsAPI:
         data = response.json()
         assert len(data) == 2  # Only 2 remaining
 
-    def test_get_asset_current_location(self, client: TestClient, sample_asset_data: dict):
+    def test_get_asset_current_location(
+        self, client: TestClient, sample_asset_data: dict
+    ):
         """Test getting current location of an asset"""
         # Create asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)
@@ -135,7 +137,9 @@ class TestAssetsAPI:
         assert response.status_code == 200
         # Should return empty or null since no location data exists yet
 
-    def test_get_asset_location_history(self, client: TestClient, sample_asset_data: dict):
+    def test_get_asset_location_history(
+        self, client: TestClient, sample_asset_data: dict
+    ):
         """Test getting location history of an asset"""
         # Create asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)
@@ -150,11 +154,16 @@ class TestAssetsAPI:
 
     def test_create_asset_validation_error(self, client: TestClient):
         """Test creating asset with invalid data"""
-        invalid_data = {"name": "", "asset_type": "invalid_type"}  # Empty name should fail
+        invalid_data = {
+            "name": "",
+            "asset_type": "invalid_type",
+        }  # Empty name should fail
         response = client.post("/api/v1/assets", json=invalid_data)
         assert response.status_code == 422  # Validation error
 
-    def test_update_asset_validation_error(self, client: TestClient, sample_asset_data: dict):
+    def test_update_asset_validation_error(
+        self, client: TestClient, sample_asset_data: dict
+    ):
         """Test updating asset with invalid data"""
         # Create asset first
         create_response = client.post("/api/v1/assets", json=sample_asset_data)

@@ -66,7 +66,11 @@ class TestAssetsAPI:
         asset_id = create_response.json()["id"]
 
         # Update the asset
-        update_data = {"name": "Updated Excavator", "status": "maintenance", "battery_level": 50}
+        update_data = {
+            "name": "Updated Excavator",
+            "status": "maintenance",
+            "battery_level": 50,
+        }
 
         response = client.put(f"/api/v1/assets/{asset_id}", json=update_data)
 
@@ -76,7 +80,9 @@ class TestAssetsAPI:
         assert data["name"] == update_data["name"]
         assert data["status"] == update_data["status"]
         assert data["battery_level"] == update_data["battery_level"]
-        assert data["asset_type"] == sample_asset_data["asset_type"]  # Should remain unchanged
+        assert (
+            data["asset_type"] == sample_asset_data["asset_type"]
+        )  # Should remain unchanged
 
     def test_delete_asset(self, client, sample_asset_data):
         """Test deleting an asset"""
@@ -124,11 +130,16 @@ class TestAssetsAPI:
         assert all(asset["status"] == "active" for asset in data)
 
         # Filter by site
-        response = client.get(f"/api/v1/assets?site_id={sample_asset_data['current_site_id']}")
+        response = client.get(
+            f"/api/v1/assets?site_id={sample_asset_data['current_site_id']}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data) >= 2
-        assert all(asset["current_site_id"] == sample_asset_data["current_site_id"] for asset in data)
+        assert all(
+            asset["current_site_id"] == sample_asset_data["current_site_id"]
+            for asset in data
+        )
 
     def test_asset_pagination(self, client, sample_asset_data):
         """Test pagination of assets"""
@@ -177,11 +188,16 @@ class TestAssetsAPI:
         assert any(asset["name"] == sample_asset_data["name"] for asset in data)
 
         # Search by serial number
-        response = client.get(f"/api/v1/assets/search?q={sample_asset_data['serial_number']}")
+        response = client.get(
+            f"/api/v1/assets/search?q={sample_asset_data['serial_number']}"
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data) >= 1
-        assert any(asset["serial_number"] == sample_asset_data["serial_number"] for asset in data)
+        assert any(
+            asset["serial_number"] == sample_asset_data["serial_number"]
+            for asset in data
+        )
 
     def test_asset_battery_history(self, client, sample_asset_data):
         """Test getting asset battery history"""

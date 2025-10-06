@@ -162,7 +162,9 @@ class TestSitesAPI:
     def test_get_personnel(self, client: TestClient, sample_personnel_data: dict):
         """Test getting personnel list"""
         # Create personnel first
-        create_response = client.post("/api/v1/sites/personnel", json=sample_personnel_data)
+        create_response = client.post(
+            "/api/v1/sites/personnel", json=sample_personnel_data
+        )
         assert create_response.status_code == 201
 
         # Get personnel list
@@ -176,7 +178,9 @@ class TestSitesAPI:
     def test_get_personnel_by_id(self, client: TestClient, sample_personnel_data: dict):
         """Test getting specific personnel by ID"""
         # Create personnel first
-        create_response = client.post("/api/v1/sites/personnel", json=sample_personnel_data)
+        create_response = client.post(
+            "/api/v1/sites/personnel", json=sample_personnel_data
+        )
         assert create_response.status_code == 201
         personnel_id = create_response.json()["id"]
 
@@ -190,13 +194,17 @@ class TestSitesAPI:
     def test_update_personnel(self, client: TestClient, sample_personnel_data: dict):
         """Test updating personnel"""
         # Create personnel first
-        create_response = client.post("/api/v1/sites/personnel", json=sample_personnel_data)
+        create_response = client.post(
+            "/api/v1/sites/personnel", json=sample_personnel_data
+        )
         assert create_response.status_code == 201
         personnel_id = create_response.json()["id"]
 
         # Update personnel
         update_data = {"name": "Updated Personnel Name", "role": "supervisor"}
-        response = client.put(f"/api/v1/sites/personnel/{personnel_id}", json=update_data)
+        response = client.put(
+            f"/api/v1/sites/personnel/{personnel_id}", json=update_data
+        )
         assert response.status_code == 200
         data = response.json()
         assert data["name"] == "Updated Personnel Name"
@@ -205,7 +213,9 @@ class TestSitesAPI:
     def test_delete_personnel(self, client: TestClient, sample_personnel_data: dict):
         """Test deleting personnel"""
         # Create personnel first
-        create_response = client.post("/api/v1/sites/personnel", json=sample_personnel_data)
+        create_response = client.post(
+            "/api/v1/sites/personnel", json=sample_personnel_data
+        )
         assert create_response.status_code == 201
         personnel_id = create_response.json()["id"]
 
@@ -219,6 +229,9 @@ class TestSitesAPI:
 
     def test_create_site_validation_error(self, client: TestClient):
         """Test creating site with invalid data"""
-        invalid_data = {"name": "", "latitude": 200.0}  # Empty name should fail  # Invalid latitude
+        invalid_data = {
+            "name": "",
+            "latitude": 200.0,
+        }  # Empty name should fail  # Invalid latitude
         response = client.post("/api/v1/sites", json=invalid_data)
         assert response.status_code == 422  # Validation error

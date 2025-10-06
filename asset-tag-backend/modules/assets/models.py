@@ -1,13 +1,21 @@
 """
 Asset models
 """
-from sqlalchemy import (JSON, Boolean, Column, ForeignKey, Index, Integer,
-                        Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Asset(BaseModel, OrganizationMixin, SoftDeleteMixin):
@@ -19,7 +27,9 @@ class Asset(BaseModel, OrganizationMixin, SoftDeleteMixin):
     name = Column(String(255), nullable=False)
     serial_number = Column(String(100), unique=True, nullable=False, index=True)
     asset_type = Column(String(100), nullable=False, index=True)
-    status = Column(String(50), default="active", index=True)  # active, inactive, maintenance, in-transit, checked-out
+    status = Column(
+        String(50), default="active", index=True
+    )  # active, inactive, maintenance, in-transit, checked-out
 
     # Location information
     current_site_id = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True)
@@ -32,7 +42,9 @@ class Asset(BaseModel, OrganizationMixin, SoftDeleteMixin):
     movement_status = Column(String(50), default="stationary")  # stationary, moving
 
     # Assignment
-    assigned_to_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    assigned_to_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
     assigned_job_id = Column(UUID(as_uuid=True), ForeignKey("jobs.id"), nullable=True)
     assignment_start_date = Column(String(100), nullable=True)  # ISO timestamp
     assignment_end_date = Column(String(100), nullable=True)  # ISO timestamp
@@ -49,7 +61,9 @@ class Asset(BaseModel, OrganizationMixin, SoftDeleteMixin):
 
     # Pricing and availability
     hourly_rate = Column(Numeric(10, 2), nullable=True)
-    availability = Column(String(50), default="available")  # available, assigned, in-use, maintenance, reserved, unavailable
+    availability = Column(
+        String(50), default="available"
+    )  # available, assigned, in-use, maintenance, reserved, unavailable
 
     # Metadata
     asset_metadata = Column(JSON, default={})

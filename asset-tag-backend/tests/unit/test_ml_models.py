@@ -115,7 +115,9 @@ class TestLocationPredictor:
         predictor.train(training_data)
 
         # Prepare features for prediction
-        features = predictor.prepare_features(training_data[-10:])  # Use last 10 records
+        features = predictor.prepare_features(
+            training_data[-10:]
+        )  # Use last 10 records
 
         # Make predictions
         predictions = predictor.predict(features, steps_ahead=3)
@@ -253,7 +255,11 @@ class TestMaintenancePredictor:
             maintenance_type = ["scheduled", "preventive", "corrective"][i % 3]
 
             training_data.append(
-                {"asset_data": asset_data, "historical_data": historical_data, "maintenance_type": maintenance_type}
+                {
+                    "asset_data": asset_data,
+                    "historical_data": historical_data,
+                    "maintenance_type": maintenance_type,
+                }
             )
 
         metrics = predictor.train(training_data)
@@ -293,7 +299,11 @@ class TestMaintenancePredictor:
             maintenance_type = ["scheduled", "preventive", "corrective"][i % 3]
 
             training_data.append(
-                {"asset_data": asset_data, "historical_data": historical_data, "maintenance_type": maintenance_type}
+                {
+                    "asset_data": asset_data,
+                    "historical_data": historical_data,
+                    "maintenance_type": maintenance_type,
+                }
             )
 
         predictor.train(training_data)
@@ -343,7 +353,12 @@ class TestMaintenancePredictor:
 
         # Test high urgency
         features_high = pd.Series(
-            {"error_count": 10, "temperature_max": 45, "days_since_maintenance": 100, "battery_cycles": 500}
+            {
+                "error_count": 10,
+                "temperature_max": 45,
+                "days_since_maintenance": 100,
+                "battery_cycles": 500,
+            }
         )
 
         urgency = predictor._determine_urgency(features_high)
@@ -351,7 +366,12 @@ class TestMaintenancePredictor:
 
         # Test medium urgency
         features_medium = pd.Series(
-            {"error_count": 2, "temperature_max": 35, "days_since_maintenance": 200, "battery_cycles": 1000}
+            {
+                "error_count": 2,
+                "temperature_max": 35,
+                "days_since_maintenance": 200,
+                "battery_cycles": 1000,
+            }
         )
 
         urgency = predictor._determine_urgency(features_medium)
@@ -359,7 +379,12 @@ class TestMaintenancePredictor:
 
         # Test low urgency
         features_low = pd.Series(
-            {"error_count": 1, "temperature_max": 30, "days_since_maintenance": 50, "battery_cycles": 200}
+            {
+                "error_count": 1,
+                "temperature_max": 30,
+                "days_since_maintenance": 50,
+                "battery_cycles": 200,
+            }
         )
 
         urgency = predictor._determine_urgency(features_low)
@@ -393,7 +418,11 @@ class TestMaintenancePredictor:
             maintenance_type = ["scheduled", "preventive", "corrective"][i % 3]
 
             training_data.append(
-                {"asset_data": asset_data, "historical_data": historical_data, "maintenance_type": maintenance_type}
+                {
+                    "asset_data": asset_data,
+                    "historical_data": historical_data,
+                    "maintenance_type": maintenance_type,
+                }
             )
 
         predictor.train(training_data)

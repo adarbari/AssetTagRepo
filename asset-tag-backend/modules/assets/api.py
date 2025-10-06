@@ -57,7 +57,8 @@ def asset_to_response(asset: Asset) -> AssetResponse:
             else None
         ),
         assignment_start_date=asset.assignment_start_date.isoformat()
-        if asset.assignment_start_date and hasattr(asset.assignment_start_date, "isoformat")
+        if asset.assignment_start_date
+        and hasattr(asset.assignment_start_date, "isoformat")
         else asset.assignment_start_date,
         assignment_end_date=asset.assignment_end_date.isoformat()
         if asset.assignment_end_date and hasattr(asset.assignment_end_date, "isoformat")
@@ -81,8 +82,12 @@ def asset_to_response(asset: Asset) -> AssetResponse:
         asset_metadata=json.loads(asset.asset_metadata)
         if isinstance(asset.asset_metadata, str)
         else (asset.asset_metadata or {}),
-        created_at=asset.created_at.isoformat() if hasattr(asset.created_at, "isoformat") else str(asset.created_at),
-        updated_at=asset.updated_at.isoformat() if hasattr(asset.updated_at, "isoformat") else str(asset.updated_at),
+        created_at=asset.created_at.isoformat()
+        if hasattr(asset.created_at, "isoformat")
+        else str(asset.created_at),
+        updated_at=asset.updated_at.isoformat()
+        if hasattr(asset.updated_at, "isoformat")
+        else str(asset.updated_at),
     )
 
 
@@ -119,7 +124,9 @@ async def get_assets(
         """
 
         # Add WHERE clauses for filters
-        where_conditions = ["deleted_at IS NULL"]  # Always filter out soft-deleted assets
+        where_conditions = [
+            "deleted_at IS NULL"
+        ]  # Always filter out soft-deleted assets
         params = {}
 
         if asset_type:
@@ -129,10 +136,16 @@ async def get_assets(
             where_conditions.append("status = :status")
             params["status"] = status
         if site_id:
-            where_conditions.append("(current_site_id = :site_id OR REPLACE(current_site_id, '-', '') = REPLACE(:site_id, '-', ''))")
+            where_conditions.append(
+                "(current_site_id = :site_id OR REPLACE(current_site_id, '-', '') = REPLACE(:site_id, '-', ''))"
+            )
             params["site_id"] = site_id
 
-        raw_query += " AND " + " AND ".join(where_conditions[1:]) if len(where_conditions) > 1 else ""
+        raw_query += (
+            " AND " + " AND ".join(where_conditions[1:])
+            if len(where_conditions) > 1
+            else ""
+        )
 
         # Add pagination
         raw_query += f" LIMIT {limit} OFFSET {skip}"
@@ -201,7 +214,9 @@ async def search_assets(
         """
 
         search_query = f"%{q}%"
-        result = await db.execute(text(raw_query), {"search_query": search_query, "limit": limit})
+        result = await db.execute(
+            text(raw_query), {"search_query": search_query, "limit": limit}
+        )
         rows = result.fetchall()
 
         # Convert rows to Asset objects manually
@@ -309,18 +324,26 @@ async def create_asset(asset_data: AssetCreate, db: AsyncSession = Depends(get_d
     """Create a new asset"""
     try:
         # Check if serial number already exists
-        existing = await db.execute(select(Asset).where(Asset.serial_number == asset_data.serial_number))
+        existing = await db.execute(
+            select(Asset).where(Asset.serial_number == asset_data.serial_number)
+        )
         if existing.scalar_one_or_none():
-            raise HTTPException(status_code=400, detail="Asset with this serial number already exists")
+            raise HTTPException(
+                status_code=400, detail="Asset with this serial number already exists"
+            )
 
         # Create new asset
         asset = Asset(
-            organization_id=uuid.UUID("00000000-0000-0000-0000-000000000000"),  # Default org for now
+            organization_id=uuid.UUID(
+                "00000000-0000-0000-0000-000000000000"
+            ),  # Default org for now
             name=asset_data.name,
             serial_number=asset_data.serial_number,
             asset_type=asset_data.asset_type,
             status=asset_data.status or "active",
-            current_site_id=uuid.UUID(asset_data.current_site_id) if asset_data.current_site_id else None,
+            current_site_id=uuid.UUID(asset_data.current_site_id)
+            if asset_data.current_site_id
+            else None,
             location_description=asset_data.location_description,
             battery_level=asset_data.battery_level,
             temperature=asset_data.temperature,
@@ -347,7 +370,9 @@ async def create_asset(asset_data: AssetCreate, db: AsyncSession = Depends(get_d
 
 
 @router.put("/assets/{asset_id}", response_model=AssetResponse)
-async def update_asset(asset_id: str, asset_data: AssetUpdate, db: AsyncSession = Depends(get_db)):
+async def update_asset(
+    asset_id: str, asset_data: AssetUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update an existing asset"""
     try:
         # Use raw SQL to update the asset
@@ -500,7 +525,10 @@ async def delete_asset(asset_id: str, db: AsyncSession = Depends(get_db)):
         """
 
         now = datetime.now()
-        result = await db.execute(text(update_query), {"asset_id": asset_id, "deleted_at": now, "updated_at": now})
+        result = await db.execute(
+            text(update_query),
+            {"asset_id": asset_id, "deleted_at": now, "updated_at": now},
+        )
 
         if result.rowcount == 0:
             raise HTTPException(status_code=404, detail="Asset not found")
@@ -532,7 +560,9 @@ async def get_asset_current_location(asset_id: str, db: AsyncSession = Depends(g
         location = result.scalar_one_or_none()
 
         if not location:
-            raise HTTPException(status_code=404, detail="No location data found for asset")
+            raise HTTPException(
+                status_code=404, detail="No location data found for asset"
+            )
 
         return {
             "asset_id": asset_id,
@@ -550,7 +580,9 @@ async def get_asset_current_location(asset_id: str, db: AsyncSession = Depends(g
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching asset location: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching asset location: {str(e)}"
+        )
 
 
 @router.get("/assets/{asset_id}/location-history")
@@ -595,17 +627,25 @@ async def get_asset_location_history(
                 "estimated_at": loc.estimated_at.isoformat(),
                 "speed": float(loc.speed) if loc.speed else None,
                 "bearing": float(loc.bearing) if loc.bearing else None,
-                "distance_from_previous": float(loc.distance_from_previous) if loc.distance_from_previous else None,
+                "distance_from_previous": float(loc.distance_from_previous)
+                if loc.distance_from_previous
+                else None,
             }
             for loc in locations
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching location history: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching location history: {str(e)}"
+        )
 
 
 @router.get("/assets/{asset_id}/battery-history")
-async def get_asset_battery_history(asset_id: str, limit: int = Query(100, ge=1, le=1000), db: AsyncSession = Depends(get_db)):
+async def get_asset_battery_history(
+    asset_id: str,
+    limit: int = Query(100, ge=1, le=1000),
+    db: AsyncSession = Depends(get_db),
+):
     """Get battery level history for an asset"""
     try:
         # Use raw SQL to avoid UUID serialization issues with SQLite
@@ -632,7 +672,9 @@ async def get_asset_battery_history(asset_id: str, limit: int = Query(100, ge=1,
             battery_history.append(
                 {
                     "battery_level": battery_level,
-                    "timestamp": updated_at.isoformat() if hasattr(updated_at, "isoformat") else str(updated_at),
+                    "timestamp": updated_at.isoformat()
+                    if hasattr(updated_at, "isoformat")
+                    else str(updated_at),
                     "source": "current_reading",
                 }
             )
@@ -642,4 +684,6 @@ async def get_asset_battery_history(asset_id: str, limit: int = Query(100, ge=1,
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching battery history: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching battery history: {str(e)}"
+        )

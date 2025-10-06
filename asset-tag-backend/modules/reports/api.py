@@ -15,12 +15,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.reports.generators import ReportGenerator
-from modules.reports.schemas import (ExportRequest, ExportResponse,
-                                     ReportDownloadResponse,
-                                     ReportGenerationRequest,
-                                     ReportGenerationResponse, ReportStatus,
-                                     ReportTemplate, ScheduledReportRequest,
-                                     ScheduledReportResponse)
+from modules.reports.schemas import (
+    ExportRequest,
+    ExportResponse,
+    ReportDownloadResponse,
+    ReportGenerationRequest,
+    ReportGenerationResponse,
+    ReportStatus,
+    ReportTemplate,
+    ScheduledReportRequest,
+    ScheduledReportResponse,
+)
 
 router = APIRouter()
 
@@ -35,7 +40,11 @@ report_templates = {
             "date_range": {"type": "date_range", "required": True},
             "asset_types": {"type": "multi_select", "required": False},
             "sites": {"type": "multi_select", "required": False},
-            "include_inactive": {"type": "boolean", "required": False, "default": False},
+            "include_inactive": {
+                "type": "boolean",
+                "required": False,
+                "default": False,
+            },
         },
     ),
     "job_performance": ReportTemplate(
@@ -71,7 +80,11 @@ report_templates = {
             "date_range": {"type": "date_range", "required": True},
             "alert_types": {"type": "multi_select", "required": False},
             "severity_levels": {"type": "multi_select", "required": False},
-            "include_resolution": {"type": "boolean", "required": False, "default": True},
+            "include_resolution": {
+                "type": "boolean",
+                "required": False,
+                "default": True,
+            },
         },
     ),
     "compliance_audit": ReportTemplate(
@@ -108,7 +121,9 @@ async def get_report_template(template_id: str):
 
 @router.post("/reports/generate", response_model=ReportGenerationResponse)
 async def generate_report(
-    request: ReportGenerationRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)
+    request: ReportGenerationRequest,
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db),
 ):
     """Generate a report (async)"""
     try:
@@ -132,15 +147,24 @@ async def generate_report(
 
         # Start background task
         background_tasks.add_task(
-            _generate_report_background, report_id, request.template_id, request.parameters, request.format, db
+            _generate_report_background,
+            report_id,
+            request.template_id,
+            request.parameters,
+            request.format,
+            db,
         )
 
-        return ReportGenerationResponse(report_id=report_id, status="pending", message="Report generation started")
+        return ReportGenerationResponse(
+            report_id=report_id, status="pending", message="Report generation started"
+        )
 
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error starting report generation: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error starting report generation: {str(e)}"
+        )
 
 
 @router.get("/reports/{report_id}", response_model=ReportStatus)
@@ -170,7 +194,9 @@ async def download_report(report_id: str):
     return StreamingResponse(
         io.StringIO("Report content would be here"),
         media_type="application/octet-stream",
-        headers={"Content-Disposition": f"attachment; filename={report_status.filename}"},
+        headers={
+            "Content-Disposition": f"attachment; filename={report_status.filename}"
+        },
     )
 
 
@@ -218,7 +244,11 @@ async def export_data(request: ExportRequest, db: AsyncSession = Depends(get_db)
             raise HTTPException(status_code=400, detail="Unsupported export format")
 
         return ExportResponse(
-            export_id=export_id, filename=filename, content=content, media_type=media_type, size=len(content)
+            export_id=export_id,
+            filename=filename,
+            content=content,
+            media_type=media_type,
+            size=len(content),
         )
 
     except HTTPException:
@@ -228,7 +258,11 @@ async def export_data(request: ExportRequest, db: AsyncSession = Depends(get_db)
 
 
 async def _generate_report_background(
-    report_id: str, template_id: str, parameters: Dict[str, Any], format: str, db: AsyncSession
+    report_id: str,
+    template_id: str,
+    parameters: Dict[str, Any],
+    format: str,
+    db: AsyncSession,
 ):
     """Background task for report generation"""
     try:
@@ -241,15 +275,23 @@ async def _generate_report_background(
 
         # Generate report based on template
         if template_id == "asset_utilization":
-            report_data = await generator.generate_asset_utilization_report(parameters, db)
+            report_data = await generator.generate_asset_utilization_report(
+                parameters, db
+            )
         elif template_id == "job_performance":
-            report_data = await generator.generate_job_performance_report(parameters, db)
+            report_data = await generator.generate_job_performance_report(
+                parameters, db
+            )
         elif template_id == "maintenance_history":
-            report_data = await generator.generate_maintenance_history_report(parameters, db)
+            report_data = await generator.generate_maintenance_history_report(
+                parameters, db
+            )
         elif template_id == "alert_summary":
             report_data = await generator.generate_alert_summary_report(parameters, db)
         elif template_id == "compliance_audit":
-            report_data = await generator.generate_compliance_audit_report(parameters, db)
+            report_data = await generator.generate_compliance_audit_report(
+                parameters, db
+            )
         else:
             raise ValueError(f"Unknown template: {template_id}")
 
@@ -272,7 +314,9 @@ async def _generate_report_background(
         report_statuses[report_id].status = "completed"
         report_statuses[report_id].progress = 100
         report_statuses[report_id].completed_at = datetime.now()
-        report_statuses[report_id].download_url = f"/api/v1/reports/{report_id}/download"
+        report_statuses[
+            report_id
+        ].download_url = f"/api/v1/reports/{report_id}/download"
         report_statuses[report_id].filename = filename
 
     except Exception as e:
@@ -303,8 +347,18 @@ async def _generate_json_export(request: ExportRequest, db: AsyncSession) -> str
         "export_type": request.export_type,
         "filters": request.filters,
         "data": [
-            {"id": "1", "name": "Sample Asset", "type": "Equipment", "status": "Active"},
-            {"id": "2", "name": "Another Asset", "type": "Vehicle", "status": "Inactive"},
+            {
+                "id": "1",
+                "name": "Sample Asset",
+                "type": "Equipment",
+                "status": "Active",
+            },
+            {
+                "id": "2",
+                "name": "Another Asset",
+                "type": "Vehicle",
+                "status": "Inactive",
+            },
         ],
         "exported_at": datetime.now().isoformat(),
     }

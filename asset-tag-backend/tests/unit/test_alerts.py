@@ -31,7 +31,9 @@ class TestAlertModel:
         assert alert.status == "active"  # Default status
 
     @pytest.mark.asyncio
-    async def test_alert_status_transitions(self, db_session: AsyncSession, sample_alert_data):
+    async def test_alert_status_transitions(
+        self, db_session: AsyncSession, sample_alert_data
+    ):
         """Test alert status transitions"""
         alert = Alert(organization_id="test-org-1", **sample_alert_data)
 
@@ -59,7 +61,9 @@ class TestAlertModel:
     async def test_alert_metadata(self, db_session: AsyncSession, sample_alert_data):
         """Test alert metadata handling"""
         metadata = {"rule_id": "battery_low", "threshold": 20}
-        alert = Alert(organization_id="test-org-1", **sample_alert_data, metadata=metadata)
+        alert = Alert(
+            organization_id="test-org-1", **sample_alert_data, metadata=metadata
+        )
 
         db_session.add(alert)
         await db_session.commit()
@@ -111,7 +115,12 @@ class TestAlertSchemas:
         valid_severities = ["low", "medium", "high", "critical"]
 
         for severity in valid_severities:
-            data = {"alert_type": "test", "severity": severity, "asset_id": "test-asset-1", "message": "Test alert"}
+            data = {
+                "alert_type": "test",
+                "severity": severity,
+                "asset_id": "test-asset-1",
+                "message": "Test alert",
+            }
             alert = AlertCreate(**data)
             assert alert.severity == severity
 
@@ -167,14 +176,18 @@ class TestAlertRulesEngine:
         engine = AlertRulesEngine()
 
         # Test with unauthorized zone entry
-        asset_data = {"geofence_events": [{"event_type": "entry", "geofence_type": "restricted"}]}
+        asset_data = {
+            "geofence_events": [{"event_type": "entry", "geofence_type": "restricted"}]
+        }
         rule = engine.rules["unauthorized_zone"]
 
         result = engine._check_unauthorized_zone(rule, asset_data)
         assert result is True
 
         # Test with authorized zone entry
-        asset_data = {"geofence_events": [{"event_type": "entry", "geofence_type": "authorized"}]}
+        asset_data = {
+            "geofence_events": [{"event_type": "entry", "geofence_type": "authorized"}]
+        }
 
         result = engine._check_unauthorized_zone(rule, asset_data)
         assert result is False
@@ -184,14 +197,18 @@ class TestAlertRulesEngine:
         engine = AlertRulesEngine()
 
         # Test with authorized zone exit
-        asset_data = {"geofence_events": [{"event_type": "exit", "geofence_type": "authorized"}]}
+        asset_data = {
+            "geofence_events": [{"event_type": "exit", "geofence_type": "authorized"}]
+        }
         rule = engine.rules["geofence_exit"]
 
         result = engine._check_geofence_exit(rule, asset_data)
         assert result is True
 
         # Test with unauthorized zone exit
-        asset_data = {"geofence_events": [{"event_type": "exit", "geofence_type": "restricted"}]}
+        asset_data = {
+            "geofence_events": [{"event_type": "exit", "geofence_type": "restricted"}]
+        }
 
         result = engine._check_geofence_exit(rule, asset_data)
         assert result is False

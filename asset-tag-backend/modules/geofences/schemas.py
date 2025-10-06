@@ -19,7 +19,9 @@ class GeofenceBase(BaseModel):
     center_latitude: Optional[float] = Field(None, ge=-90, le=90)
     center_longitude: Optional[float] = Field(None, ge=-180, le=180)
     radius: Optional[int] = Field(None, ge=0)
-    coordinates: Optional[List[List[float]]] = Field(None, description="Array of [lat, lng] pairs for polygon geofences")
+    coordinates: Optional[List[List[float]]] = Field(
+        None, description="Array of [lat, lng] pairs for polygon geofences"
+    )
 
     # Site association
     site_id: Optional[str] = None
@@ -55,7 +57,9 @@ class GeofenceBase(BaseModel):
         """Validate coordinates based on geofence type"""
         if v is not None and info.data.get("geofence_type") == "polygon":
             if len(v) < 3:
-                raise ValueError("Polygon geofences must have at least 3 coordinate pairs")
+                raise ValueError(
+                    "Polygon geofences must have at least 3 coordinate pairs"
+                )
             for coord in v:
                 if len(coord) != 2:
                     raise ValueError("Each coordinate must be [latitude, longitude]")
@@ -163,7 +167,9 @@ class GeofenceEvaluationRequest(BaseModel):
     latitude: float = Field(..., ge=-90, le=90)
     longitude: float = Field(..., ge=-180, le=180)
     timestamp: Optional[str] = Field(None, description="ISO timestamp")
-    geofence_ids: Optional[List[str]] = Field(None, description="Specific geofences to evaluate")
+    geofence_ids: Optional[List[str]] = Field(
+        None, description="Specific geofences to evaluate"
+    )
 
 
 class GeofenceEvaluationResponse(BaseModel):

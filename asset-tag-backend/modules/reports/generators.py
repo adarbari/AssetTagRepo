@@ -11,12 +11,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 class ReportGenerator:
     """Main report generator class"""
 
-    async def generate_asset_utilization_report(self, parameters: Dict[str, Any], db: AsyncSession) -> Dict[str, Any]:
+    async def generate_asset_utilization_report(
+        self, parameters: Dict[str, Any], db: AsyncSession
+    ) -> Dict[str, Any]:
         """Generate asset utilization report"""
         try:
             # Extract parameters
             date_range = parameters.get("date_range", {})
-            start_date = date_range.get("start_date", datetime.now() - timedelta(days=30))
+            start_date = date_range.get(
+                "start_date", datetime.now() - timedelta(days=30)
+            )
             end_date = date_range.get("end_date", datetime.now())
             asset_types = parameters.get("asset_types", [])
             sites = parameters.get("sites", [])
@@ -38,9 +42,39 @@ class ReportGenerator:
             ]
 
             rows = [
-                ["AST-001", "Excavator CAT 320", "Equipment", "Site A", "Active", "85", "204", "240", "2024-01-15"],
-                ["AST-002", "Generator GenSet 150", "Equipment", "Site B", "Active", "92", "221", "240", "2024-01-15"],
-                ["AST-003", "Trailer PJ 20ft", "Vehicle", "Site A", "Active", "67", "161", "240", "2024-01-14"],
+                [
+                    "AST-001",
+                    "Excavator CAT 320",
+                    "Equipment",
+                    "Site A",
+                    "Active",
+                    "85",
+                    "204",
+                    "240",
+                    "2024-01-15",
+                ],
+                [
+                    "AST-002",
+                    "Generator GenSet 150",
+                    "Equipment",
+                    "Site B",
+                    "Active",
+                    "92",
+                    "221",
+                    "240",
+                    "2024-01-15",
+                ],
+                [
+                    "AST-003",
+                    "Trailer PJ 20ft",
+                    "Vehicle",
+                    "Site A",
+                    "Active",
+                    "67",
+                    "161",
+                    "240",
+                    "2024-01-14",
+                ],
             ]
 
             return {
@@ -57,12 +91,16 @@ class ReportGenerator:
         except Exception as e:
             raise Exception(f"Error generating asset utilization report: {str(e)}")
 
-    async def generate_job_performance_report(self, parameters: Dict[str, Any], db: AsyncSession) -> Dict[str, Any]:
+    async def generate_job_performance_report(
+        self, parameters: Dict[str, Any], db: AsyncSession
+    ) -> Dict[str, Any]:
         """Generate job performance report"""
         try:
             # Extract parameters
             date_range = parameters.get("date_range", {})
-            start_date = date_range.get("start_date", datetime.now() - timedelta(days=30))
+            start_date = date_range.get(
+                "start_date", datetime.now() - timedelta(days=30)
+            )
             end_date = date_range.get("end_date", datetime.now())
             job_types = parameters.get("job_types", [])
             assigned_users = parameters.get("assigned_users", [])
@@ -107,7 +145,18 @@ class ReportGenerator:
                     "",
                     "medium",
                 ],
-                ["JOB-003", "Asset Repair", "repair", "Mike Wilson", "pending", "2024-01-03", "2024-01-10", "", "", "low"],
+                [
+                    "JOB-003",
+                    "Asset Repair",
+                    "repair",
+                    "Mike Wilson",
+                    "pending",
+                    "2024-01-03",
+                    "2024-01-10",
+                    "",
+                    "",
+                    "low",
+                ],
             ]
 
             return {
@@ -126,12 +175,16 @@ class ReportGenerator:
         except Exception as e:
             raise Exception(f"Error generating job performance report: {str(e)}")
 
-    async def generate_maintenance_history_report(self, parameters: Dict[str, Any], db: AsyncSession) -> Dict[str, Any]:
+    async def generate_maintenance_history_report(
+        self, parameters: Dict[str, Any], db: AsyncSession
+    ) -> Dict[str, Any]:
         """Generate maintenance history report"""
         try:
             # Extract parameters
             date_range = parameters.get("date_range", {})
-            start_date = date_range.get("start_date", datetime.now() - timedelta(days=30))
+            start_date = date_range.get(
+                "start_date", datetime.now() - timedelta(days=30)
+            )
             end_date = date_range.get("end_date", datetime.now())
             asset_ids = parameters.get("asset_ids", [])
             maintenance_types = parameters.get("maintenance_types", [])
@@ -211,12 +264,16 @@ class ReportGenerator:
         except Exception as e:
             raise Exception(f"Error generating maintenance history report: {str(e)}")
 
-    async def generate_alert_summary_report(self, parameters: Dict[str, Any], db: AsyncSession) -> Dict[str, Any]:
+    async def generate_alert_summary_report(
+        self, parameters: Dict[str, Any], db: AsyncSession
+    ) -> Dict[str, Any]:
         """Generate alert summary report"""
         try:
             # Extract parameters
             date_range = parameters.get("date_range", {})
-            start_date = date_range.get("start_date", datetime.now() - timedelta(days=30))
+            start_date = date_range.get(
+                "start_date", datetime.now() - timedelta(days=30)
+            )
             end_date = date_range.get("end_date", datetime.now())
             alert_types = parameters.get("alert_types", [])
             severity_levels = parameters.get("severity_levels", [])
@@ -261,7 +318,17 @@ class ReportGenerator:
                     "2024-01-03",
                     "24.0",
                 ],
-                ["ALT-003", "offline", "critical", "AST-003", "Trailer PJ 20ft", "2024-01-05", "open", "", ""],
+                [
+                    "ALT-003",
+                    "offline",
+                    "critical",
+                    "AST-003",
+                    "Trailer PJ 20ft",
+                    "2024-01-05",
+                    "open",
+                    "",
+                    "",
+                ],
             ]
 
             if not include_resolution:
@@ -283,12 +350,16 @@ class ReportGenerator:
         except Exception as e:
             raise Exception(f"Error generating alert summary report: {str(e)}")
 
-    async def generate_compliance_audit_report(self, parameters: Dict[str, Any], db: AsyncSession) -> Dict[str, Any]:
+    async def generate_compliance_audit_report(
+        self, parameters: Dict[str, Any], db: AsyncSession
+    ) -> Dict[str, Any]:
         """Generate compliance audit report"""
         try:
             # Extract parameters
             date_range = parameters.get("date_range", {})
-            start_date = date_range.get("start_date", datetime.now() - timedelta(days=30))
+            start_date = date_range.get(
+                "start_date", datetime.now() - timedelta(days=30)
+            )
             end_date = date_range.get("end_date", datetime.now())
             compliance_types = parameters.get("compliance_types", [])
             status_filter = parameters.get("status_filter")

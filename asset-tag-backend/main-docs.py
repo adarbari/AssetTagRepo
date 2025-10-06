@@ -11,8 +11,7 @@ import time
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -22,7 +21,7 @@ app = FastAPI(
     description="Backend API for Asset Tag tracking system with Bluetooth location estimation",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # Add CORS middleware
@@ -34,6 +33,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Request timing middleware
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
@@ -44,28 +44,23 @@ async def add_process_time_header(request: Request, call_next):
     response.headers["X-Process-Time"] = str(process_time)
     return response
 
+
 # Global exception handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Global exception handler"""
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(
-        status_code=500,
-        content={
-            "error": "Internal server error",
-            "message": str(exc)
-        }
+        status_code=500, content={"error": "Internal server error", "message": str(exc)}
     )
+
 
 # Health check endpoint
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {
-        "status": "healthy",
-        "environment": "local",
-        "timestamp": time.time()
-    }
+    return {"status": "healthy", "environment": "local", "timestamp": time.time()}
+
 
 # Root endpoint
 @app.get("/")
@@ -76,8 +71,9 @@ async def root():
         "version": "1.0.0",
         "environment": "local",
         "docs_url": "/docs",
-        "redoc_url": "/redoc"
+        "redoc_url": "/redoc",
     }
+
 
 # Import and include all API routers
 try:
@@ -118,7 +114,9 @@ try:
     app.include_router(jobs_router, prefix="/api/v1", tags=["jobs"])
     app.include_router(maintenance_router, prefix="/api/v1", tags=["maintenance"])
     app.include_router(analytics_router, prefix="/api/v1", tags=["analytics"])
-    app.include_router(checkin_checkout_router, prefix="/api/v1", tags=["checkin-checkout"])
+    app.include_router(
+        checkin_checkout_router, prefix="/api/v1", tags=["checkin-checkout"]
+    )
     app.include_router(vehicles_router, prefix="/api/v1", tags=["vehicles"])
     app.include_router(users_router, prefix="/api/v1", tags=["users"])
     app.include_router(issues_router, prefix="/api/v1", tags=["issues"])
@@ -135,21 +133,20 @@ try:
 
 except Exception as e:
     logger.error(f"❌ Error loading API modules: {e}")
+
     # Add a simple endpoint to show the error
     @app.get("/api/error")
     async def show_error():
         return {"error": f"Failed to load API modules: {str(e)}"}
 
+
 if __name__ == "__main__":
     import uvicorn
+
     print("🚀 Starting Asset Tag Backend Server (Documentation Mode)...")
     print("📚 FastAPI Docs: http://localhost:8000/docs")
     print("📖 ReDoc: http://localhost:8000/redoc")
     print("🔗 OpenAPI JSON: http://localhost:8000/openapi.json")
     uvicorn.run(
-        "main-docs:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-        log_level="info"
+        "main-docs:app", host="0.0.0.0", port=8000, reload=True, log_level="info"
     )

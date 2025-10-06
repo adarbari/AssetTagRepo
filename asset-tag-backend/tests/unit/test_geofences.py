@@ -15,7 +15,9 @@ class TestGeofenceModel:
     """Test Geofence model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_geofence(self, db_session: AsyncSession, sample_geofence_data):
+    async def test_create_geofence(
+        self, db_session: AsyncSession, sample_geofence_data
+    ):
         """Test creating a geofence"""
         geofence = Geofence(organization_id="test-org-1", **sample_geofence_data)
 
@@ -30,7 +32,9 @@ class TestGeofenceModel:
         assert geofence.geometry == sample_geofence_data["geometry"]
 
     @pytest.mark.asyncio
-    async def test_geofence_soft_delete(self, db_session: AsyncSession, sample_geofence_data):
+    async def test_geofence_soft_delete(
+        self, db_session: AsyncSession, sample_geofence_data
+    ):
         """Test soft delete functionality"""
         geofence = Geofence(organization_id="test-org-1", **sample_geofence_data)
 
@@ -51,7 +55,13 @@ class TestGeofenceModel:
         valid_geometry = {
             "type": "Polygon",
             "coordinates": [
-                [[-74.0060, 40.7128], [-74.0050, 40.7128], [-74.0050, 40.7138], [-74.0060, 40.7138], [-74.0060, 40.7128]]
+                [
+                    [-74.0060, 40.7128],
+                    [-74.0050, 40.7128],
+                    [-74.0050, 40.7138],
+                    [-74.0060, 40.7138],
+                    [-74.0060, 40.7128],
+                ]
             ],
         }
 
@@ -96,7 +106,13 @@ class TestGeofenceSchemas:
             "geometry": {
                 "type": "Polygon",
                 "coordinates": [
-                    [[-74.0060, 40.7128], [-74.0050, 40.7128], [-74.0050, 40.7138], [-74.0060, 40.7138], [-74.0060, 40.7128]]
+                    [
+                        [-74.0060, 40.7128],
+                        [-74.0050, 40.7128],
+                        [-74.0050, 40.7138],
+                        [-74.0060, 40.7138],
+                        [-74.0060, 40.7128],
+                    ]
                 ],
             },
         }

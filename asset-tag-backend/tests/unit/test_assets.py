@@ -76,7 +76,11 @@ class TestAssetSchemas:
             AssetCreate()
 
         # Test valid data
-        valid_data = {"name": "Test Asset", "asset_type": "excavator", "status": "active"}
+        valid_data = {
+            "name": "Test Asset",
+            "asset_type": "excavator",
+            "status": "active",
+        }
         asset_create = AssetCreate(**valid_data)
         assert asset_create.name == "Test Asset"
 
@@ -106,7 +110,11 @@ class TestAssetBusinessLogic:
     def test_battery_level_validation(self):
         """Test battery level validation"""
         # Valid battery levels
-        valid_data = {"name": "Test Asset", "asset_type": "excavator", "battery_level": 50}
+        valid_data = {
+            "name": "Test Asset",
+            "asset_type": "excavator",
+            "battery_level": 50,
+        }
         asset = AssetCreate(**valid_data)
         assert asset.battery_level == 50
 

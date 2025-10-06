@@ -12,13 +12,25 @@ class ObservationBase(BaseModel):
 
     asset_id: str = Field(..., description="Asset ID")
     gateway_id: str = Field(..., description="Gateway ID")
-    rssi: int = Field(..., ge=-120, le=0, description="Received Signal Strength Indicator in dBm")
-    battery_level: Optional[int] = Field(None, ge=0, le=100, description="Asset battery percentage")
-    temperature: Optional[float] = Field(None, ge=-50, le=100, description="Asset temperature in Celsius")
+    rssi: int = Field(
+        ..., ge=-120, le=0, description="Received Signal Strength Indicator in dBm"
+    )
+    battery_level: Optional[int] = Field(
+        None, ge=0, le=100, description="Asset battery percentage"
+    )
+    temperature: Optional[float] = Field(
+        None, ge=-50, le=100, description="Asset temperature in Celsius"
+    )
     observed_at: str = Field(..., description="ISO timestamp when observation was made")
-    received_at: Optional[str] = Field(None, description="ISO timestamp when we received it")
-    signal_quality: Optional[str] = Field(None, max_length=50, description="Signal quality assessment")
-    noise_level: Optional[int] = Field(None, ge=-120, le=0, description="Noise level in dBm")
+    received_at: Optional[str] = Field(
+        None, description="ISO timestamp when we received it"
+    )
+    signal_quality: Optional[str] = Field(
+        None, max_length=50, description="Signal quality assessment"
+    )
+    noise_level: Optional[int] = Field(
+        None, ge=-120, le=0, description="Noise level in dBm"
+    )
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 

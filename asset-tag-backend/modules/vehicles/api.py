@@ -11,11 +11,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.vehicles.models import Vehicle, VehicleAssetPairing
-from modules.vehicles.schemas import (VehicleAssetPairingCreate,
-                                      VehicleAssetPairingResponse,
-                                      VehicleCreate, VehicleResponse,
-                                      VehicleStats, VehicleUpdate,
-                                      VehicleWithAssets)
+from modules.vehicles.schemas import (
+    VehicleAssetPairingCreate,
+    VehicleAssetPairingResponse,
+    VehicleCreate,
+    VehicleResponse,
+    VehicleStats,
+    VehicleUpdate,
+    VehicleWithAssets,
+)
 
 router = APIRouter()
 
@@ -58,14 +62,20 @@ async def get_vehicles(
         return [VehicleResponse.from_orm(vehicle) for vehicle in vehicles]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching vehicles: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching vehicles: {str(e)}"
+        )
 
 
 @router.get("/vehicles/{vehicle_id}", response_model=VehicleWithAssets)
 async def get_vehicle(vehicle_id: str, db: AsyncSession = Depends(get_db)):
     """Get vehicle by ID with paired assets"""
     try:
-        result = await db.execute(select(Vehicle).where(and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))))
+        result = await db.execute(
+            select(Vehicle).where(
+                and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))
+            )
+        )
         vehicle = result.scalar_one_or_none()
 
         if not vehicle:
@@ -80,7 +90,9 @@ async def get_vehicle(vehicle_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/vehicles", response_model=VehicleResponse)
-async def create_vehicle(vehicle_data: VehicleCreate, db: AsyncSession = Depends(get_db)):
+async def create_vehicle(
+    vehicle_data: VehicleCreate, db: AsyncSession = Depends(get_db)
+):
     """Create a new vehicle"""
     try:
         # Check if vehicle name already exists in organization
@@ -88,13 +100,16 @@ async def create_vehicle(vehicle_data: VehicleCreate, db: AsyncSession = Depends
             select(Vehicle).where(
                 and_(
                     Vehicle.name == vehicle_data.name,
-                    Vehicle.organization_id == "00000000-0000-0000-0000-000000000000",  # Default org
+                    Vehicle.organization_id
+                    == "00000000-0000-0000-0000-000000000000",  # Default org
                     Vehicle.deleted_at.is_(None),
                 )
             )
         )
         if existing.scalar_one_or_none():
-            raise HTTPException(status_code=400, detail="Vehicle with this name already exists")
+            raise HTTPException(
+                status_code=400, detail="Vehicle with this name already exists"
+            )
 
         # Create new vehicle
         vehicle = Vehicle(
@@ -125,11 +140,17 @@ async def create_vehicle(vehicle_data: VehicleCreate, db: AsyncSession = Depends
 
 
 @router.put("/vehicles/{vehicle_id}", response_model=VehicleResponse)
-async def update_vehicle(vehicle_id: str, vehicle_data: VehicleUpdate, db: AsyncSession = Depends(get_db)):
+async def update_vehicle(
+    vehicle_id: str, vehicle_data: VehicleUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update an existing vehicle"""
     try:
         # Get existing vehicle
-        result = await db.execute(select(Vehicle).where(and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))))
+        result = await db.execute(
+            select(Vehicle).where(
+                and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))
+            )
+        )
         vehicle = result.scalar_one_or_none()
 
         if not vehicle:
@@ -148,7 +169,9 @@ async def update_vehicle(vehicle_id: str, vehicle_data: VehicleUpdate, db: Async
                 )
             )
             if existing.scalar_one_or_none():
-                raise HTTPException(status_code=400, detail="Vehicle with this name already exists")
+                raise HTTPException(
+                    status_code=400, detail="Vehicle with this name already exists"
+                )
 
         # Update fields
         update_data = vehicle_data.dict(exclude_unset=True)
@@ -171,7 +194,11 @@ async def update_vehicle(vehicle_id: str, vehicle_data: VehicleUpdate, db: Async
 async def delete_vehicle(vehicle_id: str, db: AsyncSession = Depends(get_db)):
     """Delete a vehicle (soft delete)"""
     try:
-        result = await db.execute(select(Vehicle).where(and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))))
+        result = await db.execute(
+            select(Vehicle).where(
+                and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))
+            )
+        )
         vehicle = result.scalar_one_or_none()
 
         if not vehicle:
@@ -190,7 +217,9 @@ async def delete_vehicle(vehicle_id: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error deleting vehicle: {str(e)}")
 
 
-@router.get("/vehicles/{vehicle_id}/assets", response_model=List[VehicleAssetPairingResponse])
+@router.get(
+    "/vehicles/{vehicle_id}/assets", response_model=List[VehicleAssetPairingResponse]
+)
 async def get_vehicle_assets(
     vehicle_id: str,
     skip: int = Query(0, ge=0),
@@ -201,18 +230,28 @@ async def get_vehicle_assets(
     """Get assets paired with a vehicle"""
     try:
         # Check if vehicle exists
-        vehicle_result = await db.execute(select(Vehicle).where(and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))))
+        vehicle_result = await db.execute(
+            select(Vehicle).where(
+                and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))
+            )
+        )
         vehicle = vehicle_result.scalar_one_or_none()
         if not vehicle:
             raise HTTPException(status_code=404, detail="Vehicle not found")
 
         # Get paired assets
-        query = select(VehicleAssetPairing).where(VehicleAssetPairing.vehicle_id == vehicle_id)
+        query = select(VehicleAssetPairing).where(
+            VehicleAssetPairing.vehicle_id == vehicle_id
+        )
 
         if status:
             query = query.where(VehicleAssetPairing.status == status)
 
-        query = query.order_by(VehicleAssetPairing.created_at.desc()).offset(skip).limit(limit)
+        query = (
+            query.order_by(VehicleAssetPairing.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+        )
 
         result = await db.execute(query)
         pairings = result.scalars().all()
@@ -222,15 +261,27 @@ async def get_vehicle_assets(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching vehicle assets: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching vehicle assets: {str(e)}"
+        )
 
 
-@router.post("/vehicles/{vehicle_id}/pair-asset", response_model=VehicleAssetPairingResponse)
-async def pair_asset_to_vehicle(vehicle_id: str, pairing_data: VehicleAssetPairingCreate, db: AsyncSession = Depends(get_db)):
+@router.post(
+    "/vehicles/{vehicle_id}/pair-asset", response_model=VehicleAssetPairingResponse
+)
+async def pair_asset_to_vehicle(
+    vehicle_id: str,
+    pairing_data: VehicleAssetPairingCreate,
+    db: AsyncSession = Depends(get_db),
+):
     """Pair an asset to a vehicle"""
     try:
         # Check if vehicle exists
-        vehicle_result = await db.execute(select(Vehicle).where(and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))))
+        vehicle_result = await db.execute(
+            select(Vehicle).where(
+                and_(Vehicle.id == vehicle_id, Vehicle.deleted_at.is_(None))
+            )
+        )
         vehicle = vehicle_result.scalar_one_or_none()
         if not vehicle:
             raise HTTPException(status_code=404, detail="Vehicle not found")
@@ -246,7 +297,9 @@ async def pair_asset_to_vehicle(vehicle_id: str, pairing_data: VehicleAssetPairi
             )
         )
         if existing.scalar_one_or_none():
-            raise HTTPException(status_code=400, detail="Asset is already paired to this vehicle")
+            raise HTTPException(
+                status_code=400, detail="Asset is already paired to this vehicle"
+            )
 
         # Create pairing
         pairing = VehicleAssetPairing(
@@ -271,11 +324,15 @@ async def pair_asset_to_vehicle(vehicle_id: str, pairing_data: VehicleAssetPairi
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error pairing asset to vehicle: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error pairing asset to vehicle: {str(e)}"
+        )
 
 
 @router.delete("/vehicles/{vehicle_id}/unpair-asset/{asset_id}")
-async def unpair_asset_from_vehicle(vehicle_id: str, asset_id: str, db: AsyncSession = Depends(get_db)):
+async def unpair_asset_from_vehicle(
+    vehicle_id: str, asset_id: str, db: AsyncSession = Depends(get_db)
+):
     """Unpair an asset from a vehicle"""
     try:
         result = await db.execute(
@@ -302,7 +359,9 @@ async def unpair_asset_from_vehicle(vehicle_id: str, asset_id: str, db: AsyncSes
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error unpairing asset from vehicle: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error unpairing asset from vehicle: {str(e)}"
+        )
 
 
 @router.get("/vehicles/stats", response_model=VehicleStats)
@@ -310,27 +369,37 @@ async def get_vehicle_stats(db: AsyncSession = Depends(get_db)):
     """Get vehicle statistics"""
     try:
         # Get total vehicles
-        total_result = await db.execute(select(func.count(Vehicle.id)).where(Vehicle.deleted_at.is_(None)))
+        total_result = await db.execute(
+            select(func.count(Vehicle.id)).where(Vehicle.deleted_at.is_(None))
+        )
         total_vehicles = total_result.scalar()
 
         # Get status counts
         status_counts = {}
         for status in ["active", "inactive", "maintenance"]:
             result = await db.execute(
-                select(func.count(Vehicle.id)).where(and_(Vehicle.status == status, Vehicle.deleted_at.is_(None)))
+                select(func.count(Vehicle.id)).where(
+                    and_(Vehicle.status == status, Vehicle.deleted_at.is_(None))
+                )
             )
             status_counts[status] = result.scalar()
 
         # Get vehicles with/without drivers
         with_drivers_result = await db.execute(
-            select(func.count(Vehicle.id)).where(and_(Vehicle.assigned_driver_id.isnot(None), Vehicle.deleted_at.is_(None)))
+            select(func.count(Vehicle.id)).where(
+                and_(
+                    Vehicle.assigned_driver_id.isnot(None), Vehicle.deleted_at.is_(None)
+                )
+            )
         )
         vehicles_with_drivers = with_drivers_result.scalar()
         vehicles_without_drivers = total_vehicles - vehicles_with_drivers
 
         # Get total paired assets
         paired_assets_result = await db.execute(
-            select(func.count(VehicleAssetPairing.id)).where(VehicleAssetPairing.status == "active")
+            select(func.count(VehicleAssetPairing.id)).where(
+                VehicleAssetPairing.status == "active"
+            )
         )
         total_paired_assets = paired_assets_result.scalar()
 
@@ -351,4 +420,6 @@ async def get_vehicle_stats(db: AsyncSession = Depends(get_db)):
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching vehicle stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching vehicle stats: {str(e)}"
+        )

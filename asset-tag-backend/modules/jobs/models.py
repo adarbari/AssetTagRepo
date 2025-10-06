@@ -1,13 +1,22 @@
 """
 Job models
 """
-from sqlalchemy import (JSON, Boolean, Column, DateTime, ForeignKey, Index,
-                        Integer, Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Job(BaseModel, OrganizationMixin, SoftDeleteMixin):
@@ -18,19 +27,29 @@ class Job(BaseModel, OrganizationMixin, SoftDeleteMixin):
     # Basic information
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
-    job_type = Column(String(100), nullable=False)  # maintenance, inspection, repair, etc.
-    status = Column(String(50), default="pending", index=True)  # pending, in-progress, completed, cancelled
+    job_type = Column(
+        String(100), nullable=False
+    )  # maintenance, inspection, repair, etc.
+    status = Column(
+        String(50), default="pending", index=True
+    )  # pending, in-progress, completed, cancelled
 
     # Priority and scheduling
-    priority = Column(String(50), default="medium", index=True)  # low, medium, high, critical
+    priority = Column(
+        String(50), default="medium", index=True
+    )  # low, medium, high, critical
     scheduled_start = Column(DateTime(timezone=True), nullable=True)
     scheduled_end = Column(DateTime(timezone=True), nullable=True)
     actual_start = Column(DateTime(timezone=True), nullable=True)
     actual_end = Column(DateTime(timezone=True), nullable=True)
 
     # Assignment
-    assigned_to_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    assigned_to_user_name = Column(String(255), nullable=True)  # Denormalized for performance
+    assigned_to_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
+    assigned_to_user_name = Column(
+        String(255), nullable=True
+    )  # Denormalized for performance
 
     # Location
     site_id = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True)
@@ -78,7 +97,9 @@ class JobAsset(BaseModel, OrganizationMixin):
     # Assignment details
     assigned_at = Column(DateTime(timezone=True), nullable=False)
     unassigned_at = Column(DateTime(timezone=True), nullable=True)
-    status = Column(String(50), default="assigned", index=True)  # assigned, in-use, completed, removed
+    status = Column(
+        String(50), default="assigned", index=True
+    )  # assigned, in-use, completed, removed
 
     # Usage tracking
     usage_start = Column(DateTime(timezone=True), nullable=True)

@@ -15,11 +15,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config.database import get_db
 from config.settings import settings
 from modules.shared.database.models import User
-from modules.users.schemas import (LoginRequest, LoginResponse,
-                                   TokenRefreshRequest, TokenRefreshResponse,
-                                   UserCreate, UserPasswordUpdate,
-                                   UserProfileUpdate, UserResponse, UserStats,
-                                   UserUpdate)
+from modules.users.schemas import (
+    LoginRequest,
+    LoginResponse,
+    TokenRefreshRequest,
+    TokenRefreshResponse,
+    UserCreate,
+    UserPasswordUpdate,
+    UserProfileUpdate,
+    UserResponse,
+    UserStats,
+    UserUpdate,
+)
 
 router = APIRouter()
 
@@ -46,13 +53,19 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)
+        expire = datetime.utcnow() + timedelta(
+            minutes=settings.access_token_expire_minutes
+        )
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
+    encoded_jwt = jwt.encode(
+        to_encode, settings.secret_key, algorithm=settings.algorithm
+    )
     return encoded_jwt
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) -> User:
+async def get_current_user(
+    token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)
+) -> User:
     """Get current user from JWT token"""
     credentials_exception = HTTPException(
         status_code=401,
@@ -60,7 +73,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.algorithm]
+        )
         user_id: str = payload.get("sub")
         if user_id is None:
             raise credentials_exception
@@ -94,7 +109,9 @@ async def get_users(
             query = query.where(User.is_active == is_active)
         if search:
             search_filter = and_(
-                User.full_name.ilike(f"%{search}%"), User.email.ilike(f"%{search}%"), User.username.ilike(f"%{search}%")
+                User.full_name.ilike(f"%{search}%"),
+                User.email.ilike(f"%{search}%"),
+                User.username.ilike(f"%{search}%"),
             )
             query = query.where(search_filter)
 
@@ -114,7 +131,9 @@ async def get_users(
 async def get_user(user_id: str, db: AsyncSession = Depends(get_db)):
     """Get user by ID"""
     try:
-        result = await db.execute(select(User).where(and_(User.id == user_id, User.deleted_at.is_(None))))
+        result = await db.execute(
+            select(User).where(and_(User.id == user_id, User.deleted_at.is_(None)))
+        )
         user = result.scalar_one_or_none()
 
         if not user:
@@ -133,11 +152,15 @@ async def create_user(user_data: UserCreate, db: AsyncSession = Depends(get_db))
     """Create a new user (admin only)"""
     try:
         # Check if user already exists
-        existing_email = await db.execute(select(User).where(User.email == user_data.email))
+        existing_email = await db.execute(
+            select(User).where(User.email == user_data.email)
+        )
         if existing_email.scalar_one_or_none():
             raise HTTPException(status_code=400, detail="Email already registered")
 
-        existing_username = await db.execute(select(User).where(User.username == user_data.username))
+        existing_username = await db.execute(
+            select(User).where(User.username == user_data.username)
+        )
         if existing_username.scalar_one_or_none():
             raise HTTPException(status_code=400, detail="Username already taken")
 
@@ -167,10 +190,14 @@ async def create_user(user_data: UserCreate, db: AsyncSession = Depends(get_db))
 
 
 @router.put("/users/{user_id}", response_model=UserResponse)
-async def update_user(user_id: str, user_data: UserUpdate, db: AsyncSession = Depends(get_db)):
+async def update_user(
+    user_id: str, user_data: UserUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update an existing user (admin only)"""
     try:
-        result = await db.execute(select(User).where(and_(User.id == user_id, User.deleted_at.is_(None))))
+        result = await db.execute(
+            select(User).where(and_(User.id == user_id, User.deleted_at.is_(None)))
+        )
         user = result.scalar_one_or_none()
 
         if not user:
@@ -178,13 +205,17 @@ async def update_user(user_id: str, user_data: UserUpdate, db: AsyncSession = De
 
         # Check for email conflicts
         if user_data.email and user_data.email != user.email:
-            existing_email = await db.execute(select(User).where(User.email == user_data.email))
+            existing_email = await db.execute(
+                select(User).where(User.email == user_data.email)
+            )
             if existing_email.scalar_one_or_none():
                 raise HTTPException(status_code=400, detail="Email already registered")
 
         # Check for username conflicts
         if user_data.username and user_data.username != user.username:
-            existing_username = await db.execute(select(User).where(User.username == user_data.username))
+            existing_username = await db.execute(
+                select(User).where(User.username == user_data.username)
+            )
             if existing_username.scalar_one_or_none():
                 raise HTTPException(status_code=400, detail="Username already taken")
 
@@ -209,7 +240,9 @@ async def update_user(user_id: str, user_data: UserUpdate, db: AsyncSession = De
 async def delete_user(user_id: str, db: AsyncSession = Depends(get_db)):
     """Delete a user (soft delete, admin only)"""
     try:
-        result = await db.execute(select(User).where(and_(User.id == user_id, User.deleted_at.is_(None))))
+        result = await db.execute(
+            select(User).where(and_(User.id == user_id, User.deleted_at.is_(None)))
+        )
         user = result.scalar_one_or_none()
 
         if not user:
@@ -237,7 +270,9 @@ async def get_current_user_profile(current_user: User = Depends(get_current_user
 
 @router.put("/users/me", response_model=UserResponse)
 async def update_current_user_profile(
-    profile_data: UserProfileUpdate, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)
+    profile_data: UserProfileUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ):
     """Update current user profile"""
     try:
@@ -258,12 +293,16 @@ async def update_current_user_profile(
 
 @router.put("/users/me/password")
 async def update_current_user_password(
-    password_data: UserPasswordUpdate, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)
+    password_data: UserPasswordUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ):
     """Update current user password"""
     try:
         # Verify current password
-        if not verify_password(password_data.current_password, current_user.hashed_password):
+        if not verify_password(
+            password_data.current_password, current_user.hashed_password
+        ):
             raise HTTPException(status_code=400, detail="Current password is incorrect")
 
         # Update password
@@ -276,7 +315,9 @@ async def update_current_user_password(
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating password: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating password: {str(e)}"
+        )
 
 
 @router.post("/auth/login", response_model=LoginResponse)
@@ -287,7 +328,10 @@ async def login(login_data: LoginRequest, db: AsyncSession = Depends(get_db)):
         user_result = await db.execute(
             select(User).where(
                 and_(
-                    or_(User.username == login_data.username, User.email == login_data.username),
+                    or_(
+                        User.username == login_data.username,
+                        User.email == login_data.username,
+                    ),
                     User.is_active == True,
                     User.deleted_at.is_(None),
                 )
@@ -304,7 +348,9 @@ async def login(login_data: LoginRequest, db: AsyncSession = Depends(get_db)):
 
         # Create access token
         access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
-        access_token = create_access_token(data={"sub": str(user.id)}, expires_delta=access_token_expires)
+        access_token = create_access_token(
+            data={"sub": str(user.id)}, expires_delta=access_token_expires
+        )
 
         return LoginResponse(
             access_token=access_token,
@@ -326,12 +372,16 @@ async def logout():
 
 
 @router.post("/auth/refresh", response_model=TokenRefreshResponse)
-async def refresh_token(refresh_data: TokenRefreshRequest, db: AsyncSession = Depends(get_db)):
+async def refresh_token(
+    refresh_data: TokenRefreshRequest, db: AsyncSession = Depends(get_db)
+):
     """Refresh access token"""
     try:
         # TODO: Implement refresh token logic
         # For now, return error as refresh tokens are not implemented
-        raise HTTPException(status_code=501, detail="Refresh token functionality not implemented")
+        raise HTTPException(
+            status_code=501, detail="Refresh token functionality not implemented"
+        )
 
     except HTTPException:
         raise
@@ -344,12 +394,16 @@ async def get_user_stats(db: AsyncSession = Depends(get_db)):
     """Get user statistics"""
     try:
         # Get total users
-        total_result = await db.execute(select(func.count(User.id)).where(User.deleted_at.is_(None)))
+        total_result = await db.execute(
+            select(func.count(User.id)).where(User.deleted_at.is_(None))
+        )
         total_users = total_result.scalar()
 
         # Get active/inactive users
         active_result = await db.execute(
-            select(func.count(User.id)).where(and_(User.is_active == True, User.deleted_at.is_(None)))
+            select(func.count(User.id)).where(
+                and_(User.is_active == True, User.deleted_at.is_(None))
+            )
         )
         active_users = active_result.scalar()
         inactive_users = total_users - active_users
@@ -357,7 +411,11 @@ async def get_user_stats(db: AsyncSession = Depends(get_db)):
         # Get role counts
         role_counts = {}
         for role in ["admin", "technician", "manager", "user"]:
-            result = await db.execute(select(func.count(User.id)).where(and_(User.role == role, User.deleted_at.is_(None))))
+            result = await db.execute(
+                select(func.count(User.id)).where(
+                    and_(User.role == role, User.deleted_at.is_(None))
+                )
+            )
             role_counts[role] = result.scalar()
 
         return UserStats(
@@ -371,4 +429,6 @@ async def get_user_stats(db: AsyncSession = Depends(get_db)):
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching user stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching user stats: {str(e)}"
+        )

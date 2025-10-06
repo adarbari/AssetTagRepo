@@ -10,17 +10,18 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '003_create_analytics_views'
-down_revision = '002_create_hypertables'
+revision = "003_create_analytics_views"
+down_revision = "002_create_hypertables"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
     """Create materialized views for analytics"""
-    
+
     # Daily utilization rollup
-    op.execute("""
+    op.execute(
+        """
         CREATE MATERIALIZED VIEW IF NOT EXISTS asset_utilization_daily AS
         SELECT 
             DATE(estimated_at) as day,
@@ -34,16 +35,20 @@ def upgrade():
         FROM estimated_locations
         GROUP BY day, asset_id
         WITH DATA;
-    """)
-    
+    """
+    )
+
     # Create index on the materialized view
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_asset_utilization_daily_asset_day 
         ON asset_utilization_daily(asset_id, day);
-    """)
-    
+    """
+    )
+
     # Asset health summary
-    op.execute("""
+    op.execute(
+        """
         CREATE MATERIALIZED VIEW IF NOT EXISTS asset_health_summary AS
         SELECT 
             a.id as asset_id,
@@ -61,16 +66,20 @@ def upgrade():
             AND o.observed_at > NOW() - INTERVAL '24 hours'
         GROUP BY a.id, a.name, a.asset_type, a.status
         WITH DATA;
-    """)
-    
+    """
+    )
+
     # Create index on the materialized view
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_asset_health_summary_asset_id 
         ON asset_health_summary(asset_id);
-    """)
-    
+    """
+    )
+
     # Alert statistics
-    op.execute("""
+    op.execute(
+        """
         CREATE MATERIALIZED VIEW IF NOT EXISTS alert_statistics AS
         SELECT 
             DATE(triggered_at) as day,
@@ -89,16 +98,20 @@ def upgrade():
         WHERE triggered_at > NOW() - INTERVAL '90 days'
         GROUP BY day, alert_type, severity, status
         WITH DATA;
-    """)
-    
+    """
+    )
+
     # Create index on the materialized view
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_alert_statistics_day_type 
         ON alert_statistics(day, alert_type, severity);
-    """)
-    
+    """
+    )
+
     # Gateway performance metrics
-    op.execute("""
+    op.execute(
+        """
         CREATE MATERIALIZED VIEW IF NOT EXISTS gateway_performance_daily AS
         SELECT 
             DATE(observed_at) as day,
@@ -116,16 +129,20 @@ def upgrade():
         FROM observations
         GROUP BY day, gateway_id
         WITH DATA;
-    """)
-    
+    """
+    )
+
     # Create index on the materialized view
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_gateway_performance_daily_gateway_day 
         ON gateway_performance_daily(gateway_id, day);
-    """)
-    
+    """
+    )
+
     # Site activity summary
-    op.execute("""
+    op.execute(
+        """
         CREATE MATERIALIZED VIEW IF NOT EXISTS site_activity_daily AS
         SELECT 
             DATE(estimated_at) as day,
@@ -138,16 +155,20 @@ def upgrade():
         WHERE current_site_id IS NOT NULL
         GROUP BY day, current_site_id
         WITH DATA;
-    """)
-    
+    """
+    )
+
     # Create index on the materialized view
-    op.execute("""
+    op.execute(
+        """
         CREATE INDEX IF NOT EXISTS idx_site_activity_daily_site_day 
         ON site_activity_daily(current_site_id, day);
-    """)
-    
+    """
+    )
+
     # Create refresh function
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION refresh_analytics_views()
         RETURNS void AS $$
         BEGIN
@@ -158,15 +179,16 @@ def upgrade():
             REFRESH MATERIALIZED VIEW CONCURRENTLY site_activity_daily;
         END;
         $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
 
 
 def downgrade():
     """Drop materialized views"""
-    
+
     # Drop refresh function
     op.execute("DROP FUNCTION IF EXISTS refresh_analytics_views();")
-    
+
     # Drop materialized views
     op.execute("DROP MATERIALIZED VIEW IF EXISTS site_activity_daily CASCADE;")
     op.execute("DROP MATERIALIZED VIEW IF EXISTS gateway_performance_daily CASCADE;")

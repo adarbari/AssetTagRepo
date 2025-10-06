@@ -10,9 +10,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.maintenance.models import MaintenanceRecord
-from modules.maintenance.schemas import (MaintenanceCreate,
-                                         MaintenanceResponse,
-                                         MaintenanceUpdate)
+from modules.maintenance.schemas import (
+    MaintenanceCreate,
+    MaintenanceResponse,
+    MaintenanceUpdate,
+)
 
 router = APIRouter()
 
@@ -50,14 +52,20 @@ async def get_maintenance_records(
         return [MaintenanceResponse.from_orm(record) for record in records]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching maintenance records: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching maintenance records: {str(e)}"
+        )
 
 
 @router.get("/maintenance/{maintenance_id}", response_model=MaintenanceResponse)
-async def get_maintenance_record(maintenance_id: str, db: AsyncSession = Depends(get_db)):
+async def get_maintenance_record(
+    maintenance_id: str, db: AsyncSession = Depends(get_db)
+):
     """Get maintenance record by ID"""
     try:
-        result = await db.execute(select(MaintenanceRecord).where(MaintenanceRecord.id == maintenance_id))
+        result = await db.execute(
+            select(MaintenanceRecord).where(MaintenanceRecord.id == maintenance_id)
+        )
         record = result.scalar_one_or_none()
 
         if not record:
@@ -68,11 +76,15 @@ async def get_maintenance_record(maintenance_id: str, db: AsyncSession = Depends
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching maintenance record: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching maintenance record: {str(e)}"
+        )
 
 
 @router.post("/maintenance", response_model=MaintenanceResponse)
-async def create_maintenance_record(maintenance_data: MaintenanceCreate, db: AsyncSession = Depends(get_db)):
+async def create_maintenance_record(
+    maintenance_data: MaintenanceCreate, db: AsyncSession = Depends(get_db)
+):
     """Create a new maintenance record"""
     try:
         record = MaintenanceRecord(
@@ -99,16 +111,22 @@ async def create_maintenance_record(maintenance_data: MaintenanceCreate, db: Asy
 
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error creating maintenance record: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error creating maintenance record: {str(e)}"
+        )
 
 
 @router.put("/maintenance/{maintenance_id}", response_model=MaintenanceResponse)
 async def update_maintenance_record(
-    maintenance_id: str, maintenance_data: MaintenanceUpdate, db: AsyncSession = Depends(get_db)
+    maintenance_id: str,
+    maintenance_data: MaintenanceUpdate,
+    db: AsyncSession = Depends(get_db),
 ):
     """Update an existing maintenance record"""
     try:
-        result = await db.execute(select(MaintenanceRecord).where(MaintenanceRecord.id == maintenance_id))
+        result = await db.execute(
+            select(MaintenanceRecord).where(MaintenanceRecord.id == maintenance_id)
+        )
         record = result.scalar_one_or_none()
 
         if not record:
@@ -131,14 +149,20 @@ async def update_maintenance_record(
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating maintenance record: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating maintenance record: {str(e)}"
+        )
 
 
 @router.delete("/maintenance/{maintenance_id}")
-async def delete_maintenance_record(maintenance_id: str, db: AsyncSession = Depends(get_db)):
+async def delete_maintenance_record(
+    maintenance_id: str, db: AsyncSession = Depends(get_db)
+):
     """Delete a maintenance record (soft delete)"""
     try:
-        result = await db.execute(select(MaintenanceRecord).where(MaintenanceRecord.id == maintenance_id))
+        result = await db.execute(
+            select(MaintenanceRecord).where(MaintenanceRecord.id == maintenance_id)
+        )
         record = result.scalar_one_or_none()
 
         if not record:
@@ -154,12 +178,16 @@ async def delete_maintenance_record(maintenance_id: str, db: AsyncSession = Depe
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error deleting maintenance record: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error deleting maintenance record: {str(e)}"
+        )
 
 
 @router.get("/maintenance/asset/{asset_id}")
 async def get_asset_maintenance_history(
-    asset_id: str, limit: int = Query(50, ge=1, le=1000), db: AsyncSession = Depends(get_db)
+    asset_id: str,
+    limit: int = Query(50, ge=1, le=1000),
+    db: AsyncSession = Depends(get_db),
 ):
     """Get maintenance history for a specific asset"""
     try:
@@ -180,22 +208,33 @@ async def get_asset_maintenance_history(
                 "status": record.status,
                 "priority": record.priority,
                 "scheduled_date": record.scheduled_date.isoformat(),
-                "completed_date": record.completed_date.isoformat() if record.completed_date else None,
+                "completed_date": record.completed_date.isoformat()
+                if record.completed_date
+                else None,
                 "assigned_to_user_name": record.assigned_to_user_name,
                 "description": record.description,
                 "estimated_duration_hours": float(record.estimated_duration_hours)
                 if record.estimated_duration_hours
                 else None,
-                "estimated_cost": float(record.estimated_cost) if record.estimated_cost else None,
-                "actual_duration_hours": float(record.actual_duration_hours) if record.actual_duration_hours else None,
-                "actual_cost": float(record.actual_cost) if record.actual_cost else None,
+                "estimated_cost": float(record.estimated_cost)
+                if record.estimated_cost
+                else None,
+                "actual_duration_hours": float(record.actual_duration_hours)
+                if record.actual_duration_hours
+                else None,
+                "actual_cost": float(record.actual_cost)
+                if record.actual_cost
+                else None,
                 "notes": record.notes,
             }
             for record in records
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching asset maintenance history: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching asset maintenance history: {str(e)}",
+        )
 
 
 @router.get("/maintenance/overdue")
@@ -205,7 +244,10 @@ async def get_overdue_maintenance(db: AsyncSession = Depends(get_db)):
         current_date = datetime.now().date()
         query = (
             select(MaintenanceRecord)
-            .where(MaintenanceRecord.scheduled_date < current_date, MaintenanceRecord.status.in_(["pending", "scheduled"]))
+            .where(
+                MaintenanceRecord.scheduled_date < current_date,
+                MaintenanceRecord.status.in_(["pending", "scheduled"]),
+            )
             .order_by(MaintenanceRecord.scheduled_date.asc())
         )
 
@@ -227,7 +269,9 @@ async def get_overdue_maintenance(db: AsyncSession = Depends(get_db)):
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching overdue maintenance: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching overdue maintenance: {str(e)}"
+        )
 
 
 @router.get("/maintenance/stats/summary")
@@ -235,13 +279,19 @@ async def get_maintenance_stats(db: AsyncSession = Depends(get_db)):
     """Get maintenance statistics summary"""
     try:
         # Get counts by status
-        pending_count = await db.execute(select(MaintenanceRecord).where(MaintenanceRecord.status == "pending"))
+        pending_count = await db.execute(
+            select(MaintenanceRecord).where(MaintenanceRecord.status == "pending")
+        )
         pending_records = pending_count.scalars().all()
 
-        in_progress_count = await db.execute(select(MaintenanceRecord).where(MaintenanceRecord.status == "in_progress"))
+        in_progress_count = await db.execute(
+            select(MaintenanceRecord).where(MaintenanceRecord.status == "in_progress")
+        )
         in_progress_records = in_progress_count.scalars().all()
 
-        completed_count = await db.execute(select(MaintenanceRecord).where(MaintenanceRecord.status == "completed"))
+        completed_count = await db.execute(
+            select(MaintenanceRecord).where(MaintenanceRecord.status == "completed")
+        )
         completed_records = completed_count.scalars().all()
 
         overdue_count = await db.execute(
@@ -259,8 +309,12 @@ async def get_maintenance_stats(db: AsyncSession = Depends(get_db)):
                 "completed": len(completed_records),
             },
             "overdue": len(overdue_records),
-            "total": len(pending_records) + len(in_progress_records) + len(completed_records),
+            "total": len(pending_records)
+            + len(in_progress_records)
+            + len(completed_records),
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching maintenance stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching maintenance stats: {str(e)}"
+        )

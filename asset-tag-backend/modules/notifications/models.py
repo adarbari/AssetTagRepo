@@ -1,13 +1,21 @@
 """
 Notification models
 """
-from sqlalchemy import (JSON, Boolean, Column, DateTime, ForeignKey, Index,
-                        Integer, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class NotificationConfig(BaseModel, OrganizationMixin, SoftDeleteMixin):
@@ -17,7 +25,9 @@ class NotificationConfig(BaseModel, OrganizationMixin, SoftDeleteMixin):
 
     # Configuration level and entity
     level = Column(String(50), nullable=False, index=True)  # user, site, asset, global
-    entity_id = Column(UUID(as_uuid=True), nullable=True, index=True)  # ID of the entity (user, site, asset)
+    entity_id = Column(
+        UUID(as_uuid=True), nullable=True, index=True
+    )  # ID of the entity (user, site, asset)
     entity_name = Column(String(255), nullable=True)  # Denormalized for performance
 
     # Channel configurations
@@ -56,7 +66,9 @@ class NotificationConfig(BaseModel, OrganizationMixin, SoftDeleteMixin):
     digest_mode = Column(Boolean, default=False)  # Group notifications into digests
 
     # Override settings
-    is_override = Column(Boolean, default=False)  # Whether this overrides parent configs
+    is_override = Column(
+        Boolean, default=False
+    )  # Whether this overrides parent configs
 
     # Additional metadata
     metadata = Column(JSON, default={})
@@ -74,20 +86,30 @@ class NotificationLog(BaseModel, OrganizationMixin):
     __tablename__ = "notification_logs"
 
     # Notification details
-    notification_type = Column(String(100), nullable=False, index=True)  # alert, reminder, system, etc.
+    notification_type = Column(
+        String(100), nullable=False, index=True
+    )  # alert, reminder, system, etc.
     title = Column(String(500), nullable=False)
     message = Column(Text, nullable=False)
-    severity = Column(String(50), nullable=True, index=True)  # low, medium, high, critical
+    severity = Column(
+        String(50), nullable=True, index=True
+    )  # low, medium, high, critical
 
     # Recipient information
-    recipient_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    recipient_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
     recipient_name = Column(String(255), nullable=True)  # Denormalized for performance
     recipient_email = Column(String(255), nullable=True)
     recipient_phone = Column(String(50), nullable=True)
 
     # Delivery information
-    channel = Column(String(50), nullable=False, index=True)  # email, sms, push, webhook
-    delivery_status = Column(String(50), default="pending", index=True)  # pending, sent, delivered, failed
+    channel = Column(
+        String(50), nullable=False, index=True
+    )  # email, sms, push, webhook
+    delivery_status = Column(
+        String(50), default="pending", index=True
+    )  # pending, sent, delivered, failed
     delivery_attempts = Column(Integer, default=0)
     last_delivery_attempt = Column(DateTime(timezone=True), nullable=True)
     delivered_at = Column(DateTime(timezone=True), nullable=True)
@@ -100,7 +122,9 @@ class NotificationLog(BaseModel, OrganizationMixin):
     related_entity_name = Column(String(255), nullable=True)
 
     # Configuration used
-    config_id = Column(UUID(as_uuid=True), ForeignKey("notification_configs.id"), nullable=True)
+    config_id = Column(
+        UUID(as_uuid=True), ForeignKey("notification_configs.id"), nullable=True
+    )
 
     # Additional metadata
     metadata = Column(JSON, default={})
@@ -114,7 +138,9 @@ class NotificationLog(BaseModel, OrganizationMixin):
         Index("idx_notification_log_recipient", "recipient_user_id", "created_at"),
         Index("idx_notification_log_status", "delivery_status", "created_at"),
         Index("idx_notification_log_type", "notification_type", "created_at"),
-        Index("idx_notification_log_entity", "related_entity_type", "related_entity_id"),
+        Index(
+            "idx_notification_log_entity", "related_entity_type", "related_entity_id"
+        ),
     )
 
 
@@ -126,8 +152,12 @@ class NotificationTemplate(BaseModel, OrganizationMixin):
     # Template details
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
-    template_type = Column(String(100), nullable=False, index=True)  # alert, reminder, system, etc.
-    channel = Column(String(50), nullable=False, index=True)  # email, sms, push, webhook
+    template_type = Column(
+        String(100), nullable=False, index=True
+    )  # alert, reminder, system, etc.
+    channel = Column(
+        String(50), nullable=False, index=True
+    )  # email, sms, push, webhook
 
     # Template content
     subject_template = Column(String(500), nullable=True)  # For email
@@ -138,7 +168,9 @@ class NotificationTemplate(BaseModel, OrganizationMixin):
 
     # Template settings
     is_active = Column(Boolean, default=True)
-    is_system_template = Column(Boolean, default=False)  # System templates cannot be deleted
+    is_system_template = Column(
+        Boolean, default=False
+    )  # System templates cannot be deleted
 
     # Additional metadata
     metadata = Column(JSON, default={})

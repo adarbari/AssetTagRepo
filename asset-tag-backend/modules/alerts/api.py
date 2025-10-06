@@ -6,7 +6,14 @@ import uuid
 from datetime import datetime
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Query,
+    WebSocket,
+    WebSocketDisconnect,
+)
 from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -46,9 +53,13 @@ def alert_to_response(alert: Alert) -> AlertResponse:
             else None
         ),
         geofence_name=alert.geofence_name,
-        triggered_at=alert.triggered_at.isoformat() if hasattr(alert.triggered_at, "isoformat") else str(alert.triggered_at),
+        triggered_at=alert.triggered_at.isoformat()
+        if hasattr(alert.triggered_at, "isoformat")
+        else str(alert.triggered_at),
         auto_resolvable=alert.auto_resolvable,
-        metadata=json.loads(alert.alert_metadata) if isinstance(alert.alert_metadata, str) else (alert.alert_metadata or {}),
+        metadata=json.loads(alert.alert_metadata)
+        if isinstance(alert.alert_metadata, str)
+        else (alert.alert_metadata or {}),
         acknowledged_at=alert.acknowledged_at.isoformat()
         if alert.acknowledged_at and hasattr(alert.acknowledged_at, "isoformat")
         else alert.acknowledged_at,
@@ -65,8 +76,12 @@ def alert_to_response(alert: Alert) -> AlertResponse:
         ),
         auto_resolved=alert.auto_resolved,
         workflow_actions=alert.workflow_actions,
-        created_at=alert.created_at.isoformat() if hasattr(alert.created_at, "isoformat") else str(alert.created_at),
-        updated_at=alert.updated_at.isoformat() if hasattr(alert.updated_at, "isoformat") else str(alert.updated_at),
+        created_at=alert.created_at.isoformat()
+        if hasattr(alert.created_at, "isoformat")
+        else str(alert.created_at),
+        updated_at=alert.updated_at.isoformat()
+        if hasattr(alert.updated_at, "isoformat")
+        else str(alert.updated_at),
     )
 
 
@@ -225,7 +240,9 @@ async def get_alert_stats(db: AsyncSession = Depends(get_db)):
         warning_count = warning_result.scalar()
 
         # Get counts by alert type
-        battery_low_query = "SELECT COUNT(*) FROM alerts WHERE alert_type = 'battery_low'"
+        battery_low_query = (
+            "SELECT COUNT(*) FROM alerts WHERE alert_type = 'battery_low'"
+        )
         battery_low_result = await db.execute(text(battery_low_query))
         battery_low_count = battery_low_result.scalar()
 
@@ -236,12 +253,22 @@ async def get_alert_stats(db: AsyncSession = Depends(get_db)):
             "active_alerts": active_count,
             "acknowledged_alerts": acknowledged_count,
             "resolved_alerts": resolved_count,
-            "alerts_by_type": {"battery_low": battery_low_count, "geofence_breach": 0, "maintenance_due": 0},
-            "alerts_by_severity": {"critical": critical_count, "warning": warning_count, "info": 0},
+            "alerts_by_type": {
+                "battery_low": battery_low_count,
+                "geofence_breach": 0,
+                "maintenance_due": 0,
+            },
+            "alerts_by_severity": {
+                "critical": critical_count,
+                "warning": warning_count,
+                "info": 0,
+            },
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching alert stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching alert stats: {str(e)}"
+        )
 
 
 @router.get("/alerts/{alert_id}", response_model=AlertResponse)
@@ -313,10 +340,14 @@ async def create_alert(alert_data: AlertCreate, db: AsyncSession = Depends(get_d
         if isinstance(alert_data.triggered_at, datetime):
             triggered_at = alert_data.triggered_at
         else:
-            triggered_at = datetime.fromisoformat(str(alert_data.triggered_at).replace("Z", "+00:00"))
+            triggered_at = datetime.fromisoformat(
+                str(alert_data.triggered_at).replace("Z", "+00:00")
+            )
 
         alert = Alert(
-            organization_id=uuid.UUID("00000000-0000-0000-0000-000000000000"),  # Default org for now
+            organization_id=uuid.UUID(
+                "00000000-0000-0000-0000-000000000000"
+            ),  # Default org for now
             alert_type=alert_data.alert_type,
             severity=alert_data.severity,
             status=alert_data.status or "active",
@@ -329,7 +360,9 @@ async def create_alert(alert_data: AlertCreate, db: AsyncSession = Depends(get_d
             location_description=alert_data.location_description,
             latitude=alert_data.latitude,
             longitude=alert_data.longitude,
-            geofence_id=uuid.UUID(alert_data.geofence_id) if alert_data.geofence_id else None,
+            geofence_id=uuid.UUID(alert_data.geofence_id)
+            if alert_data.geofence_id
+            else None,
             geofence_name=alert_data.geofence_name,
             triggered_at=triggered_at,
             auto_resolvable=alert_data.auto_resolvable or False,
@@ -345,7 +378,9 @@ async def create_alert(alert_data: AlertCreate, db: AsyncSession = Depends(get_d
         alert_response = alert_to_response(alert)
 
         try:
-            await alert_manager.send_alert_update({"type": "new_alert", "alert": alert_response.model_dump()})
+            await alert_manager.send_alert_update(
+                {"type": "new_alert", "alert": alert_response.model_dump()}
+            )
         except Exception as e:
             # Don't raise here, just log the error
             pass
@@ -371,92 +406,9 @@ async def acknowledge_alert(alert_id: str, db: AsyncSession = Depends(get_db)):
         """
 
         now = datetime.now()
-        result = await db.execute(text(update_query), {"alert_id": alert_id, "acknowledged_at": now, "updated_at": now})
-
-        if result.rowcount == 0:
-            raise HTTPException(status_code=404, detail="Alert not found")
-
-        await db.commit()
-
-        # Fetch the updated alert using raw SQL
-        fetch_query = """
-        SELECT id, organization_id, alert_type, severity, status, asset_id, asset_name, 
-               message, description, reason, suggested_action, location_description, 
-               latitude, longitude, geofence_id, geofence_name, triggered_at, 
-               auto_resolvable, alert_metadata, acknowledged_at, resolved_at, 
-               resolution_notes, resolved_by_user_id, auto_resolved, workflow_actions, 
-               created_at, updated_at
-        FROM alerts
-        WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
-        """
-
-        fetch_result = await db.execute(text(fetch_query), {"alert_id": alert_id})
-        row = fetch_result.fetchone()
-
-        if not row:
-            raise HTTPException(status_code=404, detail="Alert not found")
-
-        # Convert row to Alert object manually
-        alert = Alert()
-        alert.id = row[0]
-        alert.organization_id = row[1]
-        alert.alert_type = row[2]
-        alert.severity = row[3]
-        alert.status = row[4]
-        alert.asset_id = row[5]
-        alert.asset_name = row[6]
-        alert.message = row[7]
-        alert.description = row[8]
-        alert.reason = row[9]
-        alert.suggested_action = row[10]
-        alert.location_description = row[11]
-        alert.latitude = row[12]
-        alert.longitude = row[13]
-        alert.geofence_id = row[14]
-        alert.geofence_name = row[15]
-        alert.triggered_at = row[16]
-        alert.auto_resolvable = row[17]
-        alert.alert_metadata = row[18]
-        alert.acknowledged_at = row[19]
-        alert.resolved_at = row[20]
-        alert.resolution_notes = row[21]
-        alert.resolved_by_user_id = row[22]
-        alert.auto_resolved = row[23]
-        alert.workflow_actions = row[24]
-        alert.created_at = row[25]
-        alert.updated_at = row[26]
-
-        # Send real-time update via WebSocket
-        alert_response = alert_to_response(alert)
-        await alert_manager.send_alert_update({"type": "alert_acknowledged", "alert": alert_response.model_dump()})
-
-        return alert_response
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error acknowledging alert: {str(e)}")
-
-
-@router.patch("/alerts/{alert_id}/resolve", response_model=AlertResponse)
-async def resolve_alert(alert_id: str, resolution_notes: Optional[str] = None, db: AsyncSession = Depends(get_db)):
-    """Resolve an alert"""
-    try:
-        # Use raw SQL to update the alert
-        update_query = """
-        UPDATE alerts 
-        SET status = 'resolved', 
-            resolved_at = :resolved_at,
-            resolution_notes = :resolution_notes,
-            updated_at = :updated_at
-        WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
-        """
-
-        now = datetime.now()
         result = await db.execute(
             text(update_query),
-            {"alert_id": alert_id, "resolved_at": now, "resolution_notes": resolution_notes, "updated_at": now},
+            {"alert_id": alert_id, "acknowledged_at": now, "updated_at": now},
         )
 
         if result.rowcount == 0:
@@ -514,7 +466,108 @@ async def resolve_alert(alert_id: str, resolution_notes: Optional[str] = None, d
 
         # Send real-time update via WebSocket
         alert_response = alert_to_response(alert)
-        await alert_manager.send_alert_update({"type": "alert_resolved", "alert": alert_response.model_dump()})
+        await alert_manager.send_alert_update(
+            {"type": "alert_acknowledged", "alert": alert_response.model_dump()}
+        )
+
+        return alert_response
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=500, detail=f"Error acknowledging alert: {str(e)}"
+        )
+
+
+@router.patch("/alerts/{alert_id}/resolve", response_model=AlertResponse)
+async def resolve_alert(
+    alert_id: str,
+    resolution_notes: Optional[str] = None,
+    db: AsyncSession = Depends(get_db),
+):
+    """Resolve an alert"""
+    try:
+        # Use raw SQL to update the alert
+        update_query = """
+        UPDATE alerts 
+        SET status = 'resolved', 
+            resolved_at = :resolved_at,
+            resolution_notes = :resolution_notes,
+            updated_at = :updated_at
+        WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
+        """
+
+        now = datetime.now()
+        result = await db.execute(
+            text(update_query),
+            {
+                "alert_id": alert_id,
+                "resolved_at": now,
+                "resolution_notes": resolution_notes,
+                "updated_at": now,
+            },
+        )
+
+        if result.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Alert not found")
+
+        await db.commit()
+
+        # Fetch the updated alert using raw SQL
+        fetch_query = """
+        SELECT id, organization_id, alert_type, severity, status, asset_id, asset_name, 
+               message, description, reason, suggested_action, location_description, 
+               latitude, longitude, geofence_id, geofence_name, triggered_at, 
+               auto_resolvable, alert_metadata, acknowledged_at, resolved_at, 
+               resolution_notes, resolved_by_user_id, auto_resolved, workflow_actions, 
+               created_at, updated_at
+        FROM alerts
+        WHERE id = :alert_id OR REPLACE(id, '-', '') = REPLACE(:alert_id, '-', '')
+        """
+
+        fetch_result = await db.execute(text(fetch_query), {"alert_id": alert_id})
+        row = fetch_result.fetchone()
+
+        if not row:
+            raise HTTPException(status_code=404, detail="Alert not found")
+
+        # Convert row to Alert object manually
+        alert = Alert()
+        alert.id = row[0]
+        alert.organization_id = row[1]
+        alert.alert_type = row[2]
+        alert.severity = row[3]
+        alert.status = row[4]
+        alert.asset_id = row[5]
+        alert.asset_name = row[6]
+        alert.message = row[7]
+        alert.description = row[8]
+        alert.reason = row[9]
+        alert.suggested_action = row[10]
+        alert.location_description = row[11]
+        alert.latitude = row[12]
+        alert.longitude = row[13]
+        alert.geofence_id = row[14]
+        alert.geofence_name = row[15]
+        alert.triggered_at = row[16]
+        alert.auto_resolvable = row[17]
+        alert.alert_metadata = row[18]
+        alert.acknowledged_at = row[19]
+        alert.resolved_at = row[20]
+        alert.resolution_notes = row[21]
+        alert.resolved_by_user_id = row[22]
+        alert.auto_resolved = row[23]
+        alert.workflow_actions = row[24]
+        alert.created_at = row[25]
+        alert.updated_at = row[26]
+
+        # Send real-time update via WebSocket
+        alert_response = alert_to_response(alert)
+        await alert_manager.send_alert_update(
+            {"type": "alert_resolved", "alert": alert_response.model_dump()}
+        )
 
         return alert_response
 

@@ -1,8 +1,18 @@
 """
 Location estimation models
 """
-from sqlalchemy import (JSON, Boolean, Column, DateTime, ForeignKey, Index,
-                        Integer, Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -25,7 +35,9 @@ class EstimatedLocation(BaseModel, OrganizationMixin):
     # Estimation metadata
     uncertainty_radius = Column(Numeric(8, 2), nullable=False)  # meters
     confidence = Column(Numeric(5, 2), nullable=False)  # percentage
-    algorithm = Column(String(50), nullable=False)  # TRILATERATION, SINGLE_GATEWAY, etc.
+    algorithm = Column(
+        String(50), nullable=False
+    )  # TRILATERATION, SINGLE_GATEWAY, etc.
 
     # Timing
     estimated_at = Column(DateTime(timezone=True), nullable=False, index=True)
@@ -90,7 +102,19 @@ class LocationHistory(BaseModel, OrganizationMixin):
 
     # Indexes
     __table_args__ = (
-        Index("idx_location_history_asset_period", "asset_id", "period_start", "period_end"),
-        Index("idx_location_history_org_period", "organization_id", "period_start", "period_end"),
-        Index("idx_location_history_site_period", "site_id", "period_start", "period_end"),
+        Index(
+            "idx_location_history_asset_period",
+            "asset_id",
+            "period_start",
+            "period_end",
+        ),
+        Index(
+            "idx_location_history_org_period",
+            "organization_id",
+            "period_start",
+            "period_end",
+        ),
+        Index(
+            "idx_location_history_site_period", "site_id", "period_start", "period_end"
+        ),
     )

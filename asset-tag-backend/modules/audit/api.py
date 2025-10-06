@@ -90,7 +90,9 @@ async def get_audit_trail(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting audit trail: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error getting audit trail: {str(e)}"
+        )
 
 
 @router.get("/audit/{entity_type}/{entity_id}")
@@ -105,7 +107,11 @@ async def get_entity_audit_trail(
     try:
         query = (
             select(AuditLog)
-            .where(and_(AuditLog.entity_type == entity_type, AuditLog.entity_id == entity_id))
+            .where(
+                and_(
+                    AuditLog.entity_type == entity_type, AuditLog.entity_id == entity_id
+                )
+            )
             .order_by(AuditLog.created_at.desc())
         )
 
@@ -138,7 +144,9 @@ async def get_entity_audit_trail(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting entity audit trail: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error getting entity audit trail: {str(e)}"
+        )
 
 
 @router.get("/audit/user/{user_id}")
@@ -159,7 +167,11 @@ async def get_user_audit_trail(
 
         # Build query
         query = select(AuditLog).where(
-            and_(AuditLog.user_id == user_id, AuditLog.created_at >= start_date, AuditLog.created_at <= end_date)
+            and_(
+                AuditLog.user_id == user_id,
+                AuditLog.created_at >= start_date,
+                AuditLog.created_at <= end_date,
+            )
         )
 
         # Add filters
@@ -202,13 +214,17 @@ async def get_user_audit_trail(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting user audit trail: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error getting user audit trail: {str(e)}"
+        )
 
 
 @router.get("/audit/stats/summary")
 async def get_audit_summary(
     days: int = Query(30, ge=1, le=365, description="Number of days to analyze"),
-    organization_id: Optional[str] = Query(None, description="Filter by organization ID"),
+    organization_id: Optional[str] = Query(
+        None, description="Filter by organization ID"
+    ),
     db: AsyncSession = Depends(get_db),
 ):
     """Get audit statistics summary"""
@@ -218,13 +234,17 @@ async def get_audit_summary(
         start_date = end_date - timedelta(days=days)
 
         # Build base query
-        base_query = select(AuditLog).where(and_(AuditLog.created_at >= start_date, AuditLog.created_at <= end_date))
+        base_query = select(AuditLog).where(
+            and_(AuditLog.created_at >= start_date, AuditLog.created_at <= end_date)
+        )
 
         if organization_id:
             base_query = base_query.where(AuditLog.organization_id == organization_id)
 
         # Get total count
-        total_result = await db.execute(select(text("COUNT(*)")).select_from(base_query.subquery()))
+        total_result = await db.execute(
+            select(text("COUNT(*)")).select_from(base_query.subquery())
+        )
         total_count = total_result.scalar()
 
         # Get action breakdown
@@ -240,9 +260,17 @@ async def get_audit_summary(
         )
 
         action_result = await db.execute(
-            action_query, {"start_date": start_date, "end_date": end_date, "organization_id": organization_id}
+            action_query,
+            {
+                "start_date": start_date,
+                "end_date": end_date,
+                "organization_id": organization_id,
+            },
         )
-        action_breakdown = [{"action": row.action, "count": row.count} for row in action_result.fetchall()]
+        action_breakdown = [
+            {"action": row.action, "count": row.count}
+            for row in action_result.fetchall()
+        ]
 
         # Get entity type breakdown
         entity_query = text(
@@ -257,9 +285,17 @@ async def get_audit_summary(
         )
 
         entity_result = await db.execute(
-            entity_query, {"start_date": start_date, "end_date": end_date, "organization_id": organization_id}
+            entity_query,
+            {
+                "start_date": start_date,
+                "end_date": end_date,
+                "organization_id": organization_id,
+            },
         )
-        entity_breakdown = [{"entity_type": row.entity_type, "count": row.count} for row in entity_result.fetchall()]
+        entity_breakdown = [
+            {"entity_type": row.entity_type, "count": row.count}
+            for row in entity_result.fetchall()
+        ]
 
         # Get daily activity
         daily_query = text(
@@ -274,12 +310,24 @@ async def get_audit_summary(
         )
 
         daily_result = await db.execute(
-            daily_query, {"start_date": start_date, "end_date": end_date, "organization_id": organization_id}
+            daily_query,
+            {
+                "start_date": start_date,
+                "end_date": end_date,
+                "organization_id": organization_id,
+            },
         )
-        daily_activity = [{"date": row.date.isoformat(), "count": row.count} for row in daily_result.fetchall()]
+        daily_activity = [
+            {"date": row.date.isoformat(), "count": row.count}
+            for row in daily_result.fetchall()
+        ]
 
         return {
-            "period": {"start_date": start_date.isoformat(), "end_date": end_date.isoformat(), "days": days},
+            "period": {
+                "start_date": start_date.isoformat(),
+                "end_date": end_date.isoformat(),
+                "days": days,
+            },
             "organization_id": organization_id,
             "summary": {
                 "total_audit_entries": total_count,
@@ -292,7 +340,9 @@ async def get_audit_summary(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting audit summary: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error getting audit summary: {str(e)}"
+        )
 
 
 @router.get("/audit/export")
@@ -355,9 +405,15 @@ async def export_audit_logs(
                 writer.writeheader()
                 writer.writerows(export_data)
 
-            return {"format": "csv", "data": output.getvalue(), "count": len(export_data)}
+            return {
+                "format": "csv",
+                "data": output.getvalue(),
+                "count": len(export_data),
+            }
         else:
             return {"format": "json", "data": export_data, "count": len(export_data)}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error exporting audit logs: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error exporting audit logs: {str(e)}"
+        )

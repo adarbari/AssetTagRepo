@@ -1,13 +1,21 @@
 """
 Vehicle models
 """
-from sqlalchemy import (JSON, Boolean, Column, ForeignKey, Index, Integer,
-                        Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Vehicle(BaseModel, OrganizationMixin, SoftDeleteMixin):
@@ -19,7 +27,9 @@ class Vehicle(BaseModel, OrganizationMixin, SoftDeleteMixin):
     name = Column(String(255), nullable=False)
     vehicle_type = Column(String(100), nullable=False)  # truck, van, car, etc.
     license_plate = Column(String(50), nullable=True)
-    status = Column(String(50), default="active", index=True)  # active, inactive, maintenance
+    status = Column(
+        String(50), default="active", index=True
+    )  # active, inactive, maintenance
 
     # Location
     current_latitude = Column(Numeric(10, 8), nullable=True)
@@ -27,15 +37,21 @@ class Vehicle(BaseModel, OrganizationMixin, SoftDeleteMixin):
     last_seen = Column(String(100), nullable=True)  # ISO timestamp
 
     # Assignment
-    assigned_driver_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    assigned_driver_name = Column(String(255), nullable=True)  # Denormalized for performance
+    assigned_driver_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
+    assigned_driver_name = Column(
+        String(255), nullable=True
+    )  # Denormalized for performance
 
     # Metadata
     vehicle_metadata = Column(JSON, default={})
 
     # Relationships
     assigned_driver = relationship("User", foreign_keys=[assigned_driver_id])
-    paired_assets = relationship("VehicleAssetPairing", back_populates="vehicle", cascade="all, delete-orphan")
+    paired_assets = relationship(
+        "VehicleAssetPairing", back_populates="vehicle", cascade="all, delete-orphan"
+    )
 
     # Indexes
     __table_args__ = (
@@ -57,7 +73,9 @@ class VehicleAssetPairing(BaseModel, OrganizationMixin):
 
     # Pairing details
     paired_at = Column(String(100), nullable=False)  # ISO timestamp
-    paired_by_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    paired_by_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
     paired_by_name = Column(String(255), nullable=True)  # Denormalized for performance
 
     # Status

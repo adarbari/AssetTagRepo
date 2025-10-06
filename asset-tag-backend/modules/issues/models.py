@@ -1,13 +1,21 @@
 """
 Issue models
 """
-from sqlalchemy import (JSON, Boolean, Column, DateTime, ForeignKey, Index,
-                        Integer, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Issue(BaseModel, OrganizationMixin, SoftDeleteMixin):
@@ -18,19 +26,33 @@ class Issue(BaseModel, OrganizationMixin, SoftDeleteMixin):
     # Basic information
     title = Column(String(500), nullable=False)
     description = Column(Text, nullable=True)
-    issue_type = Column(String(100), nullable=False, index=True)  # mechanical, electrical, damage, safety, etc.
-    severity = Column(String(50), nullable=False, index=True)  # low, medium, high, critical
-    status = Column(String(50), default="open", index=True)  # open, acknowledged, in-progress, resolved, closed, cancelled
+    issue_type = Column(
+        String(100), nullable=False, index=True
+    )  # mechanical, electrical, damage, safety, etc.
+    severity = Column(
+        String(50), nullable=False, index=True
+    )  # low, medium, high, critical
+    status = Column(
+        String(50), default="open", index=True
+    )  # open, acknowledged, in-progress, resolved, closed, cancelled
 
     # Asset relationship
     asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id"), nullable=True)
     asset_name = Column(String(255), nullable=True)  # Denormalized for performance
 
     # Assignment
-    reported_by_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    reported_by_name = Column(String(255), nullable=True)  # Denormalized for performance
-    assigned_to_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    assigned_to_name = Column(String(255), nullable=True)  # Denormalized for performance
+    reported_by_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
+    reported_by_name = Column(
+        String(255), nullable=True
+    )  # Denormalized for performance
+    assigned_to_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
+    assigned_to_name = Column(
+        String(255), nullable=True
+    )  # Denormalized for performance
 
     # Dates
     reported_date = Column(DateTime(timezone=True), nullable=False)
@@ -47,8 +69,12 @@ class Issue(BaseModel, OrganizationMixin, SoftDeleteMixin):
     asset = relationship("Asset", foreign_keys=[asset_id])
     reported_by_user = relationship("User", foreign_keys=[reported_by_user_id])
     assigned_to_user = relationship("User", foreign_keys=[assigned_to_user_id])
-    comments = relationship("IssueComment", back_populates="issue", cascade="all, delete-orphan")
-    attachments = relationship("IssueAttachment", back_populates="issue", cascade="all, delete-orphan")
+    comments = relationship(
+        "IssueComment", back_populates="issue", cascade="all, delete-orphan"
+    )
+    attachments = relationship(
+        "IssueAttachment", back_populates="issue", cascade="all, delete-orphan"
+    )
 
     # Indexes
     __table_args__ = (
@@ -71,7 +97,9 @@ class IssueComment(BaseModel, OrganizationMixin):
 
     # Comment details
     comment = Column(Text, nullable=False)
-    comment_type = Column(String(50), default="comment")  # comment, status_change, assignment_change, etc.
+    comment_type = Column(
+        String(50), default="comment"
+    )  # comment, status_change, assignment_change, etc.
 
     # User who made the comment
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
@@ -106,8 +134,12 @@ class IssueAttachment(BaseModel, OrganizationMixin):
     file_url = Column(String(500), nullable=False)  # S3/MinIO URL
 
     # Upload information
-    uploaded_by_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    uploaded_by_name = Column(String(255), nullable=True)  # Denormalized for performance
+    uploaded_by_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
+    uploaded_by_name = Column(
+        String(255), nullable=True
+    )  # Denormalized for performance
 
     # Additional metadata
     issue_metadata = Column(JSON, default={})

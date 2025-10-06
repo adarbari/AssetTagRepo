@@ -5,19 +5,24 @@ import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import (APIRouter, Depends, File, Form, HTTPException, Query,
-                     UploadFile)
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from sqlalchemy import and_, delete, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.issues.models import Issue, IssueAttachment, IssueComment
-from modules.issues.schemas import (IssueAttachmentCreate,
-                                    IssueAttachmentResponse,
-                                    IssueCommentCreate, IssueCommentResponse,
-                                    IssueCreate, IssueResponse, IssueStats,
-                                    IssueStatusUpdate, IssueUpdate,
-                                    IssueWithDetails)
+from modules.issues.schemas import (
+    IssueAttachmentCreate,
+    IssueAttachmentResponse,
+    IssueCommentCreate,
+    IssueCommentResponse,
+    IssueCreate,
+    IssueResponse,
+    IssueStats,
+    IssueStatusUpdate,
+    IssueUpdate,
+    IssueWithDetails,
+)
 
 router = APIRouter()
 
@@ -51,7 +56,9 @@ async def get_issues(
             query = query.where(Issue.asset_id == asset_id)
         if search:
             search_filter = or_(
-                Issue.title.ilike(f"%{search}%"), Issue.description.ilike(f"%{search}%"), Issue.asset_name.ilike(f"%{search}%")
+                Issue.title.ilike(f"%{search}%"),
+                Issue.description.ilike(f"%{search}%"),
+                Issue.asset_name.ilike(f"%{search}%"),
             )
             query = query.where(search_filter)
 
@@ -71,7 +78,9 @@ async def get_issues(
 async def get_issue(issue_id: str, db: AsyncSession = Depends(get_db)):
     """Get issue by ID with full details"""
     try:
-        result = await db.execute(select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None))))
+        result = await db.execute(
+            select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None)))
+        )
         issue = result.scalar_one_or_none()
 
         if not issue:
@@ -119,10 +128,14 @@ async def create_issue(issue_data: IssueCreate, db: AsyncSession = Depends(get_d
 
 
 @router.put("/issues/{issue_id}", response_model=IssueResponse)
-async def update_issue(issue_id: str, issue_data: IssueUpdate, db: AsyncSession = Depends(get_db)):
+async def update_issue(
+    issue_id: str, issue_data: IssueUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update an existing issue"""
     try:
-        result = await db.execute(select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None))))
+        result = await db.execute(
+            select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None)))
+        )
         issue = result.scalar_one_or_none()
 
         if not issue:
@@ -137,7 +150,10 @@ async def update_issue(issue_id: str, issue_data: IssueUpdate, db: AsyncSession 
         if "status" in update_data:
             if update_data["status"] == "acknowledged" and not issue.acknowledged_date:
                 issue.acknowledged_date = datetime.now()
-            elif update_data["status"] in ["resolved", "closed"] and not issue.resolved_date:
+            elif (
+                update_data["status"] in ["resolved", "closed"]
+                and not issue.resolved_date
+            ):
                 issue.resolved_date = datetime.now()
 
         await db.commit()
@@ -153,10 +169,14 @@ async def update_issue(issue_id: str, issue_data: IssueUpdate, db: AsyncSession 
 
 
 @router.patch("/issues/{issue_id}/status", response_model=IssueResponse)
-async def update_issue_status(issue_id: str, status_data: IssueStatusUpdate, db: AsyncSession = Depends(get_db)):
+async def update_issue_status(
+    issue_id: str, status_data: IssueStatusUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update issue status only"""
     try:
-        result = await db.execute(select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None))))
+        result = await db.execute(
+            select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None)))
+        )
         issue = result.scalar_one_or_none()
 
         if not issue:
@@ -174,9 +194,13 @@ async def update_issue_status(issue_id: str, status_data: IssueStatusUpdate, db:
         # Add status change note if provided
         if status_data.notes:
             if issue.notes:
-                issue.notes += f"\n\nStatus changed to {status_data.status}: {status_data.notes}"
+                issue.notes += (
+                    f"\n\nStatus changed to {status_data.status}: {status_data.notes}"
+                )
             else:
-                issue.notes = f"Status changed to {status_data.status}: {status_data.notes}"
+                issue.notes = (
+                    f"Status changed to {status_data.status}: {status_data.notes}"
+                )
 
         await db.commit()
         await db.refresh(issue)
@@ -187,14 +211,18 @@ async def update_issue_status(issue_id: str, status_data: IssueStatusUpdate, db:
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating issue status: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating issue status: {str(e)}"
+        )
 
 
 @router.delete("/issues/{issue_id}")
 async def delete_issue(issue_id: str, db: AsyncSession = Depends(get_db)):
     """Delete an issue (soft delete)"""
     try:
-        result = await db.execute(select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None))))
+        result = await db.execute(
+            select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None)))
+        )
         issue = result.scalar_one_or_none()
 
         if not issue:
@@ -214,11 +242,15 @@ async def delete_issue(issue_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/issues/{issue_id}/comments", response_model=IssueCommentResponse)
-async def add_issue_comment(issue_id: str, comment_data: IssueCommentCreate, db: AsyncSession = Depends(get_db)):
+async def add_issue_comment(
+    issue_id: str, comment_data: IssueCommentCreate, db: AsyncSession = Depends(get_db)
+):
     """Add a comment to an issue"""
     try:
         # Check if issue exists
-        issue_result = await db.execute(select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None))))
+        issue_result = await db.execute(
+            select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None)))
+        )
         issue = issue_result.scalar_one_or_none()
         if not issue:
             raise HTTPException(status_code=404, detail="Issue not found")
@@ -248,12 +280,17 @@ async def add_issue_comment(issue_id: str, comment_data: IssueCommentCreate, db:
 
 @router.get("/issues/{issue_id}/comments", response_model=List[IssueCommentResponse])
 async def get_issue_comments(
-    issue_id: str, skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000), db: AsyncSession = Depends(get_db)
+    issue_id: str,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    db: AsyncSession = Depends(get_db),
 ):
     """Get comments for an issue"""
     try:
         # Check if issue exists
-        issue_result = await db.execute(select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None))))
+        issue_result = await db.execute(
+            select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None)))
+        )
         issue = issue_result.scalar_one_or_none()
         if not issue:
             raise HTTPException(status_code=404, detail="Issue not found")
@@ -275,15 +312,21 @@ async def get_issue_comments(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching comments: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching comments: {str(e)}"
+        )
 
 
 @router.post("/issues/{issue_id}/attachments", response_model=IssueAttachmentResponse)
-async def upload_issue_attachment(issue_id: str, file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
+async def upload_issue_attachment(
+    issue_id: str, file: UploadFile = File(...), db: AsyncSession = Depends(get_db)
+):
     """Upload an attachment to an issue"""
     try:
         # Check if issue exists
-        issue_result = await db.execute(select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None))))
+        issue_result = await db.execute(
+            select(Issue).where(and_(Issue.id == issue_id, Issue.deleted_at.is_(None)))
+        )
         issue = issue_result.scalar_one_or_none()
         if not issue:
             raise HTTPException(status_code=404, detail="Issue not found")
@@ -314,7 +357,9 @@ async def upload_issue_attachment(issue_id: str, file: UploadFile = File(...), d
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error uploading attachment: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error uploading attachment: {str(e)}"
+        )
 
 
 @router.get("/issues/stats", response_model=IssueStats)
@@ -322,25 +367,35 @@ async def get_issue_stats(db: AsyncSession = Depends(get_db)):
     """Get issue statistics"""
     try:
         # Get basic counts
-        total_result = await db.execute(select(func.count(Issue.id)).where(Issue.deleted_at.is_(None)))
+        total_result = await db.execute(
+            select(func.count(Issue.id)).where(Issue.deleted_at.is_(None))
+        )
         total_issues = total_result.scalar()
 
         # Get status counts
         status_counts = {}
         for status in ["open", "in-progress", "resolved", "closed"]:
             result = await db.execute(
-                select(func.count(Issue.id)).where(and_(Issue.status == status, Issue.deleted_at.is_(None)))
+                select(func.count(Issue.id)).where(
+                    and_(Issue.status == status, Issue.deleted_at.is_(None))
+                )
             )
             status_counts[status] = result.scalar()
 
         # Get severity counts
         critical_result = await db.execute(
-            select(func.count(Issue.id)).where(and_(Issue.severity == "critical", Issue.deleted_at.is_(None)))
+            select(func.count(Issue.id)).where(
+                and_(Issue.severity == "critical", Issue.deleted_at.is_(None))
+            )
         )
         critical_issues = critical_result.scalar()
 
         high_priority_result = await db.execute(
-            select(func.count(Issue.id)).where(and_(Issue.severity.in_(["high", "critical"]), Issue.deleted_at.is_(None)))
+            select(func.count(Issue.id)).where(
+                and_(
+                    Issue.severity.in_(["high", "critical"]), Issue.deleted_at.is_(None)
+                )
+            )
         )
         high_priority_issues = high_priority_result.scalar()
 
@@ -369,4 +424,6 @@ async def get_issue_stats(db: AsyncSession = Depends(get_db)):
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching issue stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching issue stats: {str(e)}"
+        )

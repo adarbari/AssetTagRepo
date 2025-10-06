@@ -1,8 +1,18 @@
 """
 Alert models
 """
-from sqlalchemy import (JSON, Boolean, Column, DateTime, ForeignKey, Index,
-                        Integer, Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -15,9 +25,13 @@ class Alert(BaseModel, OrganizationMixin):
     __tablename__ = "alerts"
 
     # Alert identification
-    alert_type = Column(String(100), nullable=False, index=True)  # theft, battery, compliance, etc.
+    alert_type = Column(
+        String(100), nullable=False, index=True
+    )  # theft, battery, compliance, etc.
     severity = Column(String(50), nullable=False, index=True)  # critical, warning, info
-    status = Column(String(50), default="active", index=True)  # active, acknowledged, resolved
+    status = Column(
+        String(50), default="active", index=True
+    )  # active, acknowledged, resolved
 
     # Asset information
     asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id"), nullable=False)
@@ -45,7 +59,9 @@ class Alert(BaseModel, OrganizationMixin):
 
     # Resolution
     resolution_notes = Column(Text, nullable=True)
-    resolved_by_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    resolved_by_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
 
     # Auto-resolution
     auto_resolvable = Column(Boolean, default=False)
@@ -89,20 +105,30 @@ class AlertRule(BaseModel, OrganizationMixin):
     is_active = Column(Boolean, default=True, index=True)
 
     # Asset filtering
-    asset_type_filter = Column(String(100), nullable=True)  # Apply to specific asset types
-    site_filter = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True)  # Apply to specific sites
+    asset_type_filter = Column(
+        String(100), nullable=True
+    )  # Apply to specific asset types
+    site_filter = Column(
+        UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True
+    )  # Apply to specific sites
 
     # Notification settings
     notification_channels = Column(JSON, nullable=True)  # email, webhook, push, etc.
     notification_recipients = Column(JSON, nullable=True)  # List of recipients
 
     # Throttling
-    throttle_minutes = Column(Integer, nullable=True)  # Minimum time between alerts of same type
+    throttle_minutes = Column(
+        Integer, nullable=True
+    )  # Minimum time between alerts of same type
     max_alerts_per_hour = Column(Integer, nullable=True)  # Rate limiting
 
     # Auto-resolution
-    auto_resolve_after_minutes = Column(Integer, nullable=True)  # Auto-resolve after X minutes
-    auto_resolve_conditions = Column(JSON, nullable=True)  # Conditions for auto-resolution
+    auto_resolve_after_minutes = Column(
+        Integer, nullable=True
+    )  # Auto-resolve after X minutes
+    auto_resolve_conditions = Column(
+        JSON, nullable=True
+    )  # Conditions for auto-resolution
 
     # Metadata
     alert_metadata = Column(JSON, default={})
@@ -125,11 +151,15 @@ class AlertNotification(BaseModel, OrganizationMixin):
 
     # Notification identification
     alert_id = Column(UUID(as_uuid=True), ForeignKey("alerts.id"), nullable=False)
-    notification_channel = Column(String(50), nullable=False)  # email, webhook, push, sms
+    notification_channel = Column(
+        String(50), nullable=False
+    )  # email, webhook, push, sms
     recipient = Column(String(255), nullable=False)  # email address, phone number, etc.
 
     # Notification status
-    status = Column(String(50), default="pending", index=True)  # pending, sent, delivered, failed
+    status = Column(
+        String(50), default="pending", index=True
+    )  # pending, sent, delivered, failed
     sent_at = Column(DateTime(timezone=True), nullable=True)
     delivered_at = Column(DateTime(timezone=True), nullable=True)
     failed_at = Column(DateTime(timezone=True), nullable=True)

@@ -14,8 +14,15 @@ from config.database import Base
 class TimestampMixin:
     """Mixin to add created_at and updated_at timestamps"""
 
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
 
 
 class UUIDMixin:
@@ -35,7 +42,9 @@ class BaseModel(Base, UUIDMixin, TimestampMixin):
 class OrganizationMixin:
     """Mixin to add organization_id for multi-tenancy"""
 
-    organization_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False, index=True)
+    organization_id = Column(
+        UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False, index=True
+    )
 
 
 class SoftDeleteMixin:

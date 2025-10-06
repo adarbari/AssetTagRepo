@@ -6,8 +6,14 @@ import json
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from fastapi import (APIRouter, Depends, HTTPException, Query, WebSocket,
-                     WebSocketDisconnect)
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Query,
+    WebSocket,
+    WebSocketDisconnect,
+)
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -61,7 +67,9 @@ async def get_current_location(asset_id: str, db: AsyncSession = Depends(get_db)
         location = result.scalar_one_or_none()
 
         if not location:
-            raise HTTPException(status_code=404, detail="No location data found for asset")
+            raise HTTPException(
+                status_code=404, detail="No location data found for asset"
+            )
 
         return {
             "asset_id": asset_id,
@@ -74,8 +82,12 @@ async def get_current_location(asset_id: str, db: AsyncSession = Depends(get_db)
             "estimated_at": location.estimated_at.isoformat(),
             "speed": float(location.speed) if location.speed else None,
             "bearing": float(location.bearing) if location.bearing else None,
-            "distance_from_previous": float(location.distance_from_previous) if location.distance_from_previous else None,
-            "signal_quality_score": float(location.signal_quality_score) if location.signal_quality_score else None,
+            "distance_from_previous": float(location.distance_from_previous)
+            if location.distance_from_previous
+            else None,
+            "signal_quality_score": float(location.signal_quality_score)
+            if location.signal_quality_score
+            else None,
             "gateway_count": location.gateway_count,
             "gateway_ids": location.gateway_ids,
         }
@@ -83,7 +95,9 @@ async def get_current_location(asset_id: str, db: AsyncSession = Depends(get_db)
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching current location: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching current location: {str(e)}"
+        )
 
 
 @router.get("/locations/{asset_id}/history")
@@ -124,8 +138,12 @@ async def get_location_history(
                 "estimated_at": loc.estimated_at.isoformat(),
                 "speed": float(loc.speed) if loc.speed else None,
                 "bearing": float(loc.bearing) if loc.bearing else None,
-                "distance_from_previous": float(loc.distance_from_previous) if loc.distance_from_previous else None,
-                "signal_quality_score": float(loc.signal_quality_score) if loc.signal_quality_score else None,
+                "distance_from_previous": float(loc.distance_from_previous)
+                if loc.distance_from_previous
+                else None,
+                "signal_quality_score": float(loc.signal_quality_score)
+                if loc.signal_quality_score
+                else None,
                 "gateway_count": loc.gateway_count,
                 "gateway_ids": loc.gateway_ids,
             }
@@ -133,12 +151,16 @@ async def get_location_history(
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching location history: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching location history: {str(e)}"
+        )
 
 
 @router.get("/locations/{asset_id}/track")
 async def get_location_track(
-    asset_id: str, hours: int = Query(24, ge=1, le=168), db: AsyncSession = Depends(get_db)  # Default 24 hours, max 1 week
+    asset_id: str,
+    hours: int = Query(24, ge=1, le=168),
+    db: AsyncSession = Depends(get_db),  # Default 24 hours, max 1 week
 ):
     """Get location track for an asset over a time period"""
     try:
@@ -176,7 +198,9 @@ async def get_location_track(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching location track: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching location track: {str(e)}"
+        )
 
 
 @router.websocket("/ws/locations/{asset_id}")
@@ -195,7 +219,8 @@ async def websocket_location_updates(websocket: WebSocket, asset_id: str):
 
 @router.get("/locations/bulk/current")
 async def get_bulk_current_locations(
-    asset_ids: str = Query(..., description="Comma-separated asset IDs"), db: AsyncSession = Depends(get_db)
+    asset_ids: str = Query(..., description="Comma-separated asset IDs"),
+    db: AsyncSession = Depends(get_db),
 ):
     """Get current locations for multiple assets"""
     try:
@@ -234,4 +259,6 @@ async def get_bulk_current_locations(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching bulk locations: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching bulk locations: {str(e)}"
+        )

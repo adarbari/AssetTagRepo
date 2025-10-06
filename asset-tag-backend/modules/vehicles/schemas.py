@@ -12,27 +12,54 @@ class VehicleBase(BaseModel):
     """Base vehicle schema"""
 
     name: str = Field(..., min_length=1, max_length=255, description="Vehicle name")
-    vehicle_type: str = Field(..., min_length=1, max_length=100, description="Type of vehicle")
-    license_plate: Optional[str] = Field(None, max_length=50, description="License plate number")
+    vehicle_type: str = Field(
+        ..., min_length=1, max_length=100, description="Type of vehicle"
+    )
+    license_plate: Optional[str] = Field(
+        None, max_length=50, description="License plate number"
+    )
     status: Optional[str] = Field("active", description="Vehicle status")
-    current_latitude: Optional[float] = Field(None, ge=-90, le=90, description="Current latitude")
-    current_longitude: Optional[float] = Field(None, ge=-180, le=180, description="Current longitude")
-    last_seen: Optional[str] = Field(None, description="Last seen timestamp (ISO format)")
-    assigned_driver_id: Optional[UUID] = Field(None, description="Assigned driver user ID")
-    assigned_driver_name: Optional[str] = Field(None, max_length=255, description="Assigned driver name")
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
+    current_latitude: Optional[float] = Field(
+        None, ge=-90, le=90, description="Current latitude"
+    )
+    current_longitude: Optional[float] = Field(
+        None, ge=-180, le=180, description="Current longitude"
+    )
+    last_seen: Optional[str] = Field(
+        None, description="Last seen timestamp (ISO format)"
+    )
+    assigned_driver_id: Optional[UUID] = Field(
+        None, description="Assigned driver user ID"
+    )
+    assigned_driver_name: Optional[str] = Field(
+        None, max_length=255, description="Assigned driver name"
+    )
+    metadata: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
     @validator("status")
     def validate_status(cls, v):
         if v is not None:
             allowed_statuses = ["active", "inactive", "maintenance", "out_of_service"]
             if v not in allowed_statuses:
-                raise ValueError(f'Status must be one of: {", ".join(allowed_statuses)}')
+                raise ValueError(
+                    f'Status must be one of: {", ".join(allowed_statuses)}'
+                )
         return v
 
     @validator("vehicle_type")
     def validate_vehicle_type(cls, v):
-        allowed_types = ["truck", "van", "car", "trailer", "excavator", "loader", "crane", "other"]
+        allowed_types = [
+            "truck",
+            "van",
+            "car",
+            "trailer",
+            "excavator",
+            "loader",
+            "crane",
+            "other",
+        ]
         if v not in allowed_types:
             raise ValueError(f'Vehicle type must be one of: {", ".join(allowed_types)}')
         return v
@@ -63,7 +90,9 @@ class VehicleUpdate(BaseModel):
         if v is not None:
             allowed_statuses = ["active", "inactive", "maintenance", "out_of_service"]
             if v not in allowed_statuses:
-                raise ValueError(f'Status must be one of: {", ".join(allowed_statuses)}')
+                raise ValueError(
+                    f'Status must be one of: {", ".join(allowed_statuses)}'
+                )
         return v
 
 
@@ -84,7 +113,9 @@ class VehicleAssetPairingBase(BaseModel):
 
     asset_id: UUID = Field(..., description="Asset ID to pair")
     notes: Optional[str] = Field(None, description="Pairing notes")
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
+    metadata: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
 
 class VehicleAssetPairingCreate(VehicleAssetPairingBase):

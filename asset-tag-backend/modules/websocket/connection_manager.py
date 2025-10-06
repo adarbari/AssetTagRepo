@@ -30,7 +30,12 @@ class ConnectionManager:
         # Subscription filters for each connection
         self.connection_filters: Dict[WebSocket, Dict[str, Any]] = {}
 
-    async def connect(self, websocket: WebSocket, connection_type: str, filters: Optional[Dict[str, Any]] = None):
+    async def connect(
+        self,
+        websocket: WebSocket,
+        connection_type: str,
+        filters: Optional[Dict[str, Any]] = None,
+    ):
         """Accept a WebSocket connection and add it to the appropriate group"""
         await websocket.accept()
 
@@ -45,7 +50,9 @@ class ConnectionManager:
         }
         self.connection_filters[websocket] = filters or {}
 
-        logger.info(f"WebSocket connected: {connection_type} (total: {len(self.active_connections[connection_type])})")
+        logger.info(
+            f"WebSocket connected: {connection_type} (total: {len(self.active_connections[connection_type])})"
+        )
 
         # Send welcome message
         await self.send_personal_message(
@@ -76,9 +83,13 @@ class ConnectionManager:
             del self.connection_filters[websocket]
 
         if connection_type:
-            logger.info(f"WebSocket disconnected: {connection_type} (total: {len(self.active_connections[connection_type])})")
+            logger.info(
+                f"WebSocket disconnected: {connection_type} (total: {len(self.active_connections[connection_type])})"
+            )
 
-    async def send_personal_message(self, message: Dict[str, Any], websocket: WebSocket):
+    async def send_personal_message(
+        self, message: Dict[str, Any], websocket: WebSocket
+    ):
         """Send a message to a specific WebSocket connection"""
         try:
             await websocket.send_text(json.dumps(message))
@@ -101,7 +112,9 @@ class ConnectionManager:
                 if self._message_matches_filters(message, websocket):
                     await websocket.send_text(json.dumps(message))
                     if websocket in self.connection_metadata:
-                        self.connection_metadata[websocket]["last_activity"] = datetime.now()
+                        self.connection_metadata[websocket][
+                            "last_activity"
+                        ] = datetime.now()
             except Exception as e:
                 logger.error(f"Error broadcasting to {connection_type}: {e}")
                 disconnected.add(websocket)
@@ -115,7 +128,9 @@ class ConnectionManager:
         for connection_type in self.active_connections:
             await self.broadcast_to_type(message, connection_type)
 
-    def _message_matches_filters(self, message: Dict[str, Any], websocket: WebSocket) -> bool:
+    def _message_matches_filters(
+        self, message: Dict[str, Any], websocket: WebSocket
+    ) -> bool:
         """Check if a message matches the filters for a specific connection"""
         if websocket not in self.connection_filters:
             return True
@@ -152,8 +167,13 @@ class ConnectionManager:
     def get_connection_stats(self) -> Dict[str, Any]:
         """Get statistics about active connections"""
         stats = {
-            "total_connections": sum(len(connections) for connections in self.active_connections.values()),
-            "connections_by_type": {conn_type: len(connections) for conn_type, connections in self.active_connections.items()},
+            "total_connections": sum(
+                len(connections) for connections in self.active_connections.values()
+            ),
+            "connections_by_type": {
+                conn_type: len(connections)
+                for conn_type, connections in self.active_connections.items()
+            },
             "connection_details": [],
         }
 
@@ -177,7 +197,9 @@ class ConnectionManager:
 
             if message_type == "ping":
                 # Respond to ping with pong
-                await self.send_personal_message({"type": "pong", "timestamp": datetime.now().isoformat()}, websocket)
+                await self.send_personal_message(
+                    {"type": "pong", "timestamp": datetime.now().isoformat()}, websocket
+                )
 
             elif message_type == "update_filters":
                 # Update connection filters
@@ -223,12 +245,22 @@ class ConnectionManager:
 
         except json.JSONDecodeError:
             await self.send_personal_message(
-                {"type": "error", "message": "Invalid JSON format", "timestamp": datetime.now().isoformat()}, websocket
+                {
+                    "type": "error",
+                    "message": "Invalid JSON format",
+                    "timestamp": datetime.now().isoformat(),
+                },
+                websocket,
             )
         except Exception as e:
             logger.error(f"Error handling client message: {e}")
             await self.send_personal_message(
-                {"type": "error", "message": "Internal server error", "timestamp": datetime.now().isoformat()}, websocket
+                {
+                    "type": "error",
+                    "message": "Internal server error",
+                    "timestamp": datetime.now().isoformat(),
+                },
+                websocket,
             )
 
 

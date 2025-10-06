@@ -10,10 +10,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.sites.models import Personnel, PersonnelActivity, Site
-from modules.sites.schemas import (PersonnelActivityResponse, PersonnelCreate,
-                                   PersonnelResponse, PersonnelUpdate,
-                                   SiteCreate, SiteResponse, SiteUpdate,
-                                   SiteWithAssetsResponse)
+from modules.sites.schemas import (
+    PersonnelActivityResponse,
+    PersonnelCreate,
+    PersonnelResponse,
+    PersonnelUpdate,
+    SiteCreate,
+    SiteResponse,
+    SiteUpdate,
+    SiteWithAssetsResponse,
+)
 
 router = APIRouter()
 
@@ -62,17 +68,23 @@ async def get_site(site_id: str, db: AsyncSession = Depends(get_db)):
         # Get related assets
         from modules.assets.models import Asset
 
-        assets_result = await db.execute(select(Asset).where(Asset.current_site_id == site_id))
+        assets_result = await db.execute(
+            select(Asset).where(Asset.current_site_id == site_id)
+        )
         assets = assets_result.scalars().all()
 
         # Get related personnel
-        personnel_result = await db.execute(select(Personnel).where(Personnel.current_site_id == site_id))
+        personnel_result = await db.execute(
+            select(Personnel).where(Personnel.current_site_id == site_id)
+        )
         personnel = personnel_result.scalars().all()
 
         # Get related gateways
         from modules.gateways.models import Gateway
 
-        gateways_result = await db.execute(select(Gateway).where(Gateway.site_id == site_id))
+        gateways_result = await db.execute(
+            select(Gateway).where(Gateway.site_id == site_id)
+        )
         gateways = gateways_result.scalars().all()
 
         # Build response
@@ -133,11 +145,15 @@ async def create_site(site_data: SiteCreate, db: AsyncSession = Depends(get_db))
         # Check if site name already exists in organization
         existing = await db.execute(
             select(Site).where(
-                Site.name == site_data.name, Site.organization_id == "00000000-0000-0000-0000-000000000000"  # Default org
+                Site.name == site_data.name,
+                Site.organization_id
+                == "00000000-0000-0000-0000-000000000000",  # Default org
             )
         )
         if existing.scalar_one_or_none():
-            raise HTTPException(status_code=400, detail="Site with this name already exists")
+            raise HTTPException(
+                status_code=400, detail="Site with this name already exists"
+            )
 
         # Create new site
         site = Site(
@@ -174,7 +190,9 @@ async def create_site(site_data: SiteCreate, db: AsyncSession = Depends(get_db))
 
 
 @router.put("/sites/{site_id}", response_model=SiteResponse)
-async def update_site(site_id: str, site_data: SiteUpdate, db: AsyncSession = Depends(get_db)):
+async def update_site(
+    site_id: str, site_data: SiteUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update an existing site"""
     try:
         # Get existing site
@@ -215,12 +233,17 @@ async def delete_site(site_id: str, db: AsyncSession = Depends(get_db)):
         # Check if site has assets or personnel
         from modules.assets.models import Asset
 
-        assets_count = await db.execute(select(func.count(Asset.id)).where(Asset.current_site_id == site_id))
-        personnel_count = await db.execute(select(func.count(Personnel.id)).where(Personnel.current_site_id == site_id))
+        assets_count = await db.execute(
+            select(func.count(Asset.id)).where(Asset.current_site_id == site_id)
+        )
+        personnel_count = await db.execute(
+            select(func.count(Personnel.id)).where(Personnel.current_site_id == site_id)
+        )
 
         if assets_count.scalar() > 0 or personnel_count.scalar() > 0:
             raise HTTPException(
-                status_code=400, detail="Cannot delete site with active assets or personnel. Please reassign them first."
+                status_code=400,
+                detail="Cannot delete site with active assets or personnel. Please reassign them first.",
             )
 
         # Soft delete
@@ -275,14 +298,20 @@ async def get_site_assets(
                 "last_seen": asset.last_seen,
                 "manufacturer": asset.manufacturer,
                 "model": asset.model,
-                "assigned_to_user_id": str(asset.assigned_to_user_id) if asset.assigned_to_user_id else None,
-                "assigned_job_id": str(asset.assigned_job_id) if asset.assigned_job_id else None,
+                "assigned_to_user_id": str(asset.assigned_to_user_id)
+                if asset.assigned_to_user_id
+                else None,
+                "assigned_job_id": str(asset.assigned_job_id)
+                if asset.assigned_job_id
+                else None,
             }
             for asset in assets
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching site assets: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching site assets: {str(e)}"
+        )
 
 
 @router.get("/sites/{site_id}/personnel")
@@ -318,7 +347,9 @@ async def get_site_personnel(
                 "status": person.status,
                 "email": person.email,
                 "phone": person.phone,
-                "current_site_id": str(person.current_site_id) if person.current_site_id else None,
+                "current_site_id": str(person.current_site_id)
+                if person.current_site_id
+                else None,
                 "created_at": person.created_at.isoformat(),
                 "updated_at": person.updated_at.isoformat(),
             }
@@ -326,7 +357,9 @@ async def get_site_personnel(
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching site personnel: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching site personnel: {str(e)}"
+        )
 
 
 @router.get("/sites/{site_id}/activity")
@@ -371,7 +404,9 @@ async def get_site_activity(
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching site activity: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching site activity: {str(e)}"
+        )
 
 
 @router.get("/sites/stats/summary")
@@ -379,8 +414,12 @@ async def get_sites_stats(db: AsyncSession = Depends(get_db)):
     """Get sites statistics summary"""
     try:
         # Get counts by status
-        active_count = await db.execute(select(func.count(Site.id)).where(Site.status == "active"))
-        inactive_count = await db.execute(select(func.count(Site.id)).where(Site.status == "inactive"))
+        active_count = await db.execute(
+            select(func.count(Site.id)).where(Site.status == "active")
+        )
+        inactive_count = await db.execute(
+            select(func.count(Site.id)).where(Site.status == "inactive")
+        )
 
         # Get total counts
         total_sites = await db.execute(select(func.count(Site.id)))
@@ -392,14 +431,19 @@ async def get_sites_stats(db: AsyncSession = Depends(get_db)):
         total_personnel = await db.execute(select(func.count(Personnel.id)))
 
         return {
-            "by_status": {"active": active_count.scalar(), "inactive": inactive_count.scalar()},
+            "by_status": {
+                "active": active_count.scalar(),
+                "inactive": inactive_count.scalar(),
+            },
             "total_sites": total_sites.scalar(),
             "total_assets": total_assets.scalar(),
             "total_personnel": total_personnel.scalar(),
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching sites stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching sites stats: {str(e)}"
+        )
 
 
 # Personnel endpoints
@@ -433,7 +477,9 @@ async def get_personnel(
         return [PersonnelResponse.from_orm(person) for person in personnel]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching personnel: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching personnel: {str(e)}"
+        )
 
 
 @router.get("/personnel/{personnel_id}", response_model=PersonnelResponse)
@@ -451,11 +497,15 @@ async def get_personnel_by_id(personnel_id: str, db: AsyncSession = Depends(get_
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching personnel: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching personnel: {str(e)}"
+        )
 
 
 @router.post("/personnel", response_model=PersonnelResponse)
-async def create_personnel(personnel_data: PersonnelCreate, db: AsyncSession = Depends(get_db)):
+async def create_personnel(
+    personnel_data: PersonnelCreate, db: AsyncSession = Depends(get_db)
+):
     """Create new personnel"""
     try:
         person = Personnel(
@@ -477,11 +527,17 @@ async def create_personnel(personnel_data: PersonnelCreate, db: AsyncSession = D
 
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error creating personnel: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error creating personnel: {str(e)}"
+        )
 
 
 @router.put("/personnel/{personnel_id}", response_model=PersonnelResponse)
-async def update_personnel(personnel_id: str, personnel_data: PersonnelUpdate, db: AsyncSession = Depends(get_db)):
+async def update_personnel(
+    personnel_id: str,
+    personnel_data: PersonnelUpdate,
+    db: AsyncSession = Depends(get_db),
+):
     """Update existing personnel"""
     try:
         result = await db.execute(select(Personnel).where(Personnel.id == personnel_id))
@@ -504,7 +560,9 @@ async def update_personnel(personnel_id: str, personnel_data: PersonnelUpdate, d
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating personnel: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating personnel: {str(e)}"
+        )
 
 
 @router.delete("/personnel/{personnel_id}")
@@ -527,4 +585,6 @@ async def delete_personnel(personnel_id: str, db: AsyncSession = Depends(get_db)
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error deleting personnel: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error deleting personnel: {str(e)}"
+        )

@@ -12,33 +12,51 @@ class NotificationChannelConfig(BaseModel):
     """Schema for notification channel configuration"""
 
     enabled: bool = Field(default=True, description="Whether channel is enabled")
-    addresses: Optional[List[str]] = Field(default_factory=list, description="Email addresses or phone numbers")
+    addresses: Optional[List[str]] = Field(
+        default_factory=list, description="Email addresses or phone numbers"
+    )
     verified: bool = Field(default=False, description="Whether addresses are verified")
 
 
 class NotificationChannels(BaseModel):
     """Schema for all notification channels"""
 
-    email: NotificationChannelConfig = Field(default_factory=lambda: NotificationChannelConfig())
-    sms: NotificationChannelConfig = Field(default_factory=lambda: NotificationChannelConfig())
-    push: NotificationChannelConfig = Field(default_factory=lambda: NotificationChannelConfig())
-    webhook: NotificationChannelConfig = Field(default_factory=lambda: NotificationChannelConfig())
+    email: NotificationChannelConfig = Field(
+        default_factory=lambda: NotificationChannelConfig()
+    )
+    sms: NotificationChannelConfig = Field(
+        default_factory=lambda: NotificationChannelConfig()
+    )
+    push: NotificationChannelConfig = Field(
+        default_factory=lambda: NotificationChannelConfig()
+    )
+    webhook: NotificationChannelConfig = Field(
+        default_factory=lambda: NotificationChannelConfig()
+    )
 
 
 class NotificationFilters(BaseModel):
     """Schema for notification filters"""
 
     types: List[str] = Field(default_factory=list, description="Alert types to receive")
-    severities: List[str] = Field(default_factory=list, description="Severity levels to receive")
-    asset_types: Optional[List[str]] = Field(default_factory=list, description="Asset types to receive notifications for")
-    site_ids: Optional[List[str]] = Field(default_factory=list, description="Site IDs to receive notifications for")
+    severities: List[str] = Field(
+        default_factory=list, description="Severity levels to receive"
+    )
+    asset_types: Optional[List[str]] = Field(
+        default_factory=list, description="Asset types to receive notifications for"
+    )
+    site_ids: Optional[List[str]] = Field(
+        default_factory=list, description="Site IDs to receive notifications for"
+    )
 
     @validator("severities")
     def validate_severities(cls, v):
         allowed_severities = ["low", "medium", "high", "critical"]
         for severity in v:
             if severity not in allowed_severities:
-                raise ValueError(f'Severity must be one of: {", ".join(allowed_severities)}')
+                raise ValueError(
+                    f'Severity must be one of: {", ".join(allowed_severities)}'
+                )
         return v
 
 
@@ -49,7 +67,10 @@ class QuietHours(BaseModel):
     start: str = Field(default="22:00", description="Start time in HH:MM format")
     end: str = Field(default="08:00", description="End time in HH:MM format")
     timezone: str = Field(default="UTC", description="Timezone for quiet hours")
-    exclude_critical: bool = Field(default=True, description="Whether to exclude critical alerts during quiet hours")
+    exclude_critical: bool = Field(
+        default=True,
+        description="Whether to exclude critical alerts during quiet hours",
+    )
 
     @validator("start", "end")
     def validate_time_format(cls, v):
@@ -63,23 +84,43 @@ class QuietHours(BaseModel):
 class NotificationFrequency(BaseModel):
     """Schema for notification frequency limits"""
 
-    max_per_hour: int = Field(default=10, ge=1, le=100, description="Maximum notifications per hour")
-    max_per_day: int = Field(default=50, ge=1, le=1000, description="Maximum notifications per day")
-    digest_mode: bool = Field(default=False, description="Whether to group notifications into digests")
+    max_per_hour: int = Field(
+        default=10, ge=1, le=100, description="Maximum notifications per hour"
+    )
+    max_per_day: int = Field(
+        default=50, ge=1, le=1000, description="Maximum notifications per day"
+    )
+    digest_mode: bool = Field(
+        default=False, description="Whether to group notifications into digests"
+    )
 
 
 class NotificationConfigBase(BaseModel):
     """Base notification configuration schema"""
 
     level: str = Field(..., description="Configuration level")
-    entity_id: Optional[UUID] = Field(None, description="Entity ID for the configuration")
+    entity_id: Optional[UUID] = Field(
+        None, description="Entity ID for the configuration"
+    )
     entity_name: Optional[str] = Field(None, description="Entity name")
-    channels: NotificationChannels = Field(default_factory=NotificationChannels, description="Channel configurations")
-    filters: NotificationFilters = Field(default_factory=NotificationFilters, description="Notification filters")
-    quiet_hours: QuietHours = Field(default_factory=QuietHours, description="Quiet hours configuration")
-    frequency: NotificationFrequency = Field(default_factory=NotificationFrequency, description="Frequency limits")
-    is_override: bool = Field(default=False, description="Whether this overrides parent configurations")
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
+    channels: NotificationChannels = Field(
+        default_factory=NotificationChannels, description="Channel configurations"
+    )
+    filters: NotificationFilters = Field(
+        default_factory=NotificationFilters, description="Notification filters"
+    )
+    quiet_hours: QuietHours = Field(
+        default_factory=QuietHours, description="Quiet hours configuration"
+    )
+    frequency: NotificationFrequency = Field(
+        default_factory=NotificationFrequency, description="Frequency limits"
+    )
+    is_override: bool = Field(
+        default=False, description="Whether this overrides parent configurations"
+    )
+    metadata: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
     @validator("level")
     def validate_level(cls, v):
@@ -132,7 +173,9 @@ class NotificationLogBase(BaseModel):
     related_entity_type: Optional[str] = Field(None, description="Related entity type")
     related_entity_id: Optional[UUID] = Field(None, description="Related entity ID")
     related_entity_name: Optional[str] = Field(None, description="Related entity name")
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
+    metadata: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
 
 class NotificationLogResponse(NotificationLogBase):
@@ -161,17 +204,30 @@ class NotificationTemplateBase(BaseModel):
     description: Optional[str] = Field(None, description="Template description")
     template_type: str = Field(..., description="Template type")
     channel: str = Field(..., description="Template channel")
-    subject_template: Optional[str] = Field(None, description="Subject template (for email)")
+    subject_template: Optional[str] = Field(
+        None, description="Subject template (for email)"
+    )
     body_template: str = Field(..., description="Body template")
     variables: List[str] = Field(default_factory=list, description="Template variables")
     is_active: bool = Field(default=True, description="Whether template is active")
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
+    metadata: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
     @validator("template_type")
     def validate_template_type(cls, v):
-        allowed_types = ["alert", "reminder", "system", "report", "maintenance", "compliance"]
+        allowed_types = [
+            "alert",
+            "reminder",
+            "system",
+            "report",
+            "maintenance",
+            "compliance",
+        ]
         if v not in allowed_types:
-            raise ValueError(f'Template type must be one of: {", ".join(allowed_types)}')
+            raise ValueError(
+                f'Template type must be one of: {", ".join(allowed_types)}'
+            )
         return v
 
     @validator("channel")

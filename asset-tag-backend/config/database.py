@@ -30,9 +30,7 @@ sync_engine = create_engine(
 
 # Session factory
 AsyncSessionLocal = async_sessionmaker(
-    async_engine,
-    class_=AsyncSession,
-    expire_on_commit=False
+    async_engine, class_=AsyncSession, expire_on_commit=False
 )
 
 
@@ -54,6 +52,7 @@ async def init_db():
     async with async_engine.begin() as conn:
         # Import all models to ensure they're registered
         from modules.shared.database import models
+
         await conn.run_sync(Base.metadata.create_all)
         logger.info("Database tables created successfully")
 

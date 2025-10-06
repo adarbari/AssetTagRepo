@@ -7,8 +7,7 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from config.cache import get_cache
-from config.elasticsearch import (ElasticsearchManager,
-                                  get_elasticsearch_manager)
+from config.elasticsearch import ElasticsearchManager, get_elasticsearch_manager
 
 router = APIRouter()
 
@@ -34,7 +33,13 @@ async def search_assets(
                         {
                             "multi_match": {
                                 "query": q,
-                                "fields": ["name^2", "serial_number^2", "manufacturer", "model", "location_description"],
+                                "fields": [
+                                    "name^2",
+                                    "serial_number^2",
+                                    "manufacturer",
+                                    "model",
+                                    "location_description",
+                                ],
                                 "type": "best_fields",
                                 "fuzziness": "AUTO",
                             }
@@ -43,22 +48,35 @@ async def search_assets(
                     "filter": [],
                 }
             },
-            "highlight": {"fields": {"name": {}, "serial_number": {}, "manufacturer": {}, "model": {}}},
+            "highlight": {
+                "fields": {
+                    "name": {},
+                    "serial_number": {},
+                    "manufacturer": {},
+                    "model": {},
+                }
+            },
             "sort": [{"_score": {"order": "desc"}}, {"name.keyword": {"order": "asc"}}],
         }
 
         # Add filters
         if asset_type:
-            query["query"]["bool"]["filter"].append({"term": {"asset_type": asset_type}})
+            query["query"]["bool"]["filter"].append(
+                {"term": {"asset_type": asset_type}}
+            )
 
         if status:
             query["query"]["bool"]["filter"].append({"term": {"status": status}})
 
         if site_id:
-            query["query"]["bool"]["filter"].append({"term": {"current_site_id": site_id}})
+            query["query"]["bool"]["filter"].append(
+                {"term": {"current_site_id": site_id}}
+            )
 
         if manufacturer:
-            query["query"]["bool"]["filter"].append({"term": {"manufacturer.keyword": manufacturer}})
+            query["query"]["bool"]["filter"].append(
+                {"term": {"manufacturer.keyword": manufacturer}}
+            )
 
         # Execute search
         response = await es_manager.search_documents("assets", query, size, from_)
@@ -94,7 +112,12 @@ async def search_assets(
             "size": size,
             "from": from_,
             "results": results,
-            "filters": {"asset_type": asset_type, "status": status, "site_id": site_id, "manufacturer": manufacturer},
+            "filters": {
+                "asset_type": asset_type,
+                "status": status,
+                "site_id": site_id,
+                "manufacturer": manufacturer,
+            },
         }
 
     except Exception as e:
@@ -119,7 +142,12 @@ async def search_sites(
                         {
                             "multi_match": {
                                 "query": q,
-                                "fields": ["name^2", "location^2", "address", "description"],
+                                "fields": [
+                                    "name^2",
+                                    "location^2",
+                                    "address",
+                                    "description",
+                                ],
                                 "type": "best_fields",
                                 "fuzziness": "AUTO",
                             }
@@ -163,7 +191,14 @@ async def search_sites(
             }
             results.append(result)
 
-        return {"query": q, "total": total, "size": size, "from": from_, "results": results, "filters": {"status": status}}
+        return {
+            "query": q,
+            "total": total,
+            "size": size,
+            "from": from_,
+            "results": results,
+            "filters": {"status": status},
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error searching sites: {str(e)}")
@@ -188,7 +223,11 @@ async def search_gateways(
                         {
                             "multi_match": {
                                 "query": q,
-                                "fields": ["name^2", "gateway_id^2", "location_description"],
+                                "fields": [
+                                    "name^2",
+                                    "gateway_id^2",
+                                    "location_description",
+                                ],
                                 "type": "best_fields",
                                 "fuzziness": "AUTO",
                             }
@@ -197,7 +236,9 @@ async def search_gateways(
                     "filter": [],
                 }
             },
-            "highlight": {"fields": {"name": {}, "gateway_id": {}, "location_description": {}}},
+            "highlight": {
+                "fields": {"name": {}, "gateway_id": {}, "location_description": {}}
+            },
             "sort": [{"_score": {"order": "desc"}}, {"name.keyword": {"order": "asc"}}],
         }
 
@@ -249,7 +290,9 @@ async def search_gateways(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error searching gateways: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error searching gateways: {str(e)}"
+        )
 
 
 @router.get("/search/alerts")
@@ -273,7 +316,12 @@ async def search_alerts(
                         {
                             "multi_match": {
                                 "query": q,
-                                "fields": ["message^2", "description^2", "asset_name", "reason"],
+                                "fields": [
+                                    "message^2",
+                                    "description^2",
+                                    "asset_name",
+                                    "reason",
+                                ],
                                 "type": "best_fields",
                                 "fuzziness": "AUTO",
                             }
@@ -282,13 +330,20 @@ async def search_alerts(
                     "filter": [],
                 }
             },
-            "highlight": {"fields": {"message": {}, "description": {}, "asset_name": {}}},
-            "sort": [{"triggered_at": {"order": "desc"}}, {"_score": {"order": "desc"}}],
+            "highlight": {
+                "fields": {"message": {}, "description": {}, "asset_name": {}}
+            },
+            "sort": [
+                {"triggered_at": {"order": "desc"}},
+                {"_score": {"order": "desc"}},
+            ],
         }
 
         # Add filters
         if alert_type:
-            query["query"]["bool"]["filter"].append({"term": {"alert_type": alert_type}})
+            query["query"]["bool"]["filter"].append(
+                {"term": {"alert_type": alert_type}}
+            )
 
         if severity:
             query["query"]["bool"]["filter"].append({"term": {"severity": severity}})
@@ -343,7 +398,12 @@ async def search_alerts(
             "size": size,
             "from": from_,
             "results": results,
-            "filters": {"alert_type": alert_type, "severity": severity, "status": status, "asset_id": asset_id},
+            "filters": {
+                "alert_type": alert_type,
+                "severity": severity,
+                "status": status,
+                "asset_id": asset_id,
+            },
         }
 
     except Exception as e:
@@ -353,7 +413,9 @@ async def search_alerts(
 @router.get("/search/global")
 async def global_search(
     q: str = Query(..., description="Search query"),
-    entity_types: Optional[str] = Query(None, description="Comma-separated entity types (assets,sites,gateways,alerts)"),
+    entity_types: Optional[str] = Query(
+        None, description="Comma-separated entity types (assets,sites,gateways,alerts)"
+    ),
     size: int = Query(20, ge=1, le=100, description="Number of results to return"),
     es_manager: ElasticsearchManager = Depends(get_elasticsearch_manager),
 ):
@@ -371,20 +433,36 @@ async def global_search(
         # Search each entity type
         for entity_type in types:
             if entity_type == "assets":
-                search_result = await search_assets(q, size=size // len(types), es_manager=es_manager)
+                search_result = await search_assets(
+                    q, size=size // len(types), es_manager=es_manager
+                )
             elif entity_type == "sites":
-                search_result = await search_sites(q, size=size // len(types), es_manager=es_manager)
+                search_result = await search_sites(
+                    q, size=size // len(types), es_manager=es_manager
+                )
             elif entity_type == "gateways":
-                search_result = await search_gateways(q, size=size // len(types), es_manager=es_manager)
+                search_result = await search_gateways(
+                    q, size=size // len(types), es_manager=es_manager
+                )
             elif entity_type == "alerts":
-                search_result = await search_alerts(q, size=size // len(types), es_manager=es_manager)
+                search_result = await search_alerts(
+                    q, size=size // len(types), es_manager=es_manager
+                )
             else:
                 continue
 
-            results[entity_type] = {"total": search_result["total"], "results": search_result["results"]}
+            results[entity_type] = {
+                "total": search_result["total"],
+                "results": search_result["results"],
+            }
             total_results += search_result["total"]
 
-        return {"query": q, "total_results": total_results, "entity_types": types, "results": results}
+        return {
+            "query": q,
+            "total_results": total_results,
+            "entity_types": types,
+            "results": results,
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in global search: {str(e)}")
@@ -400,7 +478,14 @@ async def get_search_suggestions(
     """Get search suggestions"""
     try:
         # Build completion query
-        query = {"suggest": {"suggestions": {"prefix": q, "completion": {"field": f"{entity_type}_suggest", "size": size}}}}
+        query = {
+            "suggest": {
+                "suggestions": {
+                    "prefix": q,
+                    "completion": {"field": f"{entity_type}_suggest", "size": size},
+                }
+            }
+        }
 
         # Execute search
         response = await es_manager.search_documents(entity_type, query, size)
@@ -409,22 +494,34 @@ async def get_search_suggestions(
         if "suggest" in response:
             for suggestion in response["suggest"]["suggestions"]:
                 for option in suggestion.get("options", []):
-                    suggestions.append({"text": option["text"], "score": option["_score"]})
+                    suggestions.append(
+                        {"text": option["text"], "score": option["_score"]}
+                    )
 
         return {"query": q, "entity_type": entity_type, "suggestions": suggestions}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting suggestions: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error getting suggestions: {str(e)}"
+        )
 
 
 @router.get("/search/stats")
-async def get_search_stats(es_manager: ElasticsearchManager = Depends(get_elasticsearch_manager)):
+async def get_search_stats(
+    es_manager: ElasticsearchManager = Depends(get_elasticsearch_manager),
+):
     """Get search index statistics"""
     try:
         stats = await es_manager.get_index_stats()
         health = await es_manager.health_check()
 
-        return {"index_stats": stats, "cluster_health": health, "timestamp": datetime.now().isoformat()}
+        return {
+            "index_stats": stats,
+            "cluster_health": health,
+            "timestamp": datetime.now().isoformat(),
+        }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting search stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error getting search stats: {str(e)}"
+        )

@@ -11,15 +11,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.observations.models import Observation, ObservationBatch
-from modules.observations.schemas import (ObservationBatchCreate,
-                                          ObservationBatchResponse,
-                                          ObservationBatchUpdate,
-                                          ObservationBulkCreate,
-                                          ObservationBulkResponse,
-                                          ObservationCreate,
-                                          ObservationResponse,
-                                          ObservationStatsResponse,
-                                          ObservationUpdate)
+from modules.observations.schemas import (
+    ObservationBatchCreate,
+    ObservationBatchResponse,
+    ObservationBatchUpdate,
+    ObservationBulkCreate,
+    ObservationBulkResponse,
+    ObservationCreate,
+    ObservationResponse,
+    ObservationStatsResponse,
+    ObservationUpdate,
+)
 
 router = APIRouter()
 
@@ -68,14 +70,18 @@ async def get_observations(
         return [ObservationResponse.from_orm(obs) for obs in observations]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching observations: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching observations: {str(e)}"
+        )
 
 
 @router.get("/observations/{observation_id}", response_model=ObservationResponse)
 async def get_observation(observation_id: str, db: AsyncSession = Depends(get_db)):
     """Get observation by ID"""
     try:
-        result = await db.execute(select(Observation).where(Observation.id == observation_id))
+        result = await db.execute(
+            select(Observation).where(Observation.id == observation_id)
+        )
         observation = result.scalar_one_or_none()
 
         if not observation:
@@ -86,16 +92,24 @@ async def get_observation(observation_id: str, db: AsyncSession = Depends(get_db
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching observation: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching observation: {str(e)}"
+        )
 
 
 @router.post("/observations", response_model=ObservationResponse, status_code=201)
-async def create_observation(observation_data: ObservationCreate, db: AsyncSession = Depends(get_db)):
+async def create_observation(
+    observation_data: ObservationCreate, db: AsyncSession = Depends(get_db)
+):
     """Create a new observation"""
     try:
         # Parse timestamps
         observed_at = datetime.fromisoformat(observation_data.observed_at)
-        received_at = datetime.fromisoformat(observation_data.received_at) if observation_data.received_at else datetime.now()
+        received_at = (
+            datetime.fromisoformat(observation_data.received_at)
+            if observation_data.received_at
+            else datetime.now()
+        )
 
         # Create new observation
         observation = Observation(
@@ -122,11 +136,17 @@ async def create_observation(observation_data: ObservationCreate, db: AsyncSessi
         raise HTTPException(status_code=400, detail=f"Invalid timestamp format: {e}")
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error creating observation: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error creating observation: {str(e)}"
+        )
 
 
-@router.post("/observations/bulk", response_model=ObservationBulkResponse, status_code=201)
-async def create_observations_bulk(bulk_data: ObservationBulkCreate, db: AsyncSession = Depends(get_db)):
+@router.post(
+    "/observations/bulk", response_model=ObservationBulkResponse, status_code=201
+)
+async def create_observations_bulk(
+    bulk_data: ObservationBulkCreate, db: AsyncSession = Depends(get_db)
+):
     """Create multiple observations in bulk"""
     try:
         batch_id = bulk_data.batch_id or str(uuid.uuid4())
@@ -149,7 +169,11 @@ async def create_observations_bulk(bulk_data: ObservationBulkCreate, db: AsyncSe
             try:
                 # Parse timestamps
                 observed_at = datetime.fromisoformat(obs_data.observed_at)
-                received_at = datetime.fromisoformat(obs_data.received_at) if obs_data.received_at else datetime.now()
+                received_at = (
+                    datetime.fromisoformat(obs_data.received_at)
+                    if obs_data.received_at
+                    else datetime.now()
+                )
 
                 observation = Observation(
                     organization_id="00000000-0000-0000-0000-000000000000",
@@ -174,25 +198,38 @@ async def create_observations_bulk(bulk_data: ObservationBulkCreate, db: AsyncSe
 
         # Update batch status
         batch.end_time = datetime.now()
-        batch.processing_status = "completed" if failed_count == 0 else "completed_with_errors"
+        batch.processing_status = (
+            "completed" if failed_count == 0 else "completed_with_errors"
+        )
 
         await db.commit()
 
         return ObservationBulkResponse(
-            created_count=created_count, failed_count=failed_count, batch_id=batch_id, errors=errors
+            created_count=created_count,
+            failed_count=failed_count,
+            batch_id=batch_id,
+            errors=errors,
         )
 
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error creating bulk observations: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error creating bulk observations: {str(e)}"
+        )
 
 
 @router.put("/observations/{observation_id}", response_model=ObservationResponse)
-async def update_observation(observation_id: str, observation_data: ObservationUpdate, db: AsyncSession = Depends(get_db)):
+async def update_observation(
+    observation_id: str,
+    observation_data: ObservationUpdate,
+    db: AsyncSession = Depends(get_db),
+):
     """Update an existing observation"""
     try:
         # Get existing observation
-        result = await db.execute(select(Observation).where(Observation.id == observation_id))
+        result = await db.execute(
+            select(Observation).where(Observation.id == observation_id)
+        )
         observation = result.scalar_one_or_none()
 
         if not observation:
@@ -212,27 +249,38 @@ async def update_observation(observation_id: str, observation_data: ObservationU
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating observation: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating observation: {str(e)}"
+        )
 
 
 @router.get("/observations/asset/{asset_id}/latest")
-async def get_latest_observation_for_asset(asset_id: str, db: AsyncSession = Depends(get_db)):
+async def get_latest_observation_for_asset(
+    asset_id: str, db: AsyncSession = Depends(get_db)
+):
     """Get the latest observation for a specific asset"""
     try:
         result = await db.execute(
-            select(Observation).where(Observation.asset_id == asset_id).order_by(Observation.observed_at.desc()).limit(1)
+            select(Observation)
+            .where(Observation.asset_id == asset_id)
+            .order_by(Observation.observed_at.desc())
+            .limit(1)
         )
         observation = result.scalar_one_or_none()
 
         if not observation:
-            raise HTTPException(status_code=404, detail="No observations found for asset")
+            raise HTTPException(
+                status_code=404, detail="No observations found for asset"
+            )
 
         return ObservationResponse.from_orm(observation)
 
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching latest observation: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching latest observation: {str(e)}"
+        )
 
 
 @router.get("/observations/asset/{asset_id}/history")
@@ -279,7 +327,10 @@ async def get_asset_observation_history(
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching asset observation history: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching asset observation history: {str(e)}",
+        )
 
 
 @router.get("/observations/gateway/{gateway_id}/recent")
@@ -325,7 +376,9 @@ async def get_recent_observations_for_gateway(
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching gateway observations: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching gateway observations: {str(e)}"
+        )
 
 
 @router.get("/observations/stats", response_model=ObservationStatsResponse)
@@ -354,17 +407,23 @@ async def get_observation_stats(
             query = query.where(Observation.gateway_id == gateway_id)
 
         # Get total count
-        total_result = await db.execute(select(func.count(Observation.id)).select_from(query.subquery()))
+        total_result = await db.execute(
+            select(func.count(Observation.id)).select_from(query.subquery())
+        )
         total_observations = total_result.scalar()
 
         # Get unique counts
         unique_assets_result = await db.execute(
-            select(func.count(func.distinct(Observation.asset_id))).select_from(query.subquery())
+            select(func.count(func.distinct(Observation.asset_id))).select_from(
+                query.subquery()
+            )
         )
         unique_assets = unique_assets_result.scalar()
 
         unique_gateways_result = await db.execute(
-            select(func.count(func.distinct(Observation.gateway_id))).select_from(query.subquery())
+            select(func.count(func.distinct(Observation.gateway_id))).select_from(
+                query.subquery()
+            )
         )
         unique_gateways = unique_gateways_result.scalar()
 
@@ -389,16 +448,21 @@ async def get_observation_stats(
 
         # Get signal quality distribution
         quality_dist = await db.execute(
-            select(Observation.signal_quality, func.count(Observation.id).label("count"))
+            select(
+                Observation.signal_quality, func.count(Observation.id).label("count")
+            )
             .select_from(query.subquery())
             .group_by(Observation.signal_quality)
         )
-        quality_distribution = {row.signal_quality or "unknown": row.count for row in quality_dist}
+        quality_distribution = {
+            row.signal_quality or "unknown": row.count for row in quality_dist
+        }
 
         # Get time range
         time_range_result = await db.execute(
             select(
-                func.min(Observation.observed_at).label("min_time"), func.max(Observation.observed_at).label("max_time")
+                func.min(Observation.observed_at).label("min_time"),
+                func.max(Observation.observed_at).label("max_time"),
             ).select_from(query.subquery())
         )
         time_range_data = time_range_result.first()
@@ -410,17 +474,27 @@ async def get_observation_stats(
             avg_rssi=float(rssi_data.avg_rssi) if rssi_data.avg_rssi else None,
             min_rssi=rssi_data.min_rssi,
             max_rssi=rssi_data.max_rssi,
-            avg_battery_level=float(other_data.avg_battery) if other_data.avg_battery else None,
-            avg_temperature=float(other_data.avg_temperature) if other_data.avg_temperature else None,
+            avg_battery_level=float(other_data.avg_battery)
+            if other_data.avg_battery
+            else None,
+            avg_temperature=float(other_data.avg_temperature)
+            if other_data.avg_temperature
+            else None,
             time_range={
-                "start": time_range_data.min_time.isoformat() if time_range_data.min_time else None,
-                "end": time_range_data.max_time.isoformat() if time_range_data.max_time else None,
+                "start": time_range_data.min_time.isoformat()
+                if time_range_data.min_time
+                else None,
+                "end": time_range_data.max_time.isoformat()
+                if time_range_data.max_time
+                else None,
             },
             signal_quality_distribution=quality_distribution,
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching observation stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching observation stats: {str(e)}"
+        )
 
 
 @router.get("/observations/batches", response_model=List[ObservationBatchResponse])
@@ -447,7 +521,9 @@ async def get_observation_batches(
             query = query.where(ObservationBatch.end_time <= end_dt)
 
         # Apply pagination and ordering
-        query = query.order_by(ObservationBatch.start_time.desc()).offset(skip).limit(limit)
+        query = (
+            query.order_by(ObservationBatch.start_time.desc()).offset(skip).limit(limit)
+        )
 
         result = await db.execute(query)
         batches = result.scalars().all()
@@ -455,14 +531,18 @@ async def get_observation_batches(
         return [ObservationBatchResponse.from_orm(batch) for batch in batches]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching observation batches: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching observation batches: {str(e)}"
+        )
 
 
 @router.get("/observations/batches/{batch_id}", response_model=ObservationBatchResponse)
 async def get_observation_batch(batch_id: str, db: AsyncSession = Depends(get_db)):
     """Get observation batch by ID"""
     try:
-        result = await db.execute(select(ObservationBatch).where(ObservationBatch.batch_id == batch_id))
+        result = await db.execute(
+            select(ObservationBatch).where(ObservationBatch.batch_id == batch_id)
+        )
         batch = result.scalar_one_or_none()
 
         if not batch:
@@ -473,14 +553,22 @@ async def get_observation_batch(batch_id: str, db: AsyncSession = Depends(get_db
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching observation batch: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching observation batch: {str(e)}"
+        )
 
 
 @router.put("/observations/batches/{batch_id}", response_model=ObservationBatchResponse)
-async def update_observation_batch(batch_id: str, batch_data: ObservationBatchUpdate, db: AsyncSession = Depends(get_db)):
+async def update_observation_batch(
+    batch_id: str,
+    batch_data: ObservationBatchUpdate,
+    db: AsyncSession = Depends(get_db),
+):
     """Update an observation batch"""
     try:
-        result = await db.execute(select(ObservationBatch).where(ObservationBatch.batch_id == batch_id))
+        result = await db.execute(
+            select(ObservationBatch).where(ObservationBatch.batch_id == batch_id)
+        )
         batch = result.scalar_one_or_none()
 
         if not batch:
@@ -500,4 +588,6 @@ async def update_observation_batch(batch_id: str, batch_data: ObservationBatchUp
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating observation batch: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating observation batch: {str(e)}"
+        )

@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from config.database import Base, get_db
 from config.settings import settings
 from main import app
+
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
 
@@ -21,10 +22,17 @@ from modules.shared.database import models
 TEST_DATABASE_URL = "sqlite+aiosqlite:///./test_integration.db"
 
 # Create test engine with SQLite-specific configuration
-test_engine = create_async_engine(TEST_DATABASE_URL, echo=False, future=True, connect_args={"check_same_thread": False})
+test_engine = create_async_engine(
+    TEST_DATABASE_URL,
+    echo=False,
+    future=True,
+    connect_args={"check_same_thread": False},
+)
 
 # Create test session factory
-TestSessionLocal = sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
+TestSessionLocal = sessionmaker(
+    test_engine, class_=AsyncSession, expire_on_commit=False
+)
 
 
 @pytest.fixture(scope="session")
@@ -90,7 +98,7 @@ def client():
         version=app.version,
         docs_url=app.docs_url,
         redoc_url=app.redoc_url,
-        lifespan=test_lifespan
+        lifespan=test_lifespan,
     )
 
     # Copy all routes from the main app
@@ -213,7 +221,13 @@ def sample_geofence_data():
         "geometry": {
             "type": "Polygon",
             "coordinates": [
-                [[-74.0060, 40.7128], [-74.0050, 40.7128], [-74.0050, 40.7138], [-74.0060, 40.7138], [-74.0060, 40.7128]]
+                [
+                    [-74.0060, 40.7128],
+                    [-74.0050, 40.7128],
+                    [-74.0050, 40.7138],
+                    [-74.0060, 40.7138],
+                    [-74.0060, 40.7128],
+                ]
             ],
         },
         "site_id": "test-site-1",

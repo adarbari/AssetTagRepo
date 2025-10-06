@@ -10,18 +10,23 @@ from sqlalchemy import and_, delete, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
-from modules.notifications.models import (NotificationConfig, NotificationLog,
-                                          NotificationTemplate)
-from modules.notifications.schemas import (NotificationConfigCreate,
-                                           NotificationConfigResponse,
-                                           NotificationConfigUpdate,
-                                           NotificationLogResponse,
-                                           NotificationStats,
-                                           NotificationTemplateCreate,
-                                           NotificationTemplateResponse,
-                                           NotificationTemplateUpdate,
-                                           NotificationTestRequest,
-                                           NotificationTestResponse)
+from modules.notifications.models import (
+    NotificationConfig,
+    NotificationLog,
+    NotificationTemplate,
+)
+from modules.notifications.schemas import (
+    NotificationConfigCreate,
+    NotificationConfigResponse,
+    NotificationConfigUpdate,
+    NotificationLogResponse,
+    NotificationStats,
+    NotificationTemplateCreate,
+    NotificationTemplateResponse,
+    NotificationTemplateUpdate,
+    NotificationTestRequest,
+    NotificationTestResponse,
+)
 
 router = APIRouter()
 
@@ -36,7 +41,9 @@ async def get_notification_configs(
 ):
     """Get list of notification configurations"""
     try:
-        query = select(NotificationConfig).where(NotificationConfig.deleted_at.is_(None))
+        query = select(NotificationConfig).where(
+            NotificationConfig.deleted_at.is_(None)
+        )
 
         # Apply filters
         if level:
@@ -45,7 +52,11 @@ async def get_notification_configs(
             query = query.where(NotificationConfig.entity_id == entity_id)
 
         # Apply pagination
-        query = query.order_by(NotificationConfig.created_at.desc()).offset(skip).limit(limit)
+        query = (
+            query.order_by(NotificationConfig.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+        )
 
         result = await db.execute(query)
         configs = result.scalars().all()
@@ -53,11 +64,18 @@ async def get_notification_configs(
         return [NotificationConfigResponse.from_orm(config) for config in configs]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching notification configs: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching notification configs: {str(e)}"
+        )
 
 
-@router.get("/notifications/configs/{level}/{entity_id}", response_model=NotificationConfigResponse)
-async def get_notification_config(level: str, entity_id: str, db: AsyncSession = Depends(get_db)):
+@router.get(
+    "/notifications/configs/{level}/{entity_id}",
+    response_model=NotificationConfigResponse,
+)
+async def get_notification_config(
+    level: str, entity_id: str, db: AsyncSession = Depends(get_db)
+):
     """Get specific notification configuration"""
     try:
         result = await db.execute(
@@ -72,18 +90,24 @@ async def get_notification_config(level: str, entity_id: str, db: AsyncSession =
         config = result.scalar_one_or_none()
 
         if not config:
-            raise HTTPException(status_code=404, detail="Notification configuration not found")
+            raise HTTPException(
+                status_code=404, detail="Notification configuration not found"
+            )
 
         return NotificationConfigResponse.from_orm(config)
 
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching notification config: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching notification config: {str(e)}"
+        )
 
 
 @router.post("/notifications/configs", response_model=NotificationConfigResponse)
-async def create_notification_config(config_data: NotificationConfigCreate, db: AsyncSession = Depends(get_db)):
+async def create_notification_config(
+    config_data: NotificationConfigCreate, db: AsyncSession = Depends(get_db)
+):
     """Create a new notification configuration"""
     try:
         # Check if config already exists for this level/entity
@@ -98,7 +122,10 @@ async def create_notification_config(config_data: NotificationConfigCreate, db: 
                 )
             )
             if existing.scalar_one_or_none():
-                raise HTTPException(status_code=400, detail="Configuration already exists for this entity")
+                raise HTTPException(
+                    status_code=400,
+                    detail="Configuration already exists for this entity",
+                )
 
         # Create new configuration
         config = NotificationConfig(
@@ -144,22 +171,35 @@ async def create_notification_config(config_data: NotificationConfigCreate, db: 
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error creating notification config: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error creating notification config: {str(e)}"
+        )
 
 
-@router.put("/notifications/configs/{config_id}", response_model=NotificationConfigResponse)
+@router.put(
+    "/notifications/configs/{config_id}", response_model=NotificationConfigResponse
+)
 async def update_notification_config(
-    config_id: str, config_data: NotificationConfigUpdate, db: AsyncSession = Depends(get_db)
+    config_id: str,
+    config_data: NotificationConfigUpdate,
+    db: AsyncSession = Depends(get_db),
 ):
     """Update an existing notification configuration"""
     try:
         result = await db.execute(
-            select(NotificationConfig).where(and_(NotificationConfig.id == config_id, NotificationConfig.deleted_at.is_(None)))
+            select(NotificationConfig).where(
+                and_(
+                    NotificationConfig.id == config_id,
+                    NotificationConfig.deleted_at.is_(None),
+                )
+            )
         )
         config = result.scalar_one_or_none()
 
         if not config:
-            raise HTTPException(status_code=404, detail="Notification configuration not found")
+            raise HTTPException(
+                status_code=404, detail="Notification configuration not found"
+            )
 
         # Update fields
         update_data = config_data.dict(exclude_unset=True)
@@ -208,20 +248,31 @@ async def update_notification_config(
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating notification config: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating notification config: {str(e)}"
+        )
 
 
 @router.delete("/notifications/configs/{config_id}")
-async def delete_notification_config(config_id: str, db: AsyncSession = Depends(get_db)):
+async def delete_notification_config(
+    config_id: str, db: AsyncSession = Depends(get_db)
+):
     """Delete a notification configuration (soft delete)"""
     try:
         result = await db.execute(
-            select(NotificationConfig).where(and_(NotificationConfig.id == config_id, NotificationConfig.deleted_at.is_(None)))
+            select(NotificationConfig).where(
+                and_(
+                    NotificationConfig.id == config_id,
+                    NotificationConfig.deleted_at.is_(None),
+                )
+            )
         )
         config = result.scalar_one_or_none()
 
         if not config:
-            raise HTTPException(status_code=404, detail="Notification configuration not found")
+            raise HTTPException(
+                status_code=404, detail="Notification configuration not found"
+            )
 
         # Soft delete
         config.deleted_at = datetime.now()
@@ -233,7 +284,9 @@ async def delete_notification_config(config_id: str, db: AsyncSession = Depends(
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error deleting notification config: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error deleting notification config: {str(e)}"
+        )
 
 
 @router.get("/notifications", response_model=List[NotificationLogResponse])
@@ -261,22 +314,33 @@ async def get_notifications(
             query = query.where(NotificationLog.delivery_status == delivery_status)
 
         # Apply pagination
-        query = query.order_by(NotificationLog.created_at.desc()).offset(skip).limit(limit)
+        query = (
+            query.order_by(NotificationLog.created_at.desc()).offset(skip).limit(limit)
+        )
 
         result = await db.execute(query)
         notifications = result.scalars().all()
 
-        return [NotificationLogResponse.from_orm(notification) for notification in notifications]
+        return [
+            NotificationLogResponse.from_orm(notification)
+            for notification in notifications
+        ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching notifications: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching notifications: {str(e)}"
+        )
 
 
 @router.put("/notifications/{notification_id}/read")
-async def mark_notification_read(notification_id: str, db: AsyncSession = Depends(get_db)):
+async def mark_notification_read(
+    notification_id: str, db: AsyncSession = Depends(get_db)
+):
     """Mark a notification as read"""
     try:
-        result = await db.execute(select(NotificationLog).where(NotificationLog.id == notification_id))
+        result = await db.execute(
+            select(NotificationLog).where(NotificationLog.id == notification_id)
+        )
         notification = result.scalar_one_or_none()
 
         if not notification:
@@ -294,11 +358,15 @@ async def mark_notification_read(notification_id: str, db: AsyncSession = Depend
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error marking notification as read: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error marking notification as read: {str(e)}"
+        )
 
 
 @router.post("/notifications/test", response_model=NotificationTestResponse)
-async def test_notification(test_data: NotificationTestRequest, db: AsyncSession = Depends(get_db)):
+async def test_notification(
+    test_data: NotificationTestRequest, db: AsyncSession = Depends(get_db)
+):
     """Test notification configuration"""
     try:
         # TODO: Implement actual notification testing
@@ -314,7 +382,9 @@ async def test_notification(test_data: NotificationTestRequest, db: AsyncSession
             title="Test Notification",
             message=test_data.custom_message or "This is a test notification",
             channel=test_data.channel,
-            recipient_email=test_data.recipient if test_data.channel == "email" else None,
+            recipient_email=test_data.recipient
+            if test_data.channel == "email"
+            else None,
             recipient_phone=test_data.recipient if test_data.channel == "sms" else None,
             delivery_status="sent",
             delivered_at=datetime.now(),
@@ -324,12 +394,16 @@ async def test_notification(test_data: NotificationTestRequest, db: AsyncSession
         await db.commit()
 
         return NotificationTestResponse(
-            success=True, message=f"Test notification sent successfully via {test_data.channel}", delivery_id=test_id
+            success=True,
+            message=f"Test notification sent successfully via {test_data.channel}",
+            delivery_id=test_id,
         )
 
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error testing notification: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error testing notification: {str(e)}"
+        )
 
 
 @router.get("/notifications/stats", response_model=NotificationStats)
@@ -342,21 +416,25 @@ async def get_notification_stats(db: AsyncSession = Depends(get_db)):
 
         # Get notifications by channel
         channel_result = await db.execute(
-            select(NotificationLog.channel, func.count(NotificationLog.id)).group_by(NotificationLog.channel)
+            select(NotificationLog.channel, func.count(NotificationLog.id)).group_by(
+                NotificationLog.channel
+            )
         )
         notifications_by_channel = {row[0]: row[1] for row in channel_result.fetchall()}
 
         # Get notifications by status
         status_result = await db.execute(
-            select(NotificationLog.delivery_status, func.count(NotificationLog.id)).group_by(NotificationLog.delivery_status)
+            select(
+                NotificationLog.delivery_status, func.count(NotificationLog.id)
+            ).group_by(NotificationLog.delivery_status)
         )
         notifications_by_status = {row[0]: row[1] for row in status_result.fetchall()}
 
         # Get notifications by type
         type_result = await db.execute(
-            select(NotificationLog.notification_type, func.count(NotificationLog.id)).group_by(
-                NotificationLog.notification_type
-            )
+            select(
+                NotificationLog.notification_type, func.count(NotificationLog.id)
+            ).group_by(NotificationLog.notification_type)
         )
         notifications_by_type = {row[0]: row[1] for row in type_result.fetchall()}
 
@@ -379,4 +457,6 @@ async def get_notification_stats(db: AsyncSession = Depends(get_db)):
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching notification stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching notification stats: {str(e)}"
+        )

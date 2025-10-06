@@ -128,7 +128,12 @@ class TestLocationEstimator:
 
         # Test with invalid data
         gateways = [
-            {"id": "gw1", "latitude": "invalid", "longitude": -74.0060, "distance": 100},
+            {
+                "id": "gw1",
+                "latitude": "invalid",
+                "longitude": -74.0060,
+                "distance": 100,
+            },
             {"id": "gw2", "latitude": 40.7138, "longitude": -74.0050, "distance": 150},
             {"id": "gw3", "latitude": 40.7118, "longitude": -74.0070, "distance": 200},
         ]
@@ -138,7 +143,9 @@ class TestLocationEstimator:
         # Should handle invalid data gracefully
         assert result is None or result["confidence"] < 0.5
 
-    @pytest.mark.skip(reason="Distance calculation method not implemented as public method")
+    @pytest.mark.skip(
+        reason="Distance calculation method not implemented as public method"
+    )
     def test_distance_calculation(self, mock_cache):
         """Test distance calculation between two points"""
         estimator = LocationEstimator(mock_cache)
@@ -152,24 +159,56 @@ class TestLocationEstimator:
         # Distance should be reasonable (a few kilometers)
         assert 0 < distance < 10000  # Less than 10km
 
-    @pytest.mark.skip(reason="Confidence calculation method not implemented as public method")
+    @pytest.mark.skip(
+        reason="Confidence calculation method not implemented as public method"
+    )
     def test_confidence_calculation(self, mock_cache):
         """Test confidence calculation based on gateway data"""
         estimator = LocationEstimator(mock_cache)
 
         # Test with good gateway coverage
         gateways_good = [
-            {"id": "gw1", "latitude": 40.7128, "longitude": -74.0060, "distance": 100, "rssi": -50},
-            {"id": "gw2", "latitude": 40.7138, "longitude": -74.0050, "distance": 150, "rssi": -60},
-            {"id": "gw3", "latitude": 40.7118, "longitude": -74.0070, "distance": 200, "rssi": -70},
+            {
+                "id": "gw1",
+                "latitude": 40.7128,
+                "longitude": -74.0060,
+                "distance": 100,
+                "rssi": -50,
+            },
+            {
+                "id": "gw2",
+                "latitude": 40.7138,
+                "longitude": -74.0050,
+                "distance": 150,
+                "rssi": -60,
+            },
+            {
+                "id": "gw3",
+                "latitude": 40.7118,
+                "longitude": -74.0070,
+                "distance": 200,
+                "rssi": -70,
+            },
         ]
 
         confidence_good = estimator.calculate_confidence(gateways_good)
 
         # Test with poor gateway coverage
         gateways_poor = [
-            {"id": "gw1", "latitude": 40.7128, "longitude": -74.0060, "distance": 500, "rssi": -90},
-            {"id": "gw2", "latitude": 40.7138, "longitude": -74.0050, "distance": 600, "rssi": -95},
+            {
+                "id": "gw1",
+                "latitude": 40.7128,
+                "longitude": -74.0060,
+                "distance": 500,
+                "rssi": -90,
+            },
+            {
+                "id": "gw2",
+                "latitude": 40.7138,
+                "longitude": -74.0050,
+                "distance": 600,
+                "rssi": -95,
+            },
         ]
 
         confidence_poor = estimator.calculate_confidence(gateways_poor)

@@ -1,13 +1,22 @@
 """
 Geofence models
 """
-from sqlalchemy import (ARRAY, JSON, Boolean, Column, ForeignKey, Index,
-                        Integer, Numeric, String, Text)
+from sqlalchemy import (
+    ARRAY,
+    JSON,
+    Boolean,
+    Column,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from modules.shared.database.base import (BaseModel, OrganizationMixin,
-                                          SoftDeleteMixin)
+from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
 
 class Geofence(BaseModel, OrganizationMixin, SoftDeleteMixin):
@@ -25,7 +34,9 @@ class Geofence(BaseModel, OrganizationMixin, SoftDeleteMixin):
     center_latitude = Column(Numeric(10, 8), nullable=True)  # For circular geofences
     center_longitude = Column(Numeric(11, 8), nullable=True)  # For circular geofences
     radius = Column(Integer, nullable=True)  # Radius in feet for circular geofences
-    coordinates = Column(JSON, nullable=True)  # Array of [lat, lng] pairs for polygon geofences
+    coordinates = Column(
+        JSON, nullable=True
+    )  # Array of [lat, lng] pairs for polygon geofences
 
     # Site association
     site_id = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True)
@@ -34,7 +45,9 @@ class Geofence(BaseModel, OrganizationMixin, SoftDeleteMixin):
     # Alert configuration
     alert_on_entry = Column(Boolean, default=True)
     alert_on_exit = Column(Boolean, default=True)
-    geofence_classification = Column(String(50), default="authorized")  # authorized, restricted
+    geofence_classification = Column(
+        String(50), default="authorized"
+    )  # authorized, restricted
 
     # Tolerance and buffer
     tolerance = Column(Integer, nullable=True)  # Buffer zone tolerance in feet
@@ -50,7 +63,9 @@ class Geofence(BaseModel, OrganizationMixin, SoftDeleteMixin):
     attachment_type = Column(String(50), default="site")  # site, vehicle, asset, none
 
     # Expected assets
-    expected_asset_ids = Column(JSON, nullable=True)  # Array of asset IDs that should be within this geofence
+    expected_asset_ids = Column(
+        JSON, nullable=True
+    )  # Array of asset IDs that should be within this geofence
 
     # Metadata
     geofence_metadata = Column(JSON, default={})

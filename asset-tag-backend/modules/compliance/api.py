@@ -11,11 +11,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
 from modules.compliance.models import Compliance, ComplianceCheck
-from modules.compliance.schemas import (ComplianceCheckCreate,
-                                        ComplianceCheckResponse,
-                                        ComplianceCreate, ComplianceResponse,
-                                        ComplianceStats, ComplianceUpdate,
-                                        ComplianceWithChecks)
+from modules.compliance.schemas import (
+    ComplianceCheckCreate,
+    ComplianceCheckResponse,
+    ComplianceCreate,
+    ComplianceResponse,
+    ComplianceStats,
+    ComplianceUpdate,
+    ComplianceWithChecks,
+)
 
 router = APIRouter()
 
@@ -46,7 +50,12 @@ async def get_compliance_records(
         if asset_id:
             query = query.where(Compliance.asset_id == asset_id)
         if overdue_only:
-            query = query.where(and_(Compliance.due_date < datetime.now(), Compliance.status.in_(["pending", "in-progress"])))
+            query = query.where(
+                and_(
+                    Compliance.due_date < datetime.now(),
+                    Compliance.status.in_(["pending", "in-progress"]),
+                )
+            )
         if search:
             search_filter = or_(
                 Compliance.title.ilike(f"%{search}%"),
@@ -65,7 +74,9 @@ async def get_compliance_records(
         return [ComplianceResponse.from_orm(record) for record in compliance_records]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching compliance records: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching compliance records: {str(e)}"
+        )
 
 
 @router.get("/compliance/{compliance_id}", response_model=ComplianceWithChecks)
@@ -73,7 +84,9 @@ async def get_compliance_record(compliance_id: str, db: AsyncSession = Depends(g
     """Get compliance record by ID with checks"""
     try:
         result = await db.execute(
-            select(Compliance).where(and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None)))
+            select(Compliance).where(
+                and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None))
+            )
         )
         compliance = result.scalar_one_or_none()
 
@@ -85,11 +98,15 @@ async def get_compliance_record(compliance_id: str, db: AsyncSession = Depends(g
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching compliance record: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching compliance record: {str(e)}"
+        )
 
 
 @router.post("/compliance", response_model=ComplianceResponse)
-async def create_compliance_record(compliance_data: ComplianceCreate, db: AsyncSession = Depends(get_db)):
+async def create_compliance_record(
+    compliance_data: ComplianceCreate, db: AsyncSession = Depends(get_db)
+):
     """Create a new compliance record"""
     try:
         compliance = Compliance(
@@ -123,15 +140,23 @@ async def create_compliance_record(compliance_data: ComplianceCreate, db: AsyncS
 
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error creating compliance record: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error creating compliance record: {str(e)}"
+        )
 
 
 @router.put("/compliance/{compliance_id}", response_model=ComplianceResponse)
-async def update_compliance_record(compliance_id: str, compliance_data: ComplianceUpdate, db: AsyncSession = Depends(get_db)):
+async def update_compliance_record(
+    compliance_id: str,
+    compliance_data: ComplianceUpdate,
+    db: AsyncSession = Depends(get_db),
+):
     """Update an existing compliance record"""
     try:
         result = await db.execute(
-            select(Compliance).where(and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None)))
+            select(Compliance).where(
+                and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None))
+            )
         )
         compliance = result.scalar_one_or_none()
 
@@ -146,11 +171,18 @@ async def update_compliance_record(compliance_id: str, compliance_data: Complian
         # Update status based on completion
         if "completed_date" in update_data and update_data["completed_date"]:
             compliance.status = "completed"
-        elif "status" in update_data and update_data["status"] == "completed" and not compliance.completed_date:
+        elif (
+            "status" in update_data
+            and update_data["status"] == "completed"
+            and not compliance.completed_date
+        ):
             compliance.completed_date = datetime.now()
 
         # Check if overdue
-        if compliance.due_date < datetime.now() and compliance.status in ["pending", "in-progress"]:
+        if compliance.due_date < datetime.now() and compliance.status in [
+            "pending",
+            "in-progress",
+        ]:
             compliance.status = "overdue"
 
         await db.commit()
@@ -162,15 +194,21 @@ async def update_compliance_record(compliance_id: str, compliance_data: Complian
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error updating compliance record: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error updating compliance record: {str(e)}"
+        )
 
 
 @router.delete("/compliance/{compliance_id}")
-async def delete_compliance_record(compliance_id: str, db: AsyncSession = Depends(get_db)):
+async def delete_compliance_record(
+    compliance_id: str, db: AsyncSession = Depends(get_db)
+):
     """Delete a compliance record (soft delete)"""
     try:
         result = await db.execute(
-            select(Compliance).where(and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None)))
+            select(Compliance).where(
+                and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None))
+            )
         )
         compliance = result.scalar_one_or_none()
 
@@ -187,7 +225,9 @@ async def delete_compliance_record(compliance_id: str, db: AsyncSession = Depend
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error deleting compliance record: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error deleting compliance record: {str(e)}"
+        )
 
 
 @router.get("/compliance/stats", response_model=ComplianceStats)
@@ -195,14 +235,18 @@ async def get_compliance_stats(db: AsyncSession = Depends(get_db)):
     """Get compliance statistics"""
     try:
         # Get total compliance records
-        total_result = await db.execute(select(func.count(Compliance.id)).where(Compliance.deleted_at.is_(None)))
+        total_result = await db.execute(
+            select(func.count(Compliance.id)).where(Compliance.deleted_at.is_(None))
+        )
         total_compliance = total_result.scalar()
 
         # Get status counts
         status_counts = {}
         for status in ["pending", "in-progress", "completed", "overdue", "cancelled"]:
             result = await db.execute(
-                select(func.count(Compliance.id)).where(and_(Compliance.status == status, Compliance.deleted_at.is_(None)))
+                select(func.count(Compliance.id)).where(
+                    and_(Compliance.status == status, Compliance.deleted_at.is_(None))
+                )
             )
             status_counts[status] = result.scalar()
 
@@ -248,12 +292,16 @@ async def get_compliance_stats(db: AsyncSession = Depends(get_db)):
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching compliance stats: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching compliance stats: {str(e)}"
+        )
 
 
 @router.get("/compliance/overdue", response_model=List[ComplianceResponse])
 async def get_overdue_compliance(
-    skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000), db: AsyncSession = Depends(get_db)
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    db: AsyncSession = Depends(get_db),
 ):
     """Get overdue compliance records"""
     try:
@@ -277,16 +325,26 @@ async def get_overdue_compliance(
         return [ComplianceResponse.from_orm(record) for record in overdue_records]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching overdue compliance: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching overdue compliance: {str(e)}"
+        )
 
 
-@router.post("/compliance/{compliance_id}/checks", response_model=ComplianceCheckResponse)
-async def add_compliance_check(compliance_id: str, check_data: ComplianceCheckCreate, db: AsyncSession = Depends(get_db)):
+@router.post(
+    "/compliance/{compliance_id}/checks", response_model=ComplianceCheckResponse
+)
+async def add_compliance_check(
+    compliance_id: str,
+    check_data: ComplianceCheckCreate,
+    db: AsyncSession = Depends(get_db),
+):
     """Add a compliance check to a compliance record"""
     try:
         # Check if compliance record exists
         compliance_result = await db.execute(
-            select(Compliance).where(and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None)))
+            select(Compliance).where(
+                and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None))
+            )
         )
         compliance = compliance_result.scalar_one_or_none()
         if not compliance:
@@ -323,18 +381,27 @@ async def add_compliance_check(compliance_id: str, check_data: ComplianceCheckCr
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error adding compliance check: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error adding compliance check: {str(e)}"
+        )
 
 
-@router.get("/compliance/{compliance_id}/checks", response_model=List[ComplianceCheckResponse])
+@router.get(
+    "/compliance/{compliance_id}/checks", response_model=List[ComplianceCheckResponse]
+)
 async def get_compliance_checks(
-    compliance_id: str, skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000), db: AsyncSession = Depends(get_db)
+    compliance_id: str,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    db: AsyncSession = Depends(get_db),
 ):
     """Get compliance checks for a compliance record"""
     try:
         # Check if compliance record exists
         compliance_result = await db.execute(
-            select(Compliance).where(and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None)))
+            select(Compliance).where(
+                and_(Compliance.id == compliance_id, Compliance.deleted_at.is_(None))
+            )
         )
         compliance = compliance_result.scalar_one_or_none()
         if not compliance:
@@ -357,4 +424,6 @@ async def get_compliance_checks(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching compliance checks: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching compliance checks: {str(e)}"
+        )

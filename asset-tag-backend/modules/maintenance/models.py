@@ -1,8 +1,18 @@
 """
 Maintenance models
 """
-from sqlalchemy import (JSON, Boolean, Column, DateTime, ForeignKey, Index,
-                        Integer, Numeric, String, Text)
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -19,9 +29,15 @@ class MaintenanceRecord(BaseModel, OrganizationMixin):
     asset_name = Column(String(255), nullable=False)  # Denormalized for performance
 
     # Maintenance details
-    maintenance_type = Column(String(50), nullable=False)  # scheduled, unscheduled, inspection
-    status = Column(String(50), default="pending", index=True)  # pending, in-progress, completed, overdue
-    priority = Column(String(50), default="medium", index=True)  # low, medium, high, critical
+    maintenance_type = Column(
+        String(50), nullable=False
+    )  # scheduled, unscheduled, inspection
+    status = Column(
+        String(50), default="pending", index=True
+    )  # pending, in-progress, completed, overdue
+    priority = Column(
+        String(50), default="medium", index=True
+    )  # low, medium, high, critical
 
     # Scheduling
     scheduled_date = Column(DateTime(timezone=True), nullable=True)
@@ -29,8 +45,12 @@ class MaintenanceRecord(BaseModel, OrganizationMixin):
     due_date = Column(DateTime(timezone=True), nullable=True)
 
     # Assignment
-    assigned_to_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    assigned_to_user_name = Column(String(255), nullable=True)  # Denormalized for performance
+    assigned_to_user_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
+    assigned_to_user_name = Column(
+        String(255), nullable=True
+    )  # Denormalized for performance
 
     # Description and notes
     description = Column(Text, nullable=False)
@@ -49,7 +69,9 @@ class MaintenanceRecord(BaseModel, OrganizationMixin):
 
     # Maintenance category
     category = Column(String(100), nullable=True)  # preventive, corrective, predictive
-    subcategory = Column(String(100), nullable=True)  # oil_change, filter_replacement, etc.
+    subcategory = Column(
+        String(100), nullable=True
+    )  # oil_change, filter_replacement, etc.
 
     # Parts and materials
     parts_used = Column(JSON, nullable=True)  # List of parts with quantities and costs
@@ -94,15 +116,21 @@ class MaintenanceSchedule(BaseModel, OrganizationMixin):
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     asset_type = Column(String(100), nullable=True)  # Apply to specific asset types
-    asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id"), nullable=True)  # Apply to specific asset
+    asset_id = Column(
+        UUID(as_uuid=True), ForeignKey("assets.id"), nullable=True
+    )  # Apply to specific asset
 
     # Schedule details
     maintenance_type = Column(String(50), nullable=False)
     priority = Column(String(50), default="medium")
 
     # Frequency
-    frequency_type = Column(String(50), nullable=False)  # daily, weekly, monthly, yearly, usage_based
-    frequency_value = Column(Integer, nullable=False)  # e.g., every 30 days, every 1000 hours
+    frequency_type = Column(
+        String(50), nullable=False
+    )  # daily, weekly, monthly, yearly, usage_based
+    frequency_value = Column(
+        Integer, nullable=False
+    )  # e.g., every 30 days, every 1000 hours
     frequency_unit = Column(String(50), nullable=True)  # days, hours, miles, cycles
 
     # Scheduling
@@ -111,7 +139,9 @@ class MaintenanceSchedule(BaseModel, OrganizationMixin):
     end_date = Column(DateTime(timezone=True), nullable=True)
 
     # Assignment
-    default_assignee_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    default_assignee_id = Column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
 
     # Duration and cost estimates
     estimated_duration_hours = Column(Numeric(5, 2), nullable=True)

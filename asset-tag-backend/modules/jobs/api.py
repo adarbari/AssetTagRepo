@@ -80,8 +80,12 @@ async def create_job(job_data: JobCreate, db: AsyncSession = Depends(get_db)):
             job_type=job_data.job_type,
             status=job_data.status or "pending",
             priority=job_data.priority or "medium",
-            scheduled_start=datetime.fromisoformat(job_data.scheduled_start) if job_data.scheduled_start else None,
-            scheduled_end=datetime.fromisoformat(job_data.scheduled_end) if job_data.scheduled_end else None,
+            scheduled_start=datetime.fromisoformat(job_data.scheduled_start)
+            if job_data.scheduled_start
+            else None,
+            scheduled_end=datetime.fromisoformat(job_data.scheduled_end)
+            if job_data.scheduled_end
+            else None,
             assigned_to_user_id=job_data.assigned_to_user_id,
             assigned_to_user_name=job_data.assigned_to_user_name,
             site_id=job_data.site_id,
@@ -104,7 +108,9 @@ async def create_job(job_data: JobCreate, db: AsyncSession = Depends(get_db)):
 
 
 @router.put("/jobs/{job_id}", response_model=JobResponse)
-async def update_job(job_id: str, job_data: JobUpdate, db: AsyncSession = Depends(get_db)):
+async def update_job(
+    job_id: str, job_data: JobUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update an existing job"""
     try:
         result = await db.execute(select(Job).where(Job.id == job_id))
@@ -157,7 +163,12 @@ async def delete_job(job_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/jobs/{job_id}/assign-asset")
-async def assign_asset_to_job(job_id: str, asset_id: str, notes: Optional[str] = None, db: AsyncSession = Depends(get_db)):
+async def assign_asset_to_job(
+    job_id: str,
+    asset_id: str,
+    notes: Optional[str] = None,
+    db: AsyncSession = Depends(get_db),
+):
     """Assign an asset to a job"""
     try:
         # Check if job exists
@@ -168,10 +179,16 @@ async def assign_asset_to_job(job_id: str, asset_id: str, notes: Optional[str] =
 
         # Check if asset is already assigned to this job
         existing = await db.execute(
-            select(JobAsset).where(JobAsset.job_id == job_id, JobAsset.asset_id == asset_id, JobAsset.unassigned_at.is_(None))
+            select(JobAsset).where(
+                JobAsset.job_id == job_id,
+                JobAsset.asset_id == asset_id,
+                JobAsset.unassigned_at.is_(None),
+            )
         )
         if existing.scalar_one_or_none():
-            raise HTTPException(status_code=400, detail="Asset is already assigned to this job")
+            raise HTTPException(
+                status_code=400, detail="Asset is already assigned to this job"
+            )
 
         # Create job-asset assignment
         job_asset = JobAsset(
@@ -192,15 +209,23 @@ async def assign_asset_to_job(job_id: str, asset_id: str, notes: Optional[str] =
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error assigning asset to job: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error assigning asset to job: {str(e)}"
+        )
 
 
 @router.delete("/jobs/{job_id}/unassign-asset/{asset_id}")
-async def unassign_asset_from_job(job_id: str, asset_id: str, db: AsyncSession = Depends(get_db)):
+async def unassign_asset_from_job(
+    job_id: str, asset_id: str, db: AsyncSession = Depends(get_db)
+):
     """Unassign an asset from a job"""
     try:
         result = await db.execute(
-            select(JobAsset).where(JobAsset.job_id == job_id, JobAsset.asset_id == asset_id, JobAsset.unassigned_at.is_(None))
+            select(JobAsset).where(
+                JobAsset.job_id == job_id,
+                JobAsset.asset_id == asset_id,
+                JobAsset.unassigned_at.is_(None),
+            )
         )
         job_asset = result.scalar_one_or_none()
 
@@ -218,14 +243,20 @@ async def unassign_asset_from_job(job_id: str, asset_id: str, db: AsyncSession =
         raise
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error unassigning asset from job: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error unassigning asset from job: {str(e)}"
+        )
 
 
 @router.get("/jobs/{job_id}/assets")
 async def get_job_assets(job_id: str, db: AsyncSession = Depends(get_db)):
     """Get assets assigned to a job"""
     try:
-        result = await db.execute(select(JobAsset).where(JobAsset.job_id == job_id, JobAsset.unassigned_at.is_(None)))
+        result = await db.execute(
+            select(JobAsset).where(
+                JobAsset.job_id == job_id, JobAsset.unassigned_at.is_(None)
+            )
+        )
         job_assets = result.scalars().all()
 
         return [
@@ -243,4 +274,6 @@ async def get_job_assets(job_id: str, db: AsyncSession = Depends(get_db)):
         ]
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching job assets: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching job assets: {str(e)}"
+        )
