@@ -1,16 +1,16 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
-import { Reports } from '../../components/Reports'
-import { useAsyncDataAll } from '../../hooks/useAsyncData'
+import { Reports } from '../../../components/reports/Reports'
+import { useAsyncDataAll } from '../../../hooks/useAsyncData'
 
 // Mock the useAsyncDataAll hook
-vi.mock('../../hooks/useAsyncData', () => ({
+vi.mock('../../../hooks/useAsyncData', () => ({
   useAsyncDataAll: vi.fn(),
 }))
 
 // Mock the GenerateReportDialog component
-vi.mock('../../components/GenerateReportDialog', () => ({
+vi.mock('../../../components/GenerateReportDialog', () => ({
   GenerateReportDialog: ({ open, onOpenChange, reportType }: any) => (
     <div data-testid="generate-report-dialog" data-open={open} data-report-type={reportType}>
       <button onClick={() => onOpenChange(false)}>Close Dialog</button>

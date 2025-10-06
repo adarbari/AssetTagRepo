@@ -39,10 +39,10 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 import { mockGeofences } from "../../data/mockData";
-import type { Geofence } from "../types";
+import type { Geofence } from "../../types";
 
 // Helper function to format geofence data for display
-async function formatGeofenceForDisplay(geofence: Geofence): Promise<DisplayGeofence> {
+function formatGeofenceForDisplay(geofence: Geofence): DisplayGeofence {
   // Determine shape and radius string
   let shape: "circular" | "polygon" = "circular";
   let radiusStr = "N/A";
@@ -56,9 +56,12 @@ async function formatGeofenceForDisplay(geofence: Geofence): Promise<DisplayGeof
     radiusStr = `${geofence.radius}m`;
   }
 
-  // Get compliance stats
-  const { getGeofenceComplianceStats } = await import("../../data/mockData");
-  const stats = getGeofenceComplianceStats(geofence.id);
+  // Get compliance stats - provide default values if stats are not available
+  const stats = {
+    expected: geofence.expectedAssets || 0,
+    outside: geofence.violatingAssets || 0,
+    complianceRate: geofence.complianceRate || 0,
+  };
 
   return {
     id: geofence.id,

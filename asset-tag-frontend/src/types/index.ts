@@ -76,6 +76,10 @@ export interface Geofence {
   alertOnExit?: boolean; // Trigger alerts when assets exit
   geofenceType?: "authorized" | "restricted"; // Zone classification
   expectedAssetIds?: string[]; // Assets that should be within this geofence
+  // Compliance tracking
+  expectedAssets?: number; // Number of assets expected in this geofence
+  violatingAssets?: number; // Number of assets violating this geofence
+  complianceRate?: number; // Compliance rate percentage
   // Vehicle-based geofencing support
   locationMode?: "static" | "vehicle-based"; // NEW: Static location or follows vehicle
   vehicleId?: string; // NEW: ID of vehicle to follow (for vehicle-based mode)
@@ -92,13 +96,14 @@ export interface Vehicle {
   id: string;
   name: string;
   type: string;
-  licensePlate: string;
+  licensePlate?: string;
   status: "active" | "inactive" | "maintenance";
   location?: {
     lat: number;
     lng: number;
-  };
+  } | string; // Support both coordinate object and string location
   assignedDriver?: string;
+  driver?: string; // Alternative property name
   lastSeen?: string;
 }
 
@@ -155,15 +160,6 @@ export interface MaintenanceRecord {
   notes?: string;
 }
 
-export interface Vehicle {
-  id: string;
-  name: string;
-  type: string;
-  status: "active" | "inactive" | "maintenance";
-  driver?: string;
-  location: string;
-  lastSeen: string;
-}
 
 export interface CheckInOutRecord {
   id: string;

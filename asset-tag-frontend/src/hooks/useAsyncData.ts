@@ -54,7 +54,9 @@ export function useAsyncData<T>(
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       setState({ data: null, loading: false, error });
-      throw error;
+      // Don't throw the error to prevent unhandled promise rejections
+      console.error('useAsyncData error:', error);
+      return null;
     }
   }, [fetcher]);
 
@@ -64,7 +66,9 @@ export function useAsyncData<T>(
 
   useEffect(() => {
     if (immediate) {
-      execute();
+      execute().catch((err) => {
+        console.error('Unhandled promise rejection in useAsyncData:', err);
+      });
     }
   }, [...deps, immediate, execute]);
 
@@ -119,10 +123,15 @@ export function useAsyncDataAll<T extends Record<string, () => Promise<any>>>(
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         setState({ data: null, loading: false, error });
+        // Log the error to prevent unhandled promise rejection
+        console.error('useAsyncDataAll error:', error);
       }
     };
 
-    execute();
+    // Handle promise rejection properly
+    execute().catch((err) => {
+      console.error('Unhandled promise rejection in useAsyncDataAll:', err);
+    });
   }, [...deps, immediate]);
 
   return state;
