@@ -1,64 +1,64 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { Sites } from &apos;../sites/Sites&apos;;
-import { render, createMockNavigation } from &apos;../../test/test-utils&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Sites } from '../sites/Sites';
+import { render, createMockNavigation } from '../../test/test-utils';
 
 // Mock the navigation context
-vi.mock(&apos;../../contexts/NavigationContext&apos;, () => ({
+vi.mock('../../contexts/NavigationContext', () => ({
   useNavigation: () => createMockNavigation(),
 }));
 
 // Mock the mock data
-vi.mock(&apos;../../data/mockData&apos;, () => ({
+vi.mock('../../data/mockData', () => ({
   mockSites: [
     {
-      id: &apos;ST-001&apos;,
-      name: &apos;Main Warehouse&apos;,
-      address: &apos;123 Main St, Austin, TX 78701&apos;,
-      location: &apos;123 Main St, Austin, TX 78701&apos;,
-      area: &apos;500 ft radius&apos;,
+      id: 'ST-001',
+      name: 'Main Warehouse',
+      address: '123 Main St, Austin, TX 78701',
+      location: '123 Main St, Austin, TX 78701',
+      area: '500 ft radius',
       tolerance: 50,
       assets: 150,
-      status: &apos;active&apos;,
+      status: 'active',
       coordinates: { lat: 30.2672, lng: -97.7431, radius: 500 },
-      manager: &apos;John Smith&apos;,
-      phone: &apos;(555) 123-4567&apos;,
-      email: &apos;john@example.com&apos;,
+      manager: 'John Smith',
+      phone: '(555) 123-4567',
+      email: 'john@example.com',
     },
     {
-      id: &apos;ST-002&apos;,
-      name: &apos;Construction Site B&apos;,
-      address: &apos;456 Oak Ave, Dallas, TX 75201&apos;,
-      location: &apos;456 Oak Ave, Dallas, TX 75201&apos;,
-      area: &apos;300 ft radius&apos;,
+      id: 'ST-002',
+      name: 'Construction Site B',
+      address: '456 Oak Ave, Dallas, TX 75201',
+      location: '456 Oak Ave, Dallas, TX 75201',
+      area: '300 ft radius',
       tolerance: 30,
       assets: 75,
-      status: &apos;maintenance&apos;,
+      status: 'maintenance',
       coordinates: { lat: 32.7767, lng: -96.797, radius: 300 },
-      manager: &apos;Jane Doe&apos;,
-      phone: &apos;(555) 987-6543&apos;,
-      email: &apos;jane@example.com&apos;,
+      manager: 'Jane Doe',
+      phone: '(555) 987-6543',
+      email: 'jane@example.com',
     },
     {
-      id: &apos;ST-003&apos;,
-      name: &apos;Remote Office&apos;,
-      address: &apos;789 Pine St, Houston, TX 77001&apos;,
-      location: &apos;789 Pine St, Houston, TX 77001&apos;,
-      area: &apos;200 ft radius&apos;,
+      id: 'ST-003',
+      name: 'Remote Office',
+      address: '789 Pine St, Houston, TX 77001',
+      location: '789 Pine St, Houston, TX 77001',
+      area: '200 ft radius',
       tolerance: 25,
       assets: 25,
-      status: &apos;inactive&apos;,
+      status: 'inactive',
       coordinates: { lat: 29.7604, lng: -95.3698, radius: 200 },
-      manager: &apos;Bob Johnson&apos;,
-      phone: &apos;(555) 456-7890&apos;,
-      email: &apos;bob@example.com&apos;,
+      manager: 'Bob Johnson',
+      phone: '(555) 456-7890',
+      email: 'bob@example.com',
     },
   ],
 }));
 
-describe(&apos;Sites Component&apos;, () => {
+describe('Sites Component', () => {
   const mockOnSiteClick = vi.fn();
   const mockNavigation = createMockNavigation();
 
@@ -66,300 +66,300 @@ describe(&apos;Sites Component&apos;, () => {
     vi.clearAllMocks();
   });
 
-  describe(&apos;Rendering and Basic Functionality&apos;, () => {
-    it(&apos;should render the sites page with header and stats&apos;, () => {
+  describe('Rendering and Basic Functionality', () => {
+    it('should render the sites page with header and stats', () => {
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      expect(screen.getByText(&apos;Sites&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Sites')).toBeInTheDocument();
       expect(
-        screen.getByText(&apos;Manage physical locations and boundaries&apos;)
+        screen.getByText('Manage physical locations and boundaries')
       ).toBeInTheDocument();
-      expect(screen.getByText(&apos;Total Sites&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Active Sites&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Total Assets&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Total Personnel&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Total Sites')).toBeInTheDocument();
+      expect(screen.getByText('Active Sites')).toBeInTheDocument();
+      expect(screen.getByText('Total Assets')).toBeInTheDocument();
+      expect(screen.getByText('Total Personnel')).toBeInTheDocument();
     });
 
-    it(&apos;should render the Add Site button&apos;, () => {
+    it('should render the Add Site button', () => {
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      const addButton = screen.getByRole(&apos;button&apos;, { name: /add site/i });
+      const addButton = screen.getByRole('button', { name: /add site/i });
       expect(addButton).toBeInTheDocument();
     });
 
-    it(&apos;should render the sites table with correct headers&apos;, () => {
+    it('should render the sites table with correct headers', () => {
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      expect(screen.getByText(&apos;Site Name&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Address&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Boundary&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Tolerance&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Assets&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Personnel&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Status&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Last Activity&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Site Name')).toBeInTheDocument();
+      expect(screen.getByText('Address')).toBeInTheDocument();
+      expect(screen.getByText('Boundary')).toBeInTheDocument();
+      expect(screen.getByText('Tolerance')).toBeInTheDocument();
+      expect(screen.getByText('Assets')).toBeInTheDocument();
+      expect(screen.getByText('Personnel')).toBeInTheDocument();
+      expect(screen.getByText('Status')).toBeInTheDocument();
+      expect(screen.getByText('Last Activity')).toBeInTheDocument();
     });
 
-    it(&apos;should render all mock sites in the table&apos;, () => {
+    it('should render all mock sites in the table', () => {
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      expect(screen.getByText(&apos;Main Warehouse&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Construction Site B&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Remote Office&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Main Warehouse')).toBeInTheDocument();
+      expect(screen.getByText('Construction Site B')).toBeInTheDocument();
+      expect(screen.getByText('Remote Office')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Search Functionality&apos;, () => {
-    it(&apos;should filter sites by name when searching&apos;, async () => {
+  describe('Search Functionality', () => {
+    it('should filter sites by name when searching', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       const searchInput = screen.getByPlaceholderText(/search by site name/i);
-      await user.type(searchInput, &apos;Main&apos;);
+      await user.type(searchInput, 'Main');
 
-      expect(screen.getByText(&apos;Main Warehouse&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Construction Site B&apos;)).not.toBeInTheDocument();
-      expect(screen.queryByText(&apos;Remote Office&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Main Warehouse')).toBeInTheDocument();
+      expect(screen.queryByText('Construction Site B')).not.toBeInTheDocument();
+      expect(screen.queryByText('Remote Office')).not.toBeInTheDocument();
     });
 
-    it(&apos;should filter sites by ID when searching&apos;, async () => {
+    it('should filter sites by ID when searching', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       const searchInput = screen.getByPlaceholderText(/search by site name/i);
-      await user.type(searchInput, &apos;ST-002&apos;);
+      await user.type(searchInput, 'ST-002');
 
-      expect(screen.getByText(&apos;Construction Site B&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Main Warehouse&apos;)).not.toBeInTheDocument();
-      expect(screen.queryByText(&apos;Remote Office&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Construction Site B')).toBeInTheDocument();
+      expect(screen.queryByText('Main Warehouse')).not.toBeInTheDocument();
+      expect(screen.queryByText('Remote Office')).not.toBeInTheDocument();
     });
 
-    it(&apos;should filter sites by address when searching&apos;, async () => {
+    it('should filter sites by address when searching', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       const searchInput = screen.getByPlaceholderText(/search by site name/i);
-      await user.type(searchInput, &apos;Austin&apos;);
+      await user.type(searchInput, 'Austin');
 
-      expect(screen.getByText(&apos;Main Warehouse&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Construction Site B&apos;)).not.toBeInTheDocument();
-      expect(screen.queryByText(&apos;Remote Office&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Main Warehouse')).toBeInTheDocument();
+      expect(screen.queryByText('Construction Site B')).not.toBeInTheDocument();
+      expect(screen.queryByText('Remote Office')).not.toBeInTheDocument();
     });
 
-    it(&apos;should show all sites when search is cleared&apos;, async () => {
+    it('should show all sites when search is cleared', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       const searchInput = screen.getByPlaceholderText(/search by site name/i);
-      await user.type(searchInput, &apos;Main&apos;);
+      await user.type(searchInput, 'Main');
       await user.clear(searchInput);
 
-      expect(screen.getByText(&apos;Main Warehouse&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Construction Site B&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Remote Office&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Main Warehouse')).toBeInTheDocument();
+      expect(screen.getByText('Construction Site B')).toBeInTheDocument();
+      expect(screen.getByText('Remote Office')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Filter Functionality&apos;, () => {
-    it(&apos;should show and hide filters when filter button is clicked&apos;, async () => {
+  describe('Filter Functionality', () => {
+    it('should show and hide filters when filter button is clicked', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      const filterButton = screen.getByRole(&apos;button&apos;, { name: /filters/i });
+      const filterButton = screen.getByRole('button', { name: /filters/i });
 
       // Initially filters should be hidden
-      expect(screen.queryByText(&apos;Filter Sites&apos;)).not.toBeInTheDocument();
+      expect(screen.queryByText('Filter Sites')).not.toBeInTheDocument();
 
       // Click to show filters
       await user.click(filterButton);
-      expect(screen.getByText(&apos;Filter Sites&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Filter Sites')).toBeInTheDocument();
 
       // Click to hide filters
       await user.click(filterButton);
-      expect(screen.queryByText(&apos;Filter Sites&apos;)).not.toBeInTheDocument();
+      expect(screen.queryByText('Filter Sites')).not.toBeInTheDocument();
     });
 
-    it(&apos;should filter sites by status&apos;, async () => {
+    it('should filter sites by status', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       // Show filters
-      const filterButton = screen.getByRole(&apos;button&apos;, { name: /filters/i });
+      const filterButton = screen.getByRole('button', { name: /filters/i });
       await user.click(filterButton);
 
       // Filter by active status
-      const statusSelect = screen.getByRole(&apos;combobox&apos;);
+      const statusSelect = screen.getByRole('combobox');
       await user.click(statusSelect);
-      await user.click(screen.getByText(&apos;Active&apos;));
+      await user.click(screen.getByText('Active'));
 
-      expect(screen.getByText(&apos;Main Warehouse&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Construction Site B&apos;)).not.toBeInTheDocument();
-      expect(screen.queryByText(&apos;Remote Office&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Main Warehouse')).toBeInTheDocument();
+      expect(screen.queryByText('Construction Site B')).not.toBeInTheDocument();
+      expect(screen.queryByText('Remote Office')).not.toBeInTheDocument();
     });
 
-    it(&apos;should filter sites by state&apos;, async () => {
+    it('should filter sites by state', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       // Show filters
-      const filterButton = screen.getByRole(&apos;button&apos;, { name: /filters/i });
+      const filterButton = screen.getByRole('button', { name: /filters/i });
       await user.click(filterButton);
 
       // Filter by Texas
-      const stateSelect = screen.getByRole(&apos;combobox&apos;, { name: /state/i });
+      const stateSelect = screen.getByRole('combobox', { name: /state/i });
       await user.click(stateSelect);
-      await user.click(screen.getByText(&apos;Texas (TX)&apos;));
+      await user.click(screen.getByText('Texas (TX)'));
 
-      // All sites should be visible since they&apos;re all in Texas
-      expect(screen.getByText(&apos;Main Warehouse&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Construction Site B&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Remote Office&apos;)).toBeInTheDocument();
+      // All sites should be visible since they're all in Texas
+      expect(screen.getByText('Main Warehouse')).toBeInTheDocument();
+      expect(screen.getByText('Construction Site B')).toBeInTheDocument();
+      expect(screen.getByText('Remote Office')).toBeInTheDocument();
     });
 
-    it(&apos;should filter sites by asset count range&apos;, async () => {
+    it('should filter sites by asset count range', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       // Show filters
-      const filterButton = screen.getByRole(&apos;button&apos;, { name: /filters/i });
+      const filterButton = screen.getByRole('button', { name: /filters/i });
       await user.click(filterButton);
 
       // Filter by 0-100 assets
-      const assetSelect = screen.getByRole(&apos;combobox&apos;, {
+      const assetSelect = screen.getByRole('combobox', {
         name: /asset count/i,
       });
       await user.click(assetSelect);
-      await user.click(screen.getByText(&apos;0 - 100&apos;));
+      await user.click(screen.getByText('0 - 100'));
 
-      expect(screen.getByText(&apos;Construction Site B&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Remote Office&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Main Warehouse&apos;)).not.toBeInTheDocument(); // 150 assets
+      expect(screen.getByText('Construction Site B')).toBeInTheDocument();
+      expect(screen.getByText('Remote Office')).toBeInTheDocument();
+      expect(screen.queryByText('Main Warehouse')).not.toBeInTheDocument(); // 150 assets
     });
 
-    it(&apos;should show active filter count badge&apos;, async () => {
+    it('should show active filter count badge', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       // Show filters
-      const filterButton = screen.getByRole(&apos;button&apos;, { name: /filters/i });
+      const filterButton = screen.getByRole('button', { name: /filters/i });
       await user.click(filterButton);
 
       // Apply a filter
-      const statusSelect = screen.getByRole(&apos;combobox&apos;);
+      const statusSelect = screen.getByRole('combobox');
       await user.click(statusSelect);
-      await user.click(screen.getByText(&apos;Active&apos;));
+      await user.click(screen.getByText('Active'));
 
       // Should show filter count badge
-      expect(screen.getByText(&apos;1&apos;)).toBeInTheDocument(); // Badge showing 1 active filter
+      expect(screen.getByText('1')).toBeInTheDocument(); // Badge showing 1 active filter
     });
 
-    it(&apos;should clear all filters when clear button is clicked&apos;, async () => {
+    it('should clear all filters when clear button is clicked', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       // Show filters and apply some
-      const filterButton = screen.getByRole(&apos;button&apos;, { name: /filters/i });
+      const filterButton = screen.getByRole('button', { name: /filters/i });
       await user.click(filterButton);
 
-      const statusSelect = screen.getByRole(&apos;combobox&apos;);
+      const statusSelect = screen.getByRole('combobox');
       await user.click(statusSelect);
-      await user.click(screen.getByText(&apos;Active&apos;));
+      await user.click(screen.getByText('Active'));
 
       // Clear all filters
-      const clearButton = screen.getByRole(&apos;button&apos;, { name: /clear all/i });
+      const clearButton = screen.getByRole('button', { name: /clear all/i });
       await user.click(clearButton);
 
       // All sites should be visible again
-      expect(screen.getByText(&apos;Main Warehouse&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Construction Site B&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Remote Office&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Main Warehouse')).toBeInTheDocument();
+      expect(screen.getByText('Construction Site B')).toBeInTheDocument();
+      expect(screen.getByText('Remote Office')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Site Interaction&apos;, () => {
-    it(&apos;should call onSiteClick when a site row is clicked&apos;, async () => {
+  describe('Site Interaction', () => {
+    it('should call onSiteClick when a site row is clicked', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      const siteRow = screen.getByText(&apos;Main Warehouse&apos;).closest(&apos;tr&apos;);
+      const siteRow = screen.getByText('Main Warehouse').closest('tr');
       if (siteRow) await user.click(siteRow);
 
       expect(mockOnSiteClick).toHaveBeenCalledWith(
         expect.objectContaining({
-          id: &apos;ST-001&apos;,
-          name: &apos;Main Warehouse&apos;,
+          id: 'ST-001',
+          name: 'Main Warehouse',
         })
       );
     });
 
-    it(&apos;should show dropdown menu when more actions button is clicked&apos;, async () => {
+    it('should show dropdown menu when more actions button is clicked', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      const moreButton = screen.getAllByRole(&apos;button&apos;, { name: &apos;&apos; })[0]; // First more button
+      const moreButton = screen.getAllByRole('button', { name: '' })[0]; // First more button
       await user.click(moreButton);
 
-      expect(screen.getByText(&apos;Actions&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;View Details&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Edit Site&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;View Assets&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;View on Map&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Deactivate Site&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Actions')).toBeInTheDocument();
+      expect(screen.getByText('View Details')).toBeInTheDocument();
+      expect(screen.getByText('Edit Site')).toBeInTheDocument();
+      expect(screen.getByText('View Assets')).toBeInTheDocument();
+      expect(screen.getByText('View on Map')).toBeInTheDocument();
+      expect(screen.getByText('Deactivate Site')).toBeInTheDocument();
     });
 
-    it(&apos;should call onSiteClick when View Details is clicked from dropdown&apos;, async () => {
+    it('should call onSiteClick when View Details is clicked from dropdown', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      const moreButton = screen.getAllByRole(&apos;button&apos;, { name: &apos;&apos; })[0];
+      const moreButton = screen.getAllByRole('button', { name: '' })[0];
       await user.click(moreButton);
 
-      const viewDetailsButton = screen.getByText(&apos;View Details&apos;);
+      const viewDetailsButton = screen.getByText('View Details');
       await user.click(viewDetailsButton);
 
       expect(mockOnSiteClick).toHaveBeenCalledWith(
         expect.objectContaining({
-          id: &apos;ST-001&apos;,
-          name: &apos;Main Warehouse&apos;,
+          id: 'ST-001',
+          name: 'Main Warehouse',
         })
       );
     });
   });
 
-  describe(&apos;Pagination&apos;, () => {
-    it(&apos;should render pagination controls&apos;, () => {
+  describe('Pagination', () => {
+    it('should render pagination controls', () => {
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      expect(screen.getByText(&apos;Previous&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;1&apos;)).toBeInTheDocument();
-      expect(screen.getByText(&apos;Next&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Previous')).toBeInTheDocument();
+      expect(screen.getByText('1')).toBeInTheDocument();
+      expect(screen.getByText('Next')).toBeInTheDocument();
     });
 
-    it(&apos;should show correct count of filtered sites&apos;, async () => {
+    it('should show correct count of filtered sites', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       const searchInput = screen.getByPlaceholderText(/search by site name/i);
-      await user.type(searchInput, &apos;Main&apos;);
+      await user.type(searchInput, 'Main');
 
-      expect(screen.getByText(&apos;Showing 1 of 3 sites&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Showing 1 of 3 sites')).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Navigation Integration&apos;, () => {
-    it(&apos;should call navigateToCreateSite when Add Site button is clicked&apos;, async () => {
+  describe('Navigation Integration', () => {
+    it('should call navigateToCreateSite when Add Site button is clicked', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
-      const addButton = screen.getByRole(&apos;button&apos;, { name: /add site/i });
+      const addButton = screen.getByRole('button', { name: /add site/i });
       await user.click(addButton);
 
       expect(mockNavigation.navigateToCreateSite).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper ARIA labels and roles for all interactive elements&apos;, () => {
+  describe('Accessibility', () => {
+    it('should have proper ARIA labels and roles for all interactive elements', () => {
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       // Check search input
@@ -367,19 +367,19 @@ describe(&apos;Sites Component&apos;, () => {
       expect(searchInput).toBeInTheDocument();
 
       // Check filter button
-      const filterButton = screen.getByRole(&apos;button&apos;, { name: /filters/i });
+      const filterButton = screen.getByRole('button', { name: /filters/i });
       expect(filterButton).toBeInTheDocument();
 
       // Check table headers
-      const tableHeaders = screen.getAllByRole(&apos;columnheader&apos;);
+      const tableHeaders = screen.getAllByRole('columnheader');
       expect(tableHeaders.length).toBeGreaterThan(0);
 
       // Check table rows
-      const tableRows = screen.getAllByRole(&apos;row&apos;);
+      const tableRows = screen.getAllByRole('row');
       expect(tableRows.length).toBeGreaterThan(1); // Header + data rows
     });
 
-    it(&apos;should maintain keyboard navigation&apos;, async () => {
+    it('should maintain keyboard navigation', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
@@ -391,49 +391,49 @@ describe(&apos;Sites Component&apos;, () => {
 
       await user.tab();
       expect(document.activeElement).toBe(
-        screen.getByRole(&apos;button&apos;, { name: /filters/i })
+        screen.getByRole('button', { name: /filters/i })
       );
     });
   });
 
-  describe(&apos;Error Handling&apos;, () => {
-    it(&apos;should handle empty search results gracefully&apos;, async () => {
+  describe('Error Handling', () => {
+    it('should handle empty search results gracefully', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       const searchInput = screen.getByPlaceholderText(/search by site name/i);
-      await user.type(searchInput, &apos;NonExistentSite&apos;);
+      await user.type(searchInput, 'NonExistentSite');
 
       // Should show 0 results
-      expect(screen.getByText(&apos;Showing 0 of 3 sites&apos;)).toBeInTheDocument();
+      expect(screen.getByText('Showing 0 of 3 sites')).toBeInTheDocument();
     });
 
-    it(&apos;should handle multiple filter combinations&apos;, async () => {
+    it('should handle multiple filter combinations', async () => {
       const user = userEvent.setup();
       render(<Sites onSiteClick={mockOnSiteClick} />);
 
       // Show filters
-      const filterButton = screen.getByRole(&apos;button&apos;, { name: /filters/i });
+      const filterButton = screen.getByRole('button', { name: /filters/i });
       await user.click(filterButton);
 
       // Apply multiple filters
-      const statusSelect = screen.getByRole(&apos;combobox&apos;);
+      const statusSelect = screen.getByRole('combobox');
       await user.click(statusSelect);
-      await user.click(screen.getByText(&apos;Active&apos;));
+      await user.click(screen.getByText('Active'));
 
-      const assetSelect = screen.getByRole(&apos;combobox&apos;, {
+      const assetSelect = screen.getByRole('combobox', {
         name: /asset count/i,
       });
       await user.click(assetSelect);
-      await user.click(screen.getByText(&apos;101 - 500&apos;));
+      await user.click(screen.getByText('101 - 500'));
 
       // Should show filter count badge with 2
-      expect(screen.getByText(&apos;2&apos;)).toBeInTheDocument();
+      expect(screen.getByText('2')).toBeInTheDocument();
 
       // Should show only Main Warehouse (active and 150 assets)
-      expect(screen.getByText(&apos;Main Warehouse&apos;)).toBeInTheDocument();
-      expect(screen.queryByText(&apos;Construction Site B&apos;)).not.toBeInTheDocument();
-      expect(screen.queryByText(&apos;Remote Office&apos;)).not.toBeInTheDocument();
+      expect(screen.getByText('Main Warehouse')).toBeInTheDocument();
+      expect(screen.queryByText('Construction Site B')).not.toBeInTheDocument();
+      expect(screen.queryByText('Remote Office')).not.toBeInTheDocument();
     });
   });
 });

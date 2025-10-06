@@ -5,11 +5,11 @@
  * Used in both CreateJob and EditJob components
  */
 
-import React, { useState } from &apos;react&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
+import React, { useState } from 'react';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -17,9 +17,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from &apos;../ui/dialog&apos;;
-import { Plus, X, Tag } from &apos;lucide-react&apos;;
-import { toast } from &apos;sonner&apos;;
+} from '../ui/dialog';
+import { Plus, X, Tag } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface TagsSectionProps {
   tags: string[];
@@ -33,23 +33,23 @@ export function TagsSection({
   showAsSection = true,
 }: TagsSectionProps) {
   const [showTagDialog, setShowTagDialog] = useState(false);
-  const [newTag, setNewTag] = useState(&apos;&apos;);
+  const [newTag, setNewTag] = useState('');
 
   const handleAddTag = () => {
     if (!newTag.trim()) {
-      toast.error(&apos;Please enter a tag&apos;);
+      toast.error('Please enter a tag');
       return;
     }
 
     if (tags.includes(newTag.trim())) {
-      toast.error(&apos;Tag already exists&apos;);
+      toast.error('Tag already exists');
       return;
     }
 
     onTagsChange([...tags, newTag.trim()]);
-    setNewTag(&apos;&apos;);
+    setNewTag('');
     setShowTagDialog(false);
-    toast.success(&apos;Tag added&apos;);
+    toast.success('Tag added');
   };
 
   const handleRemoveTag = (tag: string) => {
@@ -57,24 +57,24 @@ export function TagsSection({
   };
 
   const content = (
-    <div className=&apos;space-y-2&apos;>
+    <div className='space-y-2'>
       <Label>Tags</Label>
-      <div className=&apos;flex flex-wrap gap-2&apos;>
+      <div className='flex flex-wrap gap-2'>
         {tags.map(tag => (
-          <Badge key={tag} variant=&apos;secondary&apos;>
+          <Badge key={tag} variant='secondary'>
             {tag}
             <X
-              className=&apos;h-3 w-3 ml-1 cursor-pointer&apos;
+              className='h-3 w-3 ml-1 cursor-pointer'
               onClick={() => handleRemoveTag(tag)}
             />
           </Badge>
         ))}
         <Button
-          variant=&apos;outline&apos;
-          size=&apos;sm&apos;
+          variant='outline'
+          size='sm'
           onClick={() => setShowTagDialog(true)}
         >
-          <Plus className=&apos;h-3 w-3 mr-1&apos; />
+          <Plus className='h-3 w-3 mr-1' />
           Add Tag
         </Button>
       </div>
@@ -84,13 +84,13 @@ export function TagsSection({
   return (
     <>
       {showAsSection ? (
-        <div className=&apos;space-y-6&apos;>
+        <div className='space-y-6'>
           <div>
-            <h3 className=&apos;flex items-center gap-2&apos;>
-              <Tag className=&apos;h-5 w-5&apos; />
+            <h3 className='flex items-center gap-2'>
+              <Tag className='h-5 w-5' />
               Tags
             </h3>
-            <p className=&apos;text-sm text-muted-foreground mt-2&apos;>
+            <p className='text-sm text-muted-foreground mt-2'>
               Add tags to organize and categorize this job
             </p>
           </div>
@@ -110,15 +110,15 @@ export function TagsSection({
             </DialogDescription>
           </DialogHeader>
 
-          <div className=&apos;space-y-2&apos;>
-            <Label htmlFor=&apos;new-tag&apos;>Tag Name</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='new-tag'>Tag Name</Label>
             <Input
-              id=&apos;new-tag&apos;
+              id='new-tag'
               value={newTag}
               onChange={e => setNewTag(e.target.value)}
-              placeholder=&apos;e.g., urgent, high-value, downtown&apos;
+              placeholder='e.g., urgent, high-value, downtown'
               onKeyDown={e => {
-                if (e.key === &apos;Enter&apos;) {
+                if (e.key === 'Enter') {
                   e.preventDefault();
                   handleAddTag();
                 }
@@ -127,7 +127,7 @@ export function TagsSection({
           </div>
 
           <DialogFooter>
-            <Button variant=&apos;outline&apos; onClick={() => setShowTagDialog(false)}>
+            <Button variant='outline' onClick={() => setShowTagDialog(false)}>
               Cancel
             </Button>
             <Button onClick={handleAddTag}>Add Tag</Button>

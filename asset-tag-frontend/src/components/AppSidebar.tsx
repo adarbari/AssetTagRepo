@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from &apos;react&apos;;
-import { ViewType } from &apos;../App&apos;;
+import React, { useState, useMemo } from 'react';
+import { ViewType } from '../App';
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
-} from &apos;./ui/sidebar&apos;;
+} from './ui/sidebar';
 import {
   LayoutDashboard,
   Map,
@@ -31,14 +31,14 @@ import {
   AlertTriangle,
   TrendingDown,
   WifiOff,
-} from &apos;lucide-react&apos;;
-import { Badge } from &apos;./ui/badge&apos;;
+} from 'lucide-react';
+import { Badge } from './ui/badge';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from &apos;./ui/collapsible&apos;;
-import { mockAlerts } from &apos;../data/mockData&apos;;
+} from './ui/collapsible';
+import { mockAlerts } from '../data/mockData';
 
 interface AppSidebarProps {
   currentView: ViewType;
@@ -54,99 +54,99 @@ export function AppSidebar({
   const [alertTypesExpanded, setAlertTypesExpanded] = useState(false);
 
   const mainItems = [
-    { id: &apos;dashboard&apos; as ViewType, label: &apos;Dashboard&apos;, icon: LayoutDashboard },
-    { id: &apos;map&apos; as ViewType, label: &apos;Live Map&apos;, icon: Map },
-    { id: &apos;inventory&apos; as ViewType, label: &apos;Asset Inventory&apos;, icon: Package },
-    { id: &apos;sites&apos; as ViewType, label: &apos;Sites&apos;, icon: Building2 },
+    { id: 'dashboard' as ViewType, label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'map' as ViewType, label: 'Live Map', icon: Map },
+    { id: 'inventory' as ViewType, label: 'Asset Inventory', icon: Package },
+    { id: 'sites' as ViewType, label: 'Sites', icon: Building2 },
   ];
 
   // Calculate alert statistics
   const alertStats = useMemo(() => {
-    const activeAlerts = mockAlerts.filter(a => a.status === &apos;active&apos;);
+    const activeAlerts = mockAlerts.filter(a => a.status === 'active');
     return {
       total: activeAlerts.length,
-      theft: activeAlerts.filter(a => a.type === &apos;theft&apos;).length,
-      battery: activeAlerts.filter(a => a.type === &apos;battery&apos;).length,
-      compliance: activeAlerts.filter(a => a.type === &apos;compliance&apos;).length,
-      offline: activeAlerts.filter(a => a.type === &apos;offline&apos;).length,
-      unauthorized: activeAlerts.filter(a => a.type === &apos;unauthorized-zone&apos;)
+      theft: activeAlerts.filter(a => a.type === 'theft').length,
+      battery: activeAlerts.filter(a => a.type === 'battery').length,
+      compliance: activeAlerts.filter(a => a.type === 'compliance').length,
+      offline: activeAlerts.filter(a => a.type === 'offline').length,
+      unauthorized: activeAlerts.filter(a => a.type === 'unauthorized-zone')
         .length,
-      underutilized: activeAlerts.filter(a => a.type === &apos;underutilized&apos;)
+      underutilized: activeAlerts.filter(a => a.type === 'underutilized')
         .length,
-      maintenance: activeAlerts.filter(a => a.type === &apos;predictive-maintenance&apos;)
+      maintenance: activeAlerts.filter(a => a.type === 'predictive-maintenance')
         .length,
     };
   }, []);
 
   const alertTypeItems = [
     {
-      type: &apos;theft&apos;,
-      label: &apos;Theft Alerts&apos;,
+      type: 'theft',
+      label: 'Theft Alerts',
       icon: Shield,
       count: alertStats.theft,
-      color: &apos;text-red-600&apos;,
+      color: 'text-red-600',
     },
     {
-      type: &apos;battery&apos;,
-      label: &apos;Battery Alerts&apos;,
+      type: 'battery',
+      label: 'Battery Alerts',
       icon: Battery,
       count: alertStats.battery,
-      color: &apos;text-orange-600&apos;,
+      color: 'text-orange-600',
     },
     {
-      type: &apos;compliance&apos;,
-      label: &apos;Compliance&apos;,
+      type: 'compliance',
+      label: 'Compliance',
       icon: AlertTriangle,
       count: alertStats.compliance,
-      color: &apos;text-yellow-600&apos;,
+      color: 'text-yellow-600',
     },
     {
-      type: &apos;offline&apos;,
-      label: &apos;Offline&apos;,
+      type: 'offline',
+      label: 'Offline',
       icon: WifiOff,
       count: alertStats.offline,
-      color: &apos;text-gray-600&apos;,
+      color: 'text-gray-600',
     },
     {
-      type: &apos;unauthorized-zone&apos;,
-      label: &apos;Unauthorized&apos;,
+      type: 'unauthorized-zone',
+      label: 'Unauthorized',
       icon: MapPin,
       count: alertStats.unauthorized,
-      color: &apos;text-red-600&apos;,
+      color: 'text-red-600',
     },
     {
-      type: &apos;underutilized&apos;,
-      label: &apos;Underutilized&apos;,
+      type: 'underutilized',
+      label: 'Underutilized',
       icon: TrendingDown,
       count: alertStats.underutilized,
-      color: &apos;text-blue-600&apos;,
+      color: 'text-blue-600',
     },
     {
-      type: &apos;predictive-maintenance&apos;,
-      label: &apos;Maintenance&apos;,
+      type: 'predictive-maintenance',
+      label: 'Maintenance',
       icon: Wrench,
       count: alertStats.maintenance,
-      color: &apos;text-purple-600&apos;,
+      color: 'text-purple-600',
     },
   ];
 
   const operationsItems = [
-    { id: &apos;jobs&apos; as ViewType, label: &apos;Jobs&apos;, icon: Package },
-    { id: &apos;maintenance&apos; as ViewType, label: &apos;Maintenance&apos;, icon: Wrench },
-    { id: &apos;issues&apos; as ViewType, label: &apos;Issues&apos;, icon: AlertTriangle },
+    { id: 'jobs' as ViewType, label: 'Jobs', icon: Package },
+    { id: 'maintenance' as ViewType, label: 'Maintenance', icon: Wrench },
+    { id: 'issues' as ViewType, label: 'Issues', icon: AlertTriangle },
     {
-      id: &apos;vehicle-pairing&apos; as ViewType,
-      label: &apos;Vehicle Pairing&apos;,
+      id: 'vehicle-pairing' as ViewType,
+      label: 'Vehicle Pairing',
       icon: Truck,
     },
   ];
 
   const monitoringItems = [
-    { id: &apos;compliance&apos; as ViewType, label: &apos;Compliance&apos;, icon: Shield },
-    { id: &apos;geofences&apos; as ViewType, label: &apos;Geofences&apos;, icon: MapPin },
+    { id: 'compliance' as ViewType, label: 'Compliance', icon: Shield },
+    { id: 'geofences' as ViewType, label: 'Geofences', icon: MapPin },
     {
-      id: &apos;alerts&apos; as ViewType,
-      label: &apos;Alerts&apos;,
+      id: 'alerts' as ViewType,
+      label: 'Alerts',
       icon: Bell,
       badge: alertStats.total,
     },
@@ -154,14 +154,14 @@ export function AppSidebar({
 
   return (
     <Sidebar>
-      <SidebarHeader className=&apos;border-b border-sidebar-border px-6 py-4&apos;>
-        <div className=&apos;flex items-center gap-2&apos;>
-          <div className=&apos;flex h-8 w-8 items-center justify-center rounded-lg bg-primary&apos;>
-            <Radio className=&apos;h-4 w-4 text-primary-foreground&apos; />
+      <SidebarHeader className='border-b border-sidebar-border px-6 py-4'>
+        <div className='flex items-center gap-2'>
+          <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary'>
+            <Radio className='h-4 w-4 text-primary-foreground' />
           </div>
           <div>
-            <h2 className=&apos;text-sidebar-foreground&apos;>AssetTrack Pro</h2>
-            <p className=&apos;text-xs text-sidebar-foreground/60&apos;>
+            <h2 className='text-sidebar-foreground'>AssetTrack Pro</h2>
+            <p className='text-xs text-sidebar-foreground/60'>
               Location Intelligence
             </p>
           </div>
@@ -181,7 +181,7 @@ export function AppSidebar({
                       onClick={() => onViewChange(item.id)}
                       isActive={currentView === item.id}
                     >
-                      <Icon className=&apos;h-4 w-4&apos; />
+                      <Icon className='h-4 w-4' />
                       <span>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -203,7 +203,7 @@ export function AppSidebar({
                       onClick={() => onViewChange(item.id)}
                       isActive={currentView === item.id}
                     >
-                      <Icon className=&apos;h-4 w-4&apos; />
+                      <Icon className='h-4 w-4' />
                       <span>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -225,12 +225,12 @@ export function AppSidebar({
                       onClick={() => onViewChange(item.id)}
                       isActive={currentView === item.id}
                     >
-                      <Icon className=&apos;h-4 w-4&apos; />
+                      <Icon className='h-4 w-4' />
                       <span>{item.label}</span>
                       {item.badge && item.badge > 0 && (
                         <Badge
-                          variant=&apos;destructive&apos;
-                          className=&apos;ml-auto h-5 min-w-5 px-1&apos;
+                          variant='destructive'
+                          className='ml-auto h-5 min-w-5 px-1'
                         >
                           {item.badge}
                         </Badge>
@@ -247,35 +247,35 @@ export function AppSidebar({
                   onOpenChange={setAlertTypesExpanded}
                 >
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton className=&apos;w-full&apos;>
+                    <SidebarMenuButton className='w-full'>
                       {alertTypesExpanded ? (
-                        <ChevronDown className=&apos;h-4 w-4&apos; />
+                        <ChevronDown className='h-4 w-4' />
                       ) : (
-                        <ChevronRight className=&apos;h-4 w-4&apos; />
+                        <ChevronRight className='h-4 w-4' />
                       )}
-                      <span className=&apos;text-xs text-muted-foreground&apos;>
+                      <span className='text-xs text-muted-foreground'>
                         Alert Types
                       </span>
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
-                  <CollapsibleContent className=&apos;space-y-1 pl-4 mt-1&apos;>
+                  <CollapsibleContent className='space-y-1 pl-4 mt-1'>
                     {alertTypeItems.map(item => {
                       const Icon = item.icon;
                       return (
                         <SidebarMenuButton
                           key={item.type}
                           onClick={() => {
-                            onViewChange(&apos;alerts&apos;);
+                            onViewChange('alerts');
                             onAlertTypeClick?.(item.type);
                           }}
-                          className=&apos;h-8 text-xs&apos;
+                          className='h-8 text-xs'
                         >
                           <Icon className={`h-3 w-3 ${item.color}`} />
-                          <span className=&apos;flex-1&apos;>{item.label}</span>
+                          <span className='flex-1'>{item.label}</span>
                           {item.count > 0 && (
                             <Badge
-                              variant=&apos;secondary&apos;
-                              className=&apos;h-4 min-w-4 px-1 text-xs&apos;
+                              variant='secondary'
+                              className='h-4 min-w-4 px-1 text-xs'
                             >
                               {item.count}
                             </Badge>
@@ -291,32 +291,32 @@ export function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className=&apos;border-t border-sidebar-border p-4&apos;>
+      <SidebarFooter className='border-t border-sidebar-border p-4'>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              onClick={() => onViewChange(&apos;notifications&apos;)}
-              isActive={currentView === &apos;notifications&apos;}
+              onClick={() => onViewChange('notifications')}
+              isActive={currentView === 'notifications'}
             >
-              <BellRing className=&apos;h-4 w-4&apos; />
+              <BellRing className='h-4 w-4' />
               <span>Notification Configuration</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
-              onClick={() => onViewChange(&apos;alert-configuration&apos;)}
-              isActive={currentView === &apos;alert-configuration&apos;}
+              onClick={() => onViewChange('alert-configuration')}
+              isActive={currentView === 'alert-configuration'}
             >
-              <Settings className=&apos;h-4 w-4&apos; />
+              <Settings className='h-4 w-4' />
               <span>Alert Configuration</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
-              onClick={() => onViewChange(&apos;settings&apos;)}
-              isActive={currentView === &apos;settings&apos;}
+              onClick={() => onViewChange('settings')}
+              isActive={currentView === 'settings'}
             >
-              <Settings className=&apos;h-4 w-4&apos; />
+              <Settings className='h-4 w-4' />
               <span>Settings</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

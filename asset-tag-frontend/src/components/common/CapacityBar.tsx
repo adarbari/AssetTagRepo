@@ -1,4 +1,4 @@
-import React from &apos;react&apos;;
+import React from 'react';
 
 /**
  * Reusable Capacity Bar Component
@@ -12,13 +12,13 @@ interface CapacityBarProps {
   total: number;
   label?: string;
   showPercentage?: boolean;
-  variant?: &apos;default&apos; | &apos;warning&apos; | &apos;danger&apos;;
+  variant?: 'default' | 'warning' | 'danger';
 }
 
 export function CapacityBar({
   current,
   total,
-  label = &apos;Capacity&apos;,
+  label = 'Capacity',
   showPercentage = true,
   variant,
 }: CapacityBarProps) {
@@ -28,29 +28,29 @@ export function CapacityBar({
   const effectiveVariant =
     variant ||
     (current >= total
-      ? &apos;danger&apos;
+      ? 'danger'
       : current >= total * 0.8
-        ? &apos;warning&apos;
-        : &apos;default&apos;);
+        ? 'warning'
+        : 'default');
 
   const colorClass =
-    effectiveVariant === &apos;danger&apos;
-      ? &apos;bg-red-500&apos;
-      : effectiveVariant === &apos;warning&apos;
-        ? &apos;bg-orange-500&apos;
-        : &apos;bg-primary&apos;;
+    effectiveVariant === 'danger'
+      ? 'bg-red-500'
+      : effectiveVariant === 'warning'
+        ? 'bg-orange-500'
+        : 'bg-primary';
 
   return (
     <div>
-      <div className=&apos;flex items-center justify-between mb-2&apos;>
-        <span className=&apos;text-sm text-muted-foreground&apos;>
+      <div className='flex items-center justify-between mb-2'>
+        <span className='text-sm text-muted-foreground'>
           {label}: {current}/{total}
         </span>
         {showPercentage && (
-          <span className=&apos;text-sm&apos;>{Math.round(percentage)}%</span>
+          <span className='text-sm'>{Math.round(percentage)}%</span>
         )}
       </div>
-      <div className=&apos;w-full bg-muted rounded-full h-2&apos;>
+      <div className='w-full bg-muted rounded-full h-2'>
         <div
           className={`rounded-full h-2 transition-all ${colorClass}`}
           style={{ width: `${percentage}%` }}

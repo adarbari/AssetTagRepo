@@ -1,12 +1,12 @@
-// import React from &apos;react&apos;;
-import { describe, it, expect, vi, beforeEach } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { CreateJob } from &apos;../job/CreateJob&apos;;
-import { render } from &apos;../../test/test-utils&apos;;
+// import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { CreateJob } from '../job/CreateJob';
+import { render } from '../../test/test-utils';
 
 // Mock toast
-vi.mock(&apos;sonner&apos;, () => ({
+vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
@@ -14,124 +14,124 @@ vi.mock(&apos;sonner&apos;, () => ({
   },
 }));
 
-describe(&apos;CreateJob Component - Basic Tests&apos;, () => {
+describe('CreateJob Component - Basic Tests', () => {
   const mockProps = {
     onBack: vi.fn(),
     onCreateJob: vi
       .fn()
-      .mockResolvedValue({ success: true, job: { id: &apos;new-job-id&apos; } }),
+      .mockResolvedValue({ success: true, job: { id: 'new-job-id' } }),
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe(&apos;Basic Rendering&apos;, () => {
-    it(&apos;should render the component without crashing&apos;, () => {
+  describe('Basic Rendering', () => {
+    it('should render the component without crashing', () => {
       render(<CreateJob {...mockProps} />);
 
       expect(screen.getByText(/create job/i)).toBeInTheDocument();
     });
 
-    it(&apos;should render back button and handle click&apos;, async () => {
+    it('should render back button and handle click', async () => {
       const user = userEvent.setup();
       render(<CreateJob {...mockProps} />);
 
-      const backButton = screen.getByRole(&apos;button&apos;); // First button is the back button
+      const backButton = screen.getByRole('button'); // First button is the back button
       await user.click(backButton);
       expect(mockProps.onBack).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Form Structure&apos;, () => {
-    it(&apos;should render form with proper structure&apos;, () => {
+  describe('Form Structure', () => {
+    it('should render form with proper structure', () => {
       render(<CreateJob {...mockProps} />);
 
       expect(screen.getByText(/create job/i)).toBeInTheDocument();
     });
 
-    it(&apos;should render job form sections&apos;, () => {
+    it('should render job form sections', () => {
       render(<CreateJob {...mockProps} />);
 
       expect(screen.getByText(/create job/i)).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Form Inputs&apos;, () => {
-    it(&apos;should render job title input&apos;, () => {
+  describe('Form Inputs', () => {
+    it('should render job title input', () => {
       render(<CreateJob {...mockProps} />);
 
       expect(screen.getByLabelText(/job title/i)).toBeInTheDocument();
     });
 
-    it(&apos;should handle title input typing&apos;, async () => {
+    it('should handle title input typing', async () => {
       const user = userEvent.setup();
       render(<CreateJob {...mockProps} />);
 
       const titleInput = screen.getByLabelText(/job title/i);
-      await user.type(titleInput, &apos;Test Job&apos;);
-      expect(titleInput).toHaveValue(&apos;Test Job&apos;);
+      await user.type(titleInput, 'Test Job');
+      expect(titleInput).toHaveValue('Test Job');
     });
   });
 
-  describe(&apos;Button Interactions&apos;, () => {
-    it(&apos;should render submit button&apos;, () => {
+  describe('Button Interactions', () => {
+    it('should render submit button', () => {
       render(<CreateJob {...mockProps} />);
 
-      const submitButton = screen.getByRole(&apos;button&apos;, { name: /create job/i });
+      const submitButton = screen.getByRole('button', { name: /create job/i });
       expect(submitButton).toBeInTheDocument();
     });
 
-    it(&apos;should handle cancel button click&apos;, async () => {
+    it('should handle cancel button click', async () => {
       const user = userEvent.setup();
       render(<CreateJob {...mockProps} />);
 
-      const cancelButton = screen.getByRole(&apos;button&apos;, { name: /cancel/i });
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
       await user.click(cancelButton);
       expect(mockProps.onBack).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Form Validation&apos;, () => {
-    it(&apos;should handle form submission with valid data&apos;, async () => {
+  describe('Form Validation', () => {
+    it('should handle form submission with valid data', async () => {
       const user = userEvent.setup();
       render(<CreateJob {...mockProps} />);
 
       const titleInput = screen.getByLabelText(/job title/i);
-      await user.type(titleInput, &apos;Test Job&apos;);
+      await user.type(titleInput, 'Test Job');
 
-      const submitButton = screen.getByRole(&apos;button&apos;, { name: /create job/i });
+      const submitButton = screen.getByRole('button', { name: /create job/i });
       await user.click(submitButton);
 
       expect(mockProps.onCreateJob).toHaveBeenCalled();
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper form structure&apos;, () => {
+  describe('Accessibility', () => {
+    it('should have proper form structure', () => {
       render(<CreateJob {...mockProps} />);
 
-      const form = document.querySelector(&apos;form&apos;);
+      const form = document.querySelector('form');
       expect(form).toBeInTheDocument();
     });
 
-    it(&apos;should have proper labels for inputs&apos;, () => {
+    it('should have proper labels for inputs', () => {
       render(<CreateJob {...mockProps} />);
 
       expect(screen.getByLabelText(/job title/i)).toBeInTheDocument();
     });
   });
 
-  describe(&apos;Error Handling&apos;, () => {
-    it(&apos;should handle onCreateJob callback&apos;, () => {
+  describe('Error Handling', () => {
+    it('should handle onCreateJob callback', () => {
       expect(mockProps.onCreateJob).toBeDefined();
     });
 
-    it(&apos;should handle form errors gracefully&apos;, async () => {
+    it('should handle form errors gracefully', async () => {
       const user = userEvent.setup();
       render(<CreateJob {...mockProps} />);
 
-      const submitButton = screen.getByRole(&apos;button&apos;, { name: /create job/i });
+      const submitButton = screen.getByRole('button', { name: /create job/i });
       await user.click(submitButton);
 
       // Should handle form validation

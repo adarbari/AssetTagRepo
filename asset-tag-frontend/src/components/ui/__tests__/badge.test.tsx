@@ -1,112 +1,112 @@
-import React from &apos;react&apos;;
-import { describe, it, expect, vi } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { Badge } from &apos;../badge&apos;;
-import { render } from &apos;../../../test/test-utils&apos;;
-import { Plus, AlertTriangle } from &apos;lucide-react&apos;;
+import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Badge } from '../badge';
+import { render } from '../../../test/test-utils';
+import { Plus, AlertTriangle } from 'lucide-react';
 
-describe(&apos;Badge Component - Click Tests&apos;, () => {
-  describe(&apos;Basic Functionality&apos;, () => {
-    it(&apos;should render badge with text&apos;, () => {
+describe('Badge Component - Click Tests', () => {
+  describe('Basic Functionality', () => {
+    it('should render badge with text', () => {
       render(<Badge>Test Badge</Badge>);
 
-      const badge = screen.getByText(&apos;Test Badge&apos;);
+      const badge = screen.getByText('Test Badge');
       expect(badge).toBeInTheDocument();
-      expect(badge).toHaveAttribute(&apos;data-slot&apos;, &apos;badge&apos;);
+      expect(badge).toHaveAttribute('data-slot', 'badge');
     });
 
-    it(&apos;should render as span by default&apos;, () => {
+    it('should render as span by default', () => {
       render(<Badge>Default Badge</Badge>);
 
-      const badge = screen.getByText(&apos;Default Badge&apos;);
-      expect(badge.tagName).toBe(&apos;SPAN&apos;);
+      const badge = screen.getByText('Default Badge');
+      expect(badge.tagName).toBe('SPAN');
     });
 
-    it(&apos;should render as child component when asChild is true&apos;, () => {
+    it('should render as child component when asChild is true', () => {
       render(
         <Badge asChild>
           <button>Badge Button</button>
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, { name: /badge button/i });
+      const badgeButton = screen.getByRole('button', { name: /badge button/i });
       expect(badgeButton).toBeInTheDocument();
-      expect(badgeButton).toHaveAttribute(&apos;data-slot&apos;, &apos;badge&apos;);
+      expect(badgeButton).toHaveAttribute('data-slot', 'badge');
     });
   });
 
-  describe(&apos;Badge Variants&apos;, () => {
-    it(&apos;should render default variant&apos;, () => {
+  describe('Badge Variants', () => {
+    it('should render default variant', () => {
       render(<Badge>Default</Badge>);
 
-      const badge = screen.getByText(&apos;Default&apos;);
+      const badge = screen.getByText('Default');
       expect(badge).toBeInTheDocument();
-      expect(badge.className).toContain(&apos;bg-primary&apos;);
+      expect(badge.className).toContain('bg-primary');
     });
 
-    it(&apos;should render secondary variant&apos;, () => {
-      render(<Badge variant=&apos;secondary&apos;>Secondary</Badge>);
+    it('should render secondary variant', () => {
+      render(<Badge variant='secondary'>Secondary</Badge>);
 
-      const badge = screen.getByText(&apos;Secondary&apos;);
+      const badge = screen.getByText('Secondary');
       expect(badge).toBeInTheDocument();
-      expect(badge.className).toContain(&apos;bg-secondary&apos;);
+      expect(badge.className).toContain('bg-secondary');
     });
 
-    it(&apos;should render destructive variant&apos;, () => {
-      render(<Badge variant=&apos;destructive&apos;>Destructive</Badge>);
+    it('should render destructive variant', () => {
+      render(<Badge variant='destructive'>Destructive</Badge>);
 
-      const badge = screen.getByText(&apos;Destructive&apos;);
+      const badge = screen.getByText('Destructive');
       expect(badge).toBeInTheDocument();
-      expect(badge.className).toContain(&apos;bg-destructive&apos;);
+      expect(badge.className).toContain('bg-destructive');
     });
 
-    it(&apos;should render outline variant&apos;, () => {
-      render(<Badge variant=&apos;outline&apos;>Outline</Badge>);
+    it('should render outline variant', () => {
+      render(<Badge variant='outline'>Outline</Badge>);
 
-      const badge = screen.getByText(&apos;Outline&apos;);
+      const badge = screen.getByText('Outline');
       expect(badge).toBeInTheDocument();
-      expect(badge.className).toContain(&apos;text-foreground&apos;);
+      expect(badge.className).toContain('text-foreground');
     });
   });
 
-  describe(&apos;Badge with Icons&apos;, () => {
-    it(&apos;should render badge with icon&apos;, () => {
+  describe('Badge with Icons', () => {
+    it('should render badge with icon', () => {
       render(
         <Badge>
-          <Plus className=&apos;h-3 w-3&apos; />
+          <Plus className='h-3 w-3' />
           With Icon
         </Badge>
       );
 
-      const badge = screen.getByText(&apos;With Icon&apos;);
+      const badge = screen.getByText('With Icon');
       expect(badge).toBeInTheDocument();
 
       // Icon should be present
-      const icon = document.querySelector(&apos;svg&apos;);
+      const icon = document.querySelector('svg');
       expect(icon).toBeInTheDocument();
     });
 
-    it(&apos;should render badge with multiple icons&apos;, () => {
+    it('should render badge with multiple icons', () => {
       render(
         <Badge>
-          <Plus className=&apos;h-3 w-3&apos; />
-          <AlertTriangle className=&apos;h-3 w-3&apos; />
+          <Plus className='h-3 w-3' />
+          <AlertTriangle className='h-3 w-3' />
           Multiple Icons
         </Badge>
       );
 
-      const badge = screen.getByText(&apos;Multiple Icons&apos;);
+      const badge = screen.getByText('Multiple Icons');
       expect(badge).toBeInTheDocument();
 
       // Multiple icons should be present
-      const icons = document.querySelectorAll(&apos;svg&apos;);
+      const icons = document.querySelectorAll('svg');
       expect(icons).toHaveLength(2);
     });
   });
 
-  describe(&apos;Interactive Badge (asChild)&apos;, () => {
-    it(&apos;should handle click on badge button&apos;, async () => {
+  describe('Interactive Badge (asChild)', () => {
+    it('should handle click on badge button', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
@@ -116,7 +116,7 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, {
+      const badgeButton = screen.getByRole('button', {
         name: /clickable badge/i,
       });
       await user.click(badgeButton);
@@ -124,7 +124,7 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle multiple clicks on badge button&apos;, async () => {
+    it('should handle multiple clicks on badge button', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
@@ -134,7 +134,7 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, {
+      const badgeButton = screen.getByRole('button', {
         name: /multi click badge/i,
       });
 
@@ -145,7 +145,7 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
       expect(mockOnClick).toHaveBeenCalledTimes(3);
     });
 
-    it(&apos;should handle keyboard activation on badge button&apos;, async () => {
+    it('should handle keyboard activation on badge button', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
@@ -155,18 +155,18 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, {
+      const badgeButton = screen.getByRole('button', {
         name: /keyboard badge/i,
       });
 
       // Focus and press Enter
       badgeButton.focus();
-      await user.keyboard(&apos;{Enter}&apos;);
+      await user.keyboard('{Enter}');
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle Space key activation on badge button&apos;, async () => {
+    it('should handle Space key activation on badge button', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
@@ -176,44 +176,44 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, { name: /space badge/i });
+      const badgeButton = screen.getByRole('button', { name: /space badge/i });
 
       // Focus and press Space
       badgeButton.focus();
-      await user.keyboard(&apos; &apos;);
+      await user.keyboard(' ');
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper data attributes&apos;, () => {
+  describe('Accessibility', () => {
+    it('should have proper data attributes', () => {
       render(<Badge>Accessible Badge</Badge>);
 
-      const badge = screen.getByText(&apos;Accessible Badge&apos;);
-      expect(badge).toHaveAttribute(&apos;data-slot&apos;, &apos;badge&apos;);
+      const badge = screen.getByText('Accessible Badge');
+      expect(badge).toHaveAttribute('data-slot', 'badge');
     });
 
-    it(&apos;should support custom aria attributes&apos;, () => {
+    it('should support custom aria attributes', () => {
       render(
-        <Badge aria-label=&apos;Custom badge label&apos; role=&apos;status&apos;>
+        <Badge aria-label='Custom badge label' role='status'>
           Custom Badge
         </Badge>
       );
 
-      const badge = screen.getByText(&apos;Custom Badge&apos;);
-      expect(badge).toHaveAttribute(&apos;aria-label&apos;, &apos;Custom badge label&apos;);
-      expect(badge).toHaveAttribute(&apos;role&apos;, &apos;status&apos;);
+      const badge = screen.getByText('Custom Badge');
+      expect(badge).toHaveAttribute('aria-label', 'Custom badge label');
+      expect(badge).toHaveAttribute('role', 'status');
     });
 
-    it(&apos;should be focusable when rendered as button&apos;, () => {
+    it('should be focusable when rendered as button', () => {
       render(
         <Badge asChild>
           <button>Focusable Badge</button>
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, {
+      const badgeButton = screen.getByRole('button', {
         name: /focusable badge/i,
       });
       badgeButton.focus();
@@ -222,29 +222,29 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Custom Styling&apos;, () => {
-    it(&apos;should apply custom className&apos;, () => {
-      render(<Badge className=&apos;custom-class&apos;>Custom Badge</Badge>);
+  describe('Custom Styling', () => {
+    it('should apply custom className', () => {
+      render(<Badge className='custom-class'>Custom Badge</Badge>);
 
-      const badge = screen.getByText(&apos;Custom Badge&apos;);
-      expect(badge).toHaveClass(&apos;custom-class&apos;);
+      const badge = screen.getByText('Custom Badge');
+      expect(badge).toHaveClass('custom-class');
     });
 
-    it(&apos;should merge custom className with variant classes&apos;, () => {
+    it('should merge custom className with variant classes', () => {
       render(
-        <Badge variant=&apos;destructive&apos; className=&apos;custom-destructive&apos;>
+        <Badge variant='destructive' className='custom-destructive'>
           Custom Destructive
         </Badge>
       );
 
-      const badge = screen.getByText(&apos;Custom Destructive&apos;);
-      expect(badge).toHaveClass(&apos;custom-destructive&apos;);
-      expect(badge.className).toContain(&apos;bg-destructive&apos;);
+      const badge = screen.getByText('Custom Destructive');
+      expect(badge).toHaveClass('custom-destructive');
+      expect(badge.className).toContain('bg-destructive');
     });
   });
 
-  describe(&apos;Event Handling&apos;, () => {
-    it(&apos;should handle mouse events on badge button&apos;, async () => {
+  describe('Event Handling', () => {
+    it('should handle mouse events on badge button', async () => {
       const user = userEvent.setup();
       const mockOnMouseDown = vi.fn();
       const mockOnMouseUp = vi.fn();
@@ -257,16 +257,16 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, { name: /event badge/i });
+      const badgeButton = screen.getByRole('button', { name: /event badge/i });
 
-      await user.pointer({ keys: &apos;[MouseLeft>]&apos;, target: badgeButton });
+      await user.pointer({ keys: '[MouseLeft>]', target: badgeButton });
       expect(mockOnMouseDown).toHaveBeenCalledTimes(1);
 
-      await user.pointer({ keys: &apos;[/MouseLeft]&apos;, target: badgeButton });
+      await user.pointer({ keys: '[/MouseLeft]', target: badgeButton });
       expect(mockOnMouseUp).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle focus and blur events&apos;, async () => {
+    it('should handle focus and blur events', async () => {
       const mockOnFocus = vi.fn();
       const mockOnBlur = vi.fn();
 
@@ -278,7 +278,7 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, { name: /focus badge/i });
+      const badgeButton = screen.getByRole('button', { name: /focus badge/i });
 
       badgeButton.focus();
       expect(mockOnFocus).toHaveBeenCalledTimes(1);
@@ -288,38 +288,38 @@ describe(&apos;Badge Component - Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Edge Cases&apos;, () => {
-    it(&apos;should handle empty content&apos;, () => {
+  describe('Edge Cases', () => {
+    it('should handle empty content', () => {
       render(<Badge></Badge>);
 
-      const badge = document.querySelector(&apos;[data-slot=&quot;badge&quot;]&apos;);
+      const badge = document.querySelector('[data-slot=&quot;badge&quot;]');
       expect(badge).toBeInTheDocument();
     });
 
-    it(&apos;should handle very long text&apos;, () => {
+    it('should handle very long text', () => {
       const longText =
-        &apos;This is a very long badge text that should be handled properly by the component&apos;;
+        'This is a very long badge text that should be handled properly by the component';
       render(<Badge>{longText}</Badge>);
 
       const badge = screen.getByText(longText);
       expect(badge).toBeInTheDocument();
     });
 
-    it(&apos;should handle special characters&apos;, () => {
+    it('should handle special characters', () => {
       render(<Badge>Special: @#$%^&*()</Badge>);
 
-      const badge = screen.getByText(&apos;Special: @#$%^&*()&apos;);
+      const badge = screen.getByText('Special: @#$%^&*()');
       expect(badge).toBeInTheDocument();
     });
 
-    it(&apos;should handle disabled state when asChild&apos;, () => {
+    it('should handle disabled state when asChild', () => {
       render(
         <Badge asChild>
           <button disabled>Disabled Badge</button>
         </Badge>
       );
 
-      const badgeButton = screen.getByRole(&apos;button&apos;, {
+      const badgeButton = screen.getByRole('button', {
         name: /disabled badge/i,
       });
       expect(badgeButton).toBeDisabled();

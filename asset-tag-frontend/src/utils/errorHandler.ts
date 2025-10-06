@@ -14,7 +14,7 @@ export function suppressCSSSecurityErrors() {
   const originalError = console.error;
 
   // Override console.error to filter out CSS security errors
-// console.error = (...args: unknown[]) => {
+  console.error = (...args: unknown[]) => {
     // Check if this is the CSS security error
     const errorMessage = args[0]?.toString() || '';
 

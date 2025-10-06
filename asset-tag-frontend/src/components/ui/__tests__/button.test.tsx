@@ -1,33 +1,33 @@
-import React from &apos;react&apos;;
-import { describe, it, expect, vi } from &apos;vitest&apos;;
-import { screen } from &apos;@testing-library/react&apos;;
-import userEvent from &apos;@testing-library/user-event&apos;;
-import { Button } from &apos;../button&apos;;
-import { render } from &apos;../../../test/test-utils&apos;;
-import { Plus } from &apos;lucide-react&apos;;
+import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Button } from '../button';
+import { render } from '../../../test/test-utils';
+import { Plus } from 'lucide-react';
 
-describe(&apos;Button Component - Click Tests&apos;, () => {
-  describe(&apos;Basic Click Functionality&apos;, () => {
-    it(&apos;should render button with text&apos;, () => {
+describe('Button Component - Click Tests', () => {
+  describe('Basic Click Functionality', () => {
+    it('should render button with text', () => {
       render(<Button>Click me</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /click me/i });
+      const button = screen.getByRole('button', { name: /click me/i });
       expect(button).toBeInTheDocument();
     });
 
-    it(&apos;should call onClick when clicked&apos;, async () => {
+    it('should call onClick when clicked', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
       render(<Button onClick={mockOnClick}>Click me</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /click me/i });
+      const button = screen.getByRole('button', { name: /click me/i });
       await user.click(button);
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should not call onClick when disabled&apos;, async () => {
+    it('should not call onClick when disabled', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
@@ -37,20 +37,20 @@ describe(&apos;Button Component - Click Tests&apos;, () => {
         </Button>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /click me/i });
+      const button = screen.getByRole('button', { name: /click me/i });
       expect(button).toBeDisabled();
 
       await user.click(button);
       expect(mockOnClick).not.toHaveBeenCalled();
     });
 
-    it(&apos;should handle multiple clicks&apos;, async () => {
+    it('should handle multiple clicks', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
       render(<Button onClick={mockOnClick}>Click me</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /click me/i });
+      const button = screen.getByRole('button', { name: /click me/i });
 
       await user.click(button);
       await user.click(button);
@@ -60,126 +60,126 @@ describe(&apos;Button Component - Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Button Variants&apos;, () => {
-    it(&apos;should render default variant&apos;, () => {
+  describe('Button Variants', () => {
+    it('should render default variant', () => {
       render(<Button>Default Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /default button/i });
-      expect(button).toHaveClass(&apos;bg-primary&apos;);
+      const button = screen.getByRole('button', { name: /default button/i });
+      expect(button).toHaveClass('bg-primary');
     });
 
-    it(&apos;should render destructive variant&apos;, () => {
-      render(<Button variant=&apos;destructive&apos;>Delete</Button>);
+    it('should render destructive variant', () => {
+      render(<Button variant='destructive'>Delete</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /delete/i });
-      expect(button).toHaveClass(&apos;bg-destructive&apos;);
+      const button = screen.getByRole('button', { name: /delete/i });
+      expect(button).toHaveClass('bg-destructive');
     });
 
-    it(&apos;should render outline variant&apos;, () => {
-      render(<Button variant=&apos;outline&apos;>Outline Button</Button>);
+    it('should render outline variant', () => {
+      render(<Button variant='outline'>Outline Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /outline button/i });
-      expect(button).toHaveClass(&apos;border&apos;);
+      const button = screen.getByRole('button', { name: /outline button/i });
+      expect(button).toHaveClass('border');
     });
 
-    it(&apos;should render secondary variant&apos;, () => {
-      render(<Button variant=&apos;secondary&apos;>Secondary Button</Button>);
+    it('should render secondary variant', () => {
+      render(<Button variant='secondary'>Secondary Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /secondary button/i });
-      expect(button).toHaveClass(&apos;bg-secondary&apos;);
+      const button = screen.getByRole('button', { name: /secondary button/i });
+      expect(button).toHaveClass('bg-secondary');
     });
 
-    it(&apos;should render ghost variant&apos;, () => {
-      render(<Button variant=&apos;ghost&apos;>Ghost Button</Button>);
+    it('should render ghost variant', () => {
+      render(<Button variant='ghost'>Ghost Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /ghost button/i });
-      expect(button).toHaveClass(&apos;hover:bg-accent&apos;);
+      const button = screen.getByRole('button', { name: /ghost button/i });
+      expect(button).toHaveClass('hover:bg-accent');
     });
 
-    it(&apos;should render link variant&apos;, () => {
-      render(<Button variant=&apos;link&apos;>Link Button</Button>);
+    it('should render link variant', () => {
+      render(<Button variant='link'>Link Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /link button/i });
-      expect(button).toHaveClass(&apos;text-primary&apos;);
+      const button = screen.getByRole('button', { name: /link button/i });
+      expect(button).toHaveClass('text-primary');
     });
   });
 
-  describe(&apos;Button Sizes&apos;, () => {
-    it(&apos;should render default size&apos;, () => {
+  describe('Button Sizes', () => {
+    it('should render default size', () => {
       render(<Button>Default Size</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /default size/i });
-      expect(button).toHaveClass(&apos;h-9&apos;);
+      const button = screen.getByRole('button', { name: /default size/i });
+      expect(button).toHaveClass('h-9');
     });
 
-    it(&apos;should render small size&apos;, () => {
-      render(<Button size=&apos;sm&apos;>Small Button</Button>);
+    it('should render small size', () => {
+      render(<Button size='sm'>Small Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /small button/i });
-      expect(button).toHaveClass(&apos;h-8&apos;);
+      const button = screen.getByRole('button', { name: /small button/i });
+      expect(button).toHaveClass('h-8');
     });
 
-    it(&apos;should render large size&apos;, () => {
-      render(<Button size=&apos;lg&apos;>Large Button</Button>);
+    it('should render large size', () => {
+      render(<Button size='lg'>Large Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /large button/i });
-      expect(button).toHaveClass(&apos;h-10&apos;);
+      const button = screen.getByRole('button', { name: /large button/i });
+      expect(button).toHaveClass('h-10');
     });
 
-    it(&apos;should render icon size&apos;, () => {
-      render(<Button size=&apos;icon&apos;>Icon Button</Button>);
+    it('should render icon size', () => {
+      render(<Button size='icon'>Icon Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /icon button/i });
-      expect(button).toHaveClass(&apos;size-9&apos;);
+      const button = screen.getByRole('button', { name: /icon button/i });
+      expect(button).toHaveClass('size-9');
     });
   });
 
-  describe(&apos;Button with Icons&apos;, () => {
-    it(&apos;should render button with icon&apos;, () => {
+  describe('Button with Icons', () => {
+    it('should render button with icon', () => {
       render(
         <Button>
-          <Plus className=&apos;h-4 w-4&apos; />
+          <Plus className='h-4 w-4' />
           Add Item
         </Button>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /add item/i });
+      const button = screen.getByRole('button', { name: /add item/i });
       expect(button).toBeInTheDocument();
 
-      // Icon should be present (SVG elements don&apos;t have img role by default)
-      const icon = document.querySelector(&apos;svg&apos;);
+      // Icon should be present (SVG elements don't have img role by default)
+      const icon = document.querySelector('svg');
       expect(icon).toBeInTheDocument();
     });
 
-    it(&apos;should handle click on button with icon&apos;, async () => {
+    it('should handle click on button with icon', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
       render(
         <Button onClick={mockOnClick}>
-          <Plus className=&apos;h-4 w-4&apos; />
+          <Plus className='h-4 w-4' />
           Add Item
         </Button>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /add item/i });
+      const button = screen.getByRole('button', { name: /add item/i });
       await user.click(button);
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle click on icon within button&apos;, async () => {
+    it('should handle click on icon within button', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
       render(
         <Button onClick={mockOnClick}>
-          <Plus className=&apos;h-4 w-4&apos; />
+          <Plus className='h-4 w-4' />
           Add Item
         </Button>
       );
 
-      const icon = document.querySelector(&apos;svg&apos;);
+      const icon = document.querySelector('svg');
       expect(icon).toBeInTheDocument();
       if (icon) await user.click(icon);
 
@@ -187,160 +187,160 @@ describe(&apos;Button Component - Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Button Types&apos;, () => {
-    it(&apos;should render as button type by default&apos;, () => {
+  describe('Button Types', () => {
+    it('should render as button type by default', () => {
       render(<Button>Submit</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /submit/i });
-      // Button component doesn&apos;t explicitly set type, so it uses browser default
+      const button = screen.getByRole('button', { name: /submit/i });
+      // Button component doesn't explicitly set type, so it uses browser default
       // The button should be clickable and functional
       expect(button).toBeInTheDocument();
-      expect(button.tagName).toBe(&apos;BUTTON&apos;);
+      expect(button.tagName).toBe('BUTTON');
     });
 
-    it(&apos;should render as submit type when specified&apos;, () => {
-      render(<Button type=&apos;submit&apos;>Submit</Button>);
+    it('should render as submit type when specified', () => {
+      render(<Button type='submit'>Submit</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /submit/i });
-      expect(button).toHaveAttribute(&apos;type&apos;, &apos;submit&apos;);
+      const button = screen.getByRole('button', { name: /submit/i });
+      expect(button).toHaveAttribute('type', 'submit');
     });
 
-    it(&apos;should render as reset type when specified&apos;, () => {
-      render(<Button type=&apos;reset&apos;>Reset</Button>);
+    it('should render as reset type when specified', () => {
+      render(<Button type='reset'>Reset</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /reset/i });
-      expect(button).toHaveAttribute(&apos;type&apos;, &apos;reset&apos;);
+      const button = screen.getByRole('button', { name: /reset/i });
+      expect(button).toHaveAttribute('type', 'reset');
     });
   });
 
-  describe(&apos;Accessibility&apos;, () => {
-    it(&apos;should have proper button role&apos;, () => {
+  describe('Accessibility', () => {
+    it('should have proper button role', () => {
       render(<Button>Accessible Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /accessible button/i });
+      const button = screen.getByRole('button', { name: /accessible button/i });
       expect(button).toBeInTheDocument();
     });
 
-    it(&apos;should support keyboard navigation&apos;, async () => {
+    it('should support keyboard navigation', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
       render(<Button onClick={mockOnClick}>Keyboard Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /keyboard button/i });
+      const button = screen.getByRole('button', { name: /keyboard button/i });
 
       // Tab to button
       await user.tab();
       expect(document.activeElement).toBe(button);
 
       // Press Enter
-      await user.keyboard(&apos;{Enter}&apos;);
+      await user.keyboard('{Enter}');
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should support Space key activation&apos;, async () => {
+    it('should support Space key activation', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
 
       render(<Button onClick={mockOnClick}>Space Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /space button/i });
+      const button = screen.getByRole('button', { name: /space button/i });
       button.focus();
 
       // Press Space
-      await user.keyboard(&apos; &apos;);
+      await user.keyboard(' ');
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should have proper focus styles&apos;, () => {
+    it('should have proper focus styles', () => {
       render(<Button>Focus Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /focus button/i });
-      expect(button).toHaveClass(&apos;focus-visible:ring-ring/50&apos;);
+      const button = screen.getByRole('button', { name: /focus button/i });
+      expect(button).toHaveClass('focus-visible:ring-ring/50');
     });
 
-    it(&apos;should be disabled when disabled prop is true&apos;, () => {
+    it('should be disabled when disabled prop is true', () => {
       render(<Button disabled>Disabled Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /disabled button/i });
+      const button = screen.getByRole('button', { name: /disabled button/i });
       expect(button).toBeDisabled();
-      expect(button).toHaveClass(&apos;disabled:opacity-50&apos;);
+      expect(button).toHaveClass('disabled:opacity-50');
     });
   });
 
-  describe(&apos;Form Integration&apos;, () => {
-    it(&apos;should submit form when type is submit&apos;, async () => {
+  describe('Form Integration', () => {
+    it('should submit form when type is submit', async () => {
       const user = userEvent.setup();
       const mockSubmit = vi.fn();
 
       render(
         <form onSubmit={mockSubmit}>
-          <Button type=&apos;submit&apos;>Submit Form</Button>
+          <Button type='submit'>Submit Form</Button>
         </form>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /submit form/i });
+      const button = screen.getByRole('button', { name: /submit form/i });
       await user.click(button);
 
       expect(mockSubmit).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should reset form when type is reset&apos;, async () => {
+    it('should reset form when type is reset', async () => {
       const user = userEvent.setup();
       const mockReset = vi.fn();
 
       render(
         <form onReset={mockReset}>
-          <input defaultValue=&apos;test&apos; />
-          <Button type=&apos;reset&apos;>Reset Form</Button>
+          <input defaultValue='test' />
+          <Button type='reset'>Reset Form</Button>
         </form>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /reset form/i });
+      const button = screen.getByRole('button', { name: /reset form/i });
       await user.click(button);
 
       expect(mockReset).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe(&apos;Event Handling&apos;, () => {
-    it(&apos;should handle onMouseDown&apos;, async () => {
+  describe('Event Handling', () => {
+    it('should handle onMouseDown', async () => {
       const user = userEvent.setup();
       const mockOnMouseDown = vi.fn();
 
       render(<Button onMouseDown={mockOnMouseDown}>Mouse Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /mouse button/i });
-      await user.pointer({ keys: &apos;[MouseLeft>]&apos;, target: button });
+      const button = screen.getByRole('button', { name: /mouse button/i });
+      await user.pointer({ keys: '[MouseLeft>]', target: button });
 
       expect(mockOnMouseDown).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle onMouseUp&apos;, async () => {
+    it('should handle onMouseUp', async () => {
       const user = userEvent.setup();
       const mockOnMouseUp = vi.fn();
 
       render(<Button onMouseUp={mockOnMouseUp}>Mouse Button</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /mouse button/i });
-      await user.pointer({ keys: &apos;[MouseLeft/]&apos;, target: button });
+      const button = screen.getByRole('button', { name: /mouse button/i });
+      await user.pointer({ keys: '[MouseLeft/]', target: button });
 
       expect(mockOnMouseUp).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle onFocus&apos;, async () => {
+    it('should handle onFocus', async () => {
       const user = userEvent.setup();
       const mockOnFocus = vi.fn();
 
       render(<Button onFocus={mockOnFocus}>Focus Button</Button>);
 
-      screen.getByRole(&apos;button&apos;, { name: /focus button/i });
+      screen.getByRole('button', { name: /focus button/i });
       await user.tab();
 
       expect(mockOnFocus).toHaveBeenCalledTimes(1);
     });
 
-    it(&apos;should handle onBlur&apos;, async () => {
+    it('should handle onBlur', async () => {
       const mockOnBlur = vi.fn();
 
       render(
@@ -350,8 +350,8 @@ describe(&apos;Button Component - Click Tests&apos;, () => {
         </>
       );
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /blur button/i });
-      const otherButton = screen.getByRole(&apos;button&apos;, { name: /other button/i });
+      const button = screen.getByRole('button', { name: /blur button/i });
+      const otherButton = screen.getByRole('button', { name: /other button/i });
 
       button.focus();
       otherButton.focus();
@@ -360,23 +360,23 @@ describe(&apos;Button Component - Click Tests&apos;, () => {
     });
   });
 
-  describe(&apos;Custom Props&apos;, () => {
-    it(&apos;should pass through custom props&apos;, () => {
+  describe('Custom Props', () => {
+    it('should pass through custom props', () => {
       render(
-        <Button data-testid=&apos;custom-button&apos; aria-label=&apos;Custom Label&apos;>
+        <Button data-testid='custom-button' aria-label='Custom Label'>
           Custom
         </Button>
       );
 
-      const button = screen.getByTestId(&apos;custom-button&apos;);
-      expect(button).toHaveAttribute(&apos;aria-label&apos;, &apos;Custom Label&apos;);
+      const button = screen.getByTestId('custom-button');
+      expect(button).toHaveAttribute('aria-label', 'Custom Label');
     });
 
-    it(&apos;should apply custom className&apos;, () => {
-      render(<Button className=&apos;custom-class&apos;>Custom Class</Button>);
+    it('should apply custom className', () => {
+      render(<Button className='custom-class'>Custom Class</Button>);
 
-      const button = screen.getByRole(&apos;button&apos;, { name: /custom class/i });
-      expect(button).toHaveClass(&apos;custom-class&apos;);
+      const button = screen.getByRole('button', { name: /custom class/i });
+      expect(button).toHaveClass('custom-class');
     });
   });
 });

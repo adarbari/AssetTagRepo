@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from &apos;react&apos;;
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from &apos;../ui/card&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { AlertTriangle, Edit, Package, Tag, Save } from &apos;lucide-react&apos;;
-import { toast } from &apos;sonner&apos;;
+} from '../ui/card';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { AlertTriangle, Edit, Package, Tag, Save } from 'lucide-react';
+import { toast } from 'sonner';
 import {
   PageHeader,
   SeverityBadge,
@@ -17,12 +17,12 @@ import {
   AuditLogList,
   LoadingState,
   PageLayout,
-} from &apos;../common&apos;;
-import { getIssueById } from &apos;../../data/mockIssueData&apos;;
-import { IssueForm, IssueFormData } from &apos;./IssueForm&apos;;
-import { formatAuditDate } from &apos;../../utils/dateFormatter&apos;;
-import type { Issue, UpdateIssueInput } from &apos;../../types/issue&apos;;
-import type { AuditLogEntry } from &apos;../common&apos;;
+} from '../common';
+import { getIssueById } from '../../data/mockIssueData';
+import { IssueForm, IssueFormData } from './IssueForm';
+import { formatAuditDate } from '../../utils/dateFormatter';
+import type { Issue, UpdateIssueInput } from '../../types/issue';
+import type { AuditLogEntry } from '../common';
 
 interface IssueDetailsProps {
   issueId: string;
@@ -59,12 +59,12 @@ export function IssueDetails({
         // Generate mock audit log
         generateMockAuditLog(issueData);
       } else {
-        toast.error(&apos;Issue not found&apos;);
+        toast.error('Issue not found');
         onBack();
       }
     } catch (error) {
-      toast.error(&apos;Failed to load issue&apos;);
-// console.error(&apos;Error loading issue:&apos;, error);
+      toast.error('Failed to load issue');
+// console.error('Error loading issue:', error);
     } finally {
       setLoading(false);
     }
@@ -73,40 +73,40 @@ export function IssueDetails({
   const generateMockAuditLog = (issueData: Issue) => {
     const mockAuditLog: AuditLogEntry[] = [
       {
-        id: &apos;audit-1&apos;,
+        id: 'audit-1',
         timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        action: &apos;created&apos;,
-        field: &apos;issue&apos;,
-        oldValue: &apos;&apos;,
+        action: 'created',
+        field: 'issue',
+        oldValue: '',
         newValue: issueData.title,
-        changedBy: &apos;John Smith&apos;,
+        changedBy: 'John Smith',
       },
       {
-        id: &apos;audit-2&apos;,
+        id: 'audit-2',
         timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-        action: &apos;updated&apos;,
-        field: &apos;status&apos;,
-        oldValue: &apos;open&apos;,
+        action: 'updated',
+        field: 'status',
+        oldValue: 'open',
         newValue: issueData.status,
-        changedBy: &apos;Sarah Johnson&apos;,
+        changedBy: 'Sarah Johnson',
       },
       {
-        id: &apos;audit-3&apos;,
+        id: 'audit-3',
         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-        action: &apos;updated&apos;,
-        field: &apos;assignedTo&apos;,
-        oldValue: &apos;&apos;,
-        newValue: issueData.assignedTo || &apos;Unassigned&apos;,
-        changedBy: &apos;Mike Wilson&apos;,
+        action: 'updated',
+        field: 'assignedTo',
+        oldValue: '',
+        newValue: issueData.assignedTo || 'Unassigned',
+        changedBy: 'Mike Wilson',
       },
       {
-        id: &apos;audit-4&apos;,
+        id: 'audit-4',
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        action: &apos;updated&apos;,
-        field: &apos;notes&apos;,
-        oldValue: &apos;&apos;,
-        newValue: issueData.notes || &apos;No notes&apos;,
-        changedBy: &apos;Current User&apos;,
+        action: 'updated',
+        field: 'notes',
+        oldValue: '',
+        newValue: issueData.notes || 'No notes',
+        changedBy: 'Current User',
       },
     ];
 
@@ -117,7 +117,7 @@ export function IssueDetails({
     formData: IssueFormData
   ): Promise<{ success: boolean; error?: any }> => {
     if (!issue) {
-      return { success: false, error: &apos;No issue found&apos; };
+      return { success: false, error: 'No issue found' };
     }
 
     setSaving(true);
@@ -137,17 +137,17 @@ export function IssueDetails({
       const result = await onUpdateIssue(issueId, updateData);
 
       if (result.success) {
-        toast.success(&apos;Issue updated successfully&apos;);
+        toast.success('Issue updated successfully');
 
         // Add audit log entry for this update
         const newAuditEntry: AuditLogEntry = {
           id: `audit-${Date.now()}`,
           timestamp: new Date().toISOString(),
-          action: &apos;updated&apos;,
-          field: &apos;multiple&apos;,
-          oldValue: &apos;previous values&apos;,
-          newValue: &apos;updated values&apos;,
-          changedBy: &apos;Current User&apos;,
+          action: 'updated',
+          field: 'multiple',
+          oldValue: 'previous values',
+          newValue: 'updated values',
+          changedBy: 'Current User',
         };
 
         setAuditLog(prev => [newAuditEntry, ...prev]);
@@ -161,12 +161,12 @@ export function IssueDetails({
         onBack();
         return { success: true };
       } else {
-        toast.error(&apos;Failed to update issue&apos;);
+        toast.error('Failed to update issue');
         return { success: false, error: result.error };
       }
     } catch (error) {
-      toast.error(&apos;Failed to update issue&apos;);
-// console.error(&apos;Error updating issue:&apos;, error);
+      toast.error('Failed to update issue');
+// console.error('Error updating issue:', error);
       return { success: false, error };
     } finally {
       setSaving(false);
@@ -177,21 +177,21 @@ export function IssueDetails({
 
   if (loading) {
     return (
-      <div className=&apos;p-6&apos;>
-        <PageHeader title=&apos;Issue Details&apos; onBack={onBack} />
-        <LoadingState message=&apos;Loading issue details...&apos; />
+      <div className='p-6'>
+        <PageHeader title='Issue Details' onBack={onBack} />
+        <LoadingState message='Loading issue details...' />
       </div>
     );
   }
 
   if (!issue) {
     return (
-      <div className=&apos;p-6&apos;>
-        <PageHeader title=&apos;Issue Details&apos; onBack={onBack} />
-        <div className=&apos;text-center py-8&apos;>
-          <AlertTriangle className=&apos;h-12 w-12 text-muted-foreground mx-auto mb-4&apos; />
-          <h3 className=&apos;text-lg font-semibold mb-2&apos;>Issue Not Found</h3>
-          <p className=&apos;text-muted-foreground mb-4&apos;>
+      <div className='p-6'>
+        <PageHeader title='Issue Details' onBack={onBack} />
+        <div className='text-center py-8'>
+          <AlertTriangle className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
+          <h3 className='text-lg font-semibold mb-2'>Issue Not Found</h3>
+          <p className='text-muted-foreground mb-4'>
             The requested issue could not be found.
           </p>
           <Button onClick={onBack}>Back to Issues</Button>
@@ -202,28 +202,28 @@ export function IssueDetails({
 
   return (
     <PageLayout
-      variant=&apos;standard&apos;
-      padding=&apos;md&apos;
+      variant='standard'
+      padding='md'
       header={
         <PageHeader
           title={`${issue.id} - ${issue.title}`}
           onBack={onBack}
           description={`Asset: ${issue.assetName} (${issue.assetId})`}
           actions={
-            <div className=&apos;flex items-center gap-2&apos;>
+            <div className='flex items-center gap-2'>
               {isEditing ? (
                 <>
-                  <Button variant=&apos;outline&apos; onClick={() => setIsEditing(false)}>
+                  <Button variant='outline' onClick={() => setIsEditing(false)}>
                     Cancel
                   </Button>
-                  <Button type=&apos;submit&apos; form=&apos;issue-form&apos;>
-                    <Save className=&apos;h-4 w-4 mr-2&apos; />
+                  <Button type='submit' form='issue-form'>
+                    <Save className='h-4 w-4 mr-2' />
                     Save Changes
                   </Button>
                 </>
               ) : (
                 <Button onClick={() => setIsEditing(true)}>
-                  <Edit className=&apos;h-4 w-4 mr-2&apos; />
+                  <Edit className='h-4 w-4 mr-2' />
                   Edit Issue
                 </Button>
               )}
@@ -233,13 +233,13 @@ export function IssueDetails({
       }
     >
       {/* Status Badges */}
-      <div className=&apos;flex gap-2&apos;>
+      <div className='flex gap-2'>
         <StatusBadge status={issue.status} />
         <SeverityBadge severity={issue.severity} />
       </div>
 
       {/* Unified Form Interface */}
-      <div className=&apos;space-y-6&apos;>
+      <div className='space-y-6'>
         {isEditing ? (
           <Card>
             <CardHeader>
@@ -248,7 +248,7 @@ export function IssueDetails({
             </CardHeader>
             <CardContent>
               <IssueForm
-                mode=&apos;edit&apos;
+                mode='edit'
                 initialData={{
                   type: issue.type,
                   severity: issue.severity,
@@ -271,49 +271,49 @@ export function IssueDetails({
             </CardContent>
           </Card>
         ) : (
-          <div className=&apos;grid gap-6 lg:grid-cols-2&apos;>
+          <div className='grid gap-6 lg:grid-cols-2'>
             {/* Issue Information */}
             <Card>
               <CardHeader>
                 <CardTitle>Issue Information</CardTitle>
               </CardHeader>
-              <CardContent className=&apos;space-y-4&apos;>
-                <div className=&apos;grid gap-4&apos;>
+              <CardContent className='space-y-4'>
+                <div className='grid gap-4'>
                   <div>
-                    <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                    <label className='text-sm font-medium text-muted-foreground'>
                       Issue Type
                     </label>
-                    <p className=&apos;text-sm&apos;>{issue.type}</p>
+                    <p className='text-sm'>{issue.type}</p>
                   </div>
                   <div>
-                    <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                    <label className='text-sm font-medium text-muted-foreground'>
                       Severity
                     </label>
-                    <div className=&apos;mt-1&apos;>
+                    <div className='mt-1'>
                       <SeverityBadge severity={issue.severity} />
                     </div>
                   </div>
                   <div>
-                    <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                    <label className='text-sm font-medium text-muted-foreground'>
                       Status
                     </label>
-                    <div className=&apos;mt-1&apos;>
+                    <div className='mt-1'>
                       <StatusBadge status={issue.status} />
                     </div>
                   </div>
                   <div>
-                    <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                    <label className='text-sm font-medium text-muted-foreground'>
                       Reported
                     </label>
-                    <p className=&apos;text-sm&apos;>
+                    <p className='text-sm'>
                       {formatAuditDate(issue.reportedDate)}
                     </p>
                   </div>
                   <div>
-                    <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                    <label className='text-sm font-medium text-muted-foreground'>
                       Reported By
                     </label>
-                    <p className=&apos;text-sm&apos;>{issue.reportedBy}</p>
+                    <p className='text-sm'>{issue.reportedBy}</p>
                   </div>
                 </div>
               </CardContent>
@@ -322,24 +322,24 @@ export function IssueDetails({
             {/* Asset Information */}
             <Card>
               <CardHeader>
-                <CardTitle className=&apos;flex items-center gap-2&apos;>
-                  <Package className=&apos;h-5 w-5&apos; />
+                <CardTitle className='flex items-center gap-2'>
+                  <Package className='h-5 w-5' />
                   Asset Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className=&apos;space-y-4&apos;>
-                <div className=&apos;grid gap-4&apos;>
+              <CardContent className='space-y-4'>
+                <div className='grid gap-4'>
                   <div>
-                    <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                    <label className='text-sm font-medium text-muted-foreground'>
                       Asset Name
                     </label>
-                    <p className=&apos;text-sm font-medium&apos;>{issue.assetName}</p>
+                    <p className='text-sm font-medium'>{issue.assetName}</p>
                   </div>
                   <div>
-                    <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                    <label className='text-sm font-medium text-muted-foreground'>
                       Asset ID
                     </label>
-                    <p className=&apos;text-sm font-mono&apos;>{issue.assetId}</p>
+                    <p className='text-sm font-mono'>{issue.assetId}</p>
                   </div>
                 </div>
               </CardContent>
@@ -353,29 +353,29 @@ export function IssueDetails({
             <CardTitle>Description</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className=&apos;text-sm whitespace-pre-wrap&apos;>{issue.description}</p>
+            <p className='text-sm whitespace-pre-wrap'>{issue.description}</p>
           </CardContent>
         </Card>
 
         {/* Additional Information */}
-        <div className=&apos;grid gap-6 lg:grid-cols-2&apos;>
+        <div className='grid gap-6 lg:grid-cols-2'>
           <Card>
             <CardHeader>
               <CardTitle>Assignment & Notes</CardTitle>
             </CardHeader>
-            <CardContent className=&apos;space-y-4&apos;>
+            <CardContent className='space-y-4'>
               <div>
-                <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                <label className='text-sm font-medium text-muted-foreground'>
                   Assigned To
                 </label>
-                <p className=&apos;text-sm&apos;>{issue.assignedTo || &apos;Unassigned&apos;}</p>
+                <p className='text-sm'>{issue.assignedTo || 'Unassigned'}</p>
               </div>
               <div>
-                <label className=&apos;text-sm font-medium text-muted-foreground&apos;>
+                <label className='text-sm font-medium text-muted-foreground'>
                   Notes
                 </label>
-                <p className=&apos;text-sm whitespace-pre-wrap&apos;>
-                  {issue.notes || &apos;No notes&apos;}
+                <p className='text-sm whitespace-pre-wrap'>
+                  {issue.notes || 'No notes'}
                 </p>
               </div>
             </CardContent>
@@ -383,22 +383,22 @@ export function IssueDetails({
 
           <Card>
             <CardHeader>
-              <CardTitle className=&apos;flex items-center gap-2&apos;>
-                <Tag className=&apos;h-5 w-5&apos; />
+              <CardTitle className='flex items-center gap-2'>
+                <Tag className='h-5 w-5' />
                 Tags
               </CardTitle>
             </CardHeader>
             <CardContent>
               {issue.tags && issue.tags.length > 0 ? (
-                <div className=&apos;flex flex-wrap gap-2&apos;>
+                <div className='flex flex-wrap gap-2'>
                   {issue.tags.map((tag, index) => (
-                    <Badge key={index} variant=&apos;secondary&apos;>
+                    <Badge key={index} variant='secondary'>
                       {tag}
                     </Badge>
                   ))}
                 </div>
               ) : (
-                <p className=&apos;text-sm text-muted-foreground&apos;>No tags</p>
+                <p className='text-sm text-muted-foreground'>No tags</p>
               )}
             </CardContent>
           </Card>
@@ -407,8 +407,8 @@ export function IssueDetails({
         {/* Audit Log */}
         <AuditLogList
           entries={auditLog}
-          title=&apos;Audit Log&apos;
-          description=&apos;Complete history of all changes made to this issue&apos;
+          title='Audit Log'
+          description='Complete history of all changes made to this issue'
           formatDate={formatAuditDate}
         />
       </div>

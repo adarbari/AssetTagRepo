@@ -1,14 +1,14 @@
-import React, { useState } from &apos;react&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Card, CardContent } from &apos;../ui/card&apos;;
-import { PageHeader, PageLayout } from &apos;../common&apos;;
-import { useFormSubmit } from &apos;../../hooks/useFormSubmit&apos;;
-import { Briefcase } from &apos;lucide-react&apos;;
-import type { CreateJobInput, JobPriority } from &apos;../../types/job&apos;;
-import { JobInformationSection } from &apos;./JobInformationSection&apos;;
-import { BudgetSection } from &apos;./BudgetSection&apos;;
-import { NotesSection } from &apos;./NotesSection&apos;;
-import { TagsSection } from &apos;./TagsSection&apos;;
+import React, { useState } from 'react';
+import { Button } from '../ui/button';
+import { Card, CardContent } from '../ui/card';
+import { PageHeader, PageLayout } from '../common';
+import { useFormSubmit } from '../../hooks/useFormSubmit';
+import { Briefcase } from 'lucide-react';
+import type { CreateJobInput, JobPriority } from '../../types/job';
+import { JobInformationSection } from './JobInformationSection';
+import { BudgetSection } from './BudgetSection';
+import { NotesSection } from './NotesSection';
+import { TagsSection } from './TagsSection';
 
 interface CreateJobProps {
   onBack: () => void;
@@ -19,22 +19,22 @@ interface CreateJobProps {
 
 export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
   // Job information state
-  const [name, setName] = useState(&apos;&apos;);
-  const [description, setDescription] = useState(&apos;&apos;);
-  const [startDate, setStartDate] = useState(&apos;&apos;);
-  const [endDate, setEndDate] = useState(&apos;&apos;);
-  const [priority, setPriority] = useState<JobPriority>(&apos;medium&apos;);
-  const [projectManager, setProjectManager] = useState(&apos;&apos;);
-  const [clientId, setClientId] = useState(&apos;&apos;);
-  const [notes, setNotes] = useState(&apos;&apos;);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [priority, setPriority] = useState<JobPriority>('medium');
+  const [projectManager, setProjectManager] = useState('');
+  const [clientId, setClientId] = useState('');
+  const [notes, setNotes] = useState('');
   const [tags, setTags] = useState<string[]>([]);
 
   // Budget state
-  const [totalBudget, setTotalBudget] = useState(&apos;&apos;);
-  const [laborBudget, setLaborBudget] = useState(&apos;&apos;);
-  const [equipmentBudget, setEquipmentBudget] = useState(&apos;&apos;);
-  const [materialsBudget, setMaterialsBudget] = useState(&apos;&apos;);
-  const [otherBudget, setOtherBudget] = useState(&apos;&apos;);
+  const [totalBudget, setTotalBudget] = useState('');
+  const [laborBudget, setLaborBudget] = useState('');
+  const [equipmentBudget, setEquipmentBudget] = useState('');
+  const [materialsBudget, setMaterialsBudget] = useState('');
+  const [otherBudget, setOtherBudget] = useState('');
 
   const { handleSubmit, isSubmitting } = useFormSubmit(
     async (formData: any) => {
@@ -52,10 +52,10 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
         tags: formData.tags.length > 0 ? formData.tags : undefined,
         budget: {
           total: formData.finalTotalBudget,
-          labor: parseFloat(formData.laborBudget || &apos;0&apos;),
-          equipment: parseFloat(formData.equipmentBudget || &apos;0&apos;),
-          materials: parseFloat(formData.materialsBudget || &apos;0&apos;),
-          other: parseFloat(formData.otherBudget || &apos;0&apos;),
+          labor: parseFloat(formData.laborBudget || '0'),
+          equipment: parseFloat(formData.equipmentBudget || '0'),
+          materials: parseFloat(formData.materialsBudget || '0'),
+          other: parseFloat(formData.otherBudget || '0'),
         },
       };
 
@@ -63,19 +63,19 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
     },
     {
       onSuccess: () => onBack(),
-      successMessage: &apos;Job created successfully!&apos;,
-      errorMessage: &apos;Failed to create job&apos;,
+      successMessage: 'Job created successfully!',
+      errorMessage: 'Failed to create job',
       validate: formData => {
         if (!formData.name || !formData.startDate || !formData.endDate) {
-          return &apos;Please fill in all required fields&apos;;
+          return 'Please fill in all required fields';
         }
 
         if (new Date(formData.endDate) <= new Date(formData.startDate)) {
-          return &apos;End date must be after start date&apos;;
+          return 'End date must be after start date';
         }
 
         if (formData.finalTotalBudget <= 0) {
-          return &apos;Please enter a valid budget amount&apos;;
+          return 'Please enter a valid budget amount';
         }
 
         return null;
@@ -88,10 +88,10 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
 
     // Calculate total budget if individual fields are filled
     const calculatedTotal =
-      parseFloat(laborBudget || &apos;0&apos;) +
-      parseFloat(equipmentBudget || &apos;0&apos;) +
-      parseFloat(materialsBudget || &apos;0&apos;) +
-      parseFloat(otherBudget || &apos;0&apos;);
+      parseFloat(laborBudget || '0') +
+      parseFloat(equipmentBudget || '0') +
+      parseFloat(materialsBudget || '0') +
+      parseFloat(otherBudget || '0');
 
     const finalTotalBudget = totalBudget
       ? parseFloat(totalBudget)
@@ -122,22 +122,22 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
 
   return (
     <PageLayout
-      variant=&apos;narrow&apos;
-      padding=&apos;md&apos;
+      variant='narrow'
+      padding='md'
       header={
         <PageHeader
-          title=&apos;Create New Job&apos;
-          subtitle=&apos;Set up a new project with budget allocation and team assignments&apos;
+          title='Create New Job'
+          subtitle='Set up a new project with budget allocation and team assignments'
           onBack={onBack}
         />
       }
     >
-      <form onSubmit={onSubmit} className=&apos;space-y-6&apos;>
+      <form onSubmit={onSubmit} className='space-y-6'>
         <Card>
-          <CardContent className=&apos;p-6&apos;>
-            <div className=&apos;flex items-center gap-2 mb-6&apos;>
-              <Briefcase className=&apos;h-5 w-5&apos; />
-              <h2 className=&apos;text-lg font-semibold&apos;>Job Information</h2>
+          <CardContent className='p-6'>
+            <div className='flex items-center gap-2 mb-6'>
+              <Briefcase className='h-5 w-5' />
+              <h2 className='text-lg font-semibold'>Job Information</h2>
             </div>
 
             <JobInformationSection
@@ -161,7 +161,7 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
         </Card>
 
         <Card>
-          <CardContent className=&apos;p-6&apos;>
+          <CardContent className='p-6'>
             <BudgetSection
               totalBudget={totalBudget}
               onTotalBudgetChange={setTotalBudget}
@@ -178,13 +178,13 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
         </Card>
 
         <Card>
-          <CardContent className=&apos;p-6&apos;>
+          <CardContent className='p-6'>
             <NotesSection notes={notes} onNotesChange={setNotes} />
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className=&apos;p-6&apos;>
+          <CardContent className='p-6'>
             <TagsSection
               tags={tags}
               onTagsChange={setTags}
@@ -193,12 +193,12 @@ export function CreateJob({ onBack, onCreateJob }: CreateJobProps) {
           </CardContent>
         </Card>
 
-        <div className=&apos;flex justify-end gap-3&apos;>
-          <Button type=&apos;button&apos; variant=&apos;outline&apos; onClick={onBack}>
+        <div className='flex justify-end gap-3'>
+          <Button type='button' variant='outline' onClick={onBack}>
             Cancel
           </Button>
-          <Button type=&apos;submit&apos; disabled={isSubmitting}>
-            {isSubmitting ? &apos;Creating...&apos; : &apos;Create Job&apos;}
+          <Button type='submit' disabled={isSubmitting}>
+            {isSubmitting ? 'Creating...' : 'Create Job'}
           </Button>
         </div>
       </form>

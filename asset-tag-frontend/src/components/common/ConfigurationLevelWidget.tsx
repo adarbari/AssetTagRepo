@@ -5,20 +5,20 @@
  * Used in both Notification and Alert Configuration pages for consistency.
  */
 
-import { Label } from &apos;../ui/label&apos;;
+import { Label } from '../ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Card } from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { User, Building2, Package, Briefcase, Info } from &apos;lucide-react&apos;;
-import type { ReactNode } from &apos;react&apos;;
+} from '../ui/select';
+import { Card } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { User, Building2, Package, Briefcase, Info } from 'lucide-react';
+import type { ReactNode } from 'react';
 
-export type ConfigLevel = &apos;user&apos; | &apos;site&apos; | &apos;asset&apos; | &apos;job&apos;;
+export type ConfigLevel = 'user' | 'site' | 'asset' | 'job';
 
 interface ConfigurationLevelOption {
   value: string;
@@ -80,14 +80,14 @@ export function ConfigurationLevelWidget({
 }: ConfigurationLevelWidgetProps) {
   const getLevelIcon = (levelType: ConfigLevel): ReactNode => {
     switch (levelType) {
-      case &apos;user&apos;:
-        return <User className=&apos;h-4 w-4&apos; />;
-      case &apos;site&apos;:
-        return <Building2 className=&apos;h-4 w-4&apos; />;
-      case &apos;asset&apos;:
-        return <Package className=&apos;h-4 w-4&apos; />;
-      case &apos;job&apos;:
-        return <Briefcase className=&apos;h-4 w-4&apos; />;
+      case 'user':
+        return <User className='h-4 w-4' />;
+      case 'site':
+        return <Building2 className='h-4 w-4' />;
+      case 'asset':
+        return <Package className='h-4 w-4' />;
+      case 'job':
+        return <Briefcase className='h-4 w-4' />;
     }
   };
 
@@ -105,47 +105,47 @@ export function ConfigurationLevelWidget({
     levelType: ConfigLevel
   ): ConfigurationLevelOption[] => {
     switch (levelType) {
-      case &apos;site&apos;:
+      case 'site':
         return siteOptions;
-      case &apos;asset&apos;:
+      case 'asset':
         return assetOptions;
-      case &apos;job&apos;:
+      case 'job':
         return jobOptions;
       default:
         return [];
     }
   };
 
-  const needsEntitySelection = level !== &apos;user&apos;;
+  const needsEntitySelection = level !== 'user';
   const entityOptions = getEntityOptions(level);
 
   const isActive =
     showActiveIndicator &&
     activeLevel === level &&
-    (level === &apos;user&apos; || activeEntityId === entityId);
+    (level === 'user' || activeEntityId === entityId);
 
   if (compact) {
     return (
-      <div className=&apos;flex items-center gap-2&apos;>
+      <div className='flex items-center gap-2'>
         <Select
           value={level}
           onValueChange={value => onLevelChange(value as ConfigLevel)}
         >
-          <SelectTrigger className=&apos;w-[180px]&apos;>
-            <div className=&apos;flex items-center gap-2&apos;>
+          <SelectTrigger className='w-[180px]'>
+            <div className='flex items-center gap-2'>
               {getLevelIcon(level)}
               <SelectValue />
             </div>
           </SelectTrigger>
           <SelectContent>
-            {([&apos;user&apos;, &apos;site&apos;, &apos;asset&apos;, &apos;job&apos;] as ConfigLevel[]).map(
+            {(['user', 'site', 'asset', 'job'] as ConfigLevel[]).map(
               levelType => (
                 <SelectItem
                   key={levelType}
                   value={levelType}
                   disabled={disabledLevels.includes(levelType)}
                 >
-                  <div className=&apos;flex items-center gap-2&apos;>
+                  <div className='flex items-center gap-2'>
                     {getLevelIcon(levelType)}
                     <span>{getLevelLabel(levelType)}</span>
                   </div>
@@ -157,7 +157,7 @@ export function ConfigurationLevelWidget({
 
         {needsEntitySelection && entityOptions.length > 0 && onEntityChange && (
           <Select value={entityId} onValueChange={onEntityChange}>
-            <SelectTrigger className=&apos;w-[220px]&apos;>
+            <SelectTrigger className='w-[220px]'>
               <SelectValue placeholder={`Select ${level}...`} />
             </SelectTrigger>
             <SelectContent>
@@ -171,7 +171,7 @@ export function ConfigurationLevelWidget({
         )}
 
         {isActive && (
-          <Badge variant=&apos;default&apos; className=&apos;bg-green-600&apos;>
+          <Badge variant='default' className='bg-green-600'>
             Active
           </Badge>
         )}
@@ -180,13 +180,13 @@ export function ConfigurationLevelWidget({
   }
 
   return (
-    <Card className=&apos;p-4&apos;>
-      <div className=&apos;space-y-4&apos;>
-        <div className=&apos;flex items-center justify-between&apos;>
-          <div className=&apos;flex items-center gap-2&apos;>
+    <Card className='p-4'>
+      <div className='space-y-4'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
             <Label>Configuration Level</Label>
             {isActive && (
-              <Badge variant=&apos;default&apos; className=&apos;bg-green-600&apos;>
+              <Badge variant='default' className='bg-green-600'>
                 Active Configuration
               </Badge>
             )}
@@ -194,62 +194,62 @@ export function ConfigurationLevelWidget({
         </div>
 
         {helpText && (
-          <div className=&apos;flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-md&apos;>
-            <Info className=&apos;h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5&apos; />
-            <p className=&apos;text-sm text-blue-900&apos;>{helpText}</p>
+          <div className='flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-md'>
+            <Info className='h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5' />
+            <p className='text-sm text-blue-900'>{helpText}</p>
           </div>
         )}
 
-        <div className=&apos;grid gap-2&apos;>
-          {([&apos;user&apos;, &apos;site&apos;, &apos;asset&apos;, &apos;job&apos;] as ConfigLevel[]).map(
+        <div className='grid gap-2'>
+          {(['user', 'site', 'asset', 'job'] as ConfigLevel[]).map(
             levelType => {
               const isSelected = level === levelType;
               const isDisabled = disabledLevels.includes(levelType);
-              const needsEntity = levelType !== &apos;user&apos;;
+              const needsEntity = levelType !== 'user';
               const options = getEntityOptions(levelType);
 
               return (
                 <div key={levelType}>
                   <button
-                    type=&apos;button&apos;
+                    type='button'
                     onClick={() => !isDisabled && onLevelChange(levelType)}
                     disabled={isDisabled}
                     className={`w-full p-3 rounded-lg border-2 transition-all ${
                       isSelected
-                        ? &apos;border-primary bg-primary/5&apos;
-                        : &apos;border-border hover:border-primary/50 hover:bg-muted/50&apos;
-                    } ${isDisabled ? &apos;opacity-50 cursor-not-allowed&apos; : &apos;cursor-pointer&apos;}`}
+                        ? 'border-primary bg-primary/5'
+                        : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                    } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                   >
-                    <div className=&apos;flex items-center gap-3&apos;>
+                    <div className='flex items-center gap-3'>
                       <div
                         className={`flex items-center justify-center w-10 h-10 rounded-full ${
                           isSelected
-                            ? &apos;bg-primary text-primary-foreground&apos;
-                            : &apos;bg-muted&apos;
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted'
                         }`}
                       >
                         {getLevelIcon(levelType)}
                       </div>
-                      <div className=&apos;flex-1 text-left&apos;>
-                        <div className=&apos;flex items-center gap-2&apos;>
-                          <span className=&apos;font-medium&apos;>
+                      <div className='flex-1 text-left'>
+                        <div className='flex items-center gap-2'>
+                          <span className='font-medium'>
                             {getLevelLabel(levelType)}
                           </span>
                           {needsEntity && options.length > 0 && (
-                            <Badge variant=&apos;outline&apos; className=&apos;text-xs&apos;>
+                            <Badge variant='outline' className='text-xs'>
                               {options.length} available
                             </Badge>
                           )}
                         </div>
-                        <p className=&apos;text-sm text-muted-foreground&apos;>
-                          {levelType === &apos;user&apos; &&
-                            &apos;Default settings for all your notifications&apos;}
-                          {levelType === &apos;site&apos; &&
-                            &apos;Override settings for specific sites&apos;}
-                          {levelType === &apos;asset&apos; &&
-                            &apos;Override settings for specific assets&apos;}
-                          {levelType === &apos;job&apos; &&
-                            &apos;Override settings for specific jobs&apos;}
+                        <p className='text-sm text-muted-foreground'>
+                          {levelType === 'user' &&
+                            'Default settings for all your notifications'}
+                          {levelType === 'site' &&
+                            'Override settings for specific sites'}
+                          {levelType === 'asset' &&
+                            'Override settings for specific assets'}
+                          {levelType === 'job' &&
+                            'Override settings for specific jobs'}
                         </p>
                       </div>
                     </div>
@@ -260,7 +260,7 @@ export function ConfigurationLevelWidget({
                     needsEntity &&
                     options.length > 0 &&
                     onEntityChange && (
-                      <div className=&apos;mt-2 ml-13 space-y-2&apos;>
+                      <div className='mt-2 ml-13 space-y-2'>
                         <Label htmlFor={`${levelType}-select`}>
                           Select {getLevelLabel(levelType)}
                         </Label>
@@ -286,8 +286,8 @@ export function ConfigurationLevelWidget({
 
                   {/* Warning for empty options */}
                   {isSelected && needsEntity && options.length === 0 && (
-                    <div className=&apos;mt-2 ml-13 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-900&apos;>
-                      No {levelType}s available. Please create a {levelType}{&apos; &apos;}
+                    <div className='mt-2 ml-13 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-900'>
+                      No {levelType}s available. Please create a {levelType}{' '}
                       first.
                     </div>
                   )}

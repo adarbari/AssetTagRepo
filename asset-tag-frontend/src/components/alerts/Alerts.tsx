@@ -4,19 +4,19 @@ import React, {
   useMemo,
   useImperativeHandle,
   forwardRef,
-} from &apos;react&apos;;
-import { Card, CardContent } from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Tabs, TabsContent, TabsList, TabsTrigger } from &apos;../ui/tabs&apos;;
+} from 'react';
+import { Card, CardContent } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
+} from '../ui/select';
 import {
   Shield,
   Battery,
@@ -30,15 +30,15 @@ import {
   X,
   Settings,
   Layers,
-} from &apos;lucide-react&apos;;
+} from 'lucide-react';
 import {
   getAllAlerts,
   acknowledgeAlert,
   resolveAlert,
-} from &apos;../../services/alertService&apos;;
-import type { Alert, AlertType } from &apos;../../types&apos;;
-import { AlertCard, PageLayout } from &apos;../common&apos;;
-import { toast } from &apos;sonner&apos;;
+} from '../../services/alertService';
+import type { Alert, AlertType } from '../../types';
+import { AlertCard, PageLayout } from '../common';
+import { toast } from 'sonner';
 
 export interface AlertFilter {
   category?: string;
@@ -63,53 +63,53 @@ const alertTypeIcons: Record<AlertType, any> = {
   compliance: AlertTriangle,
   underutilized: TrendingDown,
   offline: WifiOff,
-  &apos;unauthorized-zone&apos;: MapPin,
-  &apos;predictive-maintenance&apos;: Wrench,
+  'unauthorized-zone': MapPin,
+  'predictive-maintenance': Wrench,
 };
 
 const alertTypeColors: Record<AlertType, string> = {
-  theft: &apos;text-red-600&apos;,
-  battery: &apos;text-orange-600&apos;,
-  compliance: &apos;text-yellow-600&apos;,
-  underutilized: &apos;text-blue-600&apos;,
-  offline: &apos;text-gray-600&apos;,
-  &apos;unauthorized-zone&apos;: &apos;text-red-600&apos;,
-  &apos;predictive-maintenance&apos;: &apos;text-purple-600&apos;,
+  theft: 'text-red-600',
+  battery: 'text-orange-600',
+  compliance: 'text-yellow-600',
+  underutilized: 'text-blue-600',
+  offline: 'text-gray-600',
+  'unauthorized-zone': 'text-red-600',
+  'predictive-maintenance': 'text-purple-600',
 };
 
 const alertTypeLabels: Record<AlertType, string> = {
-  theft: &apos;Theft Alert&apos;,
-  battery: &apos;Battery Alert&apos;,
-  compliance: &apos;Compliance&apos;,
-  underutilized: &apos;Underutilized&apos;,
-  offline: &apos;Offline&apos;,
-  &apos;unauthorized-zone&apos;: &apos;Unauthorized Zone&apos;,
-  &apos;predictive-maintenance&apos;: &apos;Predictive Maintenance&apos;,
+  theft: 'Theft Alert',
+  battery: 'Battery Alert',
+  compliance: 'Compliance',
+  underutilized: 'Underutilized',
+  offline: 'Offline',
+  'unauthorized-zone': 'Unauthorized Zone',
+  'predictive-maintenance': 'Predictive Maintenance',
 };
 
 // Load user preferences from localStorage
 const loadUserPreferences = () => {
   try {
-    const saved = localStorage.getItem(&apos;alertPreferences&apos;);
+    const saved = localStorage.getItem('alertPreferences');
     if (saved) {
       return JSON.parse(saved);
     }
   } catch (error) {
-// console.error(&apos;Failed to load alert preferences:&apos;, error);
+// console.error('Failed to load alert preferences:', error);
   }
   return {
-    defaultView: &apos;all&apos;,
-    groupBy: &apos;none&apos;,
-    defaultSeverity: &apos;all&apos;,
+    defaultView: 'all',
+    groupBy: 'none',
+    defaultSeverity: 'all',
   };
 };
 
 // Save user preferences to localStorage
 const saveUserPreferences = (prefs: any) => {
   try {
-    localStorage.setItem(&apos;alertPreferences&apos;, JSON.stringify(prefs));
+    localStorage.setItem('alertPreferences', JSON.stringify(prefs));
   } catch (error) {
-// console.error(&apos;Failed to save alert preferences:&apos;, error);
+// console.error('Failed to save alert preferences:', error);
   }
 };
 
@@ -118,29 +118,29 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
     const userPrefs = loadUserPreferences();
 
     const [searchText, setSearchText] = useState(
-      initialFilter?.searchText || &apos;&apos;
+      initialFilter?.searchText || ''
     );
     const [categoryFilter, setCategoryFilter] = useState(
-      initialFilter?.category || &apos;all&apos;
+      initialFilter?.category || 'all'
     );
     const [severityFilter, setSeverityFilter] = useState(
-      initialFilter?.severity || userPrefs.defaultSeverity || &apos;all&apos;
+      initialFilter?.severity || userPrefs.defaultSeverity || 'all'
     );
     const [statusFilter, setStatusFilter] = useState(
-      initialFilter?.status || &apos;all&apos;
+      initialFilter?.status || 'all'
     );
     const [activeTab, setActiveTab] = useState(
-      initialFilter?.status === &apos;resolved&apos;
-        ? &apos;resolved&apos;
-        : userPrefs.defaultView || &apos;all&apos;
+      initialFilter?.status === 'resolved'
+        ? 'resolved'
+        : userPrefs.defaultView || 'all'
     );
     const [alerts, setAlerts] = useState<Alert[]>([]);
     const [activeStatFilter, setActiveStatFilter] = useState<string | null>(
       null
     );
     const [groupBy, setGroupBy] = useState<
-      &apos;none&apos; | &apos;type&apos; | &apos;severity&apos; | &apos;asset&apos;
-    >(userPrefs.groupBy || &apos;none&apos;);
+      'none' | 'type' | 'severity' | 'asset'
+    >(userPrefs.groupBy || 'none');
 
     // Load alerts from service
     useEffect(() => {
@@ -150,8 +150,8 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
           const alertsData = await getAllAlerts();
           setAlerts(alertsData);
         } catch (error) {
-// console.error(&apos;Failed to load alerts:&apos;, error);
-          toast.error(&apos;Failed to load alerts&apos;);
+// console.error('Failed to load alerts:', error);
+          toast.error('Failed to load alerts');
         } finally {
           setIsLoading(false);
         }
@@ -163,14 +163,14 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
     // Update filters when initialFilter changes
     useEffect(() => {
       if (initialFilter) {
-        setSearchText(initialFilter.searchText || &apos;&apos;);
-        setCategoryFilter(initialFilter.category || &apos;all&apos;);
-        setSeverityFilter(initialFilter.severity || &apos;all&apos;);
-        setStatusFilter(initialFilter.status || &apos;all&apos;);
-        if (initialFilter.status === &apos;resolved&apos;) {
-          setActiveTab(&apos;resolved&apos;);
-        } else if (initialFilter.status === &apos;active&apos;) {
-          setActiveTab(&apos;all&apos;);
+        setSearchText(initialFilter.searchText || '');
+        setCategoryFilter(initialFilter.category || 'all');
+        setSeverityFilter(initialFilter.severity || 'all');
+        setStatusFilter(initialFilter.status || 'all');
+        if (initialFilter.status === 'resolved') {
+          setActiveTab('resolved');
+        } else if (initialFilter.status === 'active') {
+          setActiveTab('all');
         }
       }
     }, [initialFilter]);
@@ -190,17 +190,17 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         }
 
         // Category filter
-        if (categoryFilter !== &apos;all&apos; && alert.type !== categoryFilter) {
+        if (categoryFilter !== 'all' && alert.type !== categoryFilter) {
           return false;
         }
 
         // Severity filter
-        if (severityFilter !== &apos;all&apos; && alert.severity !== severityFilter) {
+        if (severityFilter !== 'all' && alert.severity !== severityFilter) {
           return false;
         }
 
         // Status filter
-        if (statusFilter !== &apos;all&apos; && alert.status !== statusFilter) {
+        if (statusFilter !== 'all' && alert.status !== statusFilter) {
           return false;
         }
 
@@ -209,34 +209,34 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
     }, [searchText, categoryFilter, severityFilter, statusFilter, alerts]);
 
     // Split filtered alerts by status
-    const activeAlerts = filteredAlerts.filter(a => a.status === &apos;active&apos;);
+    const activeAlerts = filteredAlerts.filter(a => a.status === 'active');
     const acknowledgedAlerts = filteredAlerts.filter(
-      a => a.status === &apos;acknowledged&apos;
+      a => a.status === 'acknowledged'
     );
-    const resolvedAlerts = filteredAlerts.filter(a => a.status === &apos;resolved&apos;);
+    const resolvedAlerts = filteredAlerts.filter(a => a.status === 'resolved');
 
     // Group alerts based on groupBy setting
     const groupedAlerts = useMemo(() => {
-      if (groupBy === &apos;none&apos;) return null;
+      if (groupBy === 'none') return null;
 
       const groups: Record<string, Alert[]> = {};
       const alertsToGroup =
-        activeTab === &apos;all&apos;
+        activeTab === 'all'
           ? filteredAlerts
-          : activeTab === &apos;active&apos;
+          : activeTab === 'active'
             ? activeAlerts
-            : activeTab === &apos;acknowledged&apos;
+            : activeTab === 'acknowledged'
               ? acknowledgedAlerts
               : resolvedAlerts;
 
       alertsToGroup.forEach(alert => {
-        let key = &apos;&apos;;
-        if (groupBy === &apos;type&apos;) {
+        let key = '';
+        if (groupBy === 'type') {
           key = alertTypeLabels[alert.type];
-        } else if (groupBy === &apos;severity&apos;) {
+        } else if (groupBy === 'severity') {
           key =
             alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1);
-        } else if (groupBy === &apos;asset&apos;) {
+        } else if (groupBy === 'asset') {
           key = alert.asset;
         }
 
@@ -257,9 +257,9 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
 
     const hasActiveFilters =
       searchText ||
-      categoryFilter !== &apos;all&apos; ||
-      severityFilter !== &apos;all&apos; ||
-      statusFilter !== &apos;all&apos; ||
+      categoryFilter !== 'all' ||
+      severityFilter !== 'all' ||
+      statusFilter !== 'all' ||
       activeStatFilter;
 
     // Save user preferences when they change
@@ -273,76 +273,76 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
     }, [activeTab, groupBy, severityFilter]);
 
     const clearFilters = () => {
-      setSearchText(&apos;&apos;);
-      setCategoryFilter(&apos;all&apos;);
-      setSeverityFilter(&apos;all&apos;);
-      setStatusFilter(&apos;all&apos;);
+      setSearchText('');
+      setCategoryFilter('all');
+      setSeverityFilter('all');
+      setStatusFilter('all');
       setActiveStatFilter(null);
     };
 
     const handleStatCardClick = (
       filterType:
-        | &apos;total&apos;
-        | &apos;active&apos;
-        | &apos;critical&apos;
-        | &apos;theft&apos;
-        | &apos;battery&apos;
-        | &apos;compliance&apos;
-        | &apos;offline&apos;
+        | 'total'
+        | 'active'
+        | 'critical'
+        | 'theft'
+        | 'battery'
+        | 'compliance'
+        | 'offline'
     ) => {
       // Clear all filters first
-      setSearchText(&apos;&apos;);
+      setSearchText('');
       setActiveStatFilter(filterType);
 
       switch (filterType) {
-        case &apos;total&apos;:
+        case 'total':
           // Show all alerts
-          setCategoryFilter(&apos;all&apos;);
-          setSeverityFilter(&apos;all&apos;);
-          setStatusFilter(&apos;all&apos;);
-          setActiveTab(&apos;all&apos;);
+          setCategoryFilter('all');
+          setSeverityFilter('all');
+          setStatusFilter('all');
+          setActiveTab('all');
           break;
-        case &apos;active&apos;:
+        case 'active':
           // Show only active alerts
-          setCategoryFilter(&apos;all&apos;);
-          setSeverityFilter(&apos;all&apos;);
-          setStatusFilter(&apos;active&apos;);
-          setActiveTab(&apos;active&apos;);
+          setCategoryFilter('all');
+          setSeverityFilter('all');
+          setStatusFilter('active');
+          setActiveTab('active');
           break;
-        case &apos;critical&apos;:
+        case 'critical':
           // Show only critical severity alerts that are active
-          setCategoryFilter(&apos;all&apos;);
-          setSeverityFilter(&apos;critical&apos;);
-          setStatusFilter(&apos;active&apos;);
-          setActiveTab(&apos;all&apos;);
+          setCategoryFilter('all');
+          setSeverityFilter('critical');
+          setStatusFilter('active');
+          setActiveTab('all');
           break;
-        case &apos;theft&apos;:
+        case 'theft':
           // Show only theft alerts that are active
-          setCategoryFilter(&apos;theft&apos;);
-          setSeverityFilter(&apos;all&apos;);
-          setStatusFilter(&apos;active&apos;);
-          setActiveTab(&apos;all&apos;);
+          setCategoryFilter('theft');
+          setSeverityFilter('all');
+          setStatusFilter('active');
+          setActiveTab('all');
           break;
-        case &apos;battery&apos;:
+        case 'battery':
           // Show only battery alerts that are active
-          setCategoryFilter(&apos;battery&apos;);
-          setSeverityFilter(&apos;all&apos;);
-          setStatusFilter(&apos;active&apos;);
-          setActiveTab(&apos;all&apos;);
+          setCategoryFilter('battery');
+          setSeverityFilter('all');
+          setStatusFilter('active');
+          setActiveTab('all');
           break;
-        case &apos;compliance&apos;:
+        case 'compliance':
           // Show only compliance alerts that are active
-          setCategoryFilter(&apos;compliance&apos;);
-          setSeverityFilter(&apos;all&apos;);
-          setStatusFilter(&apos;active&apos;);
-          setActiveTab(&apos;all&apos;);
+          setCategoryFilter('compliance');
+          setSeverityFilter('all');
+          setStatusFilter('active');
+          setActiveTab('all');
           break;
-        case &apos;offline&apos;:
+        case 'offline':
           // Show only offline alerts that are active
-          setCategoryFilter(&apos;offline&apos;);
-          setSeverityFilter(&apos;all&apos;);
-          setStatusFilter(&apos;active&apos;);
-          setActiveTab(&apos;all&apos;);
+          setCategoryFilter('offline');
+          setSeverityFilter('all');
+          setStatusFilter('active');
+          setActiveTab('all');
           break;
       }
     };
@@ -364,10 +364,10 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         // Refresh alerts to get updated data
         const updatedAlerts = await getAllAlerts();
         setAlerts(updatedAlerts);
-        toast.success(&apos;Alert acknowledged&apos;);
+        toast.success('Alert acknowledged');
       } catch (error) {
-// console.error(&apos;Failed to acknowledge alert:&apos;, error);
-        toast.error(&apos;Failed to acknowledge alert&apos;);
+// console.error('Failed to acknowledge alert:', error);
+        toast.error('Failed to acknowledge alert');
       }
     };
 
@@ -379,10 +379,10 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         // Refresh alerts to get updated data
         const updatedAlerts = await getAllAlerts();
         setAlerts(updatedAlerts);
-        toast.success(&apos;Alert resolved&apos;);
+        toast.success('Alert resolved');
       } catch (error) {
-// console.error(&apos;Failed to resolve alert:&apos;, error);
-        toast.error(&apos;Failed to resolve alert&apos;);
+// console.error('Failed to resolve alert:', error);
+        toast.error('Failed to resolve alert');
       }
     };
 
@@ -391,10 +391,10 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         setIsLoading(true);
         const updatedAlerts = await getAllAlerts();
         setAlerts(updatedAlerts);
-        toast.success(&apos;Alerts refreshed&apos;);
+        toast.success('Alerts refreshed');
       } catch (error) {
-// console.error(&apos;Failed to refresh alerts:&apos;, error);
-        toast.error(&apos;Failed to refresh alerts&apos;);
+// console.error('Failed to refresh alerts:', error);
+        toast.error('Failed to refresh alerts');
       } finally {
         setIsLoading(false);
       }
@@ -413,11 +413,11 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
       const diffHours = Math.floor(diffMins / 60);
       const diffDays = Math.floor(diffHours / 24);
 
-      if (diffMins < 1) return &apos;Just now&apos;;
+      if (diffMins < 1) return 'Just now';
       if (diffMins < 60) return `${diffMins} min ago`;
       if (diffHours < 24)
-        return `${diffHours} hour${diffHours > 1 ? &apos;s&apos; : &apos;&apos;} ago`;
-      return `${diffDays} day${diffDays > 1 ? &apos;s&apos; : &apos;&apos;} ago`;
+        return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
     };
 
     const renderAlertCard = (alert: Alert) => {
@@ -438,14 +438,14 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
       if (alerts.length === 0) {
         return (
           <Card>
-            <CardContent className=&apos;p-8 text-center text-muted-foreground&apos;>
+            <CardContent className='p-8 text-center text-muted-foreground'>
               No alerts found
             </CardContent>
           </Card>
         );
       }
 
-      if (groupBy === &apos;none&apos;) {
+      if (groupBy === 'none') {
         return <>{alerts.map(renderAlertCard)}</>;
       }
 
@@ -453,14 +453,14 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
       if (!groupedAlerts) return null;
 
       return (
-        <div className=&apos;space-y-6&apos;>
+        <div className='space-y-6'>
           {Object.entries(groupedAlerts)
             .sort(([, a], [, b]) => b.length - a.length) // Sort by count descending
             .map(([groupKey, groupAlerts]) => {
               // Get icon for type grouping
               let groupIcon = null;
-              let iconColor = &apos;&apos;;
-              if (groupBy === &apos;type&apos;) {
+              let iconColor = '';
+              if (groupBy === 'type') {
                 const alertType = Object.keys(alertTypeLabels).find(
                   key => alertTypeLabels[key as AlertType] === groupKey
                 ) as AlertType | undefined;
@@ -473,12 +473,12 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
 
               return (
                 <div key={groupKey}>
-                  <div className=&apos;flex items-center gap-2 mb-3 pb-2 border-b&apos;>
+                  <div className='flex items-center gap-2 mb-3 pb-2 border-b'>
                     {groupIcon}
-                    <h3 className=&apos;text-base&apos;>{groupKey}</h3>
-                    <Badge variant=&apos;secondary&apos;>{groupAlerts.length}</Badge>
+                    <h3 className='text-base'>{groupKey}</h3>
+                    <Badge variant='secondary'>{groupAlerts.length}</Badge>
                   </div>
-                  <div className=&apos;space-y-3&apos;>
+                  <div className='space-y-3'>
                     {groupAlerts.map(renderAlertCard)}
                   </div>
                 </div>
@@ -491,159 +491,159 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
     const stats = useMemo(
       () => ({
         total: alerts.length,
-        active: alerts.filter(a => a.status === &apos;active&apos;).length,
+        active: alerts.filter(a => a.status === 'active').length,
         critical: alerts.filter(
-          a => a.severity === &apos;critical&apos; && a.status === &apos;active&apos;
+          a => a.severity === 'critical' && a.status === 'active'
         ).length,
-        theft: alerts.filter(a => a.type === &apos;theft&apos; && a.status === &apos;active&apos;)
+        theft: alerts.filter(a => a.type === 'theft' && a.status === 'active')
           .length,
         battery: alerts.filter(
-          a => a.type === &apos;battery&apos; && a.status === &apos;active&apos;
+          a => a.type === 'battery' && a.status === 'active'
         ).length,
         compliance: alerts.filter(
-          a => a.type === &apos;compliance&apos; && a.status === &apos;active&apos;
+          a => a.type === 'compliance' && a.status === 'active'
         ).length,
         offline: alerts.filter(
-          a => a.type === &apos;offline&apos; && a.status === &apos;active&apos;
+          a => a.type === 'offline' && a.status === 'active'
         ).length,
       }),
       [alerts]
     );
 
     return (
-      <PageLayout variant=&apos;wide&apos; padding=&apos;md&apos;>
+      <PageLayout variant='wide' padding='md'>
         {/* Header */}
-        <div className=&apos;flex items-center justify-between&apos;>
+        <div className='flex items-center justify-between'>
           <div>
             <h1>Alert Management</h1>
-            <div className=&apos;flex items-center gap-2&apos;>
-              <p className=&apos;text-muted-foreground&apos;>
+            <div className='flex items-center gap-2'>
+              <p className='text-muted-foreground'>
                 Monitor and respond to system alerts
               </p>
-              {groupBy !== &apos;none&apos; && (
-                <Badge variant=&apos;outline&apos; className=&apos;gap-1&apos;>
-                  <Layers className=&apos;h-3 w-3&apos; />
-                  {groupBy === &apos;type&apos; && &apos;By Type&apos;}
-                  {groupBy === &apos;severity&apos; && &apos;By Severity&apos;}
-                  {groupBy === &apos;asset&apos; && &apos;By Asset&apos;}
+              {groupBy !== 'none' && (
+                <Badge variant='outline' className='gap-1'>
+                  <Layers className='h-3 w-3' />
+                  {groupBy === 'type' && 'By Type'}
+                  {groupBy === 'severity' && 'By Severity'}
+                  {groupBy === 'asset' && 'By Asset'}
                 </Badge>
               )}
             </div>
           </div>
           <Button onClick={onNavigateToConfiguration}>
-            <Settings className=&apos;h-4 w-4 mr-2&apos; />
+            <Settings className='h-4 w-4 mr-2' />
             Configure Rules
           </Button>
         </div>
 
         {/* Stats */}
-        <div className=&apos;grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4&apos;>
+        <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4'>
           <Card
             className={`cursor-pointer transition-all ${
-              activeStatFilter === &apos;total&apos;
-                ? &apos;border-primary border-2 shadow-md&apos;
-                : &apos;hover:shadow-md hover:border-primary/50&apos;
+              activeStatFilter === 'total'
+                ? 'border-primary border-2 shadow-md'
+                : 'hover:shadow-md hover:border-primary/50'
             }`}
-            onClick={() => handleStatCardClick(&apos;total&apos;)}
+            onClick={() => handleStatCardClick('total')}
           >
-            <CardContent className=&apos;p-4&apos;>
-              <div className=&apos;text-2xl mb-1&apos;>{stats.total}</div>
-              <div className=&apos;text-xs text-muted-foreground&apos;>Total Alerts</div>
+            <CardContent className='p-4'>
+              <div className='text-2xl mb-1'>{stats.total}</div>
+              <div className='text-xs text-muted-foreground'>Total Alerts</div>
             </CardContent>
           </Card>
           <Card
             className={`cursor-pointer transition-all ${
-              activeStatFilter === &apos;active&apos;
-                ? &apos;border-red-500 border-2 shadow-md bg-red-50&apos;
-                : &apos;hover:shadow-md hover:border-red-500/50&apos;
+              activeStatFilter === 'active'
+                ? 'border-red-500 border-2 shadow-md bg-red-50'
+                : 'hover:shadow-md hover:border-red-500/50'
             }`}
-            onClick={() => handleStatCardClick(&apos;active&apos;)}
+            onClick={() => handleStatCardClick('active')}
           >
-            <CardContent className=&apos;p-4&apos;>
-              <div className=&apos;text-2xl text-red-600 mb-1&apos;>{stats.active}</div>
-              <div className=&apos;text-xs text-muted-foreground&apos;>Active</div>
+            <CardContent className='p-4'>
+              <div className='text-2xl text-red-600 mb-1'>{stats.active}</div>
+              <div className='text-xs text-muted-foreground'>Active</div>
             </CardContent>
           </Card>
           <Card
             className={`cursor-pointer transition-all ${
-              activeStatFilter === &apos;critical&apos;
-                ? &apos;border-red-500 border-2 shadow-md bg-red-50&apos;
-                : &apos;hover:shadow-md hover:border-red-500/50&apos;
+              activeStatFilter === 'critical'
+                ? 'border-red-500 border-2 shadow-md bg-red-50'
+                : 'hover:shadow-md hover:border-red-500/50'
             }`}
-            onClick={() => handleStatCardClick(&apos;critical&apos;)}
+            onClick={() => handleStatCardClick('critical')}
           >
-            <CardContent className=&apos;p-4&apos;>
-              <div className=&apos;text-2xl text-red-600 mb-1&apos;>{stats.critical}</div>
-              <div className=&apos;text-xs text-muted-foreground&apos;>Critical</div>
+            <CardContent className='p-4'>
+              <div className='text-2xl text-red-600 mb-1'>{stats.critical}</div>
+              <div className='text-xs text-muted-foreground'>Critical</div>
             </CardContent>
           </Card>
           <Card
             className={`cursor-pointer transition-all ${
-              activeStatFilter === &apos;theft&apos;
-                ? &apos;border-red-500 border-2 shadow-md bg-red-50&apos;
-                : &apos;hover:shadow-md hover:border-red-500/50&apos;
+              activeStatFilter === 'theft'
+                ? 'border-red-500 border-2 shadow-md bg-red-50'
+                : 'hover:shadow-md hover:border-red-500/50'
             }`}
-            onClick={() => handleStatCardClick(&apos;theft&apos;)}
+            onClick={() => handleStatCardClick('theft')}
           >
-            <CardContent className=&apos;p-4&apos;>
-              <div className=&apos;text-2xl text-red-600 mb-1&apos;>{stats.theft}</div>
-              <div className=&apos;text-xs text-muted-foreground&apos;>Theft</div>
+            <CardContent className='p-4'>
+              <div className='text-2xl text-red-600 mb-1'>{stats.theft}</div>
+              <div className='text-xs text-muted-foreground'>Theft</div>
             </CardContent>
           </Card>
           <Card
             className={`cursor-pointer transition-all ${
-              activeStatFilter === &apos;battery&apos;
-                ? &apos;border-orange-500 border-2 shadow-md bg-orange-50&apos;
-                : &apos;hover:shadow-md hover:border-orange-500/50&apos;
+              activeStatFilter === 'battery'
+                ? 'border-orange-500 border-2 shadow-md bg-orange-50'
+                : 'hover:shadow-md hover:border-orange-500/50'
             }`}
-            onClick={() => handleStatCardClick(&apos;battery&apos;)}
+            onClick={() => handleStatCardClick('battery')}
           >
-            <CardContent className=&apos;p-4&apos;>
-              <div className=&apos;text-2xl text-orange-600 mb-1&apos;>
+            <CardContent className='p-4'>
+              <div className='text-2xl text-orange-600 mb-1'>
                 {stats.battery}
               </div>
-              <div className=&apos;text-xs text-muted-foreground&apos;>Battery</div>
+              <div className='text-xs text-muted-foreground'>Battery</div>
             </CardContent>
           </Card>
           <Card
             className={`cursor-pointer transition-all ${
-              activeStatFilter === &apos;compliance&apos;
-                ? &apos;border-yellow-500 border-2 shadow-md bg-yellow-50&apos;
-                : &apos;hover:shadow-md hover:border-yellow-500/50&apos;
+              activeStatFilter === 'compliance'
+                ? 'border-yellow-500 border-2 shadow-md bg-yellow-50'
+                : 'hover:shadow-md hover:border-yellow-500/50'
             }`}
-            onClick={() => handleStatCardClick(&apos;compliance&apos;)}
+            onClick={() => handleStatCardClick('compliance')}
           >
-            <CardContent className=&apos;p-4&apos;>
-              <div className=&apos;text-2xl text-yellow-600 mb-1&apos;>
+            <CardContent className='p-4'>
+              <div className='text-2xl text-yellow-600 mb-1'>
                 {stats.compliance}
               </div>
-              <div className=&apos;text-xs text-muted-foreground&apos;>Compliance</div>
+              <div className='text-xs text-muted-foreground'>Compliance</div>
             </CardContent>
           </Card>
           <Card
             className={`cursor-pointer transition-all ${
-              activeStatFilter === &apos;offline&apos;
-                ? &apos;border-gray-500 border-2 shadow-md bg-gray-50&apos;
-                : &apos;hover:shadow-md hover:border-gray-500/50&apos;
+              activeStatFilter === 'offline'
+                ? 'border-gray-500 border-2 shadow-md bg-gray-50'
+                : 'hover:shadow-md hover:border-gray-500/50'
             }`}
-            onClick={() => handleStatCardClick(&apos;offline&apos;)}
+            onClick={() => handleStatCardClick('offline')}
           >
-            <CardContent className=&apos;p-4&apos;>
-              <div className=&apos;text-2xl text-gray-600 mb-1&apos;>{stats.offline}</div>
-              <div className=&apos;text-xs text-muted-foreground&apos;>Offline</div>
+            <CardContent className='p-4'>
+              <div className='text-2xl text-gray-600 mb-1'>{stats.offline}</div>
+              <div className='text-xs text-muted-foreground'>Offline</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Filters */}
         <Card>
-          <CardContent className=&apos;p-4&apos;>
-            <div className=&apos;grid grid-cols-1 md:grid-cols-5 gap-4&apos;>
-              <div className=&apos;relative&apos;>
-                <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
+          <CardContent className='p-4'>
+            <div className='grid grid-cols-1 md:grid-cols-5 gap-4'>
+              <div className='relative'>
+                <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                 <Input
-                  placeholder=&apos;Search alerts...&apos;
-                  className=&apos;pl-9&apos;
+                  placeholder='Search alerts...'
+                  className='pl-9'
                   value={searchText}
                   onChange={e => {
                     setSearchText(e.target.value);
@@ -659,19 +659,19 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder=&apos;Alert Type&apos; />
+                  <SelectValue placeholder='Alert Type' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&apos;all&apos;>All Types</SelectItem>
-                  <SelectItem value=&apos;theft&apos;>Theft Alert</SelectItem>
-                  <SelectItem value=&apos;battery&apos;>Battery Alert</SelectItem>
-                  <SelectItem value=&apos;compliance&apos;>Compliance</SelectItem>
-                  <SelectItem value=&apos;underutilized&apos;>Underutilized</SelectItem>
-                  <SelectItem value=&apos;offline&apos;>Offline</SelectItem>
-                  <SelectItem value=&apos;unauthorized-zone&apos;>
+                  <SelectItem value='all'>All Types</SelectItem>
+                  <SelectItem value='theft'>Theft Alert</SelectItem>
+                  <SelectItem value='battery'>Battery Alert</SelectItem>
+                  <SelectItem value='compliance'>Compliance</SelectItem>
+                  <SelectItem value='underutilized'>Underutilized</SelectItem>
+                  <SelectItem value='offline'>Offline</SelectItem>
+                  <SelectItem value='unauthorized-zone'>
                     Unauthorized Zone
                   </SelectItem>
-                  <SelectItem value=&apos;predictive-maintenance&apos;>
+                  <SelectItem value='predictive-maintenance'>
                     Predictive Maintenance
                   </SelectItem>
                 </SelectContent>
@@ -684,13 +684,13 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder=&apos;Severity&apos; />
+                  <SelectValue placeholder='Severity' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&apos;all&apos;>All Severities</SelectItem>
-                  <SelectItem value=&apos;critical&apos;>Critical</SelectItem>
-                  <SelectItem value=&apos;warning&apos;>Warning</SelectItem>
-                  <SelectItem value=&apos;info&apos;>Info</SelectItem>
+                  <SelectItem value='all'>All Severities</SelectItem>
+                  <SelectItem value='critical'>Critical</SelectItem>
+                  <SelectItem value='warning'>Warning</SelectItem>
+                  <SelectItem value='info'>Info</SelectItem>
                 </SelectContent>
               </Select>
               <Select
@@ -701,13 +701,13 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder=&apos;Status&apos; />
+                  <SelectValue placeholder='Status' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&apos;all&apos;>All Statuses</SelectItem>
-                  <SelectItem value=&apos;active&apos;>Active</SelectItem>
-                  <SelectItem value=&apos;acknowledged&apos;>Acknowledged</SelectItem>
-                  <SelectItem value=&apos;resolved&apos;>Resolved</SelectItem>
+                  <SelectItem value='all'>All Statuses</SelectItem>
+                  <SelectItem value='active'>Active</SelectItem>
+                  <SelectItem value='acknowledged'>Acknowledged</SelectItem>
+                  <SelectItem value='resolved'>Resolved</SelectItem>
                 </SelectContent>
               </Select>
               <Select
@@ -715,42 +715,42 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
                 onValueChange={(value: any) => setGroupBy(value)}
               >
                 <SelectTrigger
-                  className={groupBy !== &apos;none&apos; ? &apos;border-primary&apos; : &apos;&apos;}
+                  className={groupBy !== 'none' ? 'border-primary' : ''}
                 >
-                  <div className=&apos;flex items-center gap-2&apos;>
-                    <Layers className=&apos;h-4 w-4&apos; />
-                    <SelectValue placeholder=&apos;Group By&apos; />
+                  <div className='flex items-center gap-2'>
+                    <Layers className='h-4 w-4' />
+                    <SelectValue placeholder='Group By' />
                   </div>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&apos;none&apos;>
-                    <div className=&apos;flex flex-col&apos;>
+                  <SelectItem value='none'>
+                    <div className='flex flex-col'>
                       <span>No Grouping</span>
-                      <span className=&apos;text-xs text-muted-foreground&apos;>
+                      <span className='text-xs text-muted-foreground'>
                         Show all alerts in a list
                       </span>
                     </div>
                   </SelectItem>
-                  <SelectItem value=&apos;type&apos;>
-                    <div className=&apos;flex flex-col&apos;>
+                  <SelectItem value='type'>
+                    <div className='flex flex-col'>
                       <span>Group by Type</span>
-                      <span className=&apos;text-xs text-muted-foreground&apos;>
+                      <span className='text-xs text-muted-foreground'>
                         Organize by alert category
                       </span>
                     </div>
                   </SelectItem>
-                  <SelectItem value=&apos;severity&apos;>
-                    <div className=&apos;flex flex-col&apos;>
+                  <SelectItem value='severity'>
+                    <div className='flex flex-col'>
                       <span>Group by Severity</span>
-                      <span className=&apos;text-xs text-muted-foreground&apos;>
+                      <span className='text-xs text-muted-foreground'>
                         Organize by priority level
                       </span>
                     </div>
                   </SelectItem>
-                  <SelectItem value=&apos;asset&apos;>
-                    <div className=&apos;flex flex-col&apos;>
+                  <SelectItem value='asset'>
+                    <div className='flex flex-col'>
                       <span>Group by Asset</span>
-                      <span className=&apos;text-xs text-muted-foreground&apos;>
+                      <span className='text-xs text-muted-foreground'>
                         Organize by asset name
                       </span>
                     </div>
@@ -758,22 +758,22 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
                 </SelectContent>
               </Select>
             </div>
-            {(hasActiveFilters || groupBy !== &apos;none&apos;) && (
-              <div className=&apos;mt-3 flex items-center gap-2 flex-wrap&apos;>
+            {(hasActiveFilters || groupBy !== 'none') && (
+              <div className='mt-3 flex items-center gap-2 flex-wrap'>
                 {activeStatFilter && (
-                  <Badge variant=&apos;secondary&apos; className=&apos;gap-1&apos;>
+                  <Badge variant='secondary' className='gap-1'>
                     Quick filter: {activeStatFilter}
                   </Badge>
                 )}
-                {groupBy !== &apos;none&apos; && (
-                  <Badge variant=&apos;secondary&apos; className=&apos;gap-1&apos;>
-                    <Filter className=&apos;h-3 w-3&apos; />
+                {groupBy !== 'none' && (
+                  <Badge variant='secondary' className='gap-1'>
+                    <Filter className='h-3 w-3' />
                     Grouped by {groupBy}
                   </Badge>
                 )}
                 {hasActiveFilters && (
-                  <Button variant=&apos;ghost&apos; size=&apos;sm&apos; onClick={clearFilters}>
-                    <X className=&apos;h-4 w-4 mr-2&apos; />
+                  <Button variant='ghost' size='sm' onClick={clearFilters}>
+                    <X className='h-4 w-4 mr-2' />
                     Clear All Filters
                   </Button>
                 )}
@@ -785,33 +785,33 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         {/* Alert List */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
-            <TabsTrigger value=&apos;all&apos;>
+            <TabsTrigger value='all'>
               All Alerts ({filteredAlerts.length})
             </TabsTrigger>
-            <TabsTrigger value=&apos;active&apos;>
+            <TabsTrigger value='active'>
               Active ({activeAlerts.length})
             </TabsTrigger>
-            <TabsTrigger value=&apos;acknowledged&apos;>
+            <TabsTrigger value='acknowledged'>
               Acknowledged ({acknowledgedAlerts.length})
             </TabsTrigger>
-            <TabsTrigger value=&apos;resolved&apos;>
+            <TabsTrigger value='resolved'>
               Resolved ({resolvedAlerts.length})
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value=&apos;all&apos; className=&apos;space-y-3 mt-4&apos;>
+          <TabsContent value='all' className='space-y-3 mt-4'>
             {renderAlertsList(filteredAlerts)}
           </TabsContent>
 
-          <TabsContent value=&apos;active&apos; className=&apos;space-y-3 mt-4&apos;>
+          <TabsContent value='active' className='space-y-3 mt-4'>
             {renderAlertsList(activeAlerts)}
           </TabsContent>
 
-          <TabsContent value=&apos;acknowledged&apos; className=&apos;space-y-3 mt-4&apos;>
+          <TabsContent value='acknowledged' className='space-y-3 mt-4'>
             {renderAlertsList(acknowledgedAlerts)}
           </TabsContent>
 
-          <TabsContent value=&apos;resolved&apos; className=&apos;space-y-3 mt-4&apos;>
+          <TabsContent value='resolved' className='space-y-3 mt-4'>
             {renderAlertsList(resolvedAlerts)}
           </TabsContent>
         </Tabs>
@@ -820,4 +820,4 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
   }
 );
 
-Alerts.displayName = &apos;Alerts&apos;;
+Alerts.displayName = 'Alerts';

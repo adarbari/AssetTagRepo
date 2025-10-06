@@ -1,11 +1,11 @@
-import React from &apos;react&apos;;
-import { cn } from &apos;./utils&apos;;
+import React from 'react';
+import { cn } from './utils';
 
-function Skeleton({ className, ...props }: React.ComponentProps<&apos;div&apos;>) {
+function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot=&apos;skeleton&apos;
-      className={cn(&apos;bg-accent animate-pulse rounded-md&apos;, className)}
+      data-slot='skeleton'
+      className={cn('bg-accent animate-pulse rounded-md', className)}
       {...props}
     />
   );

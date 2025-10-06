@@ -1,58 +1,58 @@
-import React, { useState, useEffect } from &apos;react&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Textarea } from &apos;../ui/textarea&apos;;
+import React, { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
-import { Calendar } from &apos;../ui/calendar&apos;;
-import { Popover, PopoverContent, PopoverTrigger } from &apos;../ui/popover&apos;;
-import { Card, CardContent } from &apos;../ui/card&apos;;
-import { PageHeader, PageLayout } from &apos;../common&apos;;
-import { cn } from &apos;../ui/utils&apos;;
-import { Calendar as CalendarIcon, Shield, FileText } from &apos;lucide-react&apos;;
-import { format } from &apos;date-fns&apos;;
-import { toast } from &apos;sonner&apos;;
-import { getAllAssets } from &apos;../../data/mockData&apos;;
-import type { Asset } from &apos;../types&apos;;
+} from '../ui/select';
+import { Calendar } from '../ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Card, CardContent } from '../ui/card';
+import { PageHeader, PageLayout } from '../common';
+import { cn } from '../ui/utils';
+import { Calendar as CalendarIcon, Shield, FileText } from 'lucide-react';
+import { format } from 'date-fns';
+import { toast } from 'sonner';
+import { getAllAssets } from '../../data/mockData';
+import type { Asset } from '../types';
 
 interface CreateComplianceProps {
   onBack: () => void;
 }
 
 const certificationTypes = [
-  { value: &apos;dot-inspection&apos;, label: &apos;DOT Inspection&apos; },
-  { value: &apos;safety-cert&apos;, label: &apos;Safety Certification&apos; },
-  { value: &apos;epa-compliance&apos;, label: &apos;EPA Compliance&apos; },
-  { value: &apos;insurance&apos;, label: &apos;Insurance Certificate&apos; },
-  { value: &apos;operator-license&apos;, label: &apos;Operator License&apos; },
-  { value: &apos;emissions&apos;, label: &apos;Emissions Testing&apos; },
-  { value: &apos;calibration&apos;, label: &apos;Equipment Calibration&apos; },
-  { value: &apos;other&apos;, label: &apos;Other&apos; },
+  { value: 'dot-inspection', label: 'DOT Inspection' },
+  { value: 'safety-cert', label: 'Safety Certification' },
+  { value: 'epa-compliance', label: 'EPA Compliance' },
+  { value: 'insurance', label: 'Insurance Certificate' },
+  { value: 'operator-license', label: 'Operator License' },
+  { value: 'emissions', label: 'Emissions Testing' },
+  { value: 'calibration', label: 'Equipment Calibration' },
+  { value: 'other', label: 'Other' },
 ];
 
 const inspectors = [
-  { value: &apos;john-smith&apos;, label: &apos;John Smith&apos; },
-  { value: &apos;sarah-johnson&apos;, label: &apos;Sarah Johnson&apos; },
-  { value: &apos;mike-davis&apos;, label: &apos;Mike Davis&apos; },
-  { value: &apos;external&apos;, label: &apos;External Inspector&apos; },
+  { value: 'john-smith', label: 'John Smith' },
+  { value: 'sarah-johnson', label: 'Sarah Johnson' },
+  { value: 'mike-davis', label: 'Mike Davis' },
+  { value: 'external', label: 'External Inspector' },
 ];
 
 export function CreateCompliance({ onBack }: CreateComplianceProps) {
-  const [selectedAsset, setSelectedAsset] = useState(&apos;&apos;);
-  const [certificationType, setCertificationType] = useState(&apos;&apos;);
-  const [customCertType, setCustomCertType] = useState(&apos;&apos;);
-  const [inspector, setInspector] = useState(&apos;&apos;);
-  const [externalInspector, setExternalInspector] = useState(&apos;&apos;);
+  const [selectedAsset, setSelectedAsset] = useState('');
+  const [certificationType, setCertificationType] = useState('');
+  const [customCertType, setCustomCertType] = useState('');
+  const [inspector, setInspector] = useState('');
+  const [externalInspector, setExternalInspector] = useState('');
   const [issueDate, setIssueDate] = useState<Date>();
   const [expiryDate, setExpiryDate] = useState<Date>();
-  const [certificateNumber, setCertificateNumber] = useState(&apos;&apos;);
-  const [notes, setNotes] = useState(&apos;&apos;);
+  const [certificateNumber, setCertificateNumber] = useState('');
+  const [notes, setNotes] = useState('');
   const [availableAssets, setAvailableAssets] = useState<Asset[]>([]);
 
   useEffect(() => {
@@ -70,22 +70,22 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
       !issueDate ||
       !expiryDate
     ) {
-      toast.error(&apos;Please fill in all required fields&apos;);
+      toast.error('Please fill in all required fields');
       return;
     }
 
-    if (certificationType === &apos;other&apos; && !customCertType) {
-      toast.error(&apos;Please specify the certification type&apos;);
+    if (certificationType === 'other' && !customCertType) {
+      toast.error('Please specify the certification type');
       return;
     }
 
-    if (inspector === &apos;external&apos; && !externalInspector) {
-      toast.error(&apos;Please specify the external inspector name&apos;);
+    if (inspector === 'external' && !externalInspector) {
+      toast.error('Please specify the external inspector name');
       return;
     }
 
     if (expiryDate <= issueDate) {
-      toast.error(&apos;Expiry date must be after issue date&apos;);
+      toast.error('Expiry date must be after issue date');
       return;
     }
 
@@ -94,11 +94,11 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
 
     const asset = availableAssets.find(a => a.id === selectedAsset);
     const certType =
-      certificationType === &apos;other&apos;
+      certificationType === 'other'
         ? customCertType
         : certificationTypes.find(t => t.value === certificationType)?.label;
 
-    toast.success(&apos;Compliance record created successfully&apos;, {
+    toast.success('Compliance record created successfully', {
       description: `${certType} added for ${asset?.name}`,
     });
 
@@ -107,16 +107,16 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
 
   return (
     <PageLayout
-      variant=&apos;narrow&apos;
-      padding=&apos;md&apos;
+      variant='narrow'
+      padding='md'
       header={
         <PageHeader
-          title=&apos;Add Compliance Record&apos;
-          description=&apos;Create a new certification or compliance record for an asset&apos;
+          title='Add Compliance Record'
+          description='Create a new certification or compliance record for an asset'
           onBack={onBack}
           actions={
-            <Button type=&apos;submit&apos; form=&apos;create-compliance-form&apos;>
-              <Shield className=&apos;h-4 w-4 mr-2&apos; />
+            <Button type='submit' form='create-compliance-form'>
+              <Shield className='h-4 w-4 mr-2' />
               Create Record
             </Button>
           }
@@ -124,18 +124,18 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
       }
     >
       <Card>
-        <CardContent className=&apos;pt-6&apos;>
+        <CardContent className='pt-6'>
           <form
-            id=&apos;create-compliance-form&apos;
+            id='create-compliance-form'
             onSubmit={handleSubmit}
-            className=&apos;space-y-6&apos;
+            className='space-y-6'
           >
             {/* Asset Selection */}
-            <div className=&apos;space-y-2&apos;>
-              <Label htmlFor=&apos;asset&apos;>Asset *</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='asset'>Asset *</Label>
               <Select value={selectedAsset} onValueChange={setSelectedAsset}>
-                <SelectTrigger id=&apos;asset&apos;>
-                  <SelectValue placeholder=&apos;Select asset&apos; />
+                <SelectTrigger id='asset'>
+                  <SelectValue placeholder='Select asset' />
                 </SelectTrigger>
                 <SelectContent>
                   {availableAssets.map(asset => (
@@ -148,14 +148,14 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
             </div>
 
             {/* Certification Type */}
-            <div className=&apos;space-y-2&apos;>
-              <Label htmlFor=&apos;cert-type&apos;>Certification Type *</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='cert-type'>Certification Type *</Label>
               <Select
                 value={certificationType}
                 onValueChange={setCertificationType}
               >
-                <SelectTrigger id=&apos;cert-type&apos;>
-                  <SelectValue placeholder=&apos;Select certification type&apos; />
+                <SelectTrigger id='cert-type'>
+                  <SelectValue placeholder='Select certification type' />
                 </SelectTrigger>
                 <SelectContent>
                   {certificationTypes.map(type => (
@@ -168,14 +168,14 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
             </div>
 
             {/* Custom Certification Type */}
-            {certificationType === &apos;other&apos; && (
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;custom-cert-type&apos;>
+            {certificationType === 'other' && (
+              <div className='space-y-2'>
+                <Label htmlFor='custom-cert-type'>
                   Custom Certification Type *
                 </Label>
                 <Input
-                  id=&apos;custom-cert-type&apos;
-                  placeholder=&apos;Enter certification type&apos;
+                  id='custom-cert-type'
+                  placeholder='Enter certification type'
                   value={customCertType}
                   onChange={e => setCustomCertType(e.target.value)}
                   required
@@ -183,13 +183,13 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
               </div>
             )}
 
-            <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+            <div className='grid gap-4 md:grid-cols-2'>
               {/* Inspector */}
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;inspector&apos;>Inspector *</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='inspector'>Inspector *</Label>
                 <Select value={inspector} onValueChange={setInspector}>
-                  <SelectTrigger id=&apos;inspector&apos;>
-                    <SelectValue placeholder=&apos;Select inspector&apos; />
+                  <SelectTrigger id='inspector'>
+                    <SelectValue placeholder='Select inspector' />
                   </SelectTrigger>
                   <SelectContent>
                     {inspectors.map(insp => (
@@ -202,11 +202,11 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
               </div>
 
               {/* Certificate Number */}
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;cert-number&apos;>Certificate Number</Label>
+              <div className='space-y-2'>
+                <Label htmlFor='cert-number'>Certificate Number</Label>
                 <Input
-                  id=&apos;cert-number&apos;
-                  placeholder=&apos;e.g., CERT-2024-001&apos;
+                  id='cert-number'
+                  placeholder='e.g., CERT-2024-001'
                   value={certificateNumber}
                   onChange={e => setCertificateNumber(e.target.value)}
                 />
@@ -214,14 +214,14 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
             </div>
 
             {/* External Inspector Name */}
-            {inspector === &apos;external&apos; && (
-              <div className=&apos;space-y-2&apos;>
-                <Label htmlFor=&apos;external-inspector&apos;>
+            {inspector === 'external' && (
+              <div className='space-y-2'>
+                <Label htmlFor='external-inspector'>
                   External Inspector Name *
                 </Label>
                 <Input
-                  id=&apos;external-inspector&apos;
-                  placeholder=&apos;Enter inspector or company name&apos;
+                  id='external-inspector'
+                  placeholder='Enter inspector or company name'
                   value={externalInspector}
                   onChange={e => setExternalInspector(e.target.value)}
                   required
@@ -229,26 +229,26 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
               </div>
             )}
 
-            <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
+            <div className='grid gap-4 md:grid-cols-2'>
               {/* Issue Date */}
-              <div className=&apos;space-y-2&apos;>
+              <div className='space-y-2'>
                 <Label>Issue Date *</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
-                      variant=&apos;outline&apos;
+                      variant='outline'
                       className={cn(
-                        &apos;w-full justify-start text-left&apos;,
-                        !issueDate && &apos;text-muted-foreground&apos;
+                        'w-full justify-start text-left',
+                        !issueDate && 'text-muted-foreground'
                       )}
                     >
-                      <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
-                      {issueDate ? format(issueDate, &apos;PPP&apos;) : &apos;Pick a date&apos;}
+                      <CalendarIcon className='mr-2 h-4 w-4' />
+                      {issueDate ? format(issueDate, 'PPP') : 'Pick a date'}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
+                  <PopoverContent className='w-auto p-0' align='start'>
                     <Calendar
-                      mode=&apos;single&apos;
+                      mode='single'
                       selected={issueDate}
                       onSelect={setIssueDate}
                       initialFocus
@@ -259,24 +259,24 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
               </div>
 
               {/* Expiry Date */}
-              <div className=&apos;space-y-2&apos;>
+              <div className='space-y-2'>
                 <Label>Expiry Date *</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
-                      variant=&apos;outline&apos;
+                      variant='outline'
                       className={cn(
-                        &apos;w-full justify-start text-left&apos;,
-                        !expiryDate && &apos;text-muted-foreground&apos;
+                        'w-full justify-start text-left',
+                        !expiryDate && 'text-muted-foreground'
                       )}
                     >
-                      <CalendarIcon className=&apos;mr-2 h-4 w-4&apos; />
-                      {expiryDate ? format(expiryDate, &apos;PPP&apos;) : &apos;Pick a date&apos;}
+                      <CalendarIcon className='mr-2 h-4 w-4' />
+                      {expiryDate ? format(expiryDate, 'PPP') : 'Pick a date'}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className=&apos;w-auto p-0&apos; align=&apos;start&apos;>
+                  <PopoverContent className='w-auto p-0' align='start'>
                     <Calendar
-                      mode=&apos;single&apos;
+                      mode='single'
                       selected={expiryDate}
                       onSelect={setExpiryDate}
                       initialFocus
@@ -288,11 +288,11 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
             </div>
 
             {/* Notes */}
-            <div className=&apos;space-y-2&apos;>
-              <Label htmlFor=&apos;notes&apos;>Notes</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='notes'>Notes</Label>
               <Textarea
-                id=&apos;notes&apos;
-                placeholder=&apos;Additional notes, findings, or recommendations...&apos;
+                id='notes'
+                placeholder='Additional notes, findings, or recommendations...'
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
                 rows={4}
@@ -300,12 +300,12 @@ export function CreateCompliance({ onBack }: CreateComplianceProps) {
             </div>
 
             {/* Document Upload Placeholder */}
-            <div className=&apos;p-4 bg-muted rounded-lg border-2 border-dashed&apos;>
-              <div className=&apos;flex items-center gap-2 text-muted-foreground&apos;>
-                <FileText className=&apos;h-5 w-5&apos; />
+            <div className='p-4 bg-muted rounded-lg border-2 border-dashed'>
+              <div className='flex items-center gap-2 text-muted-foreground'>
+                <FileText className='h-5 w-5' />
                 <div>
-                  <p className=&apos;text-sm&apos;>Upload Certificate Document</p>
-                  <p className=&apos;text-xs&apos;>Document upload feature coming soon</p>
+                  <p className='text-sm'>Upload Certificate Document</p>
+                  <p className='text-xs'>Document upload feature coming soon</p>
                 </div>
               </div>
             </div>

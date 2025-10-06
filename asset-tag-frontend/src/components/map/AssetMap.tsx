@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useRef } from &apos;react&apos;;
-import { Card, CardContent, CardHeader, CardTitle } from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { StatusBadge } from &apos;../common&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { Checkbox } from &apos;../ui/checkbox&apos;;
+import React, { useState, useEffect, useRef } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { StatusBadge } from '../common';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Checkbox } from '../ui/checkbox';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from &apos;../ui/collapsible&apos;;
+} from '../ui/collapsible';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
+} from '../ui/select';
 import {
   Search,
   Layers,
@@ -33,19 +33,19 @@ import {
   ArrowLeft,
   ChevronDown,
   ChevronRight,
-} from &apos;lucide-react&apos;;
+} from 'lucide-react';
 import type {
   Asset as SharedAsset,
   Geofence as SharedGeofence,
-} from &apos;../../types&apos;;
+} from '../../types';
 import {
   mockAssets as sharedMockAssets,
   mockGeofences as sharedMockGeofences,
-} from &apos;../../data/mockData&apos;;
+} from '../../data/mockData';
 
 // Local types for this component
-type AssetStatus = &apos;active&apos; | &apos;idle&apos; | &apos;in-transit&apos; | &apos;offline&apos;;
-type AssetType = &apos;tools&apos; | &apos;vehicles&apos; | &apos;equipment&apos; | &apos;containers&apos;;
+type AssetStatus = 'active' | 'idle' | 'in-transit' | 'offline';
+type AssetType = 'tools' | 'vehicles' | 'equipment' | 'containers';
 
 interface Asset {
   id: string;
@@ -71,13 +71,13 @@ const mockAssets: Asset[] = sharedMockAssets
   .map(asset => ({
     id: asset.id,
     name: asset.name,
-    type: asset.type.toLowerCase().includes(&apos;vehicle&apos;)
-      ? &apos;vehicles&apos;
-      : asset.type.toLowerCase().includes(&apos;tool&apos;)
-        ? &apos;tools&apos;
-        : asset.type.toLowerCase().includes(&apos;container&apos;)
-          ? &apos;containers&apos;
-          : &apos;equipment&apos;,
+    type: asset.type.toLowerCase().includes('vehicle')
+      ? 'vehicles'
+      : asset.type.toLowerCase().includes('tool')
+        ? 'tools'
+        : asset.type.toLowerCase().includes('container')
+          ? 'containers'
+          : 'equipment',
     lat: asset.coordinates?.[0] || 0,
     lng: asset.coordinates?.[1] || 0,
     status: asset.status as AssetStatus,
@@ -87,14 +87,14 @@ const mockAssets: Asset[] = sharedMockAssets
 
 const mockSites: Site[] = [
   {
-    id: &apos;ST-1&apos;,
-    name: &apos;Main Warehouse&apos;,
+    id: 'ST-1',
+    name: 'Main Warehouse',
     center: [37.7849, -122.4194],
     radius: 100,
   },
   {
-    id: &apos;ST-2&apos;,
-    name: &apos;Construction Site B&apos;,
+    id: 'ST-2',
+    name: 'Construction Site B',
     center: [37.7649, -122.4194],
     radius: 150,
   },
@@ -130,9 +130,9 @@ export function AssetMap({
   const markersRef = useRef<unknown[]>([]);
 
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-  const [searchText, setSearchText] = useState(&apos;&apos;);
-  const [typeFilter, setTypeFilter] = useState(&apos;all&apos;);
-  const [statusFilter, setStatusFilter] = useState(&apos;all&apos;);
+  const [searchText, setSearchText] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [showGeofences, setShowGeofences] = useState(true);
   const [showClusters, setShowClusters] = useState(true);
   const [showSites, setShowSites] = useState(true);
@@ -185,10 +185,10 @@ export function AssetMap({
     ) {
       return false;
     }
-    if (typeFilter !== &apos;all&apos; && asset.type !== typeFilter) {
+    if (typeFilter !== 'all' && asset.type !== typeFilter) {
       return false;
     }
-    if (statusFilter !== &apos;all&apos; && asset.status !== statusFilter) {
+    if (statusFilter !== 'all' && asset.status !== statusFilter) {
       return false;
     }
     return true;
@@ -199,19 +199,19 @@ export function AssetMap({
     if (!mapRef.current || mapInstanceRef.current) return;
 
     // Dynamically load Leaflet CSS
-    const link = document.createElement(&apos;link&apos;);
-    link.rel = &apos;stylesheet&apos;;
-    link.href = &apos;https://unpkg.com/leaflet/dist/leaflet.css&apos;;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet/dist/leaflet.css';
     document.head.appendChild(link);
 
     // Load Leaflet JS
-    import(&apos;leaflet&apos;).then(L => {
+    import('leaflet').then(L => {
       // Fix for default marker icon issue with webpack/vite
       L.Icon.Default.mergeOptions({
         iconRetinaUrl:
-          &apos;https://unpkg.com/leaflet/dist/images/marker-icon-2x.png&apos;,
-        iconUrl: &apos;https://unpkg.com/leaflet/dist/images/marker-icon.png&apos;,
-        shadowUrl: &apos;https://unpkg.com/leaflet/dist/images/marker-shadow.png&apos;,
+          'https://unpkg.com/leaflet/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet/dist/images/marker-shadow.png',
       });
 
       // Initialize map centered on San Francisco
@@ -219,8 +219,8 @@ export function AssetMap({
       const map = L.map(mapRef.current).setView([37.7749, -122.4194], 13);
 
       // Add OpenStreetMap tiles
-      L.tileLayer(&apos;https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&apos;, {
-        attribution: &apos;© OpenStreetMap contributors&apos;,
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
         maxZoom: 19,
       }).addTo(map);
 
@@ -238,7 +238,7 @@ export function AssetMap({
   useEffect(() => {
     if (!mapInstanceRef.current || !mapLoaded) return;
 
-    import(&apos;leaflet&apos;).then(L => {
+    import('leaflet').then(L => {
       // Clear existing markers
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
@@ -246,10 +246,10 @@ export function AssetMap({
       // Asset marker icons
       const getMarkerIcon = (type: AssetType, status: AssetStatus) => {
         const colors: Record<AssetStatus, string> = {
-          active: &apos;#22c55e&apos;,
-          idle: &apos;#fbbf24&apos;,
-          &apos;in-transit&apos;: &apos;#3b82f6&apos;,
-          offline: &apos;#ef4444&apos;,
+          active: '#22c55e',
+          idle: '#fbbf24',
+          'in-transit': '#3b82f6',
+          offline: '#ef4444',
         };
 
         const iconHtml = `
@@ -273,7 +273,7 @@ export function AssetMap({
 
         return L.divIcon({
           html: iconHtml,
-          className: &apos;custom-marker&apos;,
+          className: 'custom-marker',
           iconSize: [32, 32],
           iconAnchor: [16, 32],
           popupAnchor: [0, -32],
@@ -284,7 +284,7 @@ export function AssetMap({
       filteredAssets.forEach(asset => {
         // In violation mode, use red markers
         const markerIcon = violationMode
-          ? getMarkerIcon(asset.type, &apos;offline&apos;) // Use red color for violations
+          ? getMarkerIcon(asset.type, 'offline') // Use red color for violations
           : getMarkerIcon(asset.type, asset.status);
 
         const marker = L.marker([asset.lat, asset.lng], {
@@ -292,8 +292,8 @@ export function AssetMap({
         }).addTo(mapInstanceRef.current);
 
         const violationBadge = violationMode
-          ? &apos;<div style=&quot;background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-bottom: 8px;&quot;>⚠️ GEOFENCE VIOLATION</div>&apos;
-          : &apos;&apos;;
+          ? '<div style=&quot;background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-bottom: 8px;&quot;>⚠️ GEOFENCE VIOLATION</div>'
+          : '';
 
         const popupContent = `
           <div style=&quot;min-width: 200px;&quot;>
@@ -317,7 +317,7 @@ export function AssetMap({
 
         marker.bindPopup(popupContent);
 
-        marker.on(&apos;click&apos;, () => {
+        marker.on('click', () => {
           setSelectedAsset(asset);
         });
 
@@ -345,13 +345,13 @@ export function AssetMap({
         geofencesToShow.forEach(geofence => {
           // Determine color based on geofence type
           const color = violationMode
-            ? &apos;#ef4444&apos; // Red for violation mode
-            : geofence.geofenceType === &apos;restricted&apos;
-              ? &apos;#ef4444&apos; // Red for restricted zones
-              : &apos;#3b82f6&apos;; // Blue for authorized zones
+            ? '#ef4444' // Red for violation mode
+            : geofence.geofenceType === 'restricted'
+              ? '#ef4444' // Red for restricted zones
+              : '#3b82f6'; // Blue for authorized zones
 
           if (
-            geofence.type === &apos;circular&apos; &&
+            geofence.type === 'circular' &&
             geofence.center &&
             geofence.radius
           ) {
@@ -374,7 +374,7 @@ export function AssetMap({
 
             circle.bindPopup(popupContent);
             markersRef.current.push(circle);
-          } else if (geofence.type === &apos;polygon&apos; && geofence.coordinates) {
+          } else if (geofence.type === 'polygon' && geofence.coordinates) {
             // Render polygon geofence
             const polygon = L.polygon(
               geofence.coordinates as [number, number][],
@@ -400,16 +400,16 @@ export function AssetMap({
         });
       }
 
-      // Add sites (don&apos;t show sites in violation mode)
+      // Add sites (don't show sites in violation mode)
       if (showSites && !violationMode) {
         mockSites.forEach(site => {
           const circle = L.circle(site.center, {
-            color: &apos;#8b5cf6&apos;,
-            fillColor: &apos;#8b5cf6&apos;,
+            color: '#8b5cf6',
+            fillColor: '#8b5cf6',
             fillOpacity: 0.1,
             radius: site.radius,
             weight: 2,
-            dashArray: &apos;5, 5&apos;,
+            dashArray: '5, 5',
           }).addTo(mapInstanceRef.current);
 
           circle.bindPopup(`<strong>${site.name}</strong>`);
@@ -448,14 +448,14 @@ export function AssetMap({
         g => g.id === violatingGeofenceId
       );
       if (geofence) {
-        if (geofence.type === &apos;circular&apos; && geofence.center) {
+        if (geofence.type === 'circular' && geofence.center) {
           // Center on circular geofence
           mapInstanceRef.current.setView(
             geofence.center as [number, number],
             14
           );
         } else if (
-          geofence.type === &apos;polygon&apos; &&
+          geofence.type === 'polygon' &&
           geofence.coordinates &&
           geofence.coordinates.length > 0
         ) {
@@ -472,14 +472,14 @@ export function AssetMap({
 
   const getAssetIcon = (type: AssetType) => {
     switch (type) {
-      case &apos;equipment&apos;:
-        return <Wrench className=&apos;h-4 w-4&apos; />;
-      case &apos;vehicles&apos;:
-        return <Truck className=&apos;h-4 w-4&apos; />;
-      case &apos;tools&apos;:
-        return <PackageIcon className=&apos;h-4 w-4&apos; />;
-      case &apos;containers&apos;:
-        return <Container className=&apos;h-4 w-4&apos; />;
+      case 'equipment':
+        return <Wrench className='h-4 w-4' />;
+      case 'vehicles':
+        return <Truck className='h-4 w-4' />;
+      case 'tools':
+        return <PackageIcon className='h-4 w-4' />;
+      case 'containers':
+        return <Container className='h-4 w-4' />;
     }
   };
 
@@ -499,48 +499,48 @@ export function AssetMap({
   };
 
   return (
-    <div className=&apos;h-screen flex flex-col&apos;>
+    <div className='h-screen flex flex-col'>
       {/* Header */}
-      <div className=&apos;border-b bg-background px-8 py-4&apos;>
-        <div className=&apos;flex items-center justify-between&apos;>
-          <div className=&apos;flex items-center gap-4&apos;>
+      <div className='border-b bg-background px-8 py-4'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-4'>
             {onBack && (
-              <Button variant=&apos;ghost&apos; size=&apos;icon&apos; onClick={onBack}>
-                <ArrowLeft className=&apos;h-5 w-5&apos; />
+              <Button variant='ghost' size='icon' onClick={onBack}>
+                <ArrowLeft className='h-5 w-5' />
               </Button>
             )}
             <div>
               <h1>Live Asset Map</h1>
-              <p className=&apos;text-muted-foreground&apos;>
+              <p className='text-muted-foreground'>
                 {violationMode
-                  ? &apos;Showing assets outside their designated geofence boundaries&apos;
-                  : &apos;Real-time location tracking with OpenStreetMap&apos;}
+                  ? 'Showing assets outside their designated geofence boundaries'
+                  : 'Real-time location tracking with OpenStreetMap'}
               </p>
             </div>
           </div>
-          <div className=&apos;flex items-center gap-2&apos;>
+          <div className='flex items-center gap-2'>
             {violationMode && (
               <Badge
-                variant=&apos;outline&apos;
-                className=&apos;bg-red-50 text-red-700 border-red-200&apos;
+                variant='outline'
+                className='bg-red-50 text-red-700 border-red-200'
               >
                 ⚠️ {filteredAssets.length} Violation
-                {filteredAssets.length !== 1 ? &apos;s&apos; : &apos;&apos;}
+                {filteredAssets.length !== 1 ? 's' : ''}
               </Badge>
             )}
             {!violationMode && (
               <>
-                <Badge variant=&apos;outline&apos;>
+                <Badge variant='outline'>
                   {
                     sharedMockAssets.filter(
                       a => a.coordinates && a.coordinates.length >= 2
                     ).length
-                  }{&apos; &apos;}
+                  }{' '}
                   Assets Tracked
                 </Badge>
                 <Badge
-                  variant=&apos;outline&apos;
-                  className=&apos;bg-green-50 text-green-700 border-green-200&apos;
+                  variant='outline'
+                  className='bg-green-50 text-green-700 border-green-200'
                 >
                   {filteredAssets.length} Visible
                 </Badge>
@@ -551,10 +551,10 @@ export function AssetMap({
       </div>
 
       {/* Map and Controls */}
-      <div className=&apos;flex-1 flex overflow-hidden&apos;>
+      <div className='flex-1 flex overflow-hidden'>
         {/* Sidebar Filters */}
-        <div className=&apos;w-80 border-r bg-background overflow-y-auto&apos;>
-          <div className=&apos;p-4 space-y-4&apos;>
+        <div className='w-80 border-r bg-background overflow-y-auto'>
+          <div className='p-4 space-y-4'>
             {violationMode &&
               violatingGeofenceId &&
               (() => {
@@ -563,56 +563,56 @@ export function AssetMap({
                 );
 
                 return geofence ? (
-                  <div className=&apos;p-4 bg-red-50 border border-red-200 rounded-lg space-y-3&apos;>
-                    <div className=&apos;flex items-start gap-2&apos;>
-                      <div className=&apos;flex items-center gap-2&apos;>
-                        <MapPin className=&apos;h-4 w-4 text-red-600&apos; />
-                        <span className=&apos;text-sm text-red-900&apos;>
+                  <div className='p-4 bg-red-50 border border-red-200 rounded-lg space-y-3'>
+                    <div className='flex items-start gap-2'>
+                      <div className='flex items-center gap-2'>
+                        <MapPin className='h-4 w-4 text-red-600' />
+                        <span className='text-sm text-red-900'>
                           Geofence Violations
                         </span>
                       </div>
                     </div>
 
-                    <div className=&apos;space-y-2&apos;>
-                      <p className=&apos;text-xs text-red-800&apos;>
+                    <div className='space-y-2'>
+                      <p className='text-xs text-red-800'>
                         <strong>Geofence:</strong> {geofence.name}
                       </p>
-                      <div className=&apos;space-y-2 text-xs&apos;>
+                      <div className='space-y-2 text-xs'>
                         {/* Expected Assets */}
                         <Collapsible
                           open={showExpectedAssets}
                           onOpenChange={setShowExpectedAssets}
                         >
-                          <div className=&apos;flex justify-between items-center&apos;>
-                            <span className=&apos;text-gray-700&apos;>
+                          <div className='flex justify-between items-center'>
+                            <span className='text-gray-700'>
                               Expected Assets:
                             </span>
-                            <div className=&apos;flex items-center gap-2&apos;>
-                              <Badge variant=&apos;outline&apos; className=&apos;text-xs&apos;>
+                            <div className='flex items-center gap-2'>
+                              <Badge variant='outline' className='text-xs'>
                                 {expectedAssetIds?.length || 0}
                               </Badge>
                               <CollapsibleTrigger asChild>
                                 <Button
-                                  variant=&apos;ghost&apos;
-                                  size=&apos;sm&apos;
-                                  className=&apos;h-5 w-5 p-0&apos;
+                                  variant='ghost'
+                                  size='sm'
+                                  className='h-5 w-5 p-0'
                                 >
                                   {showExpectedAssets ? (
-                                    <ChevronDown className=&apos;h-3 w-3&apos; />
+                                    <ChevronDown className='h-3 w-3' />
                                   ) : (
-                                    <ChevronRight className=&apos;h-3 w-3&apos; />
+                                    <ChevronRight className='h-3 w-3' />
                                   )}
                                 </Button>
                               </CollapsibleTrigger>
                             </div>
                           </div>
-                          <CollapsibleContent className=&apos;mt-2 space-y-1 pl-2&apos;>
+                          <CollapsibleContent className='mt-2 space-y-1 pl-2'>
                             {expectedAssetIds?.map(id => {
                               const asset = sharedMockAssets.find(
                                 a => a.id === id
                               );
                               return asset ? (
-                                <div key={id} className=&apos;text-xs text-gray-600&apos;>
+                                <div key={id} className='text-xs text-gray-600'>
                                   • {asset.name} ({id})
                                 </div>
                               ) : null;
@@ -625,33 +625,33 @@ export function AssetMap({
                           open={showActualAssets}
                           onOpenChange={setShowActualAssets}
                         >
-                          <div className=&apos;flex justify-between items-center&apos;>
-                            <span className=&apos;text-green-700&apos;>
+                          <div className='flex justify-between items-center'>
+                            <span className='text-green-700'>
                               Inside Boundary:
                             </span>
-                            <div className=&apos;flex items-center gap-2&apos;>
+                            <div className='flex items-center gap-2'>
                               <Badge
-                                variant=&apos;outline&apos;
-                                className=&apos;text-xs bg-green-50 text-green-700 border-green-200&apos;
+                                variant='outline'
+                                className='text-xs bg-green-50 text-green-700 border-green-200'
                               >
                                 {actualAssetIds?.length || 0}
                               </Badge>
                               <CollapsibleTrigger asChild>
                                 <Button
-                                  variant=&apos;ghost&apos;
-                                  size=&apos;sm&apos;
-                                  className=&apos;h-5 w-5 p-0&apos;
+                                  variant='ghost'
+                                  size='sm'
+                                  className='h-5 w-5 p-0'
                                 >
                                   {showActualAssets ? (
-                                    <ChevronDown className=&apos;h-3 w-3&apos; />
+                                    <ChevronDown className='h-3 w-3' />
                                   ) : (
-                                    <ChevronRight className=&apos;h-3 w-3&apos; />
+                                    <ChevronRight className='h-3 w-3' />
                                   )}
                                 </Button>
                               </CollapsibleTrigger>
                             </div>
                           </div>
-                          <CollapsibleContent className=&apos;mt-2 space-y-1 pl-2&apos;>
+                          <CollapsibleContent className='mt-2 space-y-1 pl-2'>
                             {actualAssetIds?.map(id => {
                               const asset = sharedMockAssets.find(
                                 a => a.id === id
@@ -659,7 +659,7 @@ export function AssetMap({
                               return asset ? (
                                 <div
                                   key={id}
-                                  className=&apos;text-xs text-green-700&apos;
+                                  className='text-xs text-green-700'
                                 >
                                   • {asset.name} ({id})
                                 </div>
@@ -673,39 +673,39 @@ export function AssetMap({
                           open={showViolatingAssets}
                           onOpenChange={setShowViolatingAssets}
                         >
-                          <div className=&apos;flex justify-between items-center&apos;>
-                            <span className=&apos;text-red-700&apos;>
+                          <div className='flex justify-between items-center'>
+                            <span className='text-red-700'>
                               Outside Boundary:
                             </span>
-                            <div className=&apos;flex items-center gap-2&apos;>
+                            <div className='flex items-center gap-2'>
                               <Badge
-                                variant=&apos;outline&apos;
-                                className=&apos;text-xs bg-red-50 text-red-700 border-red-200&apos;
+                                variant='outline'
+                                className='text-xs bg-red-50 text-red-700 border-red-200'
                               >
                                 {filteredAssets.length}
                               </Badge>
                               <CollapsibleTrigger asChild>
                                 <Button
-                                  variant=&apos;ghost&apos;
-                                  size=&apos;sm&apos;
-                                  className=&apos;h-5 w-5 p-0&apos;
+                                  variant='ghost'
+                                  size='sm'
+                                  className='h-5 w-5 p-0'
                                 >
                                   {showViolatingAssets ? (
-                                    <ChevronDown className=&apos;h-3 w-3&apos; />
+                                    <ChevronDown className='h-3 w-3' />
                                   ) : (
-                                    <ChevronRight className=&apos;h-3 w-3&apos; />
+                                    <ChevronRight className='h-3 w-3' />
                                   )}
                                 </Button>
                               </CollapsibleTrigger>
                             </div>
                           </div>
-                          <CollapsibleContent className=&apos;mt-2 space-y-1 pl-2&apos;>
+                          <CollapsibleContent className='mt-2 space-y-1 pl-2'>
                             {filteredAssetIds?.map(id => {
                               const asset = sharedMockAssets.find(
                                 a => a.id === id
                               );
                               return asset ? (
-                                <div key={id} className=&apos;text-xs text-red-700&apos;>
+                                <div key={id} className='text-xs text-red-700'>
                                   • {asset.name} ({id})
                                 </div>
                               ) : null;
@@ -715,46 +715,46 @@ export function AssetMap({
                       </div>
                     </div>
 
-                    <p className=&apos;text-xs text-red-700 pt-2 border-t border-red-200&apos;>
+                    <p className='text-xs text-red-700 pt-2 border-t border-red-200'>
                       Map shows only the {filteredAssets.length} violating asset
-                      {filteredAssets.length !== 1 ? &apos;s&apos; : &apos;&apos;}
+                      {filteredAssets.length !== 1 ? 's' : ''}
                     </p>
                   </div>
                 ) : null;
               })()}
 
             {highlightAsset && (
-              <div className=&apos;p-4 bg-blue-50 border border-blue-200 rounded-lg&apos;>
-                <div className=&apos;flex items-start justify-between gap-2 mb-2&apos;>
-                  <div className=&apos;flex items-center gap-2&apos;>
-                    <MapPin className=&apos;h-4 w-4 text-blue-600&apos; />
-                    <span className=&apos;text-sm text-blue-900&apos;>
+              <div className='p-4 bg-blue-50 border border-blue-200 rounded-lg'>
+                <div className='flex items-start justify-between gap-2 mb-2'>
+                  <div className='flex items-center gap-2'>
+                    <MapPin className='h-4 w-4 text-blue-600' />
+                    <span className='text-sm text-blue-900'>
                       Showing single asset
                     </span>
                   </div>
                   <Button
-                    variant=&apos;ghost&apos;
-                    size=&apos;sm&apos;
-                    className=&apos;h-6 w-6 p-0&apos;
+                    variant='ghost'
+                    size='sm'
+                    className='h-6 w-6 p-0'
                     onClick={onClearHighlight}
-                    title=&apos;Show all assets&apos;
+                    title='Show all assets'
                   >
-                    <X className=&apos;h-4 w-4&apos; />
+                    <X className='h-4 w-4' />
                   </Button>
                 </div>
-                <p className=&apos;text-xs text-blue-700&apos;>
+                <p className='text-xs text-blue-700'>
                   Click × to show all assets
                 </p>
               </div>
             )}
 
             <div>
-              <label className=&apos;text-sm mb-2 block&apos;>Search Assets</label>
-              <div className=&apos;relative&apos;>
-                <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
+              <label className='text-sm mb-2 block'>Search Assets</label>
+              <div className='relative'>
+                <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
                 <Input
-                  placeholder=&apos;Search by name or ID...&apos;
-                  className=&apos;pl-9&apos;
+                  placeholder='Search by name or ID...'
+                  className='pl-9'
                   value={searchText}
                   onChange={e => setSearchText(e.target.value)}
                   disabled={!!highlightAsset || violationMode}
@@ -763,7 +763,7 @@ export function AssetMap({
             </div>
 
             <div>
-              <label className=&apos;text-sm mb-2 block&apos;>Asset Type</label>
+              <label className='text-sm mb-2 block'>Asset Type</label>
               <Select
                 value={typeFilter}
                 onValueChange={setTypeFilter}
@@ -773,17 +773,17 @@ export function AssetMap({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&apos;all&apos;>All Types</SelectItem>
-                  <SelectItem value=&apos;tools&apos;>Tools</SelectItem>
-                  <SelectItem value=&apos;vehicles&apos;>Vehicles</SelectItem>
-                  <SelectItem value=&apos;equipment&apos;>Equipment</SelectItem>
-                  <SelectItem value=&apos;containers&apos;>Containers</SelectItem>
+                  <SelectItem value='all'>All Types</SelectItem>
+                  <SelectItem value='tools'>Tools</SelectItem>
+                  <SelectItem value='vehicles'>Vehicles</SelectItem>
+                  <SelectItem value='equipment'>Equipment</SelectItem>
+                  <SelectItem value='containers'>Containers</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <label className=&apos;text-sm mb-2 block&apos;>Status</label>
+              <label className='text-sm mb-2 block'>Status</label>
               <Select
                 value={statusFilter}
                 onValueChange={setStatusFilter}
@@ -793,60 +793,60 @@ export function AssetMap({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=&apos;all&apos;>All Statuses</SelectItem>
-                  <SelectItem value=&apos;active&apos;>Active</SelectItem>
-                  <SelectItem value=&apos;idle&apos;>Idle</SelectItem>
-                  <SelectItem value=&apos;in-transit&apos;>In Transit</SelectItem>
-                  <SelectItem value=&apos;offline&apos;>Offline</SelectItem>
+                  <SelectItem value='all'>All Statuses</SelectItem>
+                  <SelectItem value='active'>Active</SelectItem>
+                  <SelectItem value='idle'>Idle</SelectItem>
+                  <SelectItem value='in-transit'>In Transit</SelectItem>
+                  <SelectItem value='offline'>Offline</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {!violationMode && (
-              <div className=&apos;pt-4 border-t&apos;>
-                <div className=&apos;flex items-center justify-between mb-3&apos;>
-                  <span className=&apos;text-sm&apos;>Map Layers</span>
-                  <Layers className=&apos;h-4 w-4 text-muted-foreground&apos; />
+              <div className='pt-4 border-t'>
+                <div className='flex items-center justify-between mb-3'>
+                  <span className='text-sm'>Map Layers</span>
+                  <Layers className='h-4 w-4 text-muted-foreground' />
                 </div>
-                <div className=&apos;space-y-3&apos;>
-                  <div className=&apos;flex items-center gap-2&apos;>
+                <div className='space-y-3'>
+                  <div className='flex items-center gap-2'>
                     <Checkbox
-                      id=&apos;geofences&apos;
+                      id='geofences'
                       checked={showGeofences}
                       onCheckedChange={checked =>
                         setShowGeofences(checked as boolean)
                       }
                     />
                     <label
-                      htmlFor=&apos;geofences&apos;
-                      className=&apos;text-sm cursor-pointer&apos;
+                      htmlFor='geofences'
+                      className='text-sm cursor-pointer'
                     >
                       Geofences
                     </label>
                   </div>
-                  <div className=&apos;flex items-center gap-2&apos;>
+                  <div className='flex items-center gap-2'>
                     <Checkbox
-                      id=&apos;sites&apos;
+                      id='sites'
                       checked={showSites}
                       onCheckedChange={checked =>
                         setShowSites(checked as boolean)
                       }
                     />
-                    <label htmlFor=&apos;sites&apos; className=&apos;text-sm cursor-pointer&apos;>
+                    <label htmlFor='sites' className='text-sm cursor-pointer'>
                       Site Boundaries
                     </label>
                   </div>
-                  <div className=&apos;flex items-center gap-2&apos;>
+                  <div className='flex items-center gap-2'>
                     <Checkbox
-                      id=&apos;clusters&apos;
+                      id='clusters'
                       checked={showClusters}
                       onCheckedChange={checked =>
                         setShowClusters(checked as boolean)
                       }
                     />
                     <label
-                      htmlFor=&apos;clusters&apos;
-                      className=&apos;text-sm cursor-pointer&apos;
+                      htmlFor='clusters'
+                      className='text-sm cursor-pointer'
                     >
                       Asset Clusters
                     </label>
@@ -856,23 +856,23 @@ export function AssetMap({
             )}
 
             {/* Legend */}
-            <div className=&apos;pt-4 border-t&apos;>
-              <div className=&apos;text-sm mb-3&apos;>Status Legend</div>
-              <div className=&apos;space-y-2&apos;>
-                <div className=&apos;flex items-center gap-2 text-sm&apos;>
-                  <div className=&apos;w-3 h-3 rounded-full bg-green-500&apos;></div>
+            <div className='pt-4 border-t'>
+              <div className='text-sm mb-3'>Status Legend</div>
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2 text-sm'>
+                  <div className='w-3 h-3 rounded-full bg-green-500'></div>
                   <span>Active</span>
                 </div>
-                <div className=&apos;flex items-center gap-2 text-sm&apos;>
-                  <div className=&apos;w-3 h-3 rounded-full bg-yellow-500&apos;></div>
+                <div className='flex items-center gap-2 text-sm'>
+                  <div className='w-3 h-3 rounded-full bg-yellow-500'></div>
                   <span>Idle</span>
                 </div>
-                <div className=&apos;flex items-center gap-2 text-sm&apos;>
-                  <div className=&apos;w-3 h-3 rounded-full bg-blue-500&apos;></div>
+                <div className='flex items-center gap-2 text-sm'>
+                  <div className='w-3 h-3 rounded-full bg-blue-500'></div>
                   <span>In Transit</span>
                 </div>
-                <div className=&apos;flex items-center gap-2 text-sm&apos;>
-                  <div className=&apos;w-3 h-3 rounded-full bg-red-500&apos;></div>
+                <div className='flex items-center gap-2 text-sm'>
+                  <div className='w-3 h-3 rounded-full bg-red-500'></div>
                   <span>Offline</span>
                 </div>
               </div>
@@ -880,37 +880,37 @@ export function AssetMap({
           </div>
 
           {/* Asset List */}
-          <div className=&apos;border-t p-4&apos;>
-            <div className=&apos;flex items-center justify-between mb-3&apos;>
+          <div className='border-t p-4'>
+            <div className='flex items-center justify-between mb-3'>
               <h3>Assets ({filteredAssets.length})</h3>
             </div>
-            <div className=&apos;space-y-2&apos;>
+            <div className='space-y-2'>
               {filteredAssets.map(asset => (
                 <button
                   key={asset.id}
                   onClick={() => flyToAsset(asset)}
                   className={`w-full text-left p-3 rounded-lg border transition-all ${
                     selectedAsset?.id === asset.id
-                      ? &apos;bg-primary/5 border-primary shadow-sm&apos;
-                      : &apos;bg-card hover:bg-accent hover:shadow-sm&apos;
+                      ? 'bg-primary/5 border-primary shadow-sm'
+                      : 'bg-card hover:bg-accent hover:shadow-sm'
                   }`}
                 >
-                  <div className=&apos;flex items-start justify-between gap-2&apos;>
-                    <div className=&apos;flex-1 min-w-0&apos;>
-                      <div className=&apos;flex items-center gap-2 mb-1&apos;>
+                  <div className='flex items-start justify-between gap-2'>
+                    <div className='flex-1 min-w-0'>
+                      <div className='flex items-center gap-2 mb-1'>
                         {getAssetIcon(asset.type)}
-                        <div className=&apos;text-sm truncate&apos;>{asset.name}</div>
+                        <div className='text-sm truncate'>{asset.name}</div>
                       </div>
-                      <div className=&apos;text-xs text-muted-foreground mb-2&apos;>
+                      <div className='text-xs text-muted-foreground mb-2'>
                         {asset.id}
                       </div>
-                      <div className=&apos;flex items-center gap-2&apos;>
+                      <div className='flex items-center gap-2'>
                         <StatusBadge
                           status={asset.status}
-                          className=&apos;text-xs&apos;
+                          className='text-xs'
                         />
-                        <span className=&apos;text-xs text-muted-foreground flex items-center gap-1&apos;>
-                          <Battery className=&apos;h-3 w-3&apos; />
+                        <span className='text-xs text-muted-foreground flex items-center gap-1'>
+                          <Battery className='h-3 w-3' />
                           {asset.battery}%
                         </span>
                       </div>
@@ -923,94 +923,94 @@ export function AssetMap({
         </div>
 
         {/* Map Area */}
-        <div className=&apos;flex-1 relative&apos;>
-          <div ref={mapRef} className=&apos;absolute inset-0&apos; />
+        <div className='flex-1 relative'>
+          <div ref={mapRef} className='absolute inset-0' />
 
           {/* Map Controls */}
-          <div className=&apos;absolute top-4 right-4 flex flex-col gap-2 z-[1000]&apos;>
+          <div className='absolute top-4 right-4 flex flex-col gap-2 z-[1000]'>
             <Button
-              size=&apos;icon&apos;
-              variant=&apos;secondary&apos;
-              className=&apos;bg-background shadow-lg&apos;
+              size='icon'
+              variant='secondary'
+              className='bg-background shadow-lg'
               onClick={recenterMap}
-              title=&apos;Recenter map&apos;
+              title='Recenter map'
             >
-              <Navigation className=&apos;h-4 w-4&apos; />
+              <Navigation className='h-4 w-4' />
             </Button>
             <Button
-              size=&apos;icon&apos;
-              variant=&apos;secondary&apos;
-              className=&apos;bg-background shadow-lg&apos;
-              title=&apos;Fullscreen&apos;
+              size='icon'
+              variant='secondary'
+              className='bg-background shadow-lg'
+              title='Fullscreen'
             >
-              <Maximize2 className=&apos;h-4 w-4&apos; />
+              <Maximize2 className='h-4 w-4' />
             </Button>
           </div>
 
           {/* Selected Asset Info Card */}
           {selectedAsset && (
-            <Card className=&apos;absolute bottom-4 left-4 w-96 z-[1000] shadow-xl&apos;>
-              <CardHeader className=&apos;pb-3&apos;>
-                <div className=&apos;flex items-start justify-between&apos;>
-                  <div className=&apos;flex items-center gap-2&apos;>
+            <Card className='absolute bottom-4 left-4 w-96 z-[1000] shadow-xl'>
+              <CardHeader className='pb-3'>
+                <div className='flex items-start justify-between'>
+                  <div className='flex items-center gap-2'>
                     {getAssetIcon(selectedAsset.type)}
-                    <CardTitle className=&apos;text-base&apos;>
+                    <CardTitle className='text-base'>
                       {selectedAsset.name}
                     </CardTitle>
                   </div>
                   <Button
-                    size=&apos;icon&apos;
-                    variant=&apos;ghost&apos;
-                    className=&apos;h-6 w-6&apos;
+                    size='icon'
+                    variant='ghost'
+                    className='h-6 w-6'
                     onClick={() => setSelectedAsset(null)}
                   >
-                    <X className=&apos;h-4 w-4&apos; />
+                    <X className='h-4 w-4' />
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className=&apos;space-y-3&apos;>
-                <div className=&apos;flex justify-between text-sm&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>Asset ID:</span>
-                  <span className=&apos;font-mono&apos;>{selectedAsset.id}</span>
+              <CardContent className='space-y-3'>
+                <div className='flex justify-between text-sm'>
+                  <span className='text-muted-foreground'>Asset ID:</span>
+                  <span className='font-mono'>{selectedAsset.id}</span>
                 </div>
-                <div className=&apos;flex justify-between text-sm&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>Type:</span>
-                  <span className=&apos;capitalize&apos;>{selectedAsset.type}</span>
+                <div className='flex justify-between text-sm'>
+                  <span className='text-muted-foreground'>Type:</span>
+                  <span className='capitalize'>{selectedAsset.type}</span>
                 </div>
-                <div className=&apos;flex justify-between text-sm&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>Status:</span>
+                <div className='flex justify-between text-sm'>
+                  <span className='text-muted-foreground'>Status:</span>
                   <StatusBadge status={selectedAsset.status} />
                 </div>
-                <div className=&apos;flex justify-between text-sm&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>Battery:</span>
+                <div className='flex justify-between text-sm'>
+                  <span className='text-muted-foreground'>Battery:</span>
                   <span
                     className={
                       selectedAsset.battery < 20
-                        ? &apos;text-red-600&apos;
-                        : &apos;text-green-600&apos;
+                        ? 'text-red-600'
+                        : 'text-green-600'
                     }
                   >
                     {selectedAsset.battery}%
                   </span>
                 </div>
-                <div className=&apos;flex justify-between text-sm&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>Last Update:</span>
-                  <span className=&apos;flex items-center gap-1&apos;>
-                    <Clock className=&apos;h-3 w-3&apos; />
+                <div className='flex justify-between text-sm'>
+                  <span className='text-muted-foreground'>Last Update:</span>
+                  <span className='flex items-center gap-1'>
+                    <Clock className='h-3 w-3' />
                     {selectedAsset.lastUpdate}
                   </span>
                 </div>
-                <div className=&apos;flex justify-between text-sm&apos;>
-                  <span className=&apos;text-muted-foreground&apos;>Location:</span>
-                  <span className=&apos;text-xs&apos;>
-                    {selectedAsset.lat.toFixed(4)},{&apos; &apos;}
+                <div className='flex justify-between text-sm'>
+                  <span className='text-muted-foreground'>Location:</span>
+                  <span className='text-xs'>
+                    {selectedAsset.lat.toFixed(4)},{' '}
                     {selectedAsset.lng.toFixed(4)}
                   </span>
                 </div>
-                <div className=&apos;pt-3 border-t flex gap-2&apos;>
+                <div className='pt-3 border-t flex gap-2'>
                   <Button
-                    size=&apos;sm&apos;
-                    className=&apos;flex-1&apos;
+                    size='sm'
+                    className='flex-1'
                     onClick={() => {
                       const sharedAsset = findSharedAsset(selectedAsset);
                       if (sharedAsset) onAssetClick?.(sharedAsset);
@@ -1019,9 +1019,9 @@ export function AssetMap({
                     View Details
                   </Button>
                   <Button
-                    size=&apos;sm&apos;
-                    variant=&apos;outline&apos;
-                    className=&apos;flex-1&apos;
+                    size='sm'
+                    variant='outline'
+                    className='flex-1'
                     onClick={() => {
                       const sharedAsset = findSharedAsset(selectedAsset);
                       if (sharedAsset) onTrackHistory?.(sharedAsset);

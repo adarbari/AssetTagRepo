@@ -1,4 +1,4 @@
-import React from &apos;react&apos;;
+import React from 'react';
 
 /**
  * Generic Error State Component
@@ -6,9 +6,9 @@ import React from &apos;react&apos;;
  * Provides consistent error UI across the application
  */
 
-import { AlertTriangle, RefreshCw, ArrowLeft } from &apos;lucide-react&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Alert, AlertDescription, AlertTitle } from &apos;../ui/alert&apos;;
+import { AlertTriangle, RefreshCw, ArrowLeft } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
 interface ErrorStateProps {
   error: Error | string;
@@ -23,29 +23,29 @@ export function ErrorState({
   onBack,
   fullScreen = false,
 }: ErrorStateProps) {
-  const errorMessage = typeof error === &apos;string&apos; ? error : error.message;
+  const errorMessage = typeof error === 'string' ? error : error.message;
 
   const content = (
-    <div className=&apos;text-center space-y-4&apos;>
-      <div className=&apos;flex justify-center&apos;>
-        <div className=&apos;rounded-full bg-destructive/10 p-6&apos;>
-          <AlertTriangle className=&apos;h-12 w-12 text-destructive&apos; />
+    <div className='text-center space-y-4'>
+      <div className='flex justify-center'>
+        <div className='rounded-full bg-destructive/10 p-6'>
+          <AlertTriangle className='h-12 w-12 text-destructive' />
         </div>
       </div>
       <div>
-        <h3 className=&apos;mb-2&apos;>Something went wrong</h3>
-        <p className=&apos;text-muted-foreground max-w-md mx-auto&apos;>{errorMessage}</p>
+        <h3 className='mb-2'>Something went wrong</h3>
+        <p className='text-muted-foreground max-w-md mx-auto'>{errorMessage}</p>
       </div>
-      <div className=&apos;flex items-center justify-center gap-2&apos;>
+      <div className='flex items-center justify-center gap-2'>
         {onBack && (
-          <Button variant=&apos;outline&apos; onClick={onBack}>
-            <ArrowLeft className=&apos;h-4 w-4 mr-2&apos; />
+          <Button variant='outline' onClick={onBack}>
+            <ArrowLeft className='h-4 w-4 mr-2' />
             Go Back
           </Button>
         )}
         {retry && (
           <Button onClick={retry}>
-            <RefreshCw className=&apos;h-4 w-4 mr-2&apos; />
+            <RefreshCw className='h-4 w-4 mr-2' />
             Try Again
           </Button>
         )}
@@ -55,27 +55,27 @@ export function ErrorState({
 
   if (fullScreen) {
     return (
-      <div className=&apos;flex items-center justify-center h-screen p-8&apos;>
+      <div className='flex items-center justify-center h-screen p-8'>
         {content}
       </div>
     );
   }
 
   return (
-    <div className=&apos;p-8&apos;>
-      <Alert variant=&apos;destructive&apos; className=&apos;max-w-2xl mx-auto&apos;>
-        <AlertTriangle className=&apos;h-4 w-4&apos; />
+    <div className='p-8'>
+      <Alert variant='destructive' className='max-w-2xl mx-auto'>
+        <AlertTriangle className='h-4 w-4' />
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
           {errorMessage}
           {retry && (
             <Button
-              variant=&apos;outline&apos;
-              size=&apos;sm&apos;
+              variant='outline'
+              size='sm'
               onClick={retry}
-              className=&apos;mt-2&apos;
+              className='mt-2'
             >
-              <RefreshCw className=&apos;h-4 w-4 mr-2&apos; />
+              <RefreshCw className='h-4 w-4 mr-2' />
               Retry
             </Button>
           )}

@@ -5,10 +5,10 @@
  * Used in both CreateJob and EditJob components
  */
 
-import React from &apos;react&apos;;
-import { Label } from &apos;../ui/label&apos;;
-import { Input } from &apos;../ui/input&apos;;
-import { DollarSign } from &apos;lucide-react&apos;;
+import React from 'react';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { DollarSign } from 'lucide-react';
 
 interface BudgetSectionProps {
   totalBudget: string;
@@ -36,101 +36,101 @@ export function BudgetSection({
   onOtherBudgetChange,
 }: BudgetSectionProps) {
   return (
-    <div className=&apos;space-y-6&apos;>
+    <div className='space-y-6'>
       <div>
-        <h3 className=&apos;flex items-center gap-2 mb-4&apos;>
-          <DollarSign className=&apos;h-5 w-5&apos; />
+        <h3 className='flex items-center gap-2 mb-4'>
+          <DollarSign className='h-5 w-5' />
           Budget Allocation
         </h3>
-        <p className=&apos;text-sm text-muted-foreground mb-6&apos;>
+        <p className='text-sm text-muted-foreground mb-6'>
           Set the budget breakdown for this job
         </p>
       </div>
 
-      <div className=&apos;space-y-2&apos;>
-        <Label htmlFor=&apos;total-budget&apos;>Total Budget</Label>
-        <div className=&apos;relative&apos;>
-          <DollarSign className=&apos;absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none&apos; />
+      <div className='space-y-2'>
+        <Label htmlFor='total-budget'>Total Budget</Label>
+        <div className='relative'>
+          <DollarSign className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none' />
           <Input
-            id=&apos;total-budget&apos;
-            type=&apos;number&apos;
-            placeholder=&apos;0.00&apos;
+            id='total-budget'
+            type='number'
+            placeholder='0.00'
             value={totalBudget}
             onChange={e => onTotalBudgetChange(e.target.value)}
-            className=&apos;pl-9&apos;
-            min=&apos;0&apos;
-            step=&apos;0.01&apos;
+            className='pl-9'
+            min='0'
+            step='0.01'
           />
         </div>
       </div>
 
-      <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
-        <div className=&apos;space-y-2&apos;>
-          <Label htmlFor=&apos;labor-budget&apos;>Labor Budget</Label>
-          <div className=&apos;relative&apos;>
-            <DollarSign className=&apos;absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none&apos; />
+      <div className='grid gap-4 md:grid-cols-2'>
+        <div className='space-y-2'>
+          <Label htmlFor='labor-budget'>Labor Budget</Label>
+          <div className='relative'>
+            <DollarSign className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none' />
             <Input
-              id=&apos;labor-budget&apos;
-              type=&apos;number&apos;
-              placeholder=&apos;0.00&apos;
+              id='labor-budget'
+              type='number'
+              placeholder='0.00'
               value={laborBudget}
               onChange={e => onLaborBudgetChange(e.target.value)}
-              className=&apos;pl-9&apos;
-              min=&apos;0&apos;
-              step=&apos;0.01&apos;
+              className='pl-9'
+              min='0'
+              step='0.01'
             />
           </div>
         </div>
 
-        <div className=&apos;space-y-2&apos;>
-          <Label htmlFor=&apos;equipment-budget&apos;>Equipment Budget</Label>
-          <div className=&apos;relative&apos;>
-            <DollarSign className=&apos;absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none&apos; />
+        <div className='space-y-2'>
+          <Label htmlFor='equipment-budget'>Equipment Budget</Label>
+          <div className='relative'>
+            <DollarSign className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none' />
             <Input
-              id=&apos;equipment-budget&apos;
-              type=&apos;number&apos;
-              placeholder=&apos;0.00&apos;
+              id='equipment-budget'
+              type='number'
+              placeholder='0.00'
               value={equipmentBudget}
               onChange={e => onEquipmentBudgetChange(e.target.value)}
-              className=&apos;pl-9&apos;
-              min=&apos;0&apos;
-              step=&apos;0.01&apos;
+              className='pl-9'
+              min='0'
+              step='0.01'
             />
           </div>
         </div>
       </div>
 
-      <div className=&apos;grid gap-4 md:grid-cols-2&apos;>
-        <div className=&apos;space-y-2&apos;>
-          <Label htmlFor=&apos;materials-budget&apos;>Materials Budget</Label>
-          <div className=&apos;relative&apos;>
-            <DollarSign className=&apos;absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none&apos; />
+      <div className='grid gap-4 md:grid-cols-2'>
+        <div className='space-y-2'>
+          <Label htmlFor='materials-budget'>Materials Budget</Label>
+          <div className='relative'>
+            <DollarSign className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none' />
             <Input
-              id=&apos;materials-budget&apos;
-              type=&apos;number&apos;
-              placeholder=&apos;0.00&apos;
+              id='materials-budget'
+              type='number'
+              placeholder='0.00'
               value={materialsBudget}
               onChange={e => onMaterialsBudgetChange(e.target.value)}
-              className=&apos;pl-9&apos;
-              min=&apos;0&apos;
-              step=&apos;0.01&apos;
+              className='pl-9'
+              min='0'
+              step='0.01'
             />
           </div>
         </div>
 
-        <div className=&apos;space-y-2&apos;>
-          <Label htmlFor=&apos;other-budget&apos;>Other Budget</Label>
-          <div className=&apos;relative&apos;>
-            <DollarSign className=&apos;absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none&apos; />
+        <div className='space-y-2'>
+          <Label htmlFor='other-budget'>Other Budget</Label>
+          <div className='relative'>
+            <DollarSign className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none' />
             <Input
-              id=&apos;other-budget&apos;
-              type=&apos;number&apos;
-              placeholder=&apos;0.00&apos;
+              id='other-budget'
+              type='number'
+              placeholder='0.00'
               value={otherBudget}
               onChange={e => onOtherBudgetChange(e.target.value)}
-              className=&apos;pl-9&apos;
-              min=&apos;0&apos;
-              step=&apos;0.01&apos;
+              className='pl-9'
+              min='0'
+              step='0.01'
             />
           </div>
         </div>

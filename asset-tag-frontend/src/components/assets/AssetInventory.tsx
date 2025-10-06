@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from &apos;react&apos;;
-import { Card } from &apos;../ui/card&apos;;
-import { Badge } from &apos;../ui/badge&apos;;
-import { Button } from &apos;../ui/button&apos;;
-import { Input } from &apos;../ui/input&apos;;
+import React, { useState, useMemo } from 'react';
+import { Card } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import {
   EmptyState,
   StatsCard,
@@ -13,9 +13,9 @@ import {
   PageLayout,
   type FilterConfig,
   type TableAction,
-} from &apos;../common&apos;;
-import { ExportDialog } from &apos;../reports/ExportDialog&apos;;
-import { EditAssetDialog } from &apos;./EditAssetDialog&apos;;
+} from '../common';
+import { ExportDialog } from '../reports/ExportDialog';
+import { EditAssetDialog } from './EditAssetDialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,14 +25,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from &apos;../ui/alert-dialog&apos;;
+} from '../ui/alert-dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from &apos;../ui/select&apos;;
+} from '../ui/select';
 import {
   Table,
   TableBody,
@@ -40,7 +40,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from &apos;../ui/table&apos;;
+} from '../ui/table';
 import {
   Search,
   Download,
@@ -51,11 +51,11 @@ import {
   Eye,
   Edit,
   Trash2,
-} from &apos;lucide-react&apos;;
-import { mockAssets } from &apos;../../data/mockData&apos;;
-import type { Asset } from &apos;../../types&apos;;
-import { useNavigation } from &apos;../../contexts/NavigationContext&apos;;
-import { toast } from &apos;sonner&apos;;
+} from 'lucide-react';
+import { mockAssets } from '../../data/mockData';
+import type { Asset } from '../../types';
+import { useNavigation } from '../../contexts/NavigationContext';
+import { toast } from 'sonner';
 
 interface AssetInventoryProps {
   onAssetClick?: (asset: Asset) => void;
@@ -67,12 +67,12 @@ export function AssetInventory({
   onNavigateToCreateAsset,
 }: AssetInventoryProps) {
   const navigation = useNavigation();
-  const [searchTerm, setSearchTerm] = useState(&apos;&apos;);
-  const [typeFilter, setTypeFilter] = useState(&apos;all-types&apos;);
-  const [statusFilter, setStatusFilter] = useState(&apos;all-status&apos;);
-  const [siteFilter, setSiteFilter] = useState(&apos;all-sites&apos;);
-  const [assignmentFilter, setAssignmentFilter] = useState(&apos;all-assignment&apos;);
-  const [batteryFilter, setBatteryFilter] = useState(&apos;all-battery&apos;);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all-types');
+  const [statusFilter, setStatusFilter] = useState('all-status');
+  const [siteFilter, setSiteFilter] = useState('all-sites');
+  const [assignmentFilter, setAssignmentFilter] = useState('all-assignment');
+  const [batteryFilter, setBatteryFilter] = useState('all-battery');
   const [showFilters, setShowFilters] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -84,9 +84,9 @@ export function AssetInventory({
   const [refreshKey, setRefreshKey] = useState(0);
 
   const getBatteryColor = (battery: number) => {
-    if (battery > 60) return &apos;text-green-600&apos;;
-    if (battery > 20) return &apos;text-yellow-600&apos;;
-    return &apos;text-red-600&apos;;
+    if (battery > 60) return 'text-green-600';
+    if (battery > 20) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   // Add utilization to assets for display
@@ -112,33 +112,33 @@ export function AssetInventory({
 
       // Type filter
       const matchesType =
-        typeFilter === &apos;all-types&apos; ||
+        typeFilter === 'all-types' ||
         asset.type.toLowerCase().includes(typeFilter.toLowerCase());
 
       // Status filter
       const matchesStatus =
-        statusFilter === &apos;all-status&apos; || asset.status === statusFilter;
+        statusFilter === 'all-status' || asset.status === statusFilter;
 
       // Site filter
       const matchesSite =
-        siteFilter === &apos;all-sites&apos; || asset.site === siteFilter;
+        siteFilter === 'all-sites' || asset.site === siteFilter;
 
       // Assignment filter
       const matchesAssignment =
-        assignmentFilter === &apos;all-assignment&apos; ||
-        (assignmentFilter === &apos;assigned&apos; &&
-          asset.assignedTo !== &apos;Unassigned&apos;) ||
-        (assignmentFilter === &apos;unassigned&apos; &&
-          asset.assignedTo === &apos;Unassigned&apos;);
+        assignmentFilter === 'all-assignment' ||
+        (assignmentFilter === 'assigned' &&
+          asset.assignedTo !== 'Unassigned') ||
+        (assignmentFilter === 'unassigned' &&
+          asset.assignedTo === 'Unassigned');
 
       // Battery filter
       const matchesBattery =
-        batteryFilter === &apos;all-battery&apos; ||
-        (batteryFilter === &apos;critical&apos; && asset.battery < 20) ||
-        (batteryFilter === &apos;low&apos; &&
+        batteryFilter === 'all-battery' ||
+        (batteryFilter === 'critical' && asset.battery < 20) ||
+        (batteryFilter === 'low' &&
           asset.battery >= 20 &&
           asset.battery <= 60) ||
-        (batteryFilter === &apos;good&apos; && asset.battery > 60);
+        (batteryFilter === 'good' && asset.battery > 60);
 
       return (
         matchesSearch &&
@@ -165,80 +165,80 @@ export function AssetInventory({
   // Filter configuration for FilterPanel
   const filterConfigs: FilterConfig[] = [
     {
-      key: &apos;site&apos;,
-      label: &apos;Site&apos;,
+      key: 'site',
+      label: 'Site',
       options: [
-        { value: &apos;all-sites&apos;, label: &apos;All Sites&apos; },
+        { value: 'all-sites', label: 'All Sites' },
         ...sites.map(site => ({ value: site, label: site })),
       ],
       currentValue: siteFilter,
       onValueChange: setSiteFilter,
-      defaultOptionValue: &apos;all-sites&apos;,
+      defaultOptionValue: 'all-sites',
     },
     {
-      key: &apos;assignment&apos;,
-      label: &apos;Assignment&apos;,
+      key: 'assignment',
+      label: 'Assignment',
       options: [
-        { value: &apos;all-assignment&apos;, label: &apos;All Assignment&apos; },
-        { value: &apos;assigned&apos;, label: &apos;Assigned&apos; },
-        { value: &apos;unassigned&apos;, label: &apos;Unassigned&apos; },
+        { value: 'all-assignment', label: 'All Assignment' },
+        { value: 'assigned', label: 'Assigned' },
+        { value: 'unassigned', label: 'Unassigned' },
       ],
       currentValue: assignmentFilter,
       onValueChange: setAssignmentFilter,
-      defaultOptionValue: &apos;all-assignment&apos;,
+      defaultOptionValue: 'all-assignment',
     },
     {
-      key: &apos;battery&apos;,
-      label: &apos;Battery Level&apos;,
+      key: 'battery',
+      label: 'Battery Level',
       options: [
-        { value: &apos;all-battery&apos;, label: &apos;All Battery Levels&apos; },
-        { value: &apos;critical&apos;, label: &apos;Critical (<20%)&apos; },
-        { value: &apos;low&apos;, label: &apos;Low (20-60%)&apos; },
-        { value: &apos;good&apos;, label: &apos;Good (>60%)&apos; },
+        { value: 'all-battery', label: 'All Battery Levels' },
+        { value: 'critical', label: 'Critical (<20%)' },
+        { value: 'low', label: 'Low (20-60%)' },
+        { value: 'good', label: 'Good (>60%)' },
       ],
       currentValue: batteryFilter,
       onValueChange: setBatteryFilter,
-      defaultOptionValue: &apos;all-battery&apos;,
+      defaultOptionValue: 'all-battery',
     },
   ];
 
   // Table actions configuration
   const createAssetActions = (asset: any): TableAction[] => [
     {
-      label: &apos;View Details&apos;,
+      label: 'View Details',
       onClick: () => onAssetClick?.(asset),
       icon: Eye,
     },
     {
-      label: &apos;Show on Map&apos;,
+      label: 'Show on Map',
       onClick: () => navigation.handleShowOnMap(asset),
       icon: MapPin,
     },
     {
-      label: &apos;View History&apos;,
+      label: 'View History',
       onClick: () => navigation.handleViewHistoricalPlayback(asset),
       icon: Clock,
     },
     {
-      label: &apos;Check Out&apos;,
+      label: 'Check Out',
       onClick: () =>
         navigation.navigateToCheckInOut({
           assetId: asset.id,
           assetName: asset.name,
           currentStatus: asset.status,
-          mode: &apos;check-out&apos;,
+          mode: 'check-out',
           assetContext: asset,
         }),
       icon: Download,
       separatorBefore: true,
     },
     {
-      label: &apos;Edit Asset&apos;,
+      label: 'Edit Asset',
       onClick: () => handleEditAsset({ id: asset.id, name: asset.name }),
       icon: Edit,
     },
     {
-      label: &apos;Delete Asset&apos;,
+      label: 'Delete Asset',
       onClick: () => handleDeleteAsset({ id: asset.id, name: asset.name }),
       icon: Trash2,
       isDestructive: true,
@@ -247,29 +247,29 @@ export function AssetInventory({
 
   // Count active filters
   const activeFiltersCount = [
-    typeFilter !== &apos;all-types&apos;,
-    statusFilter !== &apos;all-status&apos;,
-    siteFilter !== &apos;all-sites&apos;,
-    assignmentFilter !== &apos;all-assignment&apos;,
-    batteryFilter !== &apos;all-battery&apos;,
+    typeFilter !== 'all-types',
+    statusFilter !== 'all-status',
+    siteFilter !== 'all-sites',
+    assignmentFilter !== 'all-assignment',
+    batteryFilter !== 'all-battery',
   ].filter(Boolean).length;
 
   const clearAllFilters = () => {
-    setTypeFilter(&apos;all-types&apos;);
-    setStatusFilter(&apos;all-status&apos;);
-    setSiteFilter(&apos;all-sites&apos;);
-    setAssignmentFilter(&apos;all-assignment&apos;);
-    setBatteryFilter(&apos;all-battery&apos;);
-    setSearchTerm(&apos;&apos;);
+    setTypeFilter('all-types');
+    setStatusFilter('all-status');
+    setSiteFilter('all-sites');
+    setAssignmentFilter('all-assignment');
+    setBatteryFilter('all-battery');
+    setSearchTerm('');
   };
 
   // Calculate stats based on filtered inventory
   const stats = useMemo(() => {
     const total = filteredInventory.length;
-    const active = filteredInventory.filter(a => a.status === &apos;active&apos;).length;
+    const active = filteredInventory.filter(a => a.status === 'active').length;
     const lowBattery = filteredInventory.filter(a => a.battery < 20).length;
     const unassigned = filteredInventory.filter(
-      a => a.assignedTo === &apos;Unassigned&apos;
+      a => a.assignedTo === 'Unassigned'
     ).length;
     const avgUtilization =
       total > 0
@@ -301,7 +301,7 @@ export function AssetInventory({
         // Refresh the inventory list
         window.location.reload();
       } catch (error) {
-        toast.error(&apos;Failed to delete asset&apos;);
+        toast.error('Failed to delete asset');
       }
     }
   };
@@ -322,76 +322,76 @@ export function AssetInventory({
   };
 
   return (
-    <PageLayout variant=&apos;wide&apos; padding=&apos;lg&apos;>
+    <PageLayout variant='wide' padding='lg'>
       {/* Header */}
-      <div className=&apos;flex items-center justify-between&apos;>
+      <div className='flex items-center justify-between'>
         <div>
           <h1>Asset Inventory</h1>
-          <p className=&apos;text-muted-foreground&apos;>Manage and track all assets</p>
+          <p className='text-muted-foreground'>Manage and track all assets</p>
         </div>
-        <div className=&apos;flex items-center gap-2&apos;>
-          <Button variant=&apos;outline&apos; onClick={() => setIsExportOpen(true)}>
-            <Download className=&apos;h-4 w-4 mr-2&apos; />
+        <div className='flex items-center gap-2'>
+          <Button variant='outline' onClick={() => setIsExportOpen(true)}>
+            <Download className='h-4 w-4 mr-2' />
             Export
           </Button>
           <Button onClick={handleAddAsset}>
-            <Plus className=&apos;h-4 w-4 mr-2&apos; />
+            <Plus className='h-4 w-4 mr-2' />
             Add Asset
           </Button>
         </div>
       </div>
 
       {/* Quick Stats */}
-      <div className=&apos;grid grid-cols-5 gap-4&apos;>
-        <StatsCard title=&apos;Total Assets&apos; value={stats.total} />
-        <StatsCard title=&apos;Active&apos; value={stats.active} variant=&apos;success&apos; />
+      <div className='grid grid-cols-5 gap-4'>
+        <StatsCard title='Total Assets' value={stats.total} />
+        <StatsCard title='Active' value={stats.active} variant='success' />
         <StatsCard
-          title=&apos;Low Battery&apos;
+          title='Low Battery'
           value={stats.lowBattery}
-          variant=&apos;danger&apos;
+          variant='danger'
         />
         <StatsCard
-          title=&apos;Unassigned&apos;
+          title='Unassigned'
           value={stats.unassigned}
-          variant=&apos;warning&apos;
+          variant='warning'
         />
-        <StatsCard title=&apos;Avg Utilization&apos; value={`${stats.avgUtilization}%`} />
+        <StatsCard title='Avg Utilization' value={`${stats.avgUtilization}%`} />
       </div>
 
       {/* Filters and Search */}
-      <Card className=&apos;p-4&apos;>
-        <div className=&apos;space-y-4&apos;>
-          <div className=&apos;flex items-center gap-4&apos;>
-            <div className=&apos;flex-1 relative&apos;>
-              <Search className=&apos;absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground&apos; />
+      <Card className='p-4'>
+        <div className='space-y-4'>
+          <div className='flex items-center gap-4'>
+            <div className='flex-1 relative'>
+              <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
               <Input
-                placeholder=&apos;Search by name, ID, or location...&apos;
-                className=&apos;pl-9&apos;
+                placeholder='Search by name, ID, or location...'
+                className='pl-9'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className=&apos;w-[180px]&apos;>
+              <SelectTrigger className='w-[180px]'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=&apos;all-types&apos;>All Types</SelectItem>
-                <SelectItem value=&apos;equipment&apos;>Equipment</SelectItem>
-                <SelectItem value=&apos;tools&apos;>Tools</SelectItem>
-                <SelectItem value=&apos;vehicle&apos;>Vehicles</SelectItem>
+                <SelectItem value='all-types'>All Types</SelectItem>
+                <SelectItem value='equipment'>Equipment</SelectItem>
+                <SelectItem value='tools'>Tools</SelectItem>
+                <SelectItem value='vehicle'>Vehicles</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className=&apos;w-[180px]&apos;>
+              <SelectTrigger className='w-[180px]'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=&apos;all-status&apos;>All Statuses</SelectItem>
-                <SelectItem value=&apos;active&apos;>Active</SelectItem>
-                <SelectItem value=&apos;idle&apos;>Idle</SelectItem>
-                <SelectItem value=&apos;in-transit&apos;>In Transit</SelectItem>
-                <SelectItem value=&apos;offline&apos;>Offline</SelectItem>
+                <SelectItem value='all-status'>All Statuses</SelectItem>
+                <SelectItem value='active'>Active</SelectItem>
+                <SelectItem value='idle'>Idle</SelectItem>
+                <SelectItem value='in-transit'>In Transit</SelectItem>
+                <SelectItem value='offline'>Offline</SelectItem>
               </SelectContent>
             </Select>
             <FilterPanel
@@ -401,7 +401,7 @@ export function AssetInventory({
               showFilters={showFilters}
               onShowFiltersChange={setShowFilters}
               searchTerm={searchTerm}
-              onClearSearch={() => setSearchTerm(&apos;&apos;)}
+              onClearSearch={() => setSearchTerm('')}
             />
           </div>
         </div>
@@ -428,19 +428,19 @@ export function AssetInventory({
           <TableBody>
             {filteredInventory.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={11} className=&apos;p-0&apos;>
+                <TableCell colSpan={11} className='p-0'>
                   <EmptyState
                     icon={Plus}
-                    title=&apos;No assets found&apos;
+                    title='No assets found'
                     description={
                       searchTerm || activeFiltersCount > 0
-                        ? &apos;Try adjusting your filters or search terms&apos;
-                        : &apos;Get started by adding your first asset&apos;
+                        ? 'Try adjusting your filters or search terms'
+                        : 'Get started by adding your first asset'
                     }
                     action={
                       !(searchTerm || activeFiltersCount > 0)
                         ? {
-                            label: &apos;Add Asset&apos;,
+                            label: 'Add Asset',
                             onClick: handleAddAsset,
                             icon: Plus,
                           }
@@ -453,37 +453,37 @@ export function AssetInventory({
               filteredInventory.map(asset => (
                 <TableRow
                   key={asset.id}
-                  className=&apos;cursor-pointer hover:bg-muted/50 transition-colors&apos;
+                  className='cursor-pointer hover:bg-muted/50 transition-colors'
                   onClick={() => onAssetClick?.(asset)}
                 >
-                  <TableCell className=&apos;font-mono text-sm&apos;>
+                  <TableCell className='font-mono text-sm'>
                     {asset.id}
                   </TableCell>
                   <TableCell>
-                    <div className=&apos;flex items-center gap-2&apos;>
+                    <div className='flex items-center gap-2'>
                       <span>{asset.name}</span>
-                      <Eye className=&apos;h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity&apos; />
+                      <Eye className='h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity' />
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant=&apos;outline&apos;>{asset.type}</Badge>
+                    <Badge variant='outline'>{asset.type}</Badge>
                   </TableCell>
                   <TableCell>
-                    <StatusBadge status={asset.status} type=&apos;asset&apos; />
+                    <StatusBadge status={asset.status} type='asset' />
                   </TableCell>
-                  <TableCell className=&apos;text-sm&apos;>{asset.site}</TableCell>
+                  <TableCell className='text-sm'>{asset.site}</TableCell>
                   <TableCell>
-                    <InfoRow icon={MapPin} iconClassName=&apos;h-3 w-3&apos;>
-                      <span className=&apos;text-sm&apos;>{asset.location}</span>
+                    <InfoRow icon={MapPin} iconClassName='h-3 w-3'>
+                      <span className='text-sm'>{asset.location}</span>
                     </InfoRow>
                   </TableCell>
                   <TableCell>
-                    <InfoRow icon={Clock} iconClassName=&apos;h-3 w-3&apos;>
-                      <span className=&apos;text-sm&apos;>{asset.lastSeen}</span>
+                    <InfoRow icon={Clock} iconClassName='h-3 w-3'>
+                      <span className='text-sm'>{asset.lastSeen}</span>
                     </InfoRow>
                   </TableCell>
                   <TableCell>
-                    <div className=&apos;flex items-center gap-1&apos;>
+                    <div className='flex items-center gap-1'>
                       <Battery
                         className={`h-3 w-3 ${getBatteryColor(asset.battery)}`}
                       />
@@ -494,16 +494,16 @@ export function AssetInventory({
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className=&apos;text-sm&apos;>{asset.assigned}</TableCell>
+                  <TableCell className='text-sm'>{asset.assigned}</TableCell>
                   <TableCell>
-                    <div className=&apos;flex items-center gap-2&apos;>
-                      <div className=&apos;flex-1 h-2 bg-muted rounded-full overflow-hidden&apos;>
+                    <div className='flex items-center gap-2'>
+                      <div className='flex-1 h-2 bg-muted rounded-full overflow-hidden'>
                         <div
-                          className=&apos;h-full bg-primary&apos;
+                          className='h-full bg-primary'
                           style={{ width: `${asset.utilization}%` }}
                         />
                       </div>
-                      <span className=&apos;text-sm text-muted-foreground w-8&apos;>
+                      <span className='text-sm text-muted-foreground w-8'>
                         {asset.utilization}%
                       </span>
                     </div>
@@ -511,7 +511,7 @@ export function AssetInventory({
                   <TableCell onClick={e => e.stopPropagation()}>
                     <TableActionMenu
                       actions={createAssetActions(asset)}
-                      label=&apos;Asset Actions&apos;
+                      label='Asset Actions'
                     />
                   </TableCell>
                 </TableRow>
@@ -522,26 +522,26 @@ export function AssetInventory({
       </Card>
 
       {/* Pagination */}
-      <div className=&apos;flex items-center justify-between&apos;>
-        <p className=&apos;text-sm text-muted-foreground&apos;>
-          Showing {filteredInventory.length} of {assetsWithUtilization.length}{&apos; &apos;}
+      <div className='flex items-center justify-between'>
+        <p className='text-sm text-muted-foreground'>
+          Showing {filteredInventory.length} of {assetsWithUtilization.length}{' '}
           assets
-          {activeFiltersCount > 0 && &apos; (filtered)&apos;}
+          {activeFiltersCount > 0 && ' (filtered)'}
         </p>
-        <div className=&apos;flex items-center gap-2&apos;>
-          <Button variant=&apos;outline&apos; size=&apos;sm&apos;>
+        <div className='flex items-center gap-2'>
+          <Button variant='outline' size='sm'>
             Previous
           </Button>
-          <Button variant=&apos;outline&apos; size=&apos;sm&apos;>
+          <Button variant='outline' size='sm'>
             1
           </Button>
-          <Button variant=&apos;outline&apos; size=&apos;sm&apos;>
+          <Button variant='outline' size='sm'>
             2
           </Button>
-          <Button variant=&apos;outline&apos; size=&apos;sm&apos;>
+          <Button variant='outline' size='sm'>
             3
           </Button>
-          <Button variant=&apos;outline&apos; size=&apos;sm&apos;>
+          <Button variant='outline' size='sm'>
             Next
           </Button>
         </div>
@@ -551,8 +551,8 @@ export function AssetInventory({
       <ExportDialog
         open={isExportOpen}
         onOpenChange={setIsExportOpen}
-        title=&apos;Export Asset Inventory&apos;
-        description=&apos;Choose format and options for exporting asset data&apos;
+        title='Export Asset Inventory'
+        description='Choose format and options for exporting asset data'
       />
 
       {/* Edit Asset Dialog */}
@@ -579,7 +579,7 @@ export function AssetInventory({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className=&apos;bg-destructive text-destructive-foreground hover:bg-destructive/90&apos;
+              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
             >
               Delete
             </AlertDialogAction>
