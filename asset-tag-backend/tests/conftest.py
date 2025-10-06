@@ -2,8 +2,14 @@
 Pytest configuration and fixtures
 """
 import asyncio
+import os
 import uuid
 from typing import AsyncGenerator, Generator
+
+# Set test environment BEFORE any imports
+os.environ["ASSET_TAG_ENVIRONMENT"] = "test"
+os.environ["ASSET_TAG_POSTGRES_HOST"] = "sqlite"
+os.environ["ASSET_TAG_DATABASE_URL"] = "sqlite+aiosqlite:///./test_integration.db"
 
 import pytest
 import pytest_asyncio
@@ -51,6 +57,43 @@ def event_loop() -> Generator:
     loop.close()
 
 
+@pytest.fixture(scope="session", autouse=True)
+def mock_external_services():
+    """Mock all external services for testing"""
+    import config.streaming
+    import config.elasticsearch
+    import config.cache
+    import ml.serving.model_loader
+    import streaming.stream_processor_coordinator
+    
+    # Mock all async startup/shutdown functions
+    async def mock_async_noop(*args, **kwargs):
+        pass
+    
+    # Mock streaming services
+    config.streaming.start_streaming = mock_async_noop
+    config.streaming.stop_streaming = mock_async_noop
+    
+    # Mock Elasticsearch
+    class MockESManager:
+        async def close(self):
+            pass
+    
+    config.elasticsearch.get_elasticsearch_manager = lambda: MockESManager()
+    
+    # Mock cache
+    config.cache.close_cache = mock_async_noop
+    
+    # Mock ML services
+    ml.serving.model_loader.start_model_refresh_scheduler = mock_async_noop
+    ml.serving.model_loader.stop_model_refresh_scheduler = mock_async_noop
+    ml.serving.model_loader.preload_common_models = mock_async_noop
+    
+    # Mock stream processors
+    streaming.stream_processor_coordinator.start_all_stream_processors = mock_async_noop
+    streaming.stream_processor_coordinator.stop_all_stream_processors = mock_async_noop
+
+
 @pytest_asyncio.fixture(scope="function")
 async def db_session() -> AsyncGenerator[AsyncSession, None]:
     """Create a test database session."""
@@ -70,8 +113,6 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 @pytest.fixture(scope="function")
 def client():
     """Create a test client with database dependency override."""
-
-    # Create a new test session for this test
     async def override_get_db():
         async with TestSessionLocal() as session:
             try:
@@ -81,47 +122,12 @@ def client():
                 raise
             finally:
                 await session.close()
-
+    
     app.dependency_overrides[get_db] = override_get_db
-
-    # Create a test app with minimal lifespan
-    from contextlib import asynccontextmanager
-
-    from fastapi import FastAPI
-
-    @asynccontextmanager
-    async def test_lifespan(app):
-        # Create tables for testing
-        async with test_engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        yield
-        # Clean up tables after testing
-        async with test_engine.begin() as conn:
-            await conn.run_sync(Base.metadata.drop_all)
-
-    # Create a new test app instance with same configuration as main app
-    test_app = FastAPI(
-        title=app.title,
-        description=app.description,
-        version=app.version,
-        docs_url=app.docs_url,
-        redoc_url=app.redoc_url,
-        lifespan=test_lifespan,
-    )
-
-    # Copy all routes from the main app
-    for route in app.routes:
-        test_app.router.routes.append(route)
-
-    # Copy middleware
-    for middleware in app.user_middleware:
-        test_app.add_middleware(middleware.cls, **middleware.kwargs)
-
-    from fastapi.testclient import TestClient
-
-    with TestClient(test_app) as tc:
+    
+    with TestClient(app) as tc:
         yield tc
-
+    
     app.dependency_overrides.clear()
 
 
@@ -154,7 +160,7 @@ def sample_site_data():
     """Sample site data for testing."""
     return {
         "name": "Test Construction Site",
-        "site_type": "construction",
+        "location": "123 Test St, Test City, TC 12345",
         "status": "active",
         "address": "123 Test St, Test City, TC 12345",
         "latitude": 40.7128,
@@ -264,4 +270,33 @@ def sample_checkin_data():
         "expected_duration_hours": 2.0,
         "notes": "Test checkin",
         "checkout_metadata": {"test": True},
+    }
+
+
+@pytest.fixture
+def sample_vehicle_data():
+    """Sample vehicle data for testing."""
+    return {
+        "name": "Test Vehicle",
+        "vehicle_type": "truck",
+        "license_plate": "ABC-123",
+        "status": "active",
+        "current_latitude": 40.7128,
+        "current_longitude": -74.0060,
+        "last_seen": "2024-01-01T12:00:00Z",
+        "assigned_driver_name": "Test Driver",
+        "metadata": {"model": "Ford F-150", "year": 2020},
+    }
+
+
+@pytest.fixture
+def sample_personnel_data():
+    """Sample personnel data for testing."""
+    return {
+        "name": "Test Personnel",
+        "role": "operator",
+        "status": "active",
+        "site_id": "550e8400-e29b-41d4-a716-446655440001",
+        "contact_info": {"email": "test@example.com", "phone": "555-0123"},
+        "metadata": {"department": "operations"},
     }

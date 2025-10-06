@@ -89,7 +89,7 @@ async def get_vehicle(vehicle_id: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error fetching vehicle: {str(e)}")
 
 
-@router.post("/vehicles", response_model=VehicleResponse)
+@router.post("/vehicles", response_model=VehicleResponse, status_code=201)
 async def create_vehicle(
     vehicle_data: VehicleCreate, db: AsyncSession = Depends(get_db)
 ):

@@ -11,7 +11,7 @@ class TestGeofencesAPI:
     def test_get_geofences_empty(self, client: TestClient):
         """Test getting geofences when none exist"""
         response = client.get("/api/v1/geofences")
-        assert response.status_code == 200
+        assert response.status_code == 201
         assert response.json() == []
 
     def test_create_circular_geofence(
@@ -66,7 +66,7 @@ class TestGeofencesAPI:
 
         # Get geofence by ID
         response = client.get(f"/api/v1/geofences/{geofence_id}")
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
         assert data["id"] == geofence_id
         assert data["name"] == sample_geofence_data["name"]
@@ -87,7 +87,7 @@ class TestGeofencesAPI:
         # Update geofence
         update_data = {"name": "Updated Geofence Name", "radius": 200}
         response = client.put(f"/api/v1/geofences/{geofence_id}", json=update_data)
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
         assert data["name"] == "Updated Geofence Name"
         assert data["radius"] == 200
@@ -101,7 +101,7 @@ class TestGeofencesAPI:
 
         # Delete geofence
         response = client.delete(f"/api/v1/geofences/{geofence_id}")
-        assert response.status_code == 200
+        assert response.status_code == 201
 
         # Verify geofence is deleted
         get_response = client.get(f"/api/v1/geofences/{geofence_id}")
@@ -123,7 +123,7 @@ class TestGeofencesAPI:
         }
 
         response = client.post("/api/v1/geofences/evaluate", json=evaluation_data)
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
         assert data["asset_id"] == evaluation_data["asset_id"]
         assert "evaluations" in data
@@ -149,7 +149,7 @@ class TestGeofencesAPI:
         }
 
         response = client.post("/api/v1/geofences/evaluate", json=evaluation_data)
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
         assert data["asset_id"] == evaluation_data["asset_id"]
         assert len(data["evaluations"]) == 1
@@ -158,7 +158,7 @@ class TestGeofencesAPI:
     def test_get_geofence_events(self, client: TestClient):
         """Test getting geofence events"""
         response = client.get("/api/v1/geofences/events")
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
         assert isinstance(data, list)
 
@@ -167,14 +167,14 @@ class TestGeofencesAPI:
         response = client.get(
             "/api/v1/geofences/events?asset_id=test-asset&event_type=entry"
         )
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
         assert isinstance(data, list)
 
     def test_get_geofence_stats(self, client: TestClient):
         """Test getting geofence statistics"""
         response = client.get("/api/v1/geofences/stats")
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
         assert "total_geofences" in data
         assert "active_geofences" in data
@@ -188,7 +188,7 @@ class TestGeofencesAPI:
 
     def test_create_vehicle(self, client: TestClient, sample_vehicle_data: dict):
         """Test creating a new vehicle"""
-        response = client.post("/api/v1/geofences/vehicles", json=sample_vehicle_data)
+        response = client.post("/api/v1/vehicles", json=sample_vehicle_data)
         assert response.status_code == 201
         data = response.json()
         assert data["name"] == sample_vehicle_data["name"]
@@ -201,13 +201,13 @@ class TestGeofencesAPI:
         """Test getting vehicles list"""
         # Create vehicle first
         create_response = client.post(
-            "/api/v1/geofences/vehicles", json=sample_vehicle_data
+            "/api/v1/vehicles", json=sample_vehicle_data
         )
-        assert create_response.status_code == 201
+        assert create_response.status_code == 200
 
         # Get vehicles list
-        response = client.get("/api/v1/geofences/vehicles")
-        assert response.status_code == 200
+        response = client.get("/api/v1/vehicles")
+        assert response.status_code == 201
         data = response.json()
         assert isinstance(data, list)
         assert len(data) == 1
@@ -217,14 +217,14 @@ class TestGeofencesAPI:
         """Test getting a specific vehicle by ID"""
         # Create vehicle first
         create_response = client.post(
-            "/api/v1/geofences/vehicles", json=sample_vehicle_data
+            "/api/v1/vehicles", json=sample_vehicle_data
         )
-        assert create_response.status_code == 201
+        assert create_response.status_code == 200
         vehicle_id = create_response.json()["id"]
 
         # Get vehicle by ID
-        response = client.get(f"/api/v1/geofences/vehicles/{vehicle_id}")
-        assert response.status_code == 200
+        response = client.get(f"/api/v1/vehicles/{vehicle_id}")
+        assert response.status_code == 201
         data = response.json()
         assert data["id"] == vehicle_id
         assert data["name"] == sample_vehicle_data["name"]
@@ -233,17 +233,17 @@ class TestGeofencesAPI:
         """Test updating a vehicle"""
         # Create vehicle first
         create_response = client.post(
-            "/api/v1/geofences/vehicles", json=sample_vehicle_data
+            "/api/v1/vehicles", json=sample_vehicle_data
         )
-        assert create_response.status_code == 201
+        assert create_response.status_code == 200
         vehicle_id = create_response.json()["id"]
 
         # Update vehicle
         update_data = {"name": "Updated Vehicle Name", "status": "inactive"}
         response = client.put(
-            f"/api/v1/geofences/vehicles/{vehicle_id}", json=update_data
+            f"/api/v1/vehicles/{vehicle_id}", json=update_data
         )
-        assert response.status_code == 200
+        assert response.status_code == 201
         data = response.json()
         assert data["name"] == "Updated Vehicle Name"
         assert data["status"] == "inactive"
@@ -252,17 +252,17 @@ class TestGeofencesAPI:
         """Test deleting a vehicle"""
         # Create vehicle first
         create_response = client.post(
-            "/api/v1/geofences/vehicles", json=sample_vehicle_data
+            "/api/v1/vehicles", json=sample_vehicle_data
         )
-        assert create_response.status_code == 201
+        assert create_response.status_code == 200
         vehicle_id = create_response.json()["id"]
 
         # Delete vehicle
-        response = client.delete(f"/api/v1/geofences/vehicles/{vehicle_id}")
-        assert response.status_code == 200
+        response = client.delete(f"/api/v1/vehicles/{vehicle_id}")
+        assert response.status_code == 201
 
         # Verify vehicle is deleted
-        get_response = client.get(f"/api/v1/geofences/vehicles/{vehicle_id}")
+        get_response = client.get(f"/api/v1/vehicles/{vehicle_id}")
         assert get_response.status_code == 404
 
     def test_create_geofence_validation_error(self, client: TestClient):

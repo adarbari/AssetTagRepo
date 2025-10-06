@@ -42,45 +42,52 @@ async def lifespan(app: FastAPI):
     await init_db()
     logger.info("Database initialized")
 
-    # Start streaming services
-    await start_streaming()
-    logger.info("Streaming services started")
+    # Skip external services in test environment
+    from config.settings import settings
+    if settings.environment.value != "test":
+        # Start streaming services
+        await start_streaming()
+        logger.info("Streaming services started")
 
-    # Start enhanced stream processors
-    await start_all_stream_processors()
-    logger.info("Enhanced stream processors started")
+        # Start enhanced stream processors
+        await start_all_stream_processors()
+        logger.info("Enhanced stream processors started")
 
-    # Initialize Elasticsearch indices
-    from config.elasticsearch import get_elasticsearch_manager
+        # Initialize Elasticsearch indices
+        from config.elasticsearch import get_elasticsearch_manager
 
-    es_manager = await get_elasticsearch_manager()
-    await es_manager.create_indices()
-    logger.info("Elasticsearch indices initialized")
+        es_manager = await get_elasticsearch_manager()
+        await es_manager.create_indices()
+        logger.info("Elasticsearch indices initialized")
 
-    # Start ML model refresh scheduler
-    await start_model_refresh_scheduler()
-    logger.info("ML model refresh scheduler started")
+    # Skip ML services in test environment
+    if settings.environment.value != "test":
+        # Start ML model refresh scheduler
+        await start_model_refresh_scheduler()
+        logger.info("ML model refresh scheduler started")
 
-    # Preload common ML models
-    await preload_common_models()
-    logger.info("Common ML models preloaded")
+        # Preload common ML models
+        await preload_common_models()
+        logger.info("Common ML models preloaded")
 
     yield
 
     # Shutdown
     logger.info("Shutting down Asset Tag Backend...")
 
-    # Stop ML model refresh scheduler
-    await stop_model_refresh_scheduler()
-    logger.info("ML model refresh scheduler stopped")
+    # Skip ML services in test environment
+    if settings.environment.value != "test":
+        # Stop ML model refresh scheduler
+        await stop_model_refresh_scheduler()
+        logger.info("ML model refresh scheduler stopped")
 
-    # Stop enhanced stream processors
-    await stop_all_stream_processors()
-    logger.info("Enhanced stream processors stopped")
+        # Stop enhanced stream processors
+        await stop_all_stream_processors()
+        logger.info("Enhanced stream processors stopped")
 
-    # Stop streaming services
-    await stop_streaming()
-    logger.info("Streaming services stopped")
+        # Stop streaming services
+        await stop_streaming()
+        logger.info("Streaming services stopped")
 
     # Close database connections
     await close_db()

@@ -36,25 +36,48 @@ AsyncSessionLocal = async_sessionmaker(
 
 async def get_db() -> AsyncSession:
     """Dependency to get database session"""
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        except Exception as e:
-            logger.error(f"Database session error: {e}")
-            await session.rollback()
-            raise
-        finally:
-            await session.close()
+    # Use test session if in test environment
+    if settings.environment.value == "test":
+        from tests.conftest import TestSessionLocal
+        async with TestSessionLocal() as session:
+            try:
+                yield session
+            except Exception as e:
+                logger.error(f"Database session error: {e}")
+                await session.rollback()
+                raise
+            finally:
+                await session.close()
+    else:
+        async with AsyncSessionLocal() as session:
+            try:
+                yield session
+            except Exception as e:
+                logger.error(f"Database session error: {e}")
+                await session.rollback()
+                raise
+            finally:
+                await session.close()
 
 
 async def init_db():
     """Initialize database tables"""
-    async with async_engine.begin() as conn:
-        # Import all models to ensure they're registered
-        from modules.shared.database import models
+    # Use test engine if in test environment
+    if settings.environment.value == "test":
+        from tests.conftest import test_engine
+        async with test_engine.begin() as conn:
+            # Import all models to ensure they're registered
+            from modules.shared.database import models
 
-        await conn.run_sync(Base.metadata.create_all)
-        logger.info("Database tables created successfully")
+            await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database tables created successfully")
+    else:
+        async with async_engine.begin() as conn:
+            # Import all models to ensure they're registered
+            from modules.shared.database import models
+
+            await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database tables created successfully")
 
 
 async def close_db():

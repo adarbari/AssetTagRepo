@@ -11,6 +11,7 @@ class Environment(str, Enum):
     LOCAL = "local"
     STAGING = "staging"
     PRODUCTION = "production"
+    TEST = "test"
 
 
 class Settings(BaseSettings):
@@ -23,6 +24,7 @@ class Settings(BaseSettings):
     postgres_db: str = "asset_tag"
     postgres_user: str = "dev_user"
     postgres_password: str = "dev_pass"
+    database_url_override: Optional[str] = None
 
     # Redis Cache
     redis_url: str = "redis://localhost:6379"
@@ -85,6 +87,10 @@ class Settings(BaseSettings):
     @property
     def database_url(self) -> str:
         """Get database URL for SQLAlchemy"""
+        if self.database_url_override:
+            return self.database_url_override
+        if self.environment == Environment.TEST:
+            return "sqlite+aiosqlite:///./test_integration.db"
         return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
 
     @property

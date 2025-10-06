@@ -409,7 +409,7 @@ async def get_site_activity(
         )
 
 
-@router.get("/sites/stats/summary")
+@router.get("/sites/stats")
 async def get_sites_stats(db: AsyncSession = Depends(get_db)):
     """Get sites statistics summary"""
     try:
@@ -431,11 +431,8 @@ async def get_sites_stats(db: AsyncSession = Depends(get_db)):
         total_personnel = await db.execute(select(func.count(Personnel.id)))
 
         return {
-            "by_status": {
-                "active": active_count.scalar(),
-                "inactive": inactive_count.scalar(),
-            },
             "total_sites": total_sites.scalar(),
+            "active_sites": active_count.scalar(),
             "total_assets": total_assets.scalar(),
             "total_personnel": total_personnel.scalar(),
         }
@@ -588,3 +585,23 @@ async def delete_personnel(personnel_id: str, db: AsyncSession = Depends(get_db)
         raise HTTPException(
             status_code=500, detail=f"Error deleting personnel: {str(e)}"
         )
+
+
+# Personnel endpoint aliases under sites namespace
+@router.post("/sites/personnel", response_model=PersonnelResponse, status_code=201)
+async def create_site_personnel(personnel_data: PersonnelCreate, db: AsyncSession = Depends(get_db)):
+    """Alias for creating personnel under sites namespace"""
+    return await create_personnel(personnel_data, db)
+
+
+@router.get("/sites/personnel", response_model=List[PersonnelResponse])
+async def get_site_personnel_list(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    status: Optional[str] = None,
+    role: Optional[str] = None,
+    site_id: Optional[str] = None,
+    db: AsyncSession = Depends(get_db),
+):
+    """Alias for getting personnel under sites namespace"""
+    return await get_personnel(skip, limit, status, role, site_id, db)
