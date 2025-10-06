@@ -1,6 +1,7 @@
 """
 Site API endpoints
 """
+import uuid
 from datetime import datetime
 from typing import List, Optional
 
@@ -143,11 +144,11 @@ async def create_site(site_data: SiteCreate, db: AsyncSession = Depends(get_db))
     """Create a new site"""
     try:
         # Check if site name already exists in organization
+        default_org_id = uuid.UUID("00000000-0000-0000-0000-000000000000")
         existing = await db.execute(
             select(Site).where(
                 Site.name == site_data.name,
-                Site.organization_id
-                == "00000000-0000-0000-0000-000000000000",  # Default org
+                Site.organization_id == default_org_id,  # Default org
             )
         )
         if existing.scalar_one_or_none():
@@ -157,7 +158,7 @@ async def create_site(site_data: SiteCreate, db: AsyncSession = Depends(get_db))
 
         # Create new site
         site = Site(
-            organization_id="00000000-0000-0000-0000-000000000000",  # Default org for now
+            organization_id=default_org_id,  # Default org for now
             name=site_data.name,
             location=site_data.location,
             area=site_data.area,

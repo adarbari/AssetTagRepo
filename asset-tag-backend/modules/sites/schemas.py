@@ -1,6 +1,7 @@
 """
 Site Pydantic schemas
 """
+import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -58,8 +59,8 @@ class SiteUpdate(BaseModel):
 class SiteResponse(SiteBase):
     """Schema for site response"""
 
-    id: str
-    organization_id: str
+    id: uuid.UUID
+    organization_id: uuid.UUID
     created_at: datetime
     updated_at: datetime
     deleted_at: Optional[datetime] = None

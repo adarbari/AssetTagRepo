@@ -30,23 +30,8 @@ from main import app
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
 
-# Test database URL - use file-based SQLite to avoid UUID issues
-TEST_DATABASE_URL = "sqlite+aiosqlite:///./test_integration.db"
-
-# Create test engine with SQLite-specific configuration
-test_engine = create_async_engine(
-    TEST_DATABASE_URL,
-    echo=False,
-    future=True,
-    connect_args={"check_same_thread": False},
-)
-
-# UUID compatibility is now handled by config/uuid_compat.py
-
-# Create test session factory
-TestSessionLocal = sessionmaker(
-    test_engine, class_=AsyncSession, expire_on_commit=False
-)
+# Import test database configuration from separate module
+from config.test_database import test_engine, TestSessionLocal
 
 
 @pytest.fixture(scope="session")
@@ -112,23 +97,20 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 
 @pytest.fixture(scope="function")
 def client():
-    """Create a test client with database dependency override."""
-    async def override_get_db():
-        async with TestSessionLocal() as session:
-            try:
-                yield session
-            except Exception as e:
-                await session.rollback()
-                raise
-            finally:
-                await session.close()
+    """Create a test client - database override handled by environment configuration."""
+    # Clean up database before each test
+    async def cleanup_db():
+        async with test_engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
+        async with test_engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
     
-    app.dependency_overrides[get_db] = override_get_db
+    # Run cleanup synchronously
+    import asyncio
+    asyncio.run(cleanup_db())
     
     with TestClient(app) as tc:
         yield tc
-    
-    app.dependency_overrides.clear()
 
 
 @pytest.fixture(scope="function")
