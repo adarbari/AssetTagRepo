@@ -16,11 +16,12 @@ class TestGeofenceModel:
     """Test Geofence model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_geofence(
-        self, db_session, sample_geofence_data
-    ):
+    async def test_create_geofence(self, db_session, sample_geofence_data):
         """Test creating a geofence"""
-        geofence = Geofence(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_geofence_data)
+        geofence = Geofence(
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+            **sample_geofence_data
+        )
 
         db_session.add(geofence)
         await db_session.commit()
@@ -33,11 +34,12 @@ class TestGeofenceModel:
         assert geofence.geometry == sample_geofence_data["geometry"]
 
     @pytest.mark.asyncio
-    async def test_geofence_soft_delete(
-        self, db_session, sample_geofence_data
-    ):
+    async def test_geofence_soft_delete(self, db_session, sample_geofence_data):
         """Test soft delete functionality"""
-        geofence = Geofence(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_geofence_data)
+        geofence = Geofence(
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+            **sample_geofence_data
+        )
 
         db_session.add(geofence)
         await db_session.commit()

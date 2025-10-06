@@ -9,9 +9,10 @@ from sqlalchemy.dialects import postgresql, sqlite
 class GUID(TypeDecorator):
     """
     Platform-independent GUID type.
-    
+
     Uses PostgreSQL's UUID type, otherwise uses String(36) for SQLite.
     """
+
     impl = String
     cache_ok = True
 
@@ -21,7 +22,7 @@ class GUID(TypeDecorator):
         super().__init__(**kwargs)
 
     def load_dialect_impl(self, dialect):
-        if dialect.name == 'postgresql':
+        if dialect.name == "postgresql":
             return dialect.type_descriptor(postgresql.UUID(as_uuid=self.as_uuid))
         else:
             return dialect.type_descriptor(String(36))
@@ -29,7 +30,7 @@ class GUID(TypeDecorator):
     def process_bind_param(self, value, dialect):
         if value is None:
             return value
-        elif dialect.name == 'postgresql':
+        elif dialect.name == "postgresql":
             if isinstance(value, uuid.UUID):
                 return value
             else:
@@ -57,11 +58,11 @@ def setup_uuid_compatibility():
     """
     # Replace PostgreSQL UUID with our GUID type
     postgresql.UUID = GUID
-    
+
     # Add visit_UUID method to SQLite type compiler
     from sqlalchemy.dialects.sqlite.base import SQLiteTypeCompiler
-    
+
     def visit_UUID(self, type_, **kw):
         return "TEXT"
-    
+
     SQLiteTypeCompiler.visit_UUID = visit_UUID

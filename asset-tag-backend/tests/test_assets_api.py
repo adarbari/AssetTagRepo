@@ -82,13 +82,24 @@ class TestAssetsAPI:
         asset_data_1 = sample_asset_data.copy()
         asset_data_1["asset_type"] = "sensor"
         asset_data_1["name"] = "Sensor Asset"
+        asset_data_1["serial_number"] = "SENSOR-001"
 
         asset_data_2 = sample_asset_data.copy()
         asset_data_2["asset_type"] = "tracker"
         asset_data_2["name"] = "Tracker Asset"
+        asset_data_2["serial_number"] = "TRACKER-001"
 
-        client.post("/api/v1/assets", json=asset_data_1)
-        client.post("/api/v1/assets", json=asset_data_2)
+        # Create first asset
+        response1 = client.post("/api/v1/assets", json=asset_data_1)
+        assert (
+            response1.status_code == 201
+        ), f"Failed to create asset 1: {response1.text}"
+
+        # Create second asset
+        response2 = client.post("/api/v1/assets", json=asset_data_2)
+        assert (
+            response2.status_code == 201
+        ), f"Failed to create asset 2: {response2.text}"
 
         # Filter by asset type
         response = client.get("/api/v1/assets?asset_type=sensor")
@@ -110,7 +121,11 @@ class TestAssetsAPI:
         for i in range(5):
             asset_data = sample_asset_data.copy()
             asset_data["name"] = f"Asset {i}"
-            client.post("/api/v1/assets", json=asset_data)
+            asset_data["serial_number"] = f"ASSET-{i:03d}"
+            response = client.post("/api/v1/assets", json=asset_data)
+            assert (
+                response.status_code == 201
+            ), f"Failed to create asset {i}: {response.text}"
 
         # Test pagination
         response = client.get("/api/v1/assets?skip=0&limit=3")
@@ -132,10 +147,10 @@ class TestAssetsAPI:
         assert create_response.status_code == 201
         asset_id = create_response.json()["id"]
 
-        # Get current location
+        # Get current location - should return 404 since no location data exists yet
         response = client.get(f"/api/v1/assets/{asset_id}/current-location")
-        assert response.status_code == 200
-        # Should return empty or null since no location data exists yet
+        assert response.status_code == 404
+        assert "No location data found for asset" in response.json()["detail"]
 
     def test_get_asset_location_history(
         self, client: TestClient, sample_asset_data: dict

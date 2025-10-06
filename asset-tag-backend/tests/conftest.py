@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Set up UUID compatibility BEFORE importing models
 from config.uuid_compat import setup_uuid_compatibility
+
 setup_uuid_compatibility()
 
 from config.database import Base, get_db
@@ -134,6 +135,7 @@ def sync_client() -> TestClient:
 def sample_asset_data():
     """Sample asset data for testing."""
     from datetime import datetime
+
     return {
         "name": "Test Excavator",
         "serial_number": "EXC-001",
@@ -165,6 +167,7 @@ def sample_site_data():
 def sample_observation_data():
     """Sample observation data for testing."""
     from datetime import datetime
+
     return {
         "asset_id": "test-asset-1",
         "gateway_id": "test-gateway-1",
@@ -180,6 +183,7 @@ def sample_observation_data():
 def sample_alert_data():
     """Sample alert data for testing."""
     from datetime import datetime
+
     return {
         "alert_type": "battery_low",
         "severity": "warning",
@@ -195,6 +199,7 @@ def sample_alert_data():
 def sample_job_data():
     """Sample job data for testing."""
     from datetime import datetime
+
     return {
         "name": "Test Job",
         "description": "Test job description",
@@ -212,6 +217,7 @@ def sample_job_data():
 def sample_maintenance_data():
     """Sample maintenance data for testing."""
     from datetime import datetime
+
     return {
         "asset_id": "test-asset-1",
         "maintenance_type": "scheduled",
@@ -239,4 +245,23 @@ def sample_geofence_data():
         ],
         "site_id": "test-site-1",
         "geofence_classification": "authorized",
+    }
+
+
+@pytest.fixture
+def sample_checkin_data():
+    """Sample checkin data for testing."""
+    from datetime import datetime, timedelta
+
+    return {
+        "asset_id": "550e8400-e29b-41d4-a716-446655440000",
+        "user_id": "550e8400-e29b-41d4-a716-446655440001",
+        "user_name": "Test User",
+        "check_in_location_lat": 40.7128,
+        "check_in_location_lng": -74.0060,
+        "check_in_location_description": "Test location",
+        "purpose": "Test checkin",
+        "expected_duration_hours": 2.0,
+        "notes": "Test checkin",
+        "metadata": {"test": True},
     }

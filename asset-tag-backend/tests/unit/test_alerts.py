@@ -18,7 +18,10 @@ class TestAlertModel:
     @pytest.mark.asyncio
     async def test_create_alert(self, db_session, sample_alert_data):
         """Test creating an alert"""
-        alert = Alert(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_alert_data)
+        alert = Alert(
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+            **sample_alert_data
+        )
 
         db_session.add(alert)
         await db_session.commit()
@@ -32,11 +35,12 @@ class TestAlertModel:
         assert alert.status == "active"  # Default status
 
     @pytest.mark.asyncio
-    async def test_alert_status_transitions(
-        self, db_session, sample_alert_data
-    ):
+    async def test_alert_status_transitions(self, db_session, sample_alert_data):
         """Test alert status transitions"""
-        alert = Alert(organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_alert_data)
+        alert = Alert(
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+            **sample_alert_data
+        )
 
         db_session.add(alert)
         await db_session.commit()
@@ -63,7 +67,9 @@ class TestAlertModel:
         """Test alert metadata handling"""
         metadata = {"rule_id": "battery_low", "threshold": 20}
         alert = Alert(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"), **sample_alert_data, metadata=metadata
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+            **sample_alert_data,
+            metadata=metadata
         )
 
         db_session.add(alert)
@@ -235,13 +241,13 @@ class TestAlertRulesEngine:
         from unittest.mock import patch
         import datetime
 
-        with patch('modules.alerts.rules_engine.datetime') as mock_datetime:
+        with patch("modules.alerts.rules_engine.datetime") as mock_datetime:
             mock_datetime.now.return_value = datetime.datetime(2024, 1, 1, 2, 0, 0)
             result = await engine._check_theft_detection(rule, asset_data)
             assert result is True
 
         # Test movement during working hours
-        with patch('modules.alerts.rules_engine.datetime') as mock_datetime:
+        with patch("modules.alerts.rules_engine.datetime") as mock_datetime:
             mock_datetime.now.return_value = datetime.datetime(2024, 1, 1, 10, 0, 0)
             result = await engine._check_theft_detection(rule, asset_data)
             assert result is False
