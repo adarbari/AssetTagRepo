@@ -165,10 +165,12 @@ class CacheManager:
         return self.metrics.get_stats()
 
     # Redis Streams support
-    async def add_to_stream(self, stream_name: str, fields: Dict[str, Any]) -> str:
+    async def add_to_stream(self, stream_name: str, fields: Dict[str, Any]) -> Optional[str]:
         """Add message to Redis stream"""
         try:
-            message_id = await self.client.xadd(stream_name, fields)
+            # Convert fields to proper types for Redis
+            redis_fields = {k: str(v) for k, v in fields.items()}
+            message_id = await self.client.xadd(stream_name, redis_fields)
             return message_id
         except Exception as e:
             logger.error(f"Error adding to stream {stream_name}: {e}")
