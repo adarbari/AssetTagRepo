@@ -393,7 +393,7 @@ export function VehicleAssetPairing({
       case 'geofence-enter':
         return `On enter: ${pairing.geofenceName || 'Unknown geofence'}`;
       case 'time-and-geofence':
-        return `${format(pairing.expirationDateTime!, 'MMM d, h:mm a')} or ${pairing.geofenceAction} ${pairing.geofenceName}`;
+        return `${pairing.expirationDateTime ? format(pairing.expirationDateTime, 'MMM d, h:mm a') : 'No date'} or ${pairing.geofenceAction} ${pairing.geofenceName}`;
       default:
         return 'Unknown';
     }

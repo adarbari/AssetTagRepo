@@ -12,8 +12,8 @@ import * as dropdownOptions from '../data/dropdownOptions';
  */
 export function useDropdownOptions(optionType: keyof typeof dropdownOptions) {
   const [options, setOptions] = useState<DropdownOption[]>([]);
-  const [loading, _setLoading] = useState(false);
-  const [error, _setError] = useState<Error | null>(null);
+  const [loading] = useState(false);
+  const [error] = useState<Error | null>(null);
 
   useEffect(() => {
     // Currently just returns static data

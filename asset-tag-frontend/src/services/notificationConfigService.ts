@@ -240,8 +240,8 @@ export function resolveNotificationConfig(
         activeLevel === 'user'
           ? userId
           : activeLevel === 'site'
-            ? siteId!
-            : assetId!,
+            ? siteId || ''
+            : assetId || '',
       entityName:
         activeLevel === 'user'
           ? 'Your Account'
