@@ -162,6 +162,11 @@ from modules.jobs.api import router as jobs_router
 from modules.maintenance.api import router as maintenance_router
 from modules.analytics.api import router as analytics_router
 from modules.checkin_checkout.api import router as checkin_checkout_router
+from modules.vehicles.api import router as vehicles_router
+from modules.users.api import router as users_router
+from modules.issues.api import router as issues_router
+from modules.compliance.api import router as compliance_router
+from modules.reports.api import router as reports_router
 
 # New API routes
 from modules.search.api import router as search_router
@@ -182,6 +187,11 @@ app.include_router(jobs_router, prefix=settings.api_v1_prefix, tags=["jobs"])
 app.include_router(maintenance_router, prefix=settings.api_v1_prefix, tags=["maintenance"])
 app.include_router(analytics_router, prefix=settings.api_v1_prefix, tags=["analytics"])
 app.include_router(checkin_checkout_router, prefix=settings.api_v1_prefix, tags=["checkin-checkout"])
+app.include_router(vehicles_router, prefix=settings.api_v1_prefix, tags=["vehicles"])
+app.include_router(users_router, prefix=settings.api_v1_prefix, tags=["users"])
+app.include_router(issues_router, prefix=settings.api_v1_prefix, tags=["issues"])
+app.include_router(compliance_router, prefix=settings.api_v1_prefix, tags=["compliance"])
+app.include_router(reports_router, prefix=settings.api_v1_prefix, tags=["reports"])
 
 # Include new routers
 app.include_router(search_router, prefix=settings.api_v1_prefix, tags=["search"])

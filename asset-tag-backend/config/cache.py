@@ -6,7 +6,7 @@ from config.settings import settings
 from config.cache_strategies import cache_key_manager, cache_metrics, CacheInvalidation
 import logging
 import json
-from typing import Any, Optional, Union, Dict
+from typing import Any, Optional, Union, Dict, List
 
 logger = logging.getLogger(__name__)
 

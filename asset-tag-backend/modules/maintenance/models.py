@@ -2,7 +2,8 @@
 Maintenance models
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric, DateTime
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin
 
@@ -49,8 +50,8 @@ class MaintenanceRecord(BaseModel, OrganizationMixin):
     subcategory = Column(String(100), nullable=True)  # oil_change, filter_replacement, etc.
     
     # Parts and materials
-    parts_used = Column(JSONB, nullable=True)  # List of parts with quantities and costs
-    materials_used = Column(JSONB, nullable=True)  # List of materials used
+    parts_used = Column(JSON, nullable=True)  # List of parts with quantities and costs
+    materials_used = Column(JSON, nullable=True)  # List of materials used
     
     # Quality and compliance
     quality_check_passed = Column(Boolean, nullable=True)
@@ -58,12 +59,12 @@ class MaintenanceRecord(BaseModel, OrganizationMixin):
     next_maintenance_due = Column(DateTime(timezone=True), nullable=True)
     
     # Documentation
-    attachments = Column(JSONB, nullable=True)  # List of file attachments
+    attachments = Column(JSON, nullable=True)  # List of file attachments
     work_order_number = Column(String(100), nullable=True)
     invoice_number = Column(String(100), nullable=True)
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    maintenance_metadata = Column(JSON, default={})
     
     # Relationships
     asset = relationship("Asset", back_populates="maintenance_records")
@@ -117,11 +118,11 @@ class MaintenanceSchedule(BaseModel, OrganizationMixin):
     description_template = Column(Text, nullable=True)
     
     # Parts and materials template
-    parts_template = Column(JSONB, nullable=True)  # Default parts list
-    materials_template = Column(JSONB, nullable=True)  # Default materials list
+    parts_template = Column(JSON, nullable=True)  # Default parts list
+    materials_template = Column(JSON, nullable=True)  # Default materials list
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    maintenance_metadata = Column(JSON, default={})
     
     # Relationships
     asset = relationship("Asset", foreign_keys=[asset_id])

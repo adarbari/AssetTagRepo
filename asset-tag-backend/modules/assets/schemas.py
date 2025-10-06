@@ -21,7 +21,7 @@ class AssetBase(BaseModel):
     warranty_expiry: Optional[str] = Field(None, max_length=100)
     hourly_rate: Optional[float] = Field(None, ge=0)
     availability: Optional[str] = Field("available", max_length=50)
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    asset_metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
 class AssetCreate(AssetBase):
@@ -43,7 +43,7 @@ class AssetUpdate(BaseModel):
     warranty_expiry: Optional[str] = Field(None, max_length=100)
     hourly_rate: Optional[float] = Field(None, ge=0)
     availability: Optional[str] = Field(None, max_length=50)
-    metadata: Optional[Dict[str, Any]] = None
+    asset_metadata: Optional[Dict[str, Any]] = None
 
 
 class AssetResponse(AssetBase):

@@ -2,7 +2,8 @@
 Geofence models
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric, ARRAY
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
@@ -21,7 +22,7 @@ class Geofence(BaseModel, OrganizationMixin, SoftDeleteMixin):
     center_latitude = Column(Numeric(10, 8), nullable=True)  # For circular geofences
     center_longitude = Column(Numeric(11, 8), nullable=True)  # For circular geofences
     radius = Column(Integer, nullable=True)  # Radius in feet for circular geofences
-    coordinates = Column(JSONB, nullable=True)  # Array of [lat, lng] pairs for polygon geofences
+    coordinates = Column(JSON, nullable=True)  # Array of [lat, lng] pairs for polygon geofences
     
     # Site association
     site_id = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True)
@@ -46,10 +47,10 @@ class Geofence(BaseModel, OrganizationMixin, SoftDeleteMixin):
     attachment_type = Column(String(50), default="site")  # site, vehicle, asset, none
     
     # Expected assets
-    expected_asset_ids = Column(JSONB, nullable=True)  # Array of asset IDs that should be within this geofence
+    expected_asset_ids = Column(JSON, nullable=True)  # Array of asset IDs that should be within this geofence
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    geofence_metadata = Column(JSON, default={})
     
     # Relationships
     site = relationship("Site", foreign_keys=[site_id])
@@ -101,36 +102,3 @@ class GeofenceEvent(BaseModel, OrganizationMixin):
     )
 
 
-class Vehicle(BaseModel, OrganizationMixin, SoftDeleteMixin):
-    """Vehicle model for vehicle-based geofencing"""
-    __tablename__ = "vehicles"
-    
-    # Basic information
-    name = Column(String(255), nullable=False)
-    vehicle_type = Column(String(100), nullable=False)  # truck, van, car, etc.
-    license_plate = Column(String(50), nullable=True)
-    status = Column(String(50), default="active", index=True)  # active, inactive, maintenance
-    
-    # Location
-    current_latitude = Column(Numeric(10, 8), nullable=True)
-    current_longitude = Column(Numeric(11, 8), nullable=True)
-    last_seen = Column(String(100), nullable=True)  # ISO timestamp
-    
-    # Assignment
-    assigned_driver_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    assigned_driver_name = Column(String(255), nullable=True)  # Denormalized for performance
-    
-    # Metadata
-    metadata = Column(JSONB, default={})
-    
-    # Relationships
-    assigned_driver = relationship("User", foreign_keys=[assigned_driver_id])
-    geofences = relationship("Geofence", foreign_keys="Geofence.vehicle_id")
-    
-    # Indexes
-    __table_args__ = (
-        Index('idx_vehicle_org_name', 'organization_id', 'name'),
-        Index('idx_vehicle_org_status', 'organization_id', 'status'),
-        Index('idx_vehicle_license', 'license_plate'),
-        Index('idx_vehicle_driver', 'assigned_driver_id'),
-    )

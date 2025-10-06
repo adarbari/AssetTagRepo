@@ -2,7 +2,8 @@
 Job models
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric, DateTime
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
@@ -44,7 +45,7 @@ class Job(BaseModel, OrganizationMixin, SoftDeleteMixin):
     completion_percentage = Column(Integer, default=0)  # 0-100
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    job_metadata = Column(JSON, default={})
     
     # Relationships
     assigned_to_user = relationship("User", foreign_keys=[assigned_to_user_id])

@@ -6,7 +6,7 @@ import boto3
 from config.settings import settings
 import logging
 import json
-from typing import Dict, Any, AsyncGenerator
+from typing import Dict, Any, AsyncGenerator, Optional
 import asyncio
 
 logger = logging.getLogger(__name__)
@@ -19,11 +19,7 @@ class StreamingManager:
         self.producer = None
         self.consumer = None
         self.kinesis_client = None
-        
-        if settings.use_local_streaming:
-            self._setup_kafka()
-        else:
-            self._setup_kinesis()
+        self._initialized = False
     
     def _setup_kafka(self):
         """Setup Kafka/Redpanda producer and consumer"""
@@ -51,6 +47,13 @@ class StreamingManager:
     
     async def start(self):
         """Start streaming services"""
+        if not self._initialized:
+            if settings.use_local_streaming:
+                self._setup_kafka()
+            else:
+                self._setup_kinesis()
+            self._initialized = True
+        
         if settings.use_local_streaming and self.producer:
             await self.producer.start()
             await self.consumer.start()

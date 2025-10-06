@@ -148,49 +148,6 @@ class GeofenceEventResponse(GeofenceEventBase):
         from_attributes = True
 
 
-class VehicleBase(BaseModel):
-    """Base vehicle schema"""
-    name: str = Field(..., min_length=1, max_length=255)
-    vehicle_type: str = Field(..., min_length=1, max_length=100)
-    license_plate: Optional[str] = Field(None, max_length=50)
-    status: Optional[str] = Field("active", max_length=50)
-    current_latitude: Optional[float] = Field(None, ge=-90, le=90)
-    current_longitude: Optional[float] = Field(None, ge=-180, le=180)
-    last_seen: Optional[str] = Field(None, description="ISO timestamp")
-    assigned_driver_id: Optional[str] = None
-    assigned_driver_name: Optional[str] = Field(None, max_length=255)
-    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
-
-
-class VehicleCreate(VehicleBase):
-    """Schema for creating a vehicle"""
-    pass
-
-
-class VehicleUpdate(BaseModel):
-    """Schema for updating a vehicle"""
-    name: Optional[str] = Field(None, min_length=1, max_length=255)
-    vehicle_type: Optional[str] = Field(None, min_length=1, max_length=100)
-    license_plate: Optional[str] = Field(None, max_length=50)
-    status: Optional[str] = Field(None, max_length=50)
-    current_latitude: Optional[float] = Field(None, ge=-90, le=90)
-    current_longitude: Optional[float] = Field(None, ge=-180, le=180)
-    last_seen: Optional[str] = None
-    assigned_driver_id: Optional[str] = None
-    assigned_driver_name: Optional[str] = Field(None, max_length=255)
-    metadata: Optional[Dict[str, Any]] = None
-
-
-class VehicleResponse(VehicleBase):
-    """Schema for vehicle response"""
-    id: str
-    organization_id: str
-    created_at: datetime
-    updated_at: datetime
-    deleted_at: Optional[datetime] = None
-    
-    class Config:
-        from_attributes = True
 
 
 class GeofenceEvaluationRequest(BaseModel):

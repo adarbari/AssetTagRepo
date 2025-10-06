@@ -2,7 +2,8 @@
 Alert models
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric, DateTime
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin
 
@@ -49,10 +50,10 @@ class Alert(BaseModel, OrganizationMixin):
     auto_resolved = Column(Boolean, default=False)
     
     # Workflow execution
-    workflow_actions = Column(JSONB, nullable=True)  # Array of workflow actions executed
+    workflow_actions = Column(JSON, nullable=True)  # Array of workflow actions executed
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    alert_metadata = Column(JSON, default={})
     
     # Relationships
     asset = relationship("Asset", back_populates="alerts")
@@ -81,7 +82,7 @@ class AlertRule(BaseModel, OrganizationMixin):
     severity = Column(String(50), nullable=False)
     
     # Rule conditions
-    conditions = Column(JSONB, nullable=False)  # Rule conditions in JSON format
+    conditions = Column(JSON, nullable=False)  # Rule conditions in JSON format
     is_active = Column(Boolean, default=True, index=True)
     
     # Asset filtering
@@ -89,8 +90,8 @@ class AlertRule(BaseModel, OrganizationMixin):
     site_filter = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=True)  # Apply to specific sites
     
     # Notification settings
-    notification_channels = Column(JSONB, nullable=True)  # email, webhook, push, etc.
-    notification_recipients = Column(JSONB, nullable=True)  # List of recipients
+    notification_channels = Column(JSON, nullable=True)  # email, webhook, push, etc.
+    notification_recipients = Column(JSON, nullable=True)  # List of recipients
     
     # Throttling
     throttle_minutes = Column(Integer, nullable=True)  # Minimum time between alerts of same type
@@ -98,10 +99,10 @@ class AlertRule(BaseModel, OrganizationMixin):
     
     # Auto-resolution
     auto_resolve_after_minutes = Column(Integer, nullable=True)  # Auto-resolve after X minutes
-    auto_resolve_conditions = Column(JSONB, nullable=True)  # Conditions for auto-resolution
+    auto_resolve_conditions = Column(JSON, nullable=True)  # Conditions for auto-resolution
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    alert_metadata = Column(JSON, default={})
     
     # Relationships
     site = relationship("Site", foreign_keys=[site_filter])
@@ -135,7 +136,7 @@ class AlertNotification(BaseModel, OrganizationMixin):
     max_retries = Column(Integer, default=3)
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    alert_metadata = Column(JSON, default={})
     
     # Relationships
     alert = relationship("Alert")

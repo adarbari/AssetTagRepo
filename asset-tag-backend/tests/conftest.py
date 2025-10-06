@@ -8,10 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from httpx import AsyncClient
 from fastapi.testclient import TestClient
+import pytest_asyncio
 
 from config.database import get_db, Base
 from main import app
-from config.settings import get_settings
+from config.settings import settings
 
 # Test database URL
 TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
@@ -56,17 +57,33 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 @pytest.fixture(scope="function")
-async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
+def client(db_session: AsyncSession):
     """Create a test client with database dependency override."""
     
-    def override_get_db():
-        return db_session
+    async def override_get_db():
+        yield db_session
     
     app.dependency_overrides[get_db] = override_get_db
     
-    async with AsyncClient(app=app, base_url="http://test") as ac:
-        yield ac
+    # Override the lifespan to skip database initialization during testing
+    from contextlib import asynccontextmanager
     
+    @asynccontextmanager
+    async def test_lifespan(app):
+        # Skip all initialization for testing
+        yield
+        # Skip all cleanup for testing
+    
+    # Temporarily replace the lifespan
+    original_lifespan = app.router.lifespan_context
+    app.router.lifespan_context = test_lifespan
+    
+    from fastapi.testclient import TestClient
+    with TestClient(app) as tc:
+        yield tc
+    
+    # Restore original lifespan
+    app.router.lifespan_context = original_lifespan
     app.dependency_overrides.clear()
 
 
@@ -81,13 +98,14 @@ def sample_asset_data():
     """Sample asset data for testing."""
     return {
         "name": "Test Excavator",
+        "serial_number": "EXC-001",
         "asset_type": "excavator",
         "status": "active",
         "site_id": "test-site-1",
         "assigned_to_user_id": "test-user-1",
         "battery_level": 85,
         "last_seen": "2024-01-01T12:00:00Z",
-        "metadata": {"model": "CAT 320", "year": 2020}
+        "asset_metadata": {"model": "CAT 320", "year": 2020}
     }
 
 

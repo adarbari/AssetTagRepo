@@ -98,7 +98,7 @@ async def create_asset(
             warranty_expiry=asset_data.warranty_expiry,
             hourly_rate=asset_data.hourly_rate,
             availability=asset_data.availability or "available",
-            metadata=asset_data.metadata or {}
+            asset_metadata=asset_data.asset_metadata or {}
         )
         
         db.add(asset)

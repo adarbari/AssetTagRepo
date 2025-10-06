@@ -2,7 +2,8 @@
 Observation models for Bluetooth signal data
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric, DateTime
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin
 
@@ -29,7 +30,7 @@ class Observation(BaseModel, OrganizationMixin):
     noise_level = Column(Integer, nullable=True)  # dBm
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    observation_metadata = Column(JSON, default={})
     
     # Relationships
     asset = relationship("Asset", back_populates="observations")

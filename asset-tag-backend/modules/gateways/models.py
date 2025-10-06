@@ -2,7 +2,8 @@
 Gateway models for Bluetooth gateways
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
@@ -38,7 +39,7 @@ class Gateway(BaseModel, OrganizationMixin, SoftDeleteMixin):
     is_online = Column(Boolean, default=True, index=True)
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    gateway_metadata = Column(JSON, default={})
     
     # Relationships
     site = relationship("Site", back_populates="gateways")

@@ -2,7 +2,8 @@
 Location estimation models
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric, DateTime
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin
 
@@ -29,7 +30,7 @@ class EstimatedLocation(BaseModel, OrganizationMixin):
     
     # Gateway information used for estimation
     gateway_count = Column(Integer, nullable=False)  # Number of gateways used
-    gateway_ids = Column(JSONB, nullable=True)  # List of gateway IDs used
+    gateway_ids = Column(JSON, nullable=True)  # List of gateway IDs used
     
     # Movement analysis
     speed = Column(Numeric(8, 2), nullable=True)  # meters per second
@@ -41,7 +42,7 @@ class EstimatedLocation(BaseModel, OrganizationMixin):
     rssi_variance = Column(Numeric(8, 2), nullable=True)  # Signal strength variance
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    location_metadata = Column(JSON, default={})
     
     # Relationships
     asset = relationship("Asset", back_populates="estimated_locations")

@@ -2,9 +2,23 @@
 Shared database models
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
+
+# Import all models to ensure they're registered with SQLAlchemy
+from modules.assets.models import Asset, AssetType
+from modules.sites.models import Site
+from modules.gateways.models import Gateway
+from modules.observations.models import Observation
+from modules.locations.models import EstimatedLocation
+from modules.geofences.models import Geofence, GeofenceEvent
+from modules.alerts.models import Alert
+from modules.jobs.models import Job
+from modules.maintenance.models import MaintenanceRecord
+from modules.checkin_checkout.models import CheckInOutRecord
+from modules.vehicles.models import Vehicle, VehicleAssetPairing
 
 
 class Organization(BaseModel, SoftDeleteMixin):
@@ -13,7 +27,7 @@ class Organization(BaseModel, SoftDeleteMixin):
     
     name = Column(String(255), nullable=False)
     domain = Column(String(255), unique=True, nullable=True)
-    settings = Column(JSONB, default={})
+    settings = Column(JSON, default={})
     is_active = Column(Boolean, default=True)
     
     # Relationships
@@ -32,7 +46,7 @@ class User(BaseModel, OrganizationMixin, SoftDeleteMixin):
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
     role = Column(String(50), default="user")  # user, admin, superuser
-    preferences = Column(JSONB, default={})
+    preferences = Column(JSON, default={})
     
     # Foreign keys
     organization_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
@@ -55,8 +69,8 @@ class AuditLog(BaseModel, OrganizationMixin):
     entity_id = Column(UUID(as_uuid=True), nullable=False)
     action = Column(String(50), nullable=False)  # create, update, delete
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    changes = Column(JSONB, nullable=True)  # before/after values
-    metadata = Column(JSONB, default={})
+    changes = Column(JSON, nullable=True)  # before/after values
+    model_metadata = Column(JSON, default={})
     
     # Indexes
     __table_args__ = (

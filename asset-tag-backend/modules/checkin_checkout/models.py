@@ -2,7 +2,7 @@
 Check-in/Check-out database models
 """
 from sqlalchemy import Column, String, UUID, DateTime, Float, Text, Index
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON
 from modules.shared.database.base import Base, TimestampMixin
 import uuid
 
@@ -40,7 +40,7 @@ class CheckInOutRecord(Base, TimestampMixin):
     return_notes = Column(Text, nullable=True)
     
     # Additional metadata
-    metadata = Column(JSONB, default={})
+    checkout_metadata = Column(JSON, default={})
 
     __table_args__ = (
         Index('idx_checkin_asset_time', 'asset_id', 'check_in_time'),

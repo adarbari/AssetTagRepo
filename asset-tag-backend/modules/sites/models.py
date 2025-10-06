@@ -2,7 +2,8 @@
 Site models
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
@@ -37,7 +38,7 @@ class Site(BaseModel, OrganizationMixin, SoftDeleteMixin):
     geofence_id = Column(UUID(as_uuid=True), ForeignKey("geofences.id"), nullable=True)
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    site_metadata = Column(JSON, default={})
     
     # Relationships
     manager = relationship("User", foreign_keys=[manager_id])
@@ -71,7 +72,7 @@ class Personnel(BaseModel, OrganizationMixin, SoftDeleteMixin):
     phone = Column(String(50), nullable=True)
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    site_metadata = Column(JSON, default={})
     
     # Relationships
     current_site = relationship("Site", foreign_keys=[current_site_id], back_populates="personnel")

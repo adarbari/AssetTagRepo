@@ -2,7 +2,8 @@
 Asset models
 """
 from sqlalchemy import Column, String, Integer, Boolean, Text, ForeignKey, Index, Numeric
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from modules.shared.database.base import BaseModel, OrganizationMixin, SoftDeleteMixin
 
@@ -48,7 +49,7 @@ class Asset(BaseModel, OrganizationMixin, SoftDeleteMixin):
     availability = Column(String(50), default="available")  # available, assigned, in-use, maintenance, reserved, unavailable
     
     # Metadata
-    metadata = Column(JSONB, default={})
+    asset_metadata = Column(JSON, default={})
     
     # Relationships
     current_site = relationship("Site", foreign_keys=[current_site_id])
@@ -80,7 +81,7 @@ class AssetType(BaseModel, OrganizationMixin):
     default_hourly_rate = Column(Numeric(10, 2), nullable=True)
     maintenance_interval_days = Column(Integer, nullable=True)
     battery_threshold = Column(Integer, default=20)  # Low battery alert threshold
-    metadata = Column(JSONB, default={})
+    asset_type_metadata = Column(JSON, default={})
     
     # Indexes
     __table_args__ = (
