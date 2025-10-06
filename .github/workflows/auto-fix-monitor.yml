@@ -21,29 +21,68 @@ jobs:
       with:
         name: workflow-logs
         path: ./logs
+      continue-on-error: true
+    
+    - name: Get workflow run logs via API
+      id: get_logs
+      if: steps.download-artifact.outcome == 'failure'
+      run: |
+        echo "Artifact download failed, fetching logs via API..."
+        
+        # Get the workflow run logs via GitHub API
+        curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+             -H "Accept: application/vnd.github.v3+json" \
+             "${{ github.event.workflow_run.logs_url }}" \
+             -o ./workflow-logs.txt
+        
+        echo "LOGS_AVAILABLE=true" >> $GITHUB_OUTPUT
     
     - name: Analyze common errors
       run: |
         echo "Analyzing workflow failure..."
         
+        # Check if we have logs from artifacts
+        if [ -d "./logs" ] && [ "$(ls -A ./logs 2>/dev/null)" ]; then
+          echo "Analyzing logs from artifacts..."
+          LOG_PATH="./logs"
+        elif [ -f "./workflow-logs.txt" ]; then
+          echo "Analyzing logs from API..."
+          LOG_PATH="./workflow-logs.txt"
+        else
+          echo "No logs available for analysis"
+          echo "ERROR_TYPE=no_logs" >> $GITHUB_ENV
+          echo "DEPENDENCY_ERROR=workflow_failure" >> $GITHUB_ENV
+        fi
+        
         # Check for common dependency issues
-        if grep -q "email-validator is not installed" ./logs/*.log 2>/dev/null; then
+        if grep -q "email-validator is not installed" $LOG_PATH 2>/dev/null; then
           echo "DEPENDENCY_ERROR=email-validator" >> $GITHUB_ENV
           echo "ERROR_TYPE=dependency" >> $GITHUB_ENV
         fi
         
-        if grep -q "ModuleNotFoundError" ./logs/*.log 2>/dev/null; then
+        if grep -q "ModuleNotFoundError" $LOG_PATH 2>/dev/null; then
           echo "DEPENDENCY_ERROR=missing_module" >> $GITHUB_ENV
           echo "ERROR_TYPE=dependency" >> $GITHUB_ENV
         fi
         
-        if grep -q "ImportError" ./logs/*.log 2>/dev/null; then
+        if grep -q "ImportError" $LOG_PATH 2>/dev/null; then
           echo "DEPENDENCY_ERROR=import_error" >> $GITHUB_ENV
+          echo "ERROR_TYPE=dependency" >> $GITHUB_ENV
+        fi
+        
+        # Check for frontend-specific errors
+        if grep -q "npm ERR" $LOG_PATH 2>/dev/null; then
+          echo "DEPENDENCY_ERROR=npm_error" >> $GITHUB_ENV
+          echo "ERROR_TYPE=dependency" >> $GITHUB_ENV
+        fi
+        
+        if grep -q "Cannot find module" $LOG_PATH 2>/dev/null; then
+          echo "DEPENDENCY_ERROR=missing_module" >> $GITHUB_ENV
           echo "ERROR_TYPE=dependency" >> $GITHUB_ENV
         fi
     
     - name: Create issue for dependency errors
-      if: env.ERROR_TYPE == 'dependency'
+      if: env.ERROR_TYPE == 'dependency' || env.ERROR_TYPE == 'no_logs'
       uses: actions/github-script@v7
       with:
         script: |
@@ -63,6 +102,12 @@ jobs:
           
           ${dependencyError === 'email-validator' ? 
             '1. Add `email-validator` to requirements.txt\n2. Run `pip install email-validator`' :
+            dependencyError === 'npm_error' ?
+            '1. Check npm dependencies\n2. Run `npm ci` or `npm install`\n3. Verify package-lock.json' :
+            dependencyError === 'missing_module' ?
+            '1. Check missing dependencies\n2. Update requirements files or package.json\n3. Verify imports' :
+            dependencyError === 'workflow_failure' ?
+            '1. Check the workflow run logs manually\n2. Verify all dependencies are properly configured\n3. Check for infrastructure issues' :
             '1. Check missing dependencies\n2. Update requirements files'
           }
           
@@ -84,14 +129,14 @@ jobs:
           });
     
     - name: Comment on PR if applicable
-      if: github.event.workflow_run.pull_requests.length > 0
+      if: github.event.workflow_run.pull_requests.length > 0 && (env.ERROR_TYPE == 'dependency' || env.ERROR_TYPE == 'no_logs')
       uses: actions/github-script@v7
       with:
         script: |
           const errorType = process.env.ERROR_TYPE;
           const dependencyError = process.env.DEPENDENCY_ERROR;
           
-          if (errorType === 'dependency') {
+          if (errorType === 'dependency' || errorType === 'no_logs') {
             const comment = `
             ## 🚨 CI Failure Detected
             
@@ -99,6 +144,12 @@ jobs:
             
             ${dependencyError === 'email-validator' ? 
               '**Quick Fix:** Add \`email-validator\` to your requirements.txt' :
+              dependencyError === 'npm_error' ?
+              '**Quick Fix:** Check npm dependencies and run \`npm ci\`' :
+              dependencyError === 'missing_module' ?
+              '**Quick Fix:** Check missing dependencies in requirements.txt or package.json' :
+              dependencyError === 'workflow_failure' ?
+              '**Action Needed:** Check workflow logs manually for detailed error information' :
               '**Action Needed:** Check for missing dependencies'
             }
             
