@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import React from 'react';
 
 // Mock fetch globally with proper response structure
-global.fetch = vi.fn((url: string) =>
+global.fetch = vi.fn((_url: string) =>
   Promise.resolve({
     ok: true,
     status: 200,
@@ -102,7 +102,7 @@ Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
 // Mock getComputedStyle
 Object.defineProperty(window, 'getComputedStyle', {
   writable: true,
-  value: vi.fn().mockImplementation(element => ({
+  value: vi.fn().mockImplementation(_element => ({
     getPropertyValue: vi.fn().mockImplementation(prop => {
       const styles = {
         'margin-left': '0px',
@@ -227,7 +227,7 @@ vi.mock('../components/common/PageHeader', () => ({
     title,
     description,
     actions,
-    onBack,
+    onBack: _onBack,
   }: {
     title: string;
     description?: string;

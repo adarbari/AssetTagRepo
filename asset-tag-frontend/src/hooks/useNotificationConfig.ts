@@ -118,7 +118,7 @@ export function useNotificationConfig() {
     }
 
     const key = `${level}:${entityId}`;
-    const { [key]: removed, ...remaining } = configs;
+    const { [key]: _removed, ...remaining } = configs;
 
     setConfigs(remaining);
 

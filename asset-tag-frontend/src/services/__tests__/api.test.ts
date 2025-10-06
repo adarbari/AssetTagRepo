@@ -14,7 +14,7 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 // Store original getApiConfig
-const originalGetApiConfig = getApiConfig;
+const _originalGetApiConfig = getApiConfig;
 
 describe('API Service', () => {
   beforeEach(() => {

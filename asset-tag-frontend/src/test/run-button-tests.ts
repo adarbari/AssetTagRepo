@@ -9,9 +9,9 @@
 
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
-import path from 'path';
+// import path from 'path';
 
-const TEST_PATTERNS = [
+const _TEST_PATTERNS = [
   '**/__tests__/**/*.test.tsx',
   '**/__tests__/**/*.test.ts',
 ];

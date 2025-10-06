@@ -40,7 +40,7 @@ export const getApiConfig = () => ({
 const API_BASE_URL = getEnvVar('VITE_API_BASE_URL', 'http://localhost:3000');
 const API_VERSION = getEnvVar('VITE_API_VERSION', 'v1');
 const API_TIMEOUT = parseInt(getEnvVar('VITE_API_TIMEOUT', '30000'));
-const USE_MOCK_DATA = getEnvVar('VITE_USE_MOCK_DATA', 'true') !== 'false'; // Default to true in dev
+const _USE_MOCK_DATA = getEnvVar('VITE_USE_MOCK_DATA', 'true') !== 'false'; // Default to true in dev
 
 // API Error Class
 export class ApiError extends Error {

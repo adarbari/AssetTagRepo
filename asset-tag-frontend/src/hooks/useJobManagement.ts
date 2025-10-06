@@ -147,7 +147,7 @@ export function useJobManagement() {
   };
 
   const deleteJob = async (jobId: string) => {
-    const { [jobId]: removed, ...remaining } = jobs;
+    const { [jobId]: _removed, ...remaining } = jobs;
 
     setJobs(remaining);
 

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { Reports } from '../../../components/reports/Reports';
@@ -270,7 +270,7 @@ describe('User Flow Integration Tests', () => {
         error: null,
       });
 
-      const { rerender } = render(<Reports />);
+      const { rerender: _rerender } = render(<Reports />);
 
       // Verify loading state
       expect(screen.getByText('Loading reports...')).toBeInTheDocument();
@@ -422,7 +422,7 @@ describe('User Flow Integration Tests', () => {
         error: null,
       });
 
-      const { rerender } = render(<Reports />);
+      const { rerender: _rerender } = render(<Reports />);
 
       // Change time range
       const timeRangeSelect = screen.getByDisplayValue('Last 6 months');

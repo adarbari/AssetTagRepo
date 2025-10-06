@@ -66,7 +66,7 @@ export function useAlertConfig() {
     }
 
     const key = `${level}:${entityId}:${alertType}`;
-    const { [key]: removed, ...remaining } = configs;
+    const { [key]: _removed, ...remaining } = configs;
 
     setConfigs(remaining);
 
