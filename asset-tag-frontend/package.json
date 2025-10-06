@@ -2,6 +2,10 @@
       "name": "location-tracking-ui-design",
       "version": "0.1.0",
       "private": true,
+      "engines": {
+            "node": ">=20.0.0",
+            "npm": ">=10.0.0"
+      },
       "dependencies": {
             "@radix-ui/react-accordion": "^1.2.3",
             "@radix-ui/react-alert-dialog": "^1.1.6",
@@ -32,13 +36,13 @@
             "@supabase/supabase-js": "^2.49.8",
             "@types/qrcode": "^1.5.5",
             "class-variance-authority": "^0.7.1",
-            "clsx": "*",
+            "clsx": "^2.1.1",
             "cmdk": "^1.1.1",
-            "date-fns": "*",
+            "date-fns": "^3.6.0",
             "embla-carousel-react": "^8.6.0",
-            "hono": "*",
+            "hono": "^4.9.9",
             "input-otp": "^1.4.2",
-            "leaflet": "*",
+            "leaflet": "^1.9.4",
             "lucide-react": "^0.487.0",
             "next-themes": "^0.4.6",
             "qrcode": "^1.5.4",
@@ -49,7 +53,7 @@
             "react-resizable-panels": "^2.1.7",
             "recharts": "^2.15.2",
             "sonner": "^2.0.3",
-            "tailwind-merge": "*",
+            "tailwind-merge": "^3.3.1",
             "vaul": "^1.1.2"
       },
       "devDependencies": {
@@ -76,6 +80,7 @@
             "test:coverage": "vitest run --coverage",
             "test:coverage:open": "vitest run --coverage && open coverage/index.html",
             "test:coverage:ci": "vitest run --coverage --reporter=verbose --reporter=json --outputFile=coverage/coverage-summary.json",
+            "test:ci": "vitest run --coverage",
             "test:buttons": "tsx src/test/run-button-tests.ts",
             "test:all": "tsx src/test/run-all-tests.ts",
             "test:sites": "vitest run src/components/__tests__/Sites.test.tsx src/components/__tests__/SiteDetails.test.tsx src/components/__tests__/CreateSite.test.tsx",
@@ -86,6 +91,8 @@
             "test:integration": "vitest run src/test/integration/__tests__/",
             "test:watch": "vitest --watch",
             "test:watch:ui": "vitest --watch --ui",
-            "test:new": "vitest run src/components/__tests__/Reports.test.tsx src/utils/__tests__/errorHandler.test.ts src/services/__tests__/api.test.ts src/hooks/__tests__/useAsyncData.test.ts src/test/integration/__tests__/userFlow.test.tsx"
+            "test:new": "vitest run src/components/__tests__/Reports.test.tsx src/utils/__tests__/errorHandler.test.ts src/services/__tests__/api.test.ts src/hooks/__tests__/useAsyncData.test.ts src/test/integration/__tests__/userFlow.test.tsx",
+            "postinstall": "npm run audit-check || true",
+            "audit-check": "npm audit --audit-level=high"
       }
 }

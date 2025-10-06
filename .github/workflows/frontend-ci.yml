@@ -26,72 +26,34 @@ jobs:
       with:
         node-version: '20.x'
         registry-url: 'https://registry.npmjs.org'
+        cache: 'npm'
+        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
 
-    - name: Debug directory structure
+    - name: Verify npm compatibility
       run: |
-        echo "Current directory: $(pwd)"
-        echo "Contents of current directory:"
-        ls -la
-        echo "Contents of asset-tag-frontend directory:"
-        ls -la asset-tag-frontend/ || echo "asset-tag-frontend directory not found"
-        
-    - name: Verify package-lock.json availability
-      run: |
-        echo "Verifying package-lock.json file availability..."
-        cd asset-tag-frontend
-        if [ -f "package-lock.json" ]; then
-          echo "✅ package-lock.json found"
-          echo "File size: $(wc -c < package-lock.json) bytes"
-          echo "File permissions: $(ls -la package-lock.json)"
-          echo "Lockfile version: $(node -p "require('./package-lock.json').lockfileVersion")"
-        else
-          echo "❌ package-lock.json not found!"
-          echo "Current directory: $(pwd)"
-          echo "Directory contents:"
-          ls -la
+        NPM_VERSION=$(npm --version | cut -d. -f1)
+        if [ "$NPM_VERSION" -lt 10 ]; then
+          echo "Error: npm version $NPM_VERSION is too old. Requires npm 10+"
           exit 1
         fi
-
+        echo "✅ npm version $(npm --version) is compatible"
+      working-directory: asset-tag-frontend
 
     - name: Install dependencies
       run: |
-        cd asset-tag-frontend
         npm --version
-        echo "Attempting npm ci..."
-        
-        # Try npm ci first
-        if npm ci --verbose; then
-          echo "✅ npm ci succeeded"
-        else
-          echo "❌ npm ci failed, checking lockfile compatibility..."
-          
-          # Check lockfile version and npm compatibility
-          LOCKFILE_VERSION=$(node -p "require('./package-lock.json').lockfileVersion")
-          NPM_VERSION=$(npm --version | cut -d. -f1)
-          
-          if [ "$LOCKFILE_VERSION" -ge 3 ] && [ "$NPM_VERSION" -lt 7 ]; then
-            echo "⚠️ Lockfile version $LOCKFILE_VERSION requires npm 7+, but found npm $NPM_VERSION"
-            echo "Updating npm to latest version..."
-            npm install -g npm@latest
-            echo "Updated npm version: $(npm --version)"
-            
-            # Try npm ci again with updated npm
-            if npm ci --verbose; then
-              echo "✅ npm ci succeeded after npm update"
-            else
-              echo "❌ npm ci still failed, falling back to npm install..."
-              npm install --verbose
-            fi
-          else
-            echo "❌ npm ci failed for other reasons, trying npm install as fallback..."
-            npm install --verbose
-          fi
-        fi
+        echo "Installing dependencies with npm ci..."
+        npm ci --verbose
+      working-directory: asset-tag-frontend
+
+    - name: Run security audit
+      run: npm audit --audit-level=moderate
+      working-directory: asset-tag-frontend
+      continue-on-error: true
 
     - name: Run fast tests
-      run: |
-        cd asset-tag-frontend
-        npm run test:run
+      run: npm run test:run
+      working-directory: asset-tag-frontend
 
     - name: Upload workflow logs
       uses: actions/upload-artifact@v4
@@ -110,7 +72,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x]
 
     steps:
     - name: Checkout code
@@ -121,72 +83,29 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         registry-url: 'https://registry.npmjs.org'
+        cache: 'npm'
+        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
 
-    - name: Debug directory structure
+    - name: Verify npm compatibility
       run: |
-        echo "Current directory: $(pwd)"
-        echo "Contents of current directory:"
-        ls -la
-        echo "Contents of asset-tag-frontend directory:"
-        ls -la asset-tag-frontend/ || echo "asset-tag-frontend directory not found"
-        
-    - name: Verify package-lock.json availability
-      run: |
-        echo "Verifying package-lock.json file availability..."
-        cd asset-tag-frontend
-        if [ -f "package-lock.json" ]; then
-          echo "✅ package-lock.json found"
-          echo "File size: $(wc -c < package-lock.json) bytes"
-          echo "File permissions: $(ls -la package-lock.json)"
-          echo "Lockfile version: $(node -p "require('./package-lock.json').lockfileVersion")"
-        else
-          echo "❌ package-lock.json not found!"
-          echo "Current directory: $(pwd)"
-          echo "Directory contents:"
-          ls -la
+        NPM_VERSION=$(npm --version | cut -d. -f1)
+        if [ "$NPM_VERSION" -lt 10 ]; then
+          echo "Error: npm version $NPM_VERSION is too old. Requires npm 10+"
           exit 1
         fi
-
+        echo "✅ npm version $(npm --version) is compatible"
+      working-directory: asset-tag-frontend
 
     - name: Install dependencies
       run: |
-        cd asset-tag-frontend
         npm --version
-        echo "Attempting npm ci..."
-        
-        # Try npm ci first
-        if npm ci --verbose; then
-          echo "✅ npm ci succeeded"
-        else
-          echo "❌ npm ci failed, checking lockfile compatibility..."
-          
-          # Check lockfile version and npm compatibility
-          LOCKFILE_VERSION=$(node -p "require('./package-lock.json').lockfileVersion")
-          NPM_VERSION=$(npm --version | cut -d. -f1)
-          
-          if [ "$LOCKFILE_VERSION" -ge 3 ] && [ "$NPM_VERSION" -lt 7 ]; then
-            echo "⚠️ Lockfile version $LOCKFILE_VERSION requires npm 7+, but found npm $NPM_VERSION"
-            echo "Updating npm to latest version..."
-            npm install -g npm@latest
-            echo "Updated npm version: $(npm --version)"
-            
-            # Try npm ci again with updated npm
-            if npm ci --verbose; then
-              echo "✅ npm ci succeeded after npm update"
-            else
-              echo "❌ npm ci still failed, falling back to npm install..."
-              npm install --verbose
-            fi
-          else
-            echo "❌ npm ci failed for other reasons, trying npm install as fallback..."
-            npm install --verbose
-          fi
-        fi
+        echo "Installing dependencies with npm ci..."
+        npm ci --verbose
+      working-directory: asset-tag-frontend
 
     - name: Run comprehensive tests
-      run: |
-        cd asset-tag-frontend
-        npm run test:run
+      run: npm run test:run
+      working-directory: asset-tag-frontend
 
     - name: Upload workflow logs
       uses: actions/upload-artifact@v4
@@ -213,46 +132,19 @@ jobs:
       with:
         node-version: '20.x'
         registry-url: 'https://registry.npmjs.org'
+        cache: 'npm'
+        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
 
     - name: Install dependencies
       run: |
-        cd asset-tag-frontend
         npm --version
-        echo "Attempting npm ci..."
-        
-        # Try npm ci first
-        if npm ci --verbose; then
-          echo "✅ npm ci succeeded"
-        else
-          echo "❌ npm ci failed, checking lockfile compatibility..."
-          
-          # Check lockfile version and npm compatibility
-          LOCKFILE_VERSION=$(node -p "require('./package-lock.json').lockfileVersion")
-          NPM_VERSION=$(npm --version | cut -d. -f1)
-          
-          if [ "$LOCKFILE_VERSION" -ge 3 ] && [ "$NPM_VERSION" -lt 7 ]; then
-            echo "⚠️ Lockfile version $LOCKFILE_VERSION requires npm 7+, but found npm $NPM_VERSION"
-            echo "Updating npm to latest version..."
-            npm install -g npm@latest
-            echo "Updated npm version: $(npm --version)"
-            
-            # Try npm ci again with updated npm
-            if npm ci --verbose; then
-              echo "✅ npm ci succeeded after npm update"
-            else
-              echo "❌ npm ci still failed, falling back to npm install..."
-              npm install --verbose
-            fi
-          else
-            echo "❌ npm ci failed for other reasons, trying npm install as fallback..."
-            npm install --verbose
-          fi
-        fi
+        echo "Installing dependencies with npm ci..."
+        npm ci --verbose
+      working-directory: asset-tag-frontend
 
     - name: Build frontend
-      run: |
-        cd asset-tag-frontend
-        npm run build
+      run: npm run build
+      working-directory: asset-tag-frontend
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -285,46 +177,19 @@ jobs:
       with:
         node-version: '20.x'
         registry-url: 'https://registry.npmjs.org'
+        cache: 'npm'
+        cache-dependency-path: 'asset-tag-frontend/package-lock.json'
 
     - name: Install dependencies
       run: |
-        cd asset-tag-frontend
         npm --version
-        echo "Attempting npm ci..."
-        
-        # Try npm ci first
-        if npm ci --verbose; then
-          echo "✅ npm ci succeeded"
-        else
-          echo "❌ npm ci failed, checking lockfile compatibility..."
-          
-          # Check lockfile version and npm compatibility
-          LOCKFILE_VERSION=$(node -p "require('./package-lock.json').lockfileVersion")
-          NPM_VERSION=$(npm --version | cut -d. -f1)
-          
-          if [ "$LOCKFILE_VERSION" -ge 3 ] && [ "$NPM_VERSION" -lt 7 ]; then
-            echo "⚠️ Lockfile version $LOCKFILE_VERSION requires npm 7+, but found npm $NPM_VERSION"
-            echo "Updating npm to latest version..."
-            npm install -g npm@latest
-            echo "Updated npm version: $(npm --version)"
-            
-            # Try npm ci again with updated npm
-            if npm ci --verbose; then
-              echo "✅ npm ci succeeded after npm update"
-            else
-              echo "❌ npm ci still failed, falling back to npm install..."
-              npm install --verbose
-            fi
-          else
-            echo "❌ npm ci failed for other reasons, trying npm install as fallback..."
-            npm install --verbose
-          fi
-        fi
+        echo "Installing dependencies with npm ci..."
+        npm ci --verbose
+      working-directory: asset-tag-frontend
 
     - name: Run tests with coverage
-      run: |
-        cd asset-tag-frontend
-        npm run test:coverage
+      run: npm run test:coverage
+      working-directory: asset-tag-frontend
 
     - name: Upload frontend coverage to Codecov
       uses: codecov/codecov-action@v3
