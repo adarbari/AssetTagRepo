@@ -102,6 +102,7 @@ class TestAssetsAPI:
 
         asset2_data = sample_asset_data.copy()
         asset2_data["name"] = "Bulldozer B"
+        asset2_data["serial_number"] = "BUL-002"  # Different serial number
         asset2_data["asset_type"] = "bulldozer"
         asset2_data["status"] = "maintenance"
 
