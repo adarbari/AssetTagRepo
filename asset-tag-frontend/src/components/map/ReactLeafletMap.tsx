@@ -5,20 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Checkbox } from '../ui/checkbox';
 import { Badge } from '../ui/badge';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
-import { Slider } from '../ui/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar } from '../ui/calendar';
-import { StatusBadge } from '../common/StatusBadge';
 import { useOverlayState } from '../../hooks/useOverlayState';
 import { mockAssets as sharedMockAssets, mockGeofences as sharedMockGeofences } from '../../data/mockData';
 import { Asset, Geofence } from '../../types';
 import { format } from 'date-fns';
 import {
   Search,
-  Layers,
   MapPin,
   Truck,
   Wrench,
@@ -28,26 +23,18 @@ import {
   Clock,
   X,
   ArrowLeft,
-  ChevronDown,
-  ChevronRight,
-  ChevronLeft,
   Play,
   Pause,
   SkipForward,
   SkipBack,
   CalendarIcon,
-  Activity,
+  Settings,
   Filter,
-  Focus,
   List,
   Maximize2,
   Minimize2,
-  CheckSquare,
-  Square,
   Eye,
   EyeOff,
-  Info,
-  GripVertical,
 } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
@@ -135,15 +122,27 @@ export function ReactLeafletMap({
   const [showAssetMarkers, setShowAssetMarkers] = useState(true);
   const [localShowGeofences, setLocalShowGeofences] = useState(showGeofences);
   const [localShowPaths, setLocalShowPaths] = useState(showPaths);
+  
+  // Secondary controls state
+  const [showAllAssets, setShowAllAssets] = useState(true);
+  const [showSelectedOnly, setShowSelectedOnly] = useState(false);
+  const [localPlaybackSpeed, setLocalPlaybackSpeed] = useState(playbackSpeed);
+  
+  // Date range picker state
+  const [isDateRangeOpen, setIsDateRangeOpen] = useState(false);
+  const [tempStartDate, setTempStartDate] = useState<Date | undefined>(timeRange?.start);
+  const [tempEndDate, setTempEndDate] = useState<Date | undefined>(timeRange?.end);
+  const [selectedRange, setSelectedRange] = useState<{from: Date | undefined, to: Date | undefined}>({
+    from: timeRange?.start,
+    to: timeRange?.end
+  });
 
-  // Overlay states
-  const [isLayersOpen, toggleLayers] = useOverlayState('layers', false);
+  // Overlay states (keeping for potential future use)
   const [isPlaybackOpen, togglePlayback] = useOverlayState('playback', false);
 
   console.log('🚀 Component state:', { 
     searchText, 
     selectedAsset, 
-    isLayersOpen, 
     isPlaybackOpen,
     assetsCount: assets.length 
   });
@@ -347,25 +346,30 @@ export function ReactLeafletMap({
 
         {/* Main Content */}
         <div 
-          className="gap-6 flex-1 min-h-0" 
-          style={{ 
-            display: 'flex',
-            flexDirection: window.innerWidth >= 1024 ? 'row' : 'column'
-          }}
+          className="gap-6 flex-1 min-h-0 flex flex-col" 
         >
-          {/* Map Area with Overlays - takes remaining space */}
+          {/* Map and Asset Panel Row */}
           <div 
-            className="relative"
+            className="gap-6 flex-1 min-h-0" 
             style={{ 
-              flex: 1,
-              minWidth: 0
+              display: 'flex',
+              flexDirection: window.innerWidth >= 1024 ? 'row' : 'column',
+              height: 'calc(100vh - 200px)' // Fixed height to prevent overflow
             }}
           >
-            {/* Map Container */}
+            {/* Map Area with Overlays - takes remaining space */}
             <div 
-              className="w-full h-full rounded-lg border overflow-hidden relative bg-gray-100"
-              style={{ minHeight: '400px' }}
+              className="relative flex flex-col"
+              style={{ 
+                flex: 1,
+                minWidth: 0
+              }}
             >
+              {/* Map Container */}
+              <div 
+                className="w-full rounded-lg border overflow-hidden relative bg-gray-100"
+                style={{ height: '100%' }}
+              >
               <MapContainer
                 center={[37.7749, -122.4194]}
                 zoom={13}
@@ -509,108 +513,7 @@ export function ReactLeafletMap({
                 </Card>
               </div>
 
-              {/* Layers Overlay */}
-              <div className="absolute top-4 right-4 z-10">
-                <Popover open={isLayersOpen} onOpenChange={toggleLayers}>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm" className="bg-background/90 backdrop-blur-sm">
-                      <Layers className="h-4 w-4 mr-2" />
-                      Layers
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-64" align="end">
-                    <div className="space-y-3">
-                      <h4 className="font-medium">Map Layers</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox 
-                            id="assets" 
-                            checked={showAssetMarkers}
-                            onCheckedChange={(checked) => setShowAssetMarkers(checked as boolean)}
-                          />
-                          <label htmlFor="assets" className="text-sm">Asset Markers</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox 
-                            id="geofences" 
-                            checked={localShowGeofences}
-                            onCheckedChange={(checked) => setLocalShowGeofences(checked as boolean)}
-                          />
-                          <label htmlFor="geofences" className="text-sm">Geofences</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox 
-                            id="paths" 
-                            checked={localShowPaths}
-                            onCheckedChange={(checked) => setLocalShowPaths(checked as boolean)}
-                          />
-                          <label htmlFor="paths" className="text-sm">Asset Paths</label>
-                        </div>
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
 
-              {/* Playback Controls Overlay */}
-              <div className="absolute bottom-4 right-4 z-10">
-                <Popover open={isPlaybackOpen} onOpenChange={togglePlayback}>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm" className="bg-background/90 backdrop-blur-sm">
-                      <Play className="h-4 w-4 mr-2" />
-                      Playback
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80" align="end">
-                    <div className="space-y-4">
-                      <h4 className="font-medium">Historical Playback</h4>
-                      
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Time Range</label>
-                        <div className="flex items-center space-x-2">
-                          <Calendar className="h-4 w-4" />
-                          <span className="text-sm text-muted-foreground">
-                            {timeRange ? format(timeRange.start, 'MMM dd, yyyy') : 'No range set'}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Playback Speed</label>
-                        <Slider
-                          value={[playbackSpeed]}
-                          onValueChange={(value) => console.log('Speed changed:', value)}
-                          max={5}
-                          min={0.5}
-                          step={0.5}
-                          className="w-full"
-                        />
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>0.5x</span>
-                          <span>5x</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <Button size="sm" variant="outline">
-                            <SkipBack className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" onClick={onPlayPause}>
-                            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <SkipForward className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <Button size="sm" variant="outline">
-                          <Maximize2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
             </div>
           </div>
 
@@ -629,8 +532,8 @@ export function ReactLeafletMap({
                   Assets ({filteredAssets.length})
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-0 flex-1 flex flex-col">
-                <div className="flex-1 overflow-y-auto" style={{ maxHeight: '600px' }}>
+              <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
+                <div className="flex-1 overflow-y-auto">
                   {filteredAssets.map(asset => (
                     <div
                       key={asset.id}
@@ -672,6 +575,345 @@ export function ReactLeafletMap({
                   ))}
                 </div>
               </CardContent>
+            </Card>
+          </div>
+          </div>
+
+          {/* Professional Playback Controls Bar - Below Map and Asset Panel */}
+          <div className="mt-4">
+            <Card className="p-0 overflow-hidden">
+              {/* Main Playback Bar */}
+              <div className="bg-gradient-to-r from-slate-50 to-slate-100 border-b">
+                <div className="px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    {/* Left Controls Group */}
+                    <div className="flex items-center space-x-3">
+                      {/* Play/Pause Button - Primary Control */}
+                      <Button 
+                        size="sm" 
+                        onClick={onPlayPause}
+                        className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90 shadow-md"
+                      >
+                        {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+                      </Button>
+                      
+                      {/* Skip Controls */}
+                      <div className="flex items-center space-x-1">
+                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <SkipBack className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <SkipForward className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      
+                      {/* Time Display */}
+                      <div className="flex items-center space-x-2 text-sm font-mono">
+                        <span className="text-slate-600">00:00</span>
+                        <span className="text-slate-400">/</span>
+                        <span className="text-slate-500">24:00</span>
+                      </div>
+                    </div>
+
+                    {/* Center - Timeline Scrubber */}
+                    <div className="flex-1 mx-6">
+                      <div className="relative">
+                        {/* Timeline Track */}
+                        <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                          {/* Progress Fill */}
+                          <div 
+                            className="h-full bg-primary rounded-full transition-all duration-200"
+                            style={{ width: '25%' }}
+                          />
+                        </div>
+                        {/* Scrubber Handle */}
+                        <div 
+                          className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform"
+                          style={{ left: '25%', marginLeft: '-8px' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Right Controls Group */}
+                    <div className="flex items-center space-x-3">
+                      {/* Speed Control */}
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-slate-600 font-medium">Speed</span>
+                        <div className="flex items-center space-x-1">
+                          <Button 
+                            size="sm" 
+                            variant={localPlaybackSpeed === 0.5 ? "default" : "ghost"}
+                            className="h-7 px-2 text-xs"
+                            onClick={() => {
+                              setLocalPlaybackSpeed(0.5);
+                              console.log('Speed changed to: 0.5x');
+                            }}
+                          >
+                            0.5x
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant={localPlaybackSpeed === 1 ? "default" : "ghost"}
+                            className="h-7 px-2 text-xs"
+                            onClick={() => {
+                              setLocalPlaybackSpeed(1);
+                              console.log('Speed changed to: 1x');
+                            }}
+                          >
+                            1x
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant={localPlaybackSpeed === 2 ? "default" : "ghost"}
+                            className="h-7 px-2 text-xs"
+                            onClick={() => {
+                              setLocalPlaybackSpeed(2);
+                              console.log('Speed changed to: 2x');
+                            }}
+                          >
+                            2x
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant={localPlaybackSpeed === 4 ? "default" : "ghost"}
+                            className="h-7 px-2 text-xs"
+                            onClick={() => {
+                              setLocalPlaybackSpeed(4);
+                              console.log('Speed changed to: 4x');
+                            }}
+                          >
+                            4x
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Date Range Picker */}
+                      <Popover open={isDateRangeOpen} onOpenChange={setIsDateRangeOpen}>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-8 px-3 text-xs">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            {selectedRange.from && selectedRange.to 
+                              ? `${format(selectedRange.from, 'MMM dd')} - ${format(selectedRange.to, 'MMM dd')}` 
+                              : 'Select Range'}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="end" side="bottom" sideOffset={5}>
+                          <div className="p-4">
+                            <div className="space-y-4">
+                              <div className="space-y-2">
+                                <h4 className="font-medium text-sm">Select Time Range</h4>
+                                <p className="text-xs text-muted-foreground">Click to select start and end dates</p>
+                              </div>
+                              
+                              {/* Quick Preset Buttons */}
+                              <div className="flex items-center justify-between">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="text-xs"
+                                  onClick={() => {
+                                    const today = new Date();
+                                    const yesterday = new Date(today);
+                                    yesterday.setDate(yesterday.getDate() - 1);
+                                    setSelectedRange({ from: yesterday, to: today });
+                                    setTempStartDate(yesterday);
+                                    setTempEndDate(today);
+                                  }}
+                                >
+                                  Last 24h
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="text-xs"
+                                  onClick={() => {
+                                    const today = new Date();
+                                    const weekAgo = new Date(today);
+                                    weekAgo.setDate(weekAgo.getDate() - 7);
+                                    setSelectedRange({ from: weekAgo, to: today });
+                                    setTempStartDate(weekAgo);
+                                    setTempEndDate(today);
+                                  }}
+                                >
+                                  Last 7 days
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="text-xs"
+                                  onClick={() => {
+                                    const today = new Date();
+                                    const monthAgo = new Date(today);
+                                    monthAgo.setDate(monthAgo.getDate() - 30);
+                                    setSelectedRange({ from: monthAgo, to: today });
+                                    setTempStartDate(monthAgo);
+                                    setTempEndDate(today);
+                                  }}
+                                >
+                                  Last 30 days
+                                </Button>
+                              </div>
+                              
+                              {/* Calendar for Date Range Selection */}
+                              <div className="border rounded-lg p-3 bg-white">
+                                <Calendar
+                                  mode="range"
+                                  selected={selectedRange}
+                                  onSelect={(range) => {
+                                    if (range?.from && range?.to) {
+                                      setSelectedRange({ from: range.from, to: range.to });
+                                      setTempStartDate(range.from);
+                                      setTempEndDate(range.to);
+                                    } else if (range?.from) {
+                                      setSelectedRange({ from: range.from, to: undefined });
+                                      setTempStartDate(range.from);
+                                    }
+                                  }}
+                                  numberOfMonths={1}
+                                  className="rounded-md"
+                                  disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                                />
+                              </div>
+                              
+                              {/* Selected Range Display */}
+                              {selectedRange.from && selectedRange.to && (
+                                <div className="bg-slate-50 rounded-lg p-3">
+                                  <div className="text-xs text-slate-600 mb-1">Selected Range:</div>
+                                  <div className="text-sm font-medium">
+                                    {format(selectedRange.from, 'MMM dd, yyyy')} - {format(selectedRange.to, 'MMM dd, yyyy')}
+                                  </div>
+                                  <div className="text-xs text-slate-500 mt-1">
+                                    {Math.ceil((selectedRange.to.getTime() - selectedRange.from.getTime()) / (1000 * 60 * 60 * 24))} days
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Action Buttons */}
+                              <div className="flex justify-end space-x-2 pt-2 border-t">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="text-xs"
+                                  onClick={() => {
+                                    setSelectedRange({ from: timeRange?.start, to: timeRange?.end });
+                                    setTempStartDate(timeRange?.start);
+                                    setTempEndDate(timeRange?.end);
+                                    setIsDateRangeOpen(false);
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  className="text-xs"
+                                  onClick={() => {
+                                    if (selectedRange.from && selectedRange.to) {
+                                      console.log('Applying date range:', { 
+                                        start: selectedRange.from, 
+                                        end: selectedRange.to 
+                                      });
+                                      // Here you would update the actual timeRange prop
+                                      setIsDateRangeOpen(false);
+                                    }
+                                  }}
+                                  disabled={!selectedRange.from || !selectedRange.to}
+                                >
+                                  Apply Range
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+
+                      {/* Fullscreen */}
+                      <div className="flex items-center space-x-1">
+                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <Maximize2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Secondary Controls Row */}
+              <div className="px-6 py-3 bg-white border-t">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    {/* Asset Selection */}
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-slate-600 font-medium">Show:</span>
+                      <div className="flex items-center space-x-1">
+                        <Button 
+                          size="sm" 
+                          variant={showAllAssets ? "default" : "ghost"} 
+                          className="h-7 px-3 text-xs"
+                          onClick={() => {
+                            setShowAllAssets(true);
+                            setShowSelectedOnly(false);
+                          }}
+                        >
+                          All Assets
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={showSelectedOnly ? "default" : "ghost"} 
+                          className="h-7 px-3 text-xs"
+                          onClick={() => {
+                            setShowAllAssets(false);
+                            setShowSelectedOnly(true);
+                          }}
+                        >
+                          Selected ({selectedAssets.length})
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Layer Controls */}
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-slate-600 font-medium">Layers:</span>
+                      <div className="flex items-center space-x-1">
+                        <Button 
+                          size="sm" 
+                          variant={showAssetMarkers ? "default" : "ghost"} 
+                          className="h-7 px-2 text-xs"
+                          onClick={() => setShowAssetMarkers(!showAssetMarkers)}
+                        >
+                          {showAssetMarkers ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
+                          Assets
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={localShowGeofences ? "default" : "ghost"} 
+                          className="h-7 px-2 text-xs"
+                          onClick={() => setLocalShowGeofences(!localShowGeofences)}
+                        >
+                          {localShowGeofences ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
+                          Geofences
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={localShowPaths ? "default" : "ghost"} 
+                          className="h-7 px-2 text-xs"
+                          onClick={() => setLocalShowPaths(!localShowPaths)}
+                        >
+                          {localShowPaths ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
+                          Paths
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    {/* Status Indicator */}
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-sm text-slate-600">Live</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </Card>
           </div>
         </div>
