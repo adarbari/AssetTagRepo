@@ -11,15 +11,14 @@ from sqlalchemy.orm import declarative_base
 
 from config.database import Base
 
-# Test database URL - use file-based SQLite to avoid UUID issues
-TEST_DATABASE_URL = "sqlite+aiosqlite:///./test_integration.db"
+# Test database URL - use PostgreSQL to support UUID types
+TEST_DATABASE_URL = "postgresql+asyncpg://dev_user:dev_pass@localhost:5432/asset_tag"
 
-# Create test engine with SQLite-specific configuration
+# Create test engine with PostgreSQL configuration
 test_engine = create_async_engine(
     TEST_DATABASE_URL,
     echo=False,
     future=True,
-    connect_args={"check_same_thread": False},
 )
 
 # Create test session factory
