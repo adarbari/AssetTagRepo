@@ -15,6 +15,13 @@ export function PathPolylines({
 }: PathPolylinesProps) {
   const visibleHistories = histories.filter(h => selectedAssets.includes(h.assetId));
   
+  console.log('🛤️ PathPolylines rendering:', {
+    totalHistories: histories.length,
+    selectedAssets: selectedAssets,
+    visibleHistories: visibleHistories.length,
+    visibleAssetIds: visibleHistories.map(h => h.assetId)
+  });
+  
   return (
     <>
       {visibleHistories.map(history => {

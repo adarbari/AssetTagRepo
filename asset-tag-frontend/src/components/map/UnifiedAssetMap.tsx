@@ -235,8 +235,15 @@ export function UnifiedAssetMap({
   // Playback mode handlers
   const handleEnterPlaybackMode = () => {
     // Only load historical data for focused assets (selectedAssets)
-    // If no assets are focused, show a message or focus all assets
-    const focusedAssetIds = selectedAssets.length > 0 ? selectedAssets : filteredAssets.map(asset => asset.id);
+    // If no assets are focused, we should not enter playback mode or show a message
+    if (selectedAssets.length === 0) {
+      console.warn('⚠️ No assets selected for playback mode. Please select assets first.');
+      // Optionally show a toast or alert to user
+      alert('Please select at least one asset before entering playback mode.');
+      return;
+    }
+    
+    const focusedAssetIds = selectedAssets;
     
     console.log('🎬 Entering playback mode with focused assets:', {
       focusedCount: selectedAssets.length,

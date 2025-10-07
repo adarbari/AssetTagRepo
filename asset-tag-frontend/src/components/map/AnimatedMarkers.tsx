@@ -26,6 +26,13 @@ export function AnimatedMarkers({
 }: AnimatedMarkersProps) {
   const visibleHistories = histories.filter(h => selectedAssets.includes(h.assetId));
   
+  console.log('📍 AnimatedMarkers rendering:', {
+    totalHistories: histories.length,
+    selectedAssets: selectedAssets,
+    visibleHistories: visibleHistories.length,
+    visibleAssetIds: visibleHistories.map(h => h.assetId)
+  });
+  
   return (
     <>
       {visibleHistories.map(history => {
