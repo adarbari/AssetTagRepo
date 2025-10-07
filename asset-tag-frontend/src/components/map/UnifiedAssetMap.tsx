@@ -309,11 +309,11 @@ export function UnifiedAssetMap({
         </div>
       </div>
 
-      {/* Top Search Bar - Responsive */}
+      {/* Top Search Bar - Single Line Layout */}
       <div className='border-b bg-background p-4 -mx-6 mb-6'>
-        <div className='flex flex-col md:flex-row items-stretch md:items-center gap-4'>
-          {/* Search Input */}
-          <div className='flex-1 relative'>
+        <div className='flex items-center gap-4'>
+          {/* Search Input - Takes remaining space */}
+          <div className='flex-1 relative min-w-0'>
             <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
             <Input
               placeholder='Search assets by name or ID...'
@@ -333,41 +333,38 @@ export function UnifiedAssetMap({
             )}
           </div>
 
-          {/* Filters Row */}
-          <div className='flex items-center gap-4'>
-            {/* Type Filter */}
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className='w-32 md:w-40'>
-                <SelectValue placeholder='Type' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Types</SelectItem>
-                <SelectItem value='Vehicle'>Vehicles</SelectItem>
-                <SelectItem value='Tools'>Tools</SelectItem>
-                <SelectItem value='Equipment'>Equipment</SelectItem>
-                <SelectItem value='Heavy Equipment'>Heavy Equipment</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Type Filter */}
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className='w-32 md:w-40 flex-shrink-0'>
+              <SelectValue placeholder='Type' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>All Types</SelectItem>
+              <SelectItem value='Vehicle'>Vehicles</SelectItem>
+              <SelectItem value='Tools'>Tools</SelectItem>
+              <SelectItem value='Equipment'>Equipment</SelectItem>
+              <SelectItem value='Heavy Equipment'>Heavy Equipment</SelectItem>
+            </SelectContent>
+          </Select>
 
-            {/* Status Filter */}
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className='w-32 md:w-40'>
-                <SelectValue placeholder='Status' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>All Status</SelectItem>
-                <SelectItem value='active'>Active</SelectItem>
-                <SelectItem value='checked-out'>Checked Out</SelectItem>
-                <SelectItem value='maintenance'>Maintenance</SelectItem>
-                <SelectItem value='idle'>Idle</SelectItem>
-                <SelectItem value='offline'>Offline</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Status Filter */}
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className='w-32 md:w-40 flex-shrink-0'>
+              <SelectValue placeholder='Status' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>All Status</SelectItem>
+              <SelectItem value='active'>Active</SelectItem>
+              <SelectItem value='checked-out'>Checked Out</SelectItem>
+              <SelectItem value='maintenance'>Maintenance</SelectItem>
+              <SelectItem value='idle'>Idle</SelectItem>
+              <SelectItem value='offline'>Offline</SelectItem>
+            </SelectContent>
+          </Select>
 
-            {/* Results Count */}
-            <div className='text-sm text-muted-foreground hidden sm:block'>
-              {filteredAssets.length} assets
-            </div>
+          {/* Results Count */}
+          <div className='text-sm text-muted-foreground hidden sm:block flex-shrink-0'>
+            {filteredAssets.length} assets
           </div>
         </div>
       </div>
