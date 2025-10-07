@@ -93,8 +93,7 @@ class Settings(BaseSettings):
         """Get database URL for SQLAlchemy"""
         if self.database_url_override:
             return self.database_url_override
-        if self.environment == Environment.TEST:
-            return "sqlite+aiosqlite:///./test_integration.db"
+        # Use PostgreSQL for all environments including test (SQLite doesn't support UUID types)
         return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
 
     @property
