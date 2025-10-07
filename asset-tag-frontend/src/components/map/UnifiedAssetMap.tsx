@@ -252,7 +252,8 @@ export function UnifiedAssetMap({
   const mapContainerClass = 'min-h-[600px] flex-1';
 
   return (
-    <PageLayout variant='full' padding='md' className='min-h-screen flex flex-col'>
+    <>
+      <PageLayout variant='full' padding='md' className={`min-h-screen flex flex-col ${showPlaybackPanel ? 'pb-32' : ''}`}>
       {/* Header */}
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-4'>
@@ -629,32 +630,34 @@ export function UnifiedAssetMap({
         </div>
       </div>
 
-      {/* Playback Control Panel */}
-      {showPlaybackPanel && (
-        <div className="animate-in slide-in-from-bottom-4 duration-300 mt-6">
-          <PlaybackControlPanel
-            isPlaying={playbackState.isPlaying}
-            playbackSpeed={playbackState.playbackSpeed}
-            currentTime={playbackState.currentTime}
-            timeRange={playbackState.timeRange}
-            progress={playbackState.progress}
-            showPaths={playbackState.showPaths}
-            showMarkers={playbackState.showMarkers}
-            selectedAssetsCount={playbackState.selectedAssets.length}
-            onPlayPause={playbackState.playPause}
-            onSkipBack={playbackState.skipBack}
-            onSkipForward={playbackState.skipForward}
-            onReset={playbackState.reset}
-            onSpeedChange={playbackState.setPlaybackSpeed}
-            onTimeChange={playbackState.setCurrentTime}
-            onShowPathsChange={playbackState.setShowPaths}
-            onShowMarkersChange={playbackState.setShowMarkers}
-            onDateRangeChange={playbackState.setDateRange}
-            onClose={handleExitPlaybackMode}
-            selectedDateRange={playbackState.selectedDateRange}
-          />
-        </div>
-      )}
     </PageLayout>
+
+    {/* Playback Control Panel - Fixed at bottom of page */}
+    {showPlaybackPanel && (
+      <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom-4 duration-300">
+        <PlaybackControlPanel
+          isPlaying={playbackState.isPlaying}
+          playbackSpeed={playbackState.playbackSpeed}
+          currentTime={playbackState.currentTime}
+          timeRange={playbackState.timeRange}
+          progress={playbackState.progress}
+          showPaths={playbackState.showPaths}
+          showMarkers={playbackState.showMarkers}
+          selectedAssetsCount={playbackState.selectedAssets.length}
+          onPlayPause={playbackState.playPause}
+          onSkipBack={playbackState.skipBack}
+          onSkipForward={playbackState.skipForward}
+          onReset={playbackState.reset}
+          onSpeedChange={playbackState.setPlaybackSpeed}
+          onTimeChange={playbackState.setCurrentTime}
+          onShowPathsChange={playbackState.setShowPaths}
+          onShowMarkersChange={playbackState.setShowMarkers}
+          onDateRangeChange={playbackState.setDateRange}
+          onClose={handleExitPlaybackMode}
+          selectedDateRange={playbackState.selectedDateRange}
+        />
+      </div>
+    )}
+    </>
   );
 }
