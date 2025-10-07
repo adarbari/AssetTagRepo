@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { AppSidebar } from './components/AppSidebar';
-import { SidebarProvider } from './components/ui/sidebar';
+import { SidebarProvider, SidebarInset } from './components/ui/sidebar';
 import { Button } from './components/ui/button';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { AssetInventory } from './components/assets/AssetInventory';
@@ -679,15 +679,15 @@ function AppContent() {
 
   return (
     <SidebarProvider>
-      <div className='flex h-screen bg-background'>
-        <AppSidebar
-          currentView={currentView}
-          onViewChange={handleViewChange}
-          onAlertTypeClick={handleAlertTypeClick}
-        />
-        <main className='flex-1 overflow-auto'>{renderCurrentView()}</main>
-        <Toaster />
-      </div>
+      <AppSidebar
+        currentView={currentView}
+        onViewChange={handleViewChange}
+        onAlertTypeClick={handleAlertTypeClick}
+      />
+      <SidebarInset>
+        {renderCurrentView()}
+      </SidebarInset>
+      <Toaster />
     </SidebarProvider>
   );
 }
