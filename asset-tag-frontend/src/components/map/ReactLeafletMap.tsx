@@ -252,9 +252,22 @@ export function ReactLeafletMap({
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-6 min-h-0" style={{ height: '600px' }}>
+        <div 
+          className="gap-6 min-h-0" 
+          style={{ 
+            height: '600px',
+            display: 'flex',
+            flexDirection: window.innerWidth >= 1024 ? 'row' : 'column'
+          }}
+        >
           {/* Map Area with Overlays - takes remaining space */}
-          <div className="flex-1 relative">
+          <div 
+            className="relative"
+            style={{ 
+              flex: 1,
+              minWidth: 0
+            }}
+          >
             {/* Map Container */}
             <div 
               className="w-full h-full rounded-lg border overflow-hidden relative bg-gray-100"
@@ -441,7 +454,13 @@ export function ReactLeafletMap({
           </div>
 
           {/* Right Panel - Asset List */}
-          <div className="w-full lg:w-80 flex-shrink-0 h-full">
+          <div 
+            className="h-full"
+            style={{ 
+              width: window.innerWidth >= 1024 ? '320px' : '100%',
+              flexShrink: 0
+            }}
+          >
             <Card className="h-full flex flex-col">
               <CardHeader className="flex-shrink-0">
                 <CardTitle className="flex items-center">
