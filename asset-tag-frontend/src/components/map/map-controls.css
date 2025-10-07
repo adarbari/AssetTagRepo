@@ -1,0 +1,314 @@
+/* Map Controls Panel Styles */
+
+/* Mobile Drawer Animations */
+.map-controls-mobile-collapsed {
+  transform: translateY(calc(100% - 60px));
+  transition: transform 300ms ease-in-out;
+}
+
+.map-controls-mobile-expanded {
+  transform: translateY(0);
+  transition: transform 300ms ease-in-out;
+}
+
+/* When inside a map container */
+.map-controls-panel {
+  position: relative;
+  z-index: 20;
+}
+
+/* Panel Transitions */
+.map-controls-panel {
+  transition: all 300ms ease-in-out;
+}
+
+.map-controls-panel-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.map-controls-panel-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
+.map-controls-panel-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.map-controls-panel-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
+/* Collapsible Group Animations */
+.map-controls-group-content {
+  overflow: hidden;
+  transition: height 300ms ease-in-out;
+}
+
+.map-controls-group-trigger {
+  transition: background-color 150ms ease-out;
+}
+
+.map-controls-group-trigger:hover {
+  background-color: hsl(var(--accent) / 0.1);
+}
+
+/* Layer Item Hover Effects */
+.map-controls-layer-item {
+  transition: all 150ms ease-out;
+}
+
+.map-controls-layer-item:hover {
+  background-color: hsl(var(--accent) / 0.05);
+  transform: translateX(2px);
+}
+
+/* Legend Item Interactions */
+.map-controls-legend-item {
+  transition: all 150ms ease-out;
+  cursor: pointer;
+}
+
+.map-controls-legend-item:hover {
+  background-color: hsl(var(--accent) / 0.1);
+  transform: translateX(2px);
+}
+
+.map-controls-legend-item:active {
+  transform: translateX(1px) scale(0.98);
+}
+
+/* Opacity Slider Styling */
+.map-controls-opacity-slider {
+  transition: opacity 200ms ease-out;
+}
+
+.map-controls-opacity-slider:hover {
+  opacity: 1;
+}
+
+/* Badge Animations */
+.map-controls-badge {
+  transition: all 200ms ease-out;
+}
+
+.map-controls-badge:hover {
+  transform: scale(1.05);
+}
+
+/* Tab Transitions */
+.map-controls-tab-trigger {
+  transition: all 200ms ease-out;
+}
+
+.map-controls-tab-trigger[data-state="active"] {
+  transform: translateY(-1px);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .map-controls-mobile-collapsed {
+    transform: translateY(calc(100% - 50px));
+  }
+  
+  .map-controls-mobile-expanded {
+    position: fixed;
+    width: 100vw;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0;
+    border-radius: 16px 16px 0 0;
+    max-height: 70vh;
+    overflow-y: auto;
+    z-index: 50;
+  }
+  
+  /* Touch-friendly targets */
+  .map-controls-layer-item,
+  .map-controls-legend-item,
+  .map-controls-group-trigger {
+    min-height: 44px;
+    padding: 12px;
+  }
+  
+  /* Larger touch targets for mobile */
+  .map-controls-checkbox {
+    transform: scale(1.2);
+  }
+  
+  .map-controls-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Swipe indicator */
+  .map-controls-mobile-expanded::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background-color: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
+  }
+}
+
+/* Desktop Enhancements */
+@media (min-width: 769px) {
+  .map-controls-panel {
+    max-width: 320px;
+    min-width: 280px;
+  }
+  
+  /* Hover effects for desktop */
+  .map-controls-panel:hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  /* Resize handle (future enhancement) */
+  .map-controls-resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    cursor: col-resize;
+    background: transparent;
+    transition: background-color 200ms ease-out;
+  }
+  
+  .map-controls-resize-handle:hover {
+    background-color: hsl(var(--primary) / 0.3);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .map-controls-panel {
+    background-color: hsl(var(--background) / 0.95);
+    border-color: hsl(var(--border) / 0.8);
+  }
+  
+  .map-controls-layer-item:hover,
+  .map-controls-legend-item:hover {
+    background-color: hsl(var(--accent) / 0.15);
+  }
+  
+  .map-controls-group-trigger:hover {
+    background-color: hsl(var(--accent) / 0.1);
+  }
+}
+
+/* Focus States for Accessibility */
+.map-controls-layer-item:focus,
+.map-controls-legend-item:focus,
+.map-controls-group-trigger:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.map-controls-checkbox:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Loading States */
+.map-controls-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.map-controls-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--muted) / 0.2),
+    transparent
+  );
+  animation: map-controls-shimmer 1.5s infinite;
+}
+
+@keyframes map-controls-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Smooth Transitions for All Interactive Elements */
+.map-controls-panel * {
+  transition: all 150ms ease-out;
+}
+
+/* Custom Scrollbar */
+.map-controls-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.map-controls-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.map-controls-panel::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+.map-controls-panel::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .map-controls-panel {
+    border: 2px solid hsl(var(--foreground));
+  }
+  
+  .map-controls-layer-item,
+  .map-controls-legend-item {
+    border: 1px solid hsl(var(--border));
+  }
+  
+  .map-controls-layer-item:hover,
+  .map-controls-legend-item:hover {
+    border-color: hsl(var(--primary));
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .map-controls-panel,
+  .map-controls-layer-item,
+  .map-controls-legend-item,
+  .map-controls-group-trigger,
+  .map-controls-badge {
+    transition: none;
+  }
+  
+  .map-controls-mobile-collapsed,
+  .map-controls-mobile-expanded {
+    transition: none;
+  }
+  
+  .map-controls-panel-enter,
+  .map-controls-panel-enter-active,
+  .map-controls-panel-exit,
+  .map-controls-panel-exit-active {
+    transition: none;
+  }
+}

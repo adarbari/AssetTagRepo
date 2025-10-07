@@ -41,6 +41,9 @@ import {
   GripVertical,
   History,
   X,
+  Shield,
+  Building,
+  Route,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import L from 'leaflet';
@@ -52,7 +55,9 @@ import { AnimatedMarkers } from './AnimatedMarkers';
 import { PathPolylines } from './PathPolylines';
 import { PlaybackMapUpdater } from './PlaybackMapUpdater';
 import { usePlaybackState } from './usePlaybackState';
+import { MapControlPanel } from './MapControlPanel';
 import './playback.css';
+import './map-controls.css';
 
 // Fix for default markers in react-leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -117,7 +122,6 @@ export function UnifiedAssetMap({
   // Map refs
   const mapRef = useRef<any>(null);
   const mapInstanceRef = useRef<any>(null);
-  const layerOverlayRef = useRef<HTMLDivElement>(null);
 
   // State management
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -129,12 +133,18 @@ export function UnifiedAssetMap({
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [showGeofences, setShowGeofences] = useState(true);
   const [showSites, setShowSites] = useState(true);
+  
+  // Layer management state
+  const [layerOpacities, setLayerOpacities] = useState({
+    boundaries: 80,
+    assets: 100,
+    overlays: 60
+  });
+  const [showAssetMarkers, setShowAssetMarkers] = useState(true);
+  const [showAssetPaths, setShowAssetPaths] = useState(true);
 
   // Playback state
   const playbackState = usePlaybackState();
-
-  // Overlay state management with localStorage persistence
-  const [isLayerControlsExpanded, setIsLayerControlsExpanded] = useOverlayState('map-layers-expanded', false);
 
   // Filter assets based on search and filters
   const filteredAssets = sharedMockAssets.filter(asset => {
@@ -164,20 +174,6 @@ export function UnifiedAssetMap({
     
     return matches;
   });
-
-  // Click outside to close layer overlay
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (layerOverlayRef.current && !layerOverlayRef.current.contains(event.target as Node)) {
-        setIsLayerControlsExpanded(false);
-      }
-    };
-    
-    if (isLayerControlsExpanded) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isLayerControlsExpanded]);
 
 
   // Load Leaflet CSS on component mount
@@ -293,6 +289,52 @@ export function UnifiedAssetMap({
     return () => clearTimeout(timer);
   }, [viewMode, showPlaybackPanel, isAssetListCollapsed]);
 
+  // Layer management functions
+  const handleLayerToggle = (groupId: string, layerId: string, visible: boolean) => {
+    switch (groupId) {
+      case 'boundaries':
+        if (layerId === 'geofences') {
+          setShowGeofences(visible);
+        } else if (layerId === 'sites') {
+          setShowSites(visible);
+        }
+        break;
+      case 'assets':
+        if (layerId === 'markers') {
+          setShowAssetMarkers(visible);
+        } else if (layerId === 'paths') {
+          setShowAssetPaths(visible);
+        }
+        break;
+    }
+  };
+
+  const handleLayerGroupToggle = (groupId: string, visible: boolean) => {
+    switch (groupId) {
+      case 'boundaries':
+        setShowGeofences(visible);
+        setShowSites(visible);
+        break;
+      case 'assets':
+        setShowAssetMarkers(visible);
+        setShowAssetPaths(visible);
+        break;
+    }
+  };
+
+  const handleOpacityChange = (groupId: string, opacity: number) => {
+    setLayerOpacities(prev => ({
+      ...prev,
+      [groupId]: opacity
+    }));
+  };
+
+  const handleLegendItemClick = (itemId: string) => {
+    // Future enhancement: highlight/filter map features
+    console.log('Legend item clicked:', itemId);
+  };
+
+
   // Update playback selected assets when main map selection changes during playback
   useEffect(() => {
     console.log('🔍 useEffect triggered:', {
@@ -336,6 +378,79 @@ export function UnifiedAssetMap({
 
   // Map container class - use full height of available space with consistent sizing
   const mapContainerClass = 'h-full max-h-full';
+
+  // Layer groups configuration
+  const layerGroups = [
+    {
+      id: 'boundaries',
+      name: 'Boundaries',
+      icon: <Shield className="h-4 w-4" />,
+      layers: [
+        {
+          id: 'geofences',
+          name: 'Geofences',
+          icon: <Shield className="h-3 w-3" />,
+          visible: showGeofences,
+          count: sharedMockGeofences.length,
+          description: 'Geofence boundaries and restrictions'
+        },
+        {
+          id: 'sites',
+          name: 'Site Boundaries',
+          icon: <Building className="h-3 w-3" />,
+          visible: showSites,
+          count: sharedMockSites.length,
+          description: 'Site boundary definitions'
+        }
+      ],
+      defaultVisible: true,
+      opacity: layerOpacities.boundaries
+    },
+    {
+      id: 'assets',
+      name: 'Assets',
+      icon: <Truck className="h-4 w-4" />,
+      layers: [
+        {
+          id: 'markers',
+          name: 'Asset Markers',
+          icon: <MapPin className="h-3 w-3" />,
+          visible: showAssetMarkers,
+          count: filteredAssets.length,
+          description: 'Current asset positions'
+        },
+        {
+          id: 'paths',
+          name: 'Asset Paths',
+          icon: <Route className="h-3 w-3" />,
+          visible: showAssetPaths && viewMode === 'playback',
+          count: viewMode === 'playback' ? playbackState.histories.length : 0,
+          description: 'Historical asset movement paths'
+        }
+      ],
+      defaultVisible: true,
+      opacity: layerOpacities.assets
+    }
+  ];
+
+  // Legend items configuration
+  const legendItems = [
+    // Asset Status
+    { id: 'active', name: 'Active', color: '#10b981', category: 'Asset Status', visible: showAssetMarkers },
+    { id: 'idle', name: 'Idle', color: '#f59e0b', category: 'Asset Status', visible: showAssetMarkers },
+    { id: 'in-transit', name: 'In Transit', color: '#3b82f6', category: 'Asset Status', visible: showAssetMarkers },
+    { id: 'offline', name: 'Offline', color: '#6b7280', category: 'Asset Status', visible: showAssetMarkers },
+    { id: 'maintenance', name: 'Maintenance', color: '#ef4444', category: 'Asset Status', visible: showAssetMarkers },
+    
+    // Alert States
+    { id: 'violation', name: 'Violation', color: '#ef4444', category: 'Alert States', visible: violationMode },
+    { id: 'geofence-breach', name: 'Geofence Breach', color: '#dc2626', category: 'Alert States', visible: showGeofences },
+    
+    // Boundaries
+    { id: 'site-boundary', name: 'Site Boundary', color: '#10b981', category: 'Boundaries', visible: showSites },
+    { id: 'geofence-allowed', name: 'Allowed Geofence', color: '#3b82f6', category: 'Boundaries', visible: showGeofences },
+    { id: 'geofence-restricted', name: 'Restricted Geofence', color: '#ef4444', category: 'Boundaries', visible: showGeofences }
+  ];
 
   return (
     <div className="h-screen flex flex-col">
@@ -496,6 +611,7 @@ export function UnifiedAssetMap({
                   {/* Geofences */}
                   {showGeofences && sharedMockGeofences.map(geofence => {
                     if (geofence.type === 'circular' && geofence.center && geofence.radius) {
+                      const opacity = layerOpacities.boundaries / 100;
                       return (
                         <Circle
                           key={geofence.id}
@@ -504,9 +620,9 @@ export function UnifiedAssetMap({
                           pathOptions={{
                             color: geofence.geofenceType === 'restricted' ? '#ef4444' : '#3b82f6',
                             weight: 2,
-                            opacity: 0.8,
+                            opacity: 0.8 * opacity,
                             fillColor: geofence.geofenceType === 'restricted' ? '#fecaca' : '#dbeafe',
-                            fillOpacity: 0.2,
+                            fillOpacity: 0.2 * opacity,
                           }}
                         >
                           <Popup>
@@ -522,6 +638,7 @@ export function UnifiedAssetMap({
                       );
                     } else if (geofence.type === 'polygon' && geofence.coordinates) {
                       const positions = geofence.coordinates.map(coord => [coord[0], coord[1]] as [number, number]);
+                      const opacity = layerOpacities.boundaries / 100;
                       return (
                         <Polygon
                           key={geofence.id}
@@ -529,9 +646,9 @@ export function UnifiedAssetMap({
                           pathOptions={{
                             color: geofence.geofenceType === 'restricted' ? '#ef4444' : '#3b82f6',
                             weight: 2,
-                            opacity: 0.8,
+                            opacity: 0.8 * opacity,
                             fillColor: geofence.geofenceType === 'restricted' ? '#fecaca' : '#dbeafe',
-                            fillOpacity: 0.2,
+                            fillOpacity: 0.2 * opacity,
                           }}
                         >
                           <Popup>
@@ -555,6 +672,7 @@ export function UnifiedAssetMap({
                       return null;
                     }
                     
+                    const opacity = layerOpacities.boundaries / 100;
                     return (
                       <Circle
                         key={`site-${site.id}`}
@@ -563,9 +681,9 @@ export function UnifiedAssetMap({
                         pathOptions={{
                           color: '#10b981', // Green color for sites
                           weight: 2,
-                          opacity: 0.8,
+                          opacity: 0.8 * opacity,
                           fillColor: '#10b981',
-                          fillOpacity: 0.1,
+                          fillOpacity: 0.1 * opacity,
                         }}
                       >
                         <Popup>
@@ -631,7 +749,7 @@ export function UnifiedAssetMap({
                   })}
 
                   {/* Asset Markers - Only show selected/focused assets */}
-                  {filteredAssets
+                  {showAssetMarkers && filteredAssets
                     .filter(asset => selectedAssets.length === 0 || selectedAssets.includes(asset.id))
                     .map(asset => {
                       if (!asset.coordinates || asset.coordinates.length < 2) return null;
@@ -710,6 +828,7 @@ export function UnifiedAssetMap({
                       return null;
                     }
                     
+                    const opacity = layerOpacities.boundaries / 100;
                     return (
                       <Circle
                         key={`site-${site.id}`}
@@ -718,9 +837,9 @@ export function UnifiedAssetMap({
                         pathOptions={{
                           color: '#10b981', // Green color for sites
                           weight: 2,
-                          opacity: 0.8,
+                          opacity: 0.8 * opacity,
                           fillColor: '#10b981',
-                          fillOpacity: 0.1,
+                          fillOpacity: 0.1 * opacity,
                         }}
                       >
                         <Popup>
@@ -788,94 +907,20 @@ export function UnifiedAssetMap({
               )}
             </MapContainer>
 
-            {/* Map Legend Overlay - Always Visible with Transparent Background */}
-            <div className='absolute bottom-4 left-4 z-10 hidden md:block'>
-              <Card className='w-48 bg-background/90 backdrop-blur-sm shadow-lg border'>
-                <CardHeader className='pb-2 pt-3 px-3'>
-                  <CardTitle className='text-xs font-semibold'>Legend</CardTitle>
-                </CardHeader>
-                <CardContent className='px-3 pb-3'>
-                  <div className='space-y-1.5'>
-                    <div className='flex items-center gap-2'>
-                      <div className='w-3 h-3 rounded-full bg-green-500' />
-                      <span className='text-xs'>Active</span>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <div className='w-3 h-3 rounded-full bg-yellow-500' />
-                      <span className='text-xs'>Idle</span>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <div className='w-3 h-3 rounded-full bg-blue-500' />
-                      <span className='text-xs'>In Transit</span>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <div className='w-3 h-3 rounded-full bg-gray-500' />
-                      <span className='text-xs'>Offline</span>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <div className='w-3 h-3 rounded-full bg-red-500 border-2 border-white' />
-                      <span className='text-xs'>Violation</span>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <div className='w-3 h-3 rounded-full bg-emerald-500 border-2 border-white' />
-                      <span className='text-xs'>Site Boundary</span>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <div className='w-3 h-3 rounded-full bg-blue-500 border-2 border-white' />
-                      <span className='text-xs'>Geofence</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-          </div>
-
-          {/* Map Layer Controls Overlay (Top-Right) - Desktop Only with Click Outside */}
-          <div ref={layerOverlayRef} className='absolute top-4 right-4 z-10 hidden md:block'>
-            <Collapsible open={isLayerControlsExpanded} onOpenChange={setIsLayerControlsExpanded}>
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='bg-background shadow-lg border'
-                >
-                  <Layers className='h-4 w-4 mr-2' />
-                  Layers
-                  <ChevronDown className='h-3 w-3 ml-2' />
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <Card className='mt-2 w-56 bg-background shadow-lg border'>
-                  <CardHeader className='pb-3'>
-                    <CardTitle className='text-sm'>Map Layers</CardTitle>
-                  </CardHeader>
-                  <CardContent className='space-y-3'>
-                    <div className='space-y-2'>
-                      <div className='flex items-center gap-2'>
-                        <Checkbox
-                          id='geofences'
-                          checked={showGeofences}
-                          onCheckedChange={checked => setShowGeofences(checked as boolean)}
-                        />
-                        <label htmlFor='geofences' className='text-sm cursor-pointer'>
-                          Geofences
-                        </label>
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        <Checkbox
-                          id='sites'
-                          checked={showSites}
-                          onCheckedChange={checked => setShowSites(checked as boolean)}
-                        />
-                        <label htmlFor='sites' className='text-sm cursor-pointer'>
-                          Site Boundaries
-                        </label>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </CollapsibleContent>
-            </Collapsible>
-          </div>
+            {/* New Map Control Panel - Positioned within map container */}
+            <div className="absolute bottom-4 left-4 z-10">
+              <MapControlPanel
+                layerGroups={layerGroups}
+                onLayerToggle={handleLayerToggle}
+                onLayerGroupToggle={handleLayerGroupToggle}
+                onOpacityChange={handleOpacityChange}
+                legendItems={legendItems}
+                onLegendItemClick={handleLegendItemClick}
+                position="bottom-left"
+                defaultCollapsed={false}
+                isMobile={window.innerWidth < 768}
+              />
+            </div>
                     </div>
                   </div>
                   

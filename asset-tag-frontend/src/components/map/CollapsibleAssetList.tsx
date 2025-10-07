@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Checkbox } from '../ui/checkbox';
 import { StatusBadge } from '../common/StatusBadge';
-import { Asset } from '../../types/asset';
+import { Asset } from '../../types';
 import { AssetLocationHistory } from '../../data/mockData';
 import { 
   ChevronLeft, 

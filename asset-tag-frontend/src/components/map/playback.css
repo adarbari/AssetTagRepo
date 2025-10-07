@@ -168,7 +168,7 @@
   
   /* Adjust playback controls for mobile */
   .playback-controls-mobile {
-    /* Removed fixed positioning styles */
+    position: relative;
   }
 }
 
