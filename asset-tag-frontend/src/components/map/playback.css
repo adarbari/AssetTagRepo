@@ -1,0 +1,223 @@
+/* Playback Control Panel Animations */
+.playback-panel-enter {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.playback-panel-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+}
+
+.playback-panel-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.playback-panel-exit-active {
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+}
+
+/* Clean slide-in animation */
+.slide-in-from-bottom-4 {
+  animation: slideInFromBottom 300ms ease-out;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Asset List Collapse Animation */
+.asset-list-collapsed {
+  width: 48px;
+  transition: width 300ms ease-in-out;
+}
+
+.asset-list-expanded {
+  width: 320px;
+  transition: width 300ms ease-in-out;
+}
+
+/* Map Container Adjustments - Now handled by height changes */
+.map-container-transition {
+  transition: height 300ms ease-in-out;
+}
+
+/* Timeline Scrubber Enhancements */
+.timeline-scrubber {
+  position: relative;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.timeline-scrubber:hover {
+  background: #cbd5e1;
+}
+
+.timeline-progress {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 3px;
+  transition: width 100ms ease-out;
+}
+
+.timeline-handle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  cursor: grab;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out;
+}
+
+.timeline-handle:hover {
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-handle:active {
+  cursor: grabbing;
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* Custom Asset Markers */
+.custom-asset-marker {
+  transition: transform 200ms ease-out;
+}
+
+.custom-asset-marker:hover {
+  transform: scale(1.1);
+}
+
+/* Path Polylines Animation */
+.leaflet-interactive {
+  transition: opacity 200ms ease-out;
+}
+
+/* Loading States */
+.playback-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.playback-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .playback-panel-enter {
+    transform: translateY(100%);
+  }
+  
+  .asset-list-collapsed {
+    width: 40px;
+  }
+  
+  .asset-list-expanded {
+    width: 100%;
+  }
+  
+  .map-container-with-panel {
+    margin-bottom: 160px; /* More space on mobile */
+  }
+  
+  /* Ensure full height layout on mobile */
+  .full-height-layout {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
+  }
+  
+  /* Adjust playback controls for mobile */
+  .playback-controls-mobile {
+    /* Removed fixed positioning styles */
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .timeline-scrubber {
+    background: #374151;
+  }
+  
+  .timeline-scrubber:hover {
+    background: #4b5563;
+  }
+  
+  .timeline-handle {
+    background: #1f2937;
+    border-color: #60a5fa;
+  }
+}
+
+/* Focus States for Accessibility */
+.playback-control:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.timeline-scrubber:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Smooth Transitions for All Interactive Elements */
+button, .playback-control, .timeline-scrubber {
+  transition: all 150ms ease-out;
+}
+
+/* Custom Scrollbar for Asset List */
+.asset-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.asset-list-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.asset-list-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.asset-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

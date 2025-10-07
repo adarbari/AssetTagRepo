@@ -1,3 +1,8 @@
+/**
+ * @deprecated This component has been deprecated in favor of UnifiedAssetMap.
+ * The playback functionality is now integrated directly into the main map view.
+ * Use UnifiedAssetMap with playback mode instead.
+ */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
 import './AssetPlaybackMap.css';

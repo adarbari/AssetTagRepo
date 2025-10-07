@@ -11,7 +11,7 @@ import { Calendar } from '../ui/calendar';
 import { useOverlayState } from '../../hooks/useOverlayState';
 import { mockAssets as sharedMockAssets, mockGeofences as sharedMockGeofences } from '../../data/mockData';
 import { Asset, Geofence } from '../../types';
-import { AssetPlaybackMap } from './AssetPlaybackMap';
+// AssetPlaybackMap has been deprecated in favor of UnifiedAssetMap
 import { format } from 'date-fns';
 import {
   Search,
@@ -139,14 +139,13 @@ export function ReactLeafletMap({
 
   // Overlay states (keeping for potential future use)
   const [isPlaybackOpen, togglePlayback] = useOverlayState('playback', false);
-  const [showPlaybackMode, setShowPlaybackMode] = useState(false);
   
-  console.log('🚀 ReactLeafletMap component rendering...', { showPlaybackMode });
+  console.log('🚀 ReactLeafletMap component rendering...');
   
   // Debug: Log when component mounts
   useEffect(() => {
-    console.log('🎯 ReactLeafletMap mounted!', { showPlaybackMode });
-  }, [showPlaybackMode]);
+    console.log('🎯 ReactLeafletMap mounted!');
+  }, []);
 
   console.log('🚀 Component state:', { 
     searchText, 
@@ -280,32 +279,12 @@ export function ReactLeafletMap({
             <h1 className="text-3xl font-bold tracking-tight">Asset Intelligence Map</h1>
             <p className="text-muted-foreground">
               Real-time asset tracking and geofence monitoring
-              {showPlaybackMode && <span className="ml-2 text-blue-600 font-semibold">(Playback Mode)</span>}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant={showPlaybackMode ? 'default' : 'outline'}
-              size='sm'
-              onClick={() => {
-                console.log('🎯 Playback button clicked!', { currentMode: showPlaybackMode });
-                setShowPlaybackMode(!showPlaybackMode);
-              }}
-              className='flex items-center gap-2'
-            >
-              📹
-              {showPlaybackMode ? 'Live View' : 'Playback'}
-            </Button>
-            <Button
-              variant="destructive"
-              size='sm'
-              onClick={() => {
-                console.log('🚨 Test button clicked!');
-                alert('Test button works!');
-              }}
-            >
-              Test
-            </Button>
+            <Badge variant="outline">
+              Legacy Map View
+            </Badge>
           </div>
         </div>
 
@@ -377,18 +356,10 @@ export function ReactLeafletMap({
           </div>
         </div>
 
-        {/* Conditional Rendering: Playback Mode or Live View */}
-        {showPlaybackMode ? (
-          <>
-            {console.log('🎬 Rendering AssetPlaybackMap')}
-            <AssetPlaybackMap onBack={onBack} />
-          </>
-        ) : (
-          <>
-            {/* Main Content */}
-            <div 
-              className="gap-6 flex-1 min-h-0 flex flex-col" 
-            >
+        {/* Main Content */}
+        <div 
+          className="gap-6 flex-1 min-h-0 flex flex-col" 
+        >
           {/* Map and Asset Panel Row */}
           <div 
             className="gap-6 flex-1 min-h-0" 
@@ -620,346 +591,7 @@ export function ReactLeafletMap({
           </div>
           </div>
 
-          {/* Professional Playback Controls Bar - Below Map and Asset Panel */}
-          <div className="mt-4">
-            <Card className="p-0 overflow-hidden">
-              {/* Main Playback Bar */}
-              <div className="bg-gradient-to-r from-slate-50 to-slate-100 border-b">
-                <div className="px-6 py-4">
-                  <div className="flex items-center justify-between">
-                    {/* Left Controls Group */}
-                    <div className="flex items-center space-x-3">
-                      {/* Play/Pause Button - Primary Control */}
-                      <Button 
-                        size="sm" 
-                        onClick={onPlayPause}
-                        className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90 shadow-md"
-                      >
-                        {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
-                      </Button>
-                      
-                      {/* Skip Controls */}
-                      <div className="flex items-center space-x-1">
-                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                          <SkipBack className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                          <SkipForward className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      
-                      {/* Time Display */}
-                      <div className="flex items-center space-x-2 text-sm font-mono">
-                        <span className="text-slate-600">00:00</span>
-                        <span className="text-slate-400">/</span>
-                        <span className="text-slate-500">24:00</span>
-                      </div>
-                    </div>
-
-                    {/* Center - Timeline Scrubber */}
-                    <div className="flex-1 mx-6">
-                      <div className="relative">
-                        {/* Timeline Track */}
-                        <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
-                          {/* Progress Fill */}
-                          <div 
-                            className="h-full bg-primary rounded-full transition-all duration-200"
-                            style={{ width: '25%' }}
-                          />
-                        </div>
-                        {/* Scrubber Handle */}
-                        <div 
-                          className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform"
-                          style={{ left: '25%', marginLeft: '-8px' }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Right Controls Group */}
-                    <div className="flex items-center space-x-3">
-                      {/* Speed Control */}
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm text-slate-600 font-medium">Speed</span>
-                        <div className="flex items-center space-x-1">
-                          <Button 
-                            size="sm" 
-                            variant={localPlaybackSpeed === 0.5 ? "default" : "ghost"}
-                            className="h-7 px-2 text-xs"
-                            onClick={() => {
-                              setLocalPlaybackSpeed(0.5);
-                              console.log('Speed changed to: 0.5x');
-                            }}
-                          >
-                            0.5x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={localPlaybackSpeed === 1 ? "default" : "ghost"}
-                            className="h-7 px-2 text-xs"
-                            onClick={() => {
-                              setLocalPlaybackSpeed(1);
-                              console.log('Speed changed to: 1x');
-                            }}
-                          >
-                            1x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={localPlaybackSpeed === 2 ? "default" : "ghost"}
-                            className="h-7 px-2 text-xs"
-                            onClick={() => {
-                              setLocalPlaybackSpeed(2);
-                              console.log('Speed changed to: 2x');
-                            }}
-                          >
-                            2x
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant={localPlaybackSpeed === 4 ? "default" : "ghost"}
-                            className="h-7 px-2 text-xs"
-                            onClick={() => {
-                              setLocalPlaybackSpeed(4);
-                              console.log('Speed changed to: 4x');
-                            }}
-                          >
-                            4x
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Date Range Picker */}
-                      <Popover open={isDateRangeOpen} onOpenChange={setIsDateRangeOpen}>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-8 px-3 text-xs">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            {selectedRange.from && selectedRange.to 
-                              ? `${format(selectedRange.from, 'MMM dd')} - ${format(selectedRange.to, 'MMM dd')}` 
-                              : 'Select Range'}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="end" side="bottom" sideOffset={5}>
-                          <div className="p-4">
-                            <div className="space-y-4">
-                              <div className="space-y-2">
-                                <h4 className="font-medium text-sm">Select Time Range</h4>
-                                <p className="text-xs text-muted-foreground">Click to select start and end dates</p>
-                              </div>
-                              
-                              {/* Quick Preset Buttons */}
-                              <div className="flex items-center justify-between">
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="text-xs"
-                                  onClick={() => {
-                                    const today = new Date();
-                                    const yesterday = new Date(today);
-                                    yesterday.setDate(yesterday.getDate() - 1);
-                                    setSelectedRange({ from: yesterday, to: today });
-                                    setTempStartDate(yesterday);
-                                    setTempEndDate(today);
-                                  }}
-                                >
-                                  Last 24h
-                                </Button>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="text-xs"
-                                  onClick={() => {
-                                    const today = new Date();
-                                    const weekAgo = new Date(today);
-                                    weekAgo.setDate(weekAgo.getDate() - 7);
-                                    setSelectedRange({ from: weekAgo, to: today });
-                                    setTempStartDate(weekAgo);
-                                    setTempEndDate(today);
-                                  }}
-                                >
-                                  Last 7 days
-                                </Button>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="text-xs"
-                                  onClick={() => {
-                                    const today = new Date();
-                                    const monthAgo = new Date(today);
-                                    monthAgo.setDate(monthAgo.getDate() - 30);
-                                    setSelectedRange({ from: monthAgo, to: today });
-                                    setTempStartDate(monthAgo);
-                                    setTempEndDate(today);
-                                  }}
-                                >
-                                  Last 30 days
-                                </Button>
-                              </div>
-                              
-                              {/* Calendar for Date Range Selection */}
-                              <div className="border rounded-lg p-3 bg-white">
-                                <Calendar
-                                  mode="range"
-                                  selected={selectedRange}
-                                  onSelect={(range) => {
-                                    if (range?.from && range?.to) {
-                                      setSelectedRange({ from: range.from, to: range.to });
-                                      setTempStartDate(range.from);
-                                      setTempEndDate(range.to);
-                                    } else if (range?.from) {
-                                      setSelectedRange({ from: range.from, to: undefined });
-                                      setTempStartDate(range.from);
-                                    }
-                                  }}
-                                  numberOfMonths={1}
-                                  className="rounded-md"
-                                  disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                                />
-                              </div>
-                              
-                              {/* Selected Range Display */}
-                              {selectedRange.from && selectedRange.to && (
-                                <div className="bg-slate-50 rounded-lg p-3">
-                                  <div className="text-xs text-slate-600 mb-1">Selected Range:</div>
-                                  <div className="text-sm font-medium">
-                                    {format(selectedRange.from, 'MMM dd, yyyy')} - {format(selectedRange.to, 'MMM dd, yyyy')}
-                                  </div>
-                                  <div className="text-xs text-slate-500 mt-1">
-                                    {Math.ceil((selectedRange.to.getTime() - selectedRange.from.getTime()) / (1000 * 60 * 60 * 24))} days
-                                  </div>
-                                </div>
-                              )}
-                              
-                              {/* Action Buttons */}
-                              <div className="flex justify-end space-x-2 pt-2 border-t">
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="text-xs"
-                                  onClick={() => {
-                                    setSelectedRange({ from: timeRange?.start, to: timeRange?.end });
-                                    setTempStartDate(timeRange?.start);
-                                    setTempEndDate(timeRange?.end);
-                                    setIsDateRangeOpen(false);
-                                  }}
-                                >
-                                  Cancel
-                                </Button>
-                                <Button 
-                                  size="sm" 
-                                  className="text-xs"
-                                  onClick={() => {
-                                    if (selectedRange.from && selectedRange.to) {
-                                      console.log('Applying date range:', { 
-                                        start: selectedRange.from, 
-                                        end: selectedRange.to 
-                                      });
-                                      // Here you would update the actual timeRange prop
-                                      setIsDateRangeOpen(false);
-                                    }
-                                  }}
-                                  disabled={!selectedRange.from || !selectedRange.to}
-                                >
-                                  Apply Range
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-
-                      {/* Fullscreen */}
-                      <div className="flex items-center space-x-1">
-                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                          <Maximize2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Secondary Controls Row */}
-              <div className="px-6 py-3 bg-white border-t">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    {/* Asset Selection */}
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-slate-600 font-medium">Show:</span>
-                      <div className="flex items-center space-x-1">
-                        <Button 
-                          size="sm" 
-                          variant={showAllAssets ? "default" : "ghost"} 
-                          className="h-7 px-3 text-xs"
-                          onClick={() => {
-                            setShowAllAssets(true);
-                            setShowSelectedOnly(false);
-                          }}
-                        >
-                          All Assets
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant={showSelectedOnly ? "default" : "ghost"} 
-                          className="h-7 px-3 text-xs"
-                          onClick={() => {
-                            setShowAllAssets(false);
-                            setShowSelectedOnly(true);
-                          }}
-                        >
-                          Selected ({selectedAssets.length})
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Layer Controls */}
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-slate-600 font-medium">Layers:</span>
-                      <div className="flex items-center space-x-1">
-                        <Button 
-                          size="sm" 
-                          variant={showAssetMarkers ? "default" : "ghost"} 
-                          className="h-7 px-2 text-xs"
-                          onClick={() => setShowAssetMarkers(!showAssetMarkers)}
-                        >
-                          {showAssetMarkers ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
-                          Assets
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant={localShowGeofences ? "default" : "ghost"} 
-                          className="h-7 px-2 text-xs"
-                          onClick={() => setLocalShowGeofences(!localShowGeofences)}
-                        >
-                          {localShowGeofences ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
-                          Geofences
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant={localShowPaths ? "default" : "ghost"} 
-                          className="h-7 px-2 text-xs"
-                          onClick={() => setLocalShowPaths(!localShowPaths)}
-                        >
-                          {localShowPaths ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
-                          Paths
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    {/* Status Indicator */}
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="text-sm text-slate-600">Live</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
         </div>
-          </>
-        )}
       </div>
     </PageLayout>
   );
