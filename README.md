@@ -20,7 +20,22 @@ AssetTagRepo/
 ### Prerequisites
 - Node.js 18+
 - Python 3.11+
-- Docker and Docker Compose
+- **Docker Desktop** (Required for backend infrastructure)
+
+#### Installing Docker Desktop
+
+**For macOS:**
+1. Download Docker Desktop from: https://www.docker.com/products/docker-desktop/
+2. Install the .dmg file
+3. Start Docker Desktop application
+4. Verify installation: `docker --version` and `docker-compose --version`
+
+**Alternative installation via Homebrew:**
+```bash
+brew install --cask docker
+```
+
+**Important:** Docker Desktop must be running before starting the backend services.
 
 ### Setup
 
@@ -35,17 +50,23 @@ AssetTagRepo/
    npm run setup
    ```
 
-3. **Start infrastructure services**:
+3. **Start Docker Desktop** (if not already running):
+   - Open Docker Desktop application
+   - Wait for it to fully start
+
+4. **Start infrastructure services**:
    ```bash
    npm run infrastructure:up
+   # OR manually: cd asset-tag-backend && docker-compose up -d
    ```
 
-4. **Run database migrations**:
+5. **Run database migrations**:
    ```bash
    npm run db:migrate
+   # OR manually: cd asset-tag-backend && alembic upgrade head
    ```
 
-5. **Start development servers**:
+6. **Start development servers**:
    ```bash
    npm run dev
    ```
@@ -146,6 +167,52 @@ npm run preview
 - **Tailwind CSS** - Utility-first CSS framework
 - **React Router** - Client-side routing
 - **Zustand** - State management
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**1. Backend won't start (UUID/SQLite errors):**
+- Ensure Docker Desktop is running
+- Start infrastructure services: `cd asset-tag-backend && docker-compose up -d`
+- The backend requires PostgreSQL with TimescaleDB, not SQLite
+
+**2. Docker services not starting:**
+```bash
+# Check Docker Desktop is running
+docker --version
+
+# Check service status
+cd asset-tag-backend && docker-compose ps
+
+# View service logs
+docker-compose logs [service-name]
+```
+
+**3. Port conflicts:**
+```bash
+# Check what's using the ports
+lsof -i :8000  # Backend API
+lsof -i :5173  # Frontend
+lsof -i :5432  # PostgreSQL
+```
+
+**4. Database connection errors:**
+```bash
+# Reset database (WARNING: This will delete all data)
+cd asset-tag-backend
+docker-compose down -v && docker-compose up -d
+alembic upgrade head
+```
+
+### Service Health Checks
+
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000/health
+- **API Docs**: http://localhost:8000/docs
+- **Grafana**: http://localhost:3001 (admin/admin)
+- **Prometheus**: http://localhost:9090
+- **MLFlow**: http://localhost:5000
 
 ## 📖 Contributing
 

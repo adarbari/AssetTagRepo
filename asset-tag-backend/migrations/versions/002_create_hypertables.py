@@ -17,102 +17,106 @@ depends_on = None
 
 
 def upgrade() -> None:
-    """Convert time-series tables to hypertables"""
+    """Convert time-series tables to hypertables (skipped for local development)"""
+    
+    # Skip TimescaleDB hypertables for local development
+    # All TimescaleDB-specific operations are commented out
+    pass
+    
+    # # Convert observations table to hypertable
+    # op.execute(
+    #     """
+    #     SELECT create_hypertable('observations', 'observed_at', 
+    #                             chunk_time_interval => INTERVAL '1 hour',
+    #                             if_not_exists => TRUE);
+    # """
+    # )
 
-    # Convert observations table to hypertable
-    op.execute(
-        """
-        SELECT create_hypertable('observations', 'observed_at', 
-                                chunk_time_interval => INTERVAL '1 hour',
-                                if_not_exists => TRUE);
-    """
-    )
+    # # Convert estimated_locations table to hypertable
+    # op.execute(
+    #     """
+    #     SELECT create_hypertable('estimated_locations', 'estimated_at',
+    #                             chunk_time_interval => INTERVAL '1 hour',
+    #                             if_not_exists => TRUE);
+    # """
+    # )
 
-    # Convert estimated_locations table to hypertable
-    op.execute(
-        """
-        SELECT create_hypertable('estimated_locations', 'estimated_at',
-                                chunk_time_interval => INTERVAL '1 hour',
-                                if_not_exists => TRUE);
-    """
-    )
+    # # Convert alerts table to hypertable
+    # op.execute(
+    #     """
+    #     SELECT create_hypertable('alerts', 'triggered_at',
+    #                             chunk_time_interval => INTERVAL '1 day',
+    #                             if_not_exists => TRUE);
+    # """
+    # )
 
-    # Convert alerts table to hypertable
-    op.execute(
-        """
-        SELECT create_hypertable('alerts', 'triggered_at',
-                                chunk_time_interval => INTERVAL '1 day',
-                                if_not_exists => TRUE);
-    """
-    )
+    # # Convert audit_logs table to hypertable
+    # op.execute(
+    #     """
+    #     SELECT create_hypertable('audit_logs', 'created_at',
+    #                             chunk_time_interval => INTERVAL '1 day',
+    #                             if_not_exists => TRUE);
+    # """
+    # )
 
-    # Convert audit_logs table to hypertable
-    op.execute(
-        """
-        SELECT create_hypertable('audit_logs', 'created_at',
-                                chunk_time_interval => INTERVAL '1 day',
-                                if_not_exists => TRUE);
-    """
-    )
+    # # Add compression to older chunks
+    # op.execute(
+    #     """
+    #     ALTER TABLE observations SET (
+    #         timescaledb.compress,
+    #         timescaledb.compress_segmentby = 'asset_id, gateway_id',
+    #         timescaledb.compress_orderby = 'observed_at DESC'
+    #     );
+    # """
+    # )
 
-    # Add compression to older chunks
-    op.execute(
-        """
-        ALTER TABLE observations SET (
-            timescaledb.compress,
-            timescaledb.compress_segmentby = 'asset_id, gateway_id',
-            timescaledb.compress_orderby = 'observed_at DESC'
-        );
-    """
-    )
+    # op.execute(
+    #     """
+    #     ALTER TABLE estimated_locations SET (
+    #         timescaledb.compress,
+    #         timescaledb.compress_segmentby = 'asset_id',
+    #         timescaledb.compress_orderby = 'estimated_at DESC'
+    #     );
+    # """
+    # )
 
-    op.execute(
-        """
-        ALTER TABLE estimated_locations SET (
-            timescaledb.compress,
-            timescaledb.compress_segmentby = 'asset_id',
-            timescaledb.compress_orderby = 'estimated_at DESC'
-        );
-    """
-    )
+    # # Add retention policies
+    # op.execute(
+    #     """
+    #     SELECT add_retention_policy('observations', INTERVAL '7 days', if_not_exists => TRUE);
+    # """
+    # )
 
-    # Add retention policies
-    op.execute(
-        """
-        SELECT add_retention_policy('observations', INTERVAL '7 days', if_not_exists => TRUE);
-    """
-    )
+    # op.execute(
+    #     """
+    #     SELECT add_retention_policy('estimated_locations', INTERVAL '90 days', if_not_exists => TRUE);
+    # """
+    # )
 
-    op.execute(
-        """
-        SELECT add_retention_policy('estimated_locations', INTERVAL '90 days', if_not_exists => TRUE);
-    """
-    )
+    # op.execute(
+    #     """
+    #     SELECT add_retention_policy('alerts', INTERVAL '180 days', if_not_exists => TRUE);
+    # """
+    # )
 
-    op.execute(
-        """
-        SELECT add_retention_policy('alerts', INTERVAL '180 days', if_not_exists => TRUE);
-    """
-    )
+    # op.execute(
+    #     """
+    #     SELECT add_retention_policy('audit_logs', INTERVAL '365 days', if_not_exists => TRUE);
+    # """
+    # )
 
-    op.execute(
-        """
-        SELECT add_retention_policy('audit_logs', INTERVAL '365 days', if_not_exists => TRUE);
-    """
-    )
+    # # Add compression policy (compress chunks older than 1 day)
+    # op.execute(
+    #     """
+    #     SELECT add_compression_policy('observations', INTERVAL '1 day', if_not_exists => TRUE);
+    # """
+    # )
 
-    # Add compression policy (compress chunks older than 1 day)
-    op.execute(
-        """
-        SELECT add_compression_policy('observations', INTERVAL '1 day', if_not_exists => TRUE);
-    """
-    )
-
-    op.execute(
-        """
-        SELECT add_compression_policy('estimated_locations', INTERVAL '1 day', if_not_exists => TRUE);
-    """
-    )
+    # op.execute(
+    #     """
+    #     SELECT add_compression_policy('estimated_locations', INTERVAL '1 day', if_not_exists => TRUE);
+    # """
+    # )
 
 
 def downgrade() -> None:

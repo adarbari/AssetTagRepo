@@ -273,6 +273,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [changes, lint-gate]
     if: needs.changes.outputs.frontend == 'true' && (needs.lint-gate.outputs.status == 'success' || needs.lint-gate.outputs.status == 'partial_success')
+    timeout-minutes: 10  # Set 10-minute timeout for frontend tests
     
     steps:
     - name: Checkout code
@@ -315,9 +316,16 @@ jobs:
       working-directory: .
       continue-on-error: true
 
-    - name: Run tests
-      run: npm run test:run --workspace=asset-tag-frontend
-      working-directory: .
+    - name: Run tests with optimized CI configuration
+      run: |
+        # Set environment variables for test optimization
+        export NODE_OPTIONS="--max-old-space-size=4096"
+        export CI=true
+        
+        # Run tests with CI-optimized configuration
+        npx vitest run --config=vitest.config.ci.ts --reporter=verbose
+      working-directory: asset-tag-frontend
+      timeout-minutes: 8  # Individual step timeout
 
   frontend-build:
     runs-on: ubuntu-latest
@@ -385,9 +393,16 @@ jobs:
         npm ci --verbose --workspace=asset-tag-frontend
       working-directory: .
 
-    - name: Run tests with coverage
-      run: npm run test:coverage --workspace=asset-tag-frontend
-      working-directory: .
+    - name: Run tests with coverage (optimized)
+      run: |
+        # Set environment variables for test optimization
+        export NODE_OPTIONS="--max-old-space-size=4096"
+        export CI=true
+        
+        # Run tests with coverage using CI-optimized configuration
+        npx vitest run --config=vitest.config.ci.ts --coverage --reporter=verbose
+      working-directory: asset-tag-frontend
+      timeout-minutes: 10  # Individual step timeout
 
     - name: Upload frontend coverage to Codecov
       uses: codecov/codecov-action@v3

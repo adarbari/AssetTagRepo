@@ -50,8 +50,23 @@ asset-tag-backend/
 ### Prerequisites
 
 - Python 3.11+
-- Docker and Docker Compose
+- **Docker Desktop** (Required for infrastructure services)
 - Git
+
+#### Installing Docker Desktop
+
+**For macOS:**
+1. Download Docker Desktop from: https://www.docker.com/products/docker-desktop/
+2. Install the .dmg file
+3. Start Docker Desktop application
+4. Verify installation: `docker --version` and `docker-compose --version`
+
+**Alternative installation via Homebrew:**
+```bash
+brew install --cask docker
+```
+
+**Important:** Docker Desktop must be running before starting the backend services.
 
 ### Local Development Setup
 
@@ -75,28 +90,49 @@ asset-tag-backend/
 4. **Set up environment variables**:
    ```bash
    cp env.example .env
-   # Edit .env with your configuration
+   # The .env file is already configured for local development
    ```
 
-5. **Start infrastructure services**:
+5. **Start Docker Desktop** (if not already running):
+   - Open Docker Desktop application
+   - Wait for it to fully start (whale icon in menu bar should be stable)
+
+6. **Start infrastructure services**:
    ```bash
    docker-compose up -d
    ```
+   
+   This will start all required services:
+   - PostgreSQL with TimescaleDB (port 5432)
+   - Redis (port 6379)
+   - MinIO S3-compatible storage (ports 9000, 9001)
+   - Elasticsearch (port 9200)
+   - Redpanda streaming (port 9092)
+   - Prometheus metrics (port 9090)
+   - Grafana dashboards (port 3001)
+   - MLFlow (port 5000)
+   - Jaeger tracing (port 16686)
 
-6. **Run database migrations**:
+7. **Verify services are running**:
+   ```bash
+   docker-compose ps
+   ```
+   All services should show "Up" status.
+
+8. **Run database migrations**:
    ```bash
    alembic upgrade head
    ```
 
-7. **Start the backend**:
+9. **Start the backend**:
    ```bash
    python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
 
-8. **Start observation consumer** (in another terminal):
-   ```bash
-   python -m streaming.kinesis_consumer
-   ```
+10. **Start observation consumer** (in another terminal):
+    ```bash
+    python -m streaming.kinesis_consumer
+    ```
 
 ### Access Points
 
@@ -282,6 +318,68 @@ docker run -p 8000:8000 --env-file .env asset-tag-backend
 - Request/response logging
 - Error tracking and alerting
 - Performance monitoring
+
+## Troubleshooting
+
+### Common Issues
+
+**1. Docker services not starting:**
+```bash
+# Check Docker Desktop is running
+docker --version
+
+# Check service status
+docker-compose ps
+
+# View service logs
+docker-compose logs [service-name]
+
+# Restart all services
+docker-compose down && docker-compose up -d
+```
+
+**2. Database connection errors:**
+```bash
+# Ensure PostgreSQL is running
+docker-compose ps postgres
+
+# Check database logs
+docker-compose logs postgres
+
+# Reset database (WARNING: This will delete all data)
+docker-compose down -v && docker-compose up -d
+alembic upgrade head
+```
+
+**3. Port conflicts:**
+If you get "port already in use" errors, check what's using the ports:
+```bash
+# Check port usage
+lsof -i :8000  # Backend API
+lsof -i :5432  # PostgreSQL
+lsof -i :6379  # Redis
+lsof -i :9000  # MinIO
+```
+
+**4. UUID/SQLite errors:**
+The application requires PostgreSQL with TimescaleDB. SQLite is not supported due to UUID type requirements. Ensure you're using the full Docker infrastructure.
+
+**5. Memory issues:**
+If services fail to start due to memory constraints:
+- Increase Docker Desktop memory allocation (Settings > Resources > Memory)
+- Close other applications to free up system memory
+
+### Service Health Checks
+
+```bash
+# Check all services
+curl http://localhost:8000/health
+
+# Check individual services
+curl http://localhost:9200  # Elasticsearch
+curl http://localhost:9090  # Prometheus
+curl http://localhost:5000  # MLFlow
+```
 
 ## Contributing
 

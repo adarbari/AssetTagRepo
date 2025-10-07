@@ -17,6 +17,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 # Import your models
 from config.database import Base
+from config.settings import settings
 from modules.alerts.models import *
 from modules.assets.models import *
 from modules.gateways.models import *
@@ -59,7 +60,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = settings.database_url
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -84,8 +85,12 @@ async def run_async_migrations() -> None:
 
     """
 
+    # Override the database URL with our settings
+    configuration = config.get_section(config.config_ini_section, {})
+    configuration["sqlalchemy.url"] = settings.database_url
+    
     connectable = async_engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
