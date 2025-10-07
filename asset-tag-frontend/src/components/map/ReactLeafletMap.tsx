@@ -281,12 +281,17 @@ export function ReactLeafletMap({
                 
                 {/* Asset Markers */}
                 {filteredAssets.map(asset => {
-                  if (!asset.coordinates || asset.coordinates.length < 2) return null;
+                  if (!asset.coordinates || asset.coordinates.length < 2) {
+                    console.log(`❌ Asset ${asset.id} has invalid coordinates:`, asset.coordinates);
+                    return null;
+                  }
+                  
+                  console.log(`📍 Asset ${asset.id} at coordinates:`, [asset.coordinates[0], asset.coordinates[1]]);
                   
                   return (
                     <Marker
                       key={asset.id}
-                      position={[asset.coordinates[1], asset.coordinates[0]]}
+                      position={[asset.coordinates[0], asset.coordinates[1]]}
                       eventHandlers={{
                         click: () => handleAssetClick(asset),
                       }}
