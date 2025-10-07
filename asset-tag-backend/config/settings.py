@@ -30,11 +30,13 @@ class Settings(BaseSettings):
 
     # Redis Cache
     redis_url: str = "redis://localhost:6379"
+    use_redis: bool = False  # Disable Redis for now
 
     # Streaming (Kinesis/Redpanda)
     kinesis_stream_name: str = "bluetooth-observations"
     aws_region: str = "us-east-1"
-    use_local_streaming: bool = True  # Use Redpanda instead of Kinesis
+    use_local_streaming: bool = False  # Use Redpanda instead of Kinesis
+    enable_streaming: bool = False  # Completely disable streaming
     redpanda_brokers: str = "localhost:9092"
 
     # Storage (S3/MinIO)
@@ -42,7 +44,7 @@ class Settings(BaseSettings):
     s3_access_key: str = "minioadmin"
     s3_secret_key: str = "minioadmin"
     s3_bucket: str = "asset-tag-data"
-    use_local_storage: bool = True  # Use MinIO instead of S3
+    use_local_storage: bool = False  # Use MinIO instead of S3
 
     # Authentication
     secret_key: str = "change-me-in-production-secret-key-very-long-and-secure"
@@ -60,11 +62,11 @@ class Settings(BaseSettings):
 
     # ML
     mlflow_tracking_uri: str = "http://localhost:5000"
-    use_local_mlflow: bool = True  # Use local MLFlow
+    use_local_mlflow: bool = False  # Use local MLFlow
 
     # Elasticsearch
     elasticsearch_url: str = "http://localhost:9200"
-    use_local_elasticsearch: bool = True  # Use local Elasticsearch
+    use_local_elasticsearch: bool = False  # Use local Elasticsearch
 
     # Logging
     log_level: str = "INFO"

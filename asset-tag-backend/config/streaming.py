@@ -47,6 +47,10 @@ class StreamingManager:
 
     async def start(self) -> None:
         """Start streaming services"""
+        if not getattr(settings, 'enable_streaming', True):
+            logger.info("Streaming is disabled, skipping initialization")
+            return
+            
         if not self._initialized:
             if settings.use_local_streaming:
                 self._setup_kafka()
@@ -63,6 +67,10 @@ class StreamingManager:
 
     async def stop(self) -> None:
         """Stop streaming services"""
+        if not getattr(settings, 'enable_streaming', True):
+            logger.info("Streaming is disabled, nothing to stop")
+            return
+            
         if settings.use_local_streaming:
             if self.producer:
                 await self.producer.stop()

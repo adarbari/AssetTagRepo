@@ -48,9 +48,12 @@ async def lifespan(app: FastAPI) -> None:
         await start_streaming()
         logger.info("Streaming services started")
 
-        # Start enhanced stream processors
-        await start_all_stream_processors()
-        logger.info("Enhanced stream processors started")
+        # Start enhanced stream processors only if streaming is enabled
+        if getattr(settings, 'enable_streaming', True):
+            await start_all_stream_processors()
+            logger.info("Enhanced stream processors started")
+        else:
+            logger.info("Streaming disabled, skipping stream processors")
 
         # Initialize Elasticsearch indices
         from config.elasticsearch import get_elasticsearch_manager
@@ -80,9 +83,10 @@ async def lifespan(app: FastAPI) -> None:
         await stop_model_refresh_scheduler()
         logger.info("ML model refresh scheduler stopped")
 
-        # Stop enhanced stream processors
-        await stop_all_stream_processors()
-        logger.info("Enhanced stream processors stopped")
+        # Stop enhanced stream processors only if streaming was enabled
+        if getattr(settings, 'enable_streaming', True):
+            await stop_all_stream_processors()
+            logger.info("Enhanced stream processors stopped")
 
         # Stop streaming services
         await stop_streaming()

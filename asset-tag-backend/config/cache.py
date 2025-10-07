@@ -15,12 +15,14 @@ from config.settings import settings
 logger = logging.getLogger(__name__)
 
 # Redis connection pool
-redis_pool = redis.ConnectionPool.from_url(
-    settings.redis_url, encoding="utf-8", decode_responses=True, max_connections=20
-)
+redis_pool = None
+redis_client = None
 
-# Redis client
-redis_client = redis.Redis(connection_pool=redis_pool)
+if hasattr(settings, 'use_redis') and settings.use_redis:
+    redis_pool = redis.ConnectionPool.from_url(
+        settings.redis_url, encoding="utf-8", decode_responses=True, max_connections=20
+    )
+    redis_client = redis.Redis(connection_pool=redis_pool)
 
 
 class CacheManager:
@@ -30,9 +32,12 @@ class CacheManager:
         self.client = client
         self.key_manager = cache_key_manager
         self.metrics = cache_metrics
+        self.enabled = client is not None
 
     async def get(self, key: str) -> Optional[Any]:
         """Get value from cache"""
+        if not self.enabled:
+            return None
         try:
             value = await self.client.get(key)
             if value:
@@ -47,6 +52,8 @@ class CacheManager:
 
     async def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
         """Set value in cache"""
+        if not self.enabled:
+            return False
         try:
             serialized = json.dumps(value, default=str)
             if ttl:
@@ -221,5 +228,8 @@ async def get_cache() -> CacheManager:
 
 async def close_cache() -> None:
     """Close Redis connections"""
-    await redis_client.close()
-    logger.info("Redis connections closed")
+    if redis_client:
+        await redis_client.close()
+        logger.info("Redis connections closed")
+    else:
+        logger.info("Redis was disabled, no connections to close")
