@@ -12,7 +12,7 @@ from sqlalchemy.orm import declarative_base
 from config.database import Base
 
 # Test database URL - use PostgreSQL to support UUID types
-TEST_DATABASE_URL = "postgresql+asyncpg://dev_user:dev_pass@localhost:5432/asset_tag"
+TEST_DATABASE_URL = "postgresql+asyncpg://dev_user:dev_pass@localhost:5432/asset_tag_test"
 
 # Create test engine with PostgreSQL configuration
 test_engine = create_async_engine(

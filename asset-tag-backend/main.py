@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> None:
+async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     # Startup
     logger.info("Starting Asset Tag Backend...")
@@ -40,27 +40,37 @@ async def lifespan(app: FastAPI) -> None:
     await init_db()
     logger.info("Database initialized")
 
-    # Skip external services in test environment
+    # Initialize services based on environment configuration
     from config.settings import settings
 
     if settings.environment.value != "test":
-        # Start streaming services
-        await start_streaming()
-        logger.info("Streaming services started")
+        # Start streaming services if enabled
+        if getattr(settings, 'enable_streaming', False):
+            await start_streaming()
+            logger.info("Streaming services started")
 
-        # Start enhanced stream processors only if streaming is enabled
-        if getattr(settings, 'enable_streaming', True):
+            # Start enhanced stream processors
             await start_all_stream_processors()
             logger.info("Enhanced stream processors started")
         else:
             logger.info("Streaming disabled, skipping stream processors")
 
-        # Initialize Elasticsearch indices
-        from config.elasticsearch import get_elasticsearch_manager
+        # Initialize Elasticsearch indices if enabled
+        if getattr(settings, 'use_local_elasticsearch', False):
+            from config.elasticsearch import get_elasticsearch_manager
 
-        es_manager = await get_elasticsearch_manager()
-        await es_manager.create_indices()
-        logger.info("Elasticsearch indices initialized")
+            es_manager = await get_elasticsearch_manager()
+            await es_manager.create_indices()
+            logger.info("Elasticsearch indices initialized")
+        else:
+            logger.info("Elasticsearch disabled, skipping index initialization")
+
+        # Initialize storage (MinIO/S3) if enabled
+        if getattr(settings, 'use_local_storage', False):
+            from config.storage import storage
+            logger.info("Storage service initialized")
+        else:
+            logger.info("Storage disabled, skipping initialization")
 
     # Skip ML services in test environment
     if settings.environment.value != "test":
@@ -84,13 +94,13 @@ async def lifespan(app: FastAPI) -> None:
         logger.info("ML model refresh scheduler stopped")
 
         # Stop enhanced stream processors only if streaming was enabled
-        if getattr(settings, 'enable_streaming', True):
+        if getattr(settings, 'enable_streaming', False):
             await stop_all_stream_processors()
             logger.info("Enhanced stream processors stopped")
 
-        # Stop streaming services
-        await stop_streaming()
-        logger.info("Streaming services stopped")
+            # Stop streaming services
+            await stop_streaming()
+            logger.info("Streaming services stopped")
 
     # Close database connections
     await close_db()

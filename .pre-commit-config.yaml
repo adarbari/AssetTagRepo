@@ -106,3 +106,10 @@ repos:
         language: script
         files: ^asset-tag-backend/.*\.py$
         pass_filenames: false
+
+      - id: check-environment-config
+        name: Check environment configuration files
+        entry: ./scripts/check-environment-config.sh
+        language: script
+        files: ^asset-tag-backend/\.env\.(beta|example)$
+        pass_filenames: true

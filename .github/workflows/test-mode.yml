@@ -1,0 +1,105 @@
+name: Test Mode CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'asset-tag-backend/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'asset-tag-backend/**'
+  workflow_dispatch:
+
+jobs:
+  test-mode:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: dev_user
+          POSTGRES_PASSWORD: dev_pass
+          POSTGRES_DB: asset_tag_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        cd asset-tag-backend
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+        pip install -r requirements-test.txt
+    
+    - name: Create test databases
+      run: |
+        cd asset-tag-backend
+        PGPASSWORD=dev_pass psql -h localhost -U dev_user -d postgres -c "CREATE DATABASE asset_tag_test;"
+        PGPASSWORD=dev_pass psql -h localhost -U dev_user -d postgres -c "CREATE DATABASE asset_tag_beta;"
+      env:
+        PGPASSWORD: dev_pass
+    
+    - name: Run database migrations
+      run: |
+        cd asset-tag-backend
+        ASSET_TAG_ENVIRONMENT=test alembic upgrade head
+      env:
+        ASSET_TAG_ENVIRONMENT: test
+        ASSET_TAG_POSTGRES_HOST: localhost
+        ASSET_TAG_POSTGRES_PORT: 5432
+        ASSET_TAG_POSTGRES_USER: dev_user
+        ASSET_TAG_POSTGRES_PASSWORD: dev_pass
+        ASSET_TAG_POSTGRES_DB: asset_tag_test
+    
+    - name: Run unit tests
+      run: |
+        cd asset-tag-backend
+        ASSET_TAG_ENVIRONMENT=test python -m pytest tests/unit/ -v --cov=modules --cov-report=xml
+      env:
+        ASSET_TAG_ENVIRONMENT: test
+        ASSET_TAG_POSTGRES_HOST: localhost
+        ASSET_TAG_POSTGRES_PORT: 5432
+        ASSET_TAG_POSTGRES_USER: dev_user
+        ASSET_TAG_POSTGRES_PASSWORD: dev_pass
+        ASSET_TAG_POSTGRES_DB: asset_tag_test
+    
+    - name: Run integration tests
+      run: |
+        cd asset-tag-backend
+        ASSET_TAG_ENVIRONMENT=test python -m pytest tests/integration/ -v
+      env:
+        ASSET_TAG_ENVIRONMENT: test
+        ASSET_TAG_POSTGRES_HOST: localhost
+        ASSET_TAG_POSTGRES_PORT: 5432
+        ASSET_TAG_POSTGRES_USER: dev_user
+        ASSET_TAG_POSTGRES_PASSWORD: dev_pass
+        ASSET_TAG_POSTGRES_DB: asset_tag_test
+    
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./asset-tag-backend/coverage.xml
+        flags: test-mode
+        name: test-mode-coverage

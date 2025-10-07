@@ -4,7 +4,7 @@ import { SidebarProvider } from './components/ui/sidebar';
 import { Button } from './components/ui/button';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { AssetInventory } from './components/assets/AssetInventory';
-import { AssetMap } from './components/map/AssetMap';
+import { UnifiedAssetMap } from './components/map/UnifiedAssetMap';
 import { AssetDetails } from './components/assets/AssetDetails';
 import { CreateAsset } from './components/assets/CreateAsset';
 import { CreateCheckInOut } from './components/check-in-out/CreateCheckInOut';
@@ -34,7 +34,6 @@ import { Settings } from './components/settings/Settings';
 import { Alerts, AlertsRef } from './components/alerts/Alerts';
 import { AlertWorkflow } from './components/alerts/AlertWorkflow';
 import { HierarchicalAlertConfiguration } from './components/alerts/HierarchicalAlertConfiguration';
-import { HistoricalPlayback } from './components/map/HistoricalPlayback';
 import { NotificationPreferencesNew } from './components/notifications/NotificationPreferencesNew';
 import {
   NavigationProvider,
@@ -174,7 +173,7 @@ function AppContent() {
         );
       case 'map':
         return (
-          <AssetMap
+          <UnifiedAssetMap
             onAssetClick={handleAssetClick}
             onTrackHistory={handleTrackHistory}
             highlightAsset={navigation.highlightAsset}
@@ -645,13 +644,6 @@ function AppContent() {
             }}
           />
         ) : null;
-      case 'historical-playback':
-        return (
-          <HistoricalPlayback
-            onBack={() => navigation.handleViewChange('asset-details')}
-            preselectedAsset={selectedAsset || undefined}
-          />
-        );
       case 'alert-workflow':
         return navigation.selectedAlertForWorkflow ? (
           <AlertWorkflow

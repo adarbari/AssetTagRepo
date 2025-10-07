@@ -14,6 +14,7 @@ class Environment(str, Enum):
     STAGING = "staging"
     PRODUCTION = "production"
     TEST = "test"
+    BETA = "beta"
 
 
 class Settings(BaseSettings):
@@ -93,13 +94,29 @@ class Settings(BaseSettings):
         """Get database URL for SQLAlchemy"""
         if self.database_url_override:
             return self.database_url_override
-        # Use PostgreSQL for all environments including test (SQLite doesn't support UUID types)
-        return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+        
+        # Use different databases for different environments
+        if self.environment == Environment.TEST:
+            db_name = "asset_tag_test"
+        elif self.environment == Environment.BETA:
+            db_name = "asset_tag_beta"
+        else:
+            db_name = self.postgres_db
+            
+        return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{db_name}"
 
     @property
     def sync_database_url(self) -> str:
         """Get synchronous database URL for Alembic"""
-        return f"postgresql://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+        # Use different databases for different environments
+        if self.environment == Environment.TEST:
+            db_name = "asset_tag_test"
+        elif self.environment == Environment.BETA:
+            db_name = "asset_tag_beta"
+        else:
+            db_name = self.postgres_db
+            
+        return f"postgresql://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{db_name}"
 
     @property
     def storage_endpoint(self) -> Optional[str]:
@@ -114,6 +131,29 @@ class Settings(BaseSettings):
         if self.use_local_streaming:
             return self.redpanda_brokers
         return f"kinesis.{self.aws_region}.amazonaws.com"
+
+    def _configure_environment_specific_settings(self) -> None:
+        """Configure settings based on environment"""
+        if self.environment == Environment.BETA:
+            # Enable all datastores for BETA mode
+            self.use_redis = True
+            self.use_local_elasticsearch = True
+            self.use_local_storage = True
+            self.enable_streaming = True
+            self.use_local_streaming = True
+            self.use_local_mlflow = True
+        elif self.environment == Environment.TEST:
+            # Disable external services for TEST mode
+            self.use_redis = False
+            self.use_local_elasticsearch = False
+            self.use_local_storage = False
+            self.enable_streaming = False
+            self.use_local_streaming = False
+            self.use_local_mlflow = False
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._configure_environment_specific_settings()
 
     class Config:
         env_file = ".env"

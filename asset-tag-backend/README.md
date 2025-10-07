@@ -143,6 +143,65 @@ brew install --cask docker
 - **MLFlow**: http://localhost:5000
 - **MinIO Console**: http://localhost:9001 (minioadmin/minioadmin)
 
+## Two-Mode Configuration
+
+The backend supports two distinct modes for different use cases:
+
+### TEST Mode (Ephemeral Data)
+- **Purpose**: Unit and integration testing
+- **Database**: `asset_tag_test` (data cleared after each test)
+- **Services**: PostgreSQL only, all other services mocked
+- **Usage**: `ASSET_TAG_ENVIRONMENT=test pytest`
+
+### BETA Mode (Persistent Data)
+- **Purpose**: Development and testing with persistent data
+- **Database**: `asset_tag_beta` (data persists across runs)
+- **Services**: All datastores enabled (PostgreSQL, Redis, Elasticsearch, MinIO, Redpanda)
+- **Usage**: `ASSET_TAG_ENVIRONMENT=beta uvicorn main:app --reload`
+
+### Switching Between Modes
+
+1. **For TEST mode** (run tests):
+   ```bash
+   ASSET_TAG_ENVIRONMENT=test pytest
+   ```
+
+2. **For BETA mode** (full functionality):
+   ```bash
+   # Copy beta configuration
+   cp .env.beta .env
+   
+   # Start all Docker services
+   docker-compose up -d
+   
+   # Run database migrations
+   alembic upgrade head
+   
+   # Start backend in beta mode
+   ASSET_TAG_ENVIRONMENT=beta uvicorn main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+### Service Requirements by Mode
+
+| Service | TEST Mode | BETA Mode | Purpose |
+|---------|-----------|-----------|---------|
+| PostgreSQL | ✅ (asset_tag_test) | ✅ (asset_tag_beta) | Core data storage |
+| Redis | ❌ (mocked) | ✅ | Caching, alert cooldowns |
+| Elasticsearch | ❌ (mocked) | ✅ | Search APIs |
+| MinIO | ❌ (mocked) | ✅ | File uploads |
+| Redpanda | ❌ (mocked) | ✅ | Real-time streaming |
+| MLFlow | ❌ (mocked) | ✅ | ML model tracking |
+
+### API Functionality by Mode
+
+**TEST Mode**: Basic CRUD operations only
+**BETA Mode**: Full functionality including:
+- Search APIs (`/api/v1/search/*`)
+- File upload APIs (`/api/v1/issues/{id}/attachments`)
+- Cached location estimation (faster performance)
+- Real-time WebSocket updates
+- Alert generation with cooldowns
+
 ## Configuration
 
 ### Environment Variables

@@ -69,7 +69,7 @@ services:
 
   # Redpanda (Kafka-compatible, replaces AWS Kinesis)
   redpanda:
-    image: vectorized/redpanda:latest
+    image: redpandadata/redpanda:latest
     ports:
       - "9092:9092"
       - "8081:8081"

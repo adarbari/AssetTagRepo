@@ -20,6 +20,7 @@ class StorageManager:
     def __init__(self) -> None:
         self.client = self._create_client()
         self.bucket = settings.s3_bucket
+        self._ensure_bucket_exists()
 
     def _create_client(self) -> None:
         """Create S3 client (MinIO or AWS S3)"""
@@ -40,6 +41,28 @@ class StorageManager:
         else:
             # Use AWS S3
             return boto3.client("s3", region_name=settings.aws_region, config=config)
+
+    def _ensure_bucket_exists(self) -> None:
+        """Ensure the bucket exists, create if it doesn't"""
+        try:
+            # Check if bucket exists
+            self.client.head_bucket(Bucket=self.bucket)
+            logger.info(f"Bucket {self.bucket} already exists")
+        except Exception:
+            # Bucket doesn't exist, create it
+            try:
+                if settings.use_local_storage:
+                    # For MinIO, create bucket with location constraint
+                    self.client.create_bucket(Bucket=self.bucket)
+                else:
+                    # For AWS S3, create bucket with region
+                    self.client.create_bucket(
+                        Bucket=self.bucket,
+                        CreateBucketConfiguration={'LocationConstraint': settings.aws_region}
+                    )
+                logger.info(f"Created bucket {self.bucket}")
+            except Exception as e:
+                logger.error(f"Error creating bucket {self.bucket}: {e}")
 
     async def upload_file(
         self, file_obj: BinaryIO, key: str, content_type: Optional[str] = None

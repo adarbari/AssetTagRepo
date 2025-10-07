@@ -31,6 +31,7 @@ import {
   AlertTriangle,
   TrendingDown,
   WifiOff,
+  Activity,
 } from 'lucide-react';
 import { Badge } from './ui/badge';
 import {
@@ -55,7 +56,7 @@ export function AppSidebar({
 
   const mainItems = [
     { id: 'dashboard' as ViewType, label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'map' as ViewType, label: 'Live Map', icon: Map },
+    { id: 'map' as ViewType, label: 'Asset Intelligence Map', icon: Map },
     { id: 'inventory' as ViewType, label: 'Asset Inventory', icon: Package },
     { id: 'sites' as ViewType, label: 'Sites', icon: Building2 },
   ];
