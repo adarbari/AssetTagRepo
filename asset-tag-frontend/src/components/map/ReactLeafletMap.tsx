@@ -90,7 +90,7 @@ function MapUpdater({ assets }: { assets: Asset[] }) {
       const bounds = L.latLngBounds(
         assets
           .filter(asset => asset.coordinates && asset.coordinates.length >= 2)
-          .map(asset => [asset.coordinates[1], asset.coordinates[0]])
+          .map(asset => [asset.coordinates[0], asset.coordinates[1]])
       );
       if (!bounds.isValid()) return;
       map.fitBounds(bounds, { padding: [20, 20] });
@@ -258,7 +258,7 @@ export function ReactLeafletMap({
                 zoom={13}
                 style={{ height: '100%', width: '100%', backgroundColor: '#e5e7eb' }}
                 key="main-map" // Key ensures proper re-initialization
-                whenReady={() => {
+                whenReady={(map) => {
                   console.log('🗺️ Map is ready!');
                   console.log('🗺️ Map container size:', document.querySelector('.leaflet-container')?.getBoundingClientRect());
                 }}
@@ -279,16 +279,6 @@ export function ReactLeafletMap({
                 {/* Update map bounds when assets change */}
                 <MapUpdater assets={filteredAssets} />
                 
-                {/* Test Marker - San Francisco */}
-                <Marker position={[37.7749, -122.4194]}>
-                  <Popup>
-                    <div className="p-2">
-                      <h3 className="font-semibold">Test Marker</h3>
-                      <p className="text-sm">San Francisco [37.7749, -122.4194]</p>
-                    </div>
-                  </Popup>
-                </Marker>
-
                 {/* Asset Markers */}
                 {filteredAssets.map(asset => {
                   if (!asset.coordinates || asset.coordinates.length < 2) {
