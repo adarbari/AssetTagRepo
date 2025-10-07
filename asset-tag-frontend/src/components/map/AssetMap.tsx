@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { StatusBadge } from '../common';
+import { StatusBadge, PageLayout } from '../common';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
@@ -499,62 +499,175 @@ export function AssetMap({
   };
 
   return (
-    <div className='h-screen flex flex-col'>
+    <PageLayout variant='full' padding='md'>
       {/* Header */}
-      <div className='border-b bg-background px-8 py-4'>
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-4'>
-            {onBack && (
-              <Button variant='ghost' size='icon' onClick={onBack}>
-                <ArrowLeft className='h-5 w-5' />
-              </Button>
-            )}
-            <div>
-              <h1>Live Asset Map</h1>
-              <p className='text-muted-foreground'>
-                {violationMode
-                  ? 'Showing assets outside their designated geofence boundaries'
-                  : 'Real-time location tracking with OpenStreetMap'}
-              </p>
-            </div>
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-4'>
+          {onBack && (
+            <Button variant='ghost' size='icon' onClick={onBack}>
+              <ArrowLeft className='h-5 w-5' />
+            </Button>
+          )}
+          <div>
+            <h1>Live Asset Map</h1>
+            <p className='text-muted-foreground'>
+              {violationMode
+                ? 'Showing assets outside their designated geofence boundaries'
+                : 'Real-time location tracking with OpenStreetMap'}
+            </p>
           </div>
-          <div className='flex items-center gap-2'>
-            {violationMode && (
+        </div>
+        <div className='flex items-center gap-2'>
+          {violationMode && (
+            <Badge
+              variant='outline'
+              className='bg-red-50 text-red-700 border-red-200'
+            >
+              ⚠️ {filteredAssets.length} Violation
+              {filteredAssets.length !== 1 ? 's' : ''}
+            </Badge>
+          )}
+          {!violationMode && (
+            <>
+              <Badge variant='outline'>
+                {
+                  sharedMockAssets.filter(
+                    a => a.coordinates && a.coordinates.length >= 2
+                  ).length
+                }{' '}
+                Assets Tracked
+              </Badge>
               <Badge
                 variant='outline'
-                className='bg-red-50 text-red-700 border-red-200'
+                className='bg-green-50 text-green-700 border-green-200'
               >
-                ⚠️ {filteredAssets.length} Violation
-                {filteredAssets.length !== 1 ? 's' : ''}
+                {filteredAssets.length} Visible
               </Badge>
-            )}
-            {!violationMode && (
-              <>
-                <Badge variant='outline'>
-                  {
-                    sharedMockAssets.filter(
-                      a => a.coordinates && a.coordinates.length >= 2
-                    ).length
-                  }{' '}
-                  Assets Tracked
-                </Badge>
-                <Badge
-                  variant='outline'
-                  className='bg-green-50 text-green-700 border-green-200'
-                >
-                  {filteredAssets.length} Visible
-                </Badge>
-              </>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Map and Controls */}
-      <div className='flex-1 flex overflow-hidden'>
-        {/* Sidebar Filters */}
-        <div className='w-80 border-r bg-background overflow-y-auto'>
-          <div className='p-4 space-y-4'>
+      <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+        {/* Map Visualization */}
+        <Card className='lg:col-span-2'>
+          <CardContent className='p-0'>
+            <div className='h-[600px] relative'>
+              <div ref={mapRef} className='h-full w-full rounded-lg overflow-hidden' />
+
+              {/* Map Controls */}
+              <div className='absolute top-4 right-4 flex flex-col gap-2 z-[1000]'>
+                <Button
+                  size='icon'
+                  variant='secondary'
+                  className='bg-background shadow-lg'
+                  onClick={recenterMap}
+                  title='Recenter map'
+                >
+                  <Navigation className='h-4 w-4' />
+                </Button>
+                <Button
+                  size='icon'
+                  variant='secondary'
+                  className='bg-background shadow-lg'
+                  title='Fullscreen'
+                >
+                  <Maximize2 className='h-4 w-4' />
+                </Button>
+              </div>
+
+              {/* Selected Asset Info Card */}
+              {selectedAsset && (
+                <Card className='absolute bottom-4 left-4 w-96 z-[1000] shadow-xl'>
+                  <CardHeader className='pb-3'>
+                    <div className='flex items-start justify-between'>
+                      <div className='flex items-center gap-2'>
+                        {getAssetIcon(selectedAsset.type)}
+                        <CardTitle className='text-base'>
+                          {selectedAsset.name}
+                        </CardTitle>
+                      </div>
+                      <Button
+                        size='icon'
+                        variant='ghost'
+                        className='h-6 w-6'
+                        onClick={() => setSelectedAsset(null)}
+                      >
+                        <X className='h-4 w-4' />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className='space-y-3'>
+                    <div className='flex justify-between text-sm'>
+                      <span className='text-muted-foreground'>Asset ID:</span>
+                      <span className='font-mono'>{selectedAsset.id}</span>
+                    </div>
+                    <div className='flex justify-between text-sm'>
+                      <span className='text-muted-foreground'>Type:</span>
+                      <span className='capitalize'>{selectedAsset.type}</span>
+                    </div>
+                    <div className='flex justify-between text-sm'>
+                      <span className='text-muted-foreground'>Status:</span>
+                      <StatusBadge status={selectedAsset.status} />
+                    </div>
+                    <div className='flex justify-between text-sm'>
+                      <span className='text-muted-foreground'>Battery:</span>
+                      <span
+                        className={
+                          selectedAsset.battery < 20
+                            ? 'text-red-600'
+                            : 'text-green-600'
+                        }
+                      >
+                        {selectedAsset.battery}%
+                      </span>
+                    </div>
+                    <div className='flex justify-between text-sm'>
+                      <span className='text-muted-foreground'>Last Update:</span>
+                      <span className='flex items-center gap-1'>
+                        <Clock className='h-3 w-3' />
+                        {selectedAsset.lastUpdate}
+                      </span>
+                    </div>
+                    <div className='flex justify-between text-sm'>
+                      <span className='text-muted-foreground'>Location:</span>
+                      <span className='text-xs'>
+                        {selectedAsset.lat.toFixed(4)},{' '}
+                        {selectedAsset.lng.toFixed(4)}
+                      </span>
+                    </div>
+                    <div className='pt-3 border-t flex gap-2'>
+                      <Button
+                        size='sm'
+                        className='flex-1'
+                        onClick={() => {
+                          const sharedAsset = findSharedAsset(selectedAsset);
+                          if (sharedAsset) onAssetClick?.(sharedAsset);
+                        }}
+                      >
+                        View Details
+                      </Button>
+                      <Button
+                        size='sm'
+                        variant='outline'
+                        className='flex-1'
+                        onClick={() => {
+                          const sharedAsset = findSharedAsset(selectedAsset);
+                          if (sharedAsset) onTrackHistory?.(sharedAsset);
+                        }}
+                      >
+                        Track History
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Controls */}
+        <div className='space-y-4'>
             {violationMode &&
               violatingGeofenceId &&
               (() => {
