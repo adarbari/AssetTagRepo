@@ -476,6 +476,87 @@ export function UnifiedAssetMap({
                     return null;
                   })}
 
+                  {/* Site Boundaries */}
+                  {showSites && sharedMockSites.map(site => {
+                    if (!site.coordinates || !site.coordinates.lat || !site.coordinates.lng || !site.coordinates.radius) {
+                      return null;
+                    }
+                    
+                    return (
+                      <Circle
+                        key={`site-${site.id}`}
+                        center={[site.coordinates.lat, site.coordinates.lng]}
+                        radius={site.coordinates.radius * 0.3048} // Convert feet to meters
+                        pathOptions={{
+                          color: '#10b981', // Green color for sites
+                          weight: 2,
+                          opacity: 0.8,
+                          fillColor: '#10b981',
+                          fillOpacity: 0.1,
+                        }}
+                      >
+                        <Popup>
+                          <div className="p-2">
+                            <h3 className="font-semibold text-green-700">{site.name}</h3>
+                            <p className="text-sm text-muted-foreground">Site Boundary</p>
+                            <p className="text-sm">Status: {site.status}</p>
+                            <p className="text-sm">Manager: {site.manager}</p>
+                            <p className="text-sm">Assets: {site.assets}</p>
+                            <p className="text-sm">Radius: {site.coordinates.radius} ft</p>
+                          </div>
+                        </Popup>
+                      </Circle>
+                    );
+                  })}
+
+                  {/* Site Markers */}
+                  {showSites && sharedMockSites.map(site => {
+                    if (!site.coordinates || !site.coordinates.lat || !site.coordinates.lng) {
+                      return null;
+                    }
+                    
+                    return (
+                      <Marker
+                        key={`site-marker-${site.id}`}
+                        position={[site.coordinates.lat, site.coordinates.lng]}
+                        icon={L.divIcon({
+                          className: 'custom-site-marker',
+                          html: `
+                            <div style="
+                              width: 24px;
+                              height: 24px;
+                              background-color: #10b981;
+                              border: 3px solid white;
+                              border-radius: 50%;
+                              box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                              font-size: 12px;
+                              color: white;
+                              font-weight: bold;
+                            ">
+                              🏢
+                            </div>
+                          `,
+                          iconSize: [24, 24],
+                          iconAnchor: [12, 12]
+                        })}
+                      >
+                        <Popup>
+                          <div className="p-2">
+                            <h3 className="font-semibold text-green-700">{site.name}</h3>
+                            <p className="text-sm text-muted-foreground">{site.location}</p>
+                            <p className="text-sm">Status: {site.status}</p>
+                            <p className="text-sm">Manager: {site.manager}</p>
+                            <p className="text-sm">Assets: {site.assets}</p>
+                            <p className="text-sm">Area: {site.area}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+
                   {/* Asset Markers - Only show selected/focused assets */}
                   {filteredAssets
                     .filter(asset => selectedAssets.length === 0 || selectedAssets.includes(asset.id))
@@ -531,6 +612,87 @@ export function UnifiedAssetMap({
                       selectedAssets={playbackState.selectedAssets}
                     />
                   )}
+
+                  {/* Site Boundaries - Also show in playback mode */}
+                  {showSites && sharedMockSites.map(site => {
+                    if (!site.coordinates || !site.coordinates.lat || !site.coordinates.lng || !site.coordinates.radius) {
+                      return null;
+                    }
+                    
+                    return (
+                      <Circle
+                        key={`site-${site.id}`}
+                        center={[site.coordinates.lat, site.coordinates.lng]}
+                        radius={site.coordinates.radius * 0.3048} // Convert feet to meters
+                        pathOptions={{
+                          color: '#10b981', // Green color for sites
+                          weight: 2,
+                          opacity: 0.8,
+                          fillColor: '#10b981',
+                          fillOpacity: 0.1,
+                        }}
+                      >
+                        <Popup>
+                          <div className="p-2">
+                            <h3 className="font-semibold text-green-700">{site.name}</h3>
+                            <p className="text-sm text-muted-foreground">Site Boundary</p>
+                            <p className="text-sm">Status: {site.status}</p>
+                            <p className="text-sm">Manager: {site.manager}</p>
+                            <p className="text-sm">Assets: {site.assets}</p>
+                            <p className="text-sm">Radius: {site.coordinates.radius} ft</p>
+                          </div>
+                        </Popup>
+                      </Circle>
+                    );
+                  })}
+
+                  {/* Site Markers - Also show in playback mode */}
+                  {showSites && sharedMockSites.map(site => {
+                    if (!site.coordinates || !site.coordinates.lat || !site.coordinates.lng) {
+                      return null;
+                    }
+                    
+                    return (
+                      <Marker
+                        key={`site-marker-${site.id}`}
+                        position={[site.coordinates.lat, site.coordinates.lng]}
+                        icon={L.divIcon({
+                          className: 'custom-site-marker',
+                          html: `
+                            <div style="
+                              width: 24px;
+                              height: 24px;
+                              background-color: #10b981;
+                              border: 3px solid white;
+                              border-radius: 50%;
+                              box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                              font-size: 12px;
+                              color: white;
+                              font-weight: bold;
+                            ">
+                              🏢
+                            </div>
+                          `,
+                          iconSize: [24, 24],
+                          iconAnchor: [12, 12]
+                        })}
+                      >
+                        <Popup>
+                          <div className="p-2">
+                            <h3 className="font-semibold text-green-700">{site.name}</h3>
+                            <p className="text-sm text-muted-foreground">{site.location}</p>
+                            <p className="text-sm">Status: {site.status}</p>
+                            <p className="text-sm">Manager: {site.manager}</p>
+                            <p className="text-sm">Assets: {site.assets}</p>
+                            <p className="text-sm">Area: {site.area}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
                 </>
               )}
             </MapContainer>
@@ -562,6 +724,14 @@ export function UnifiedAssetMap({
                     <div className='flex items-center gap-2'>
                       <div className='w-3 h-3 rounded-full bg-red-500 border-2 border-white' />
                       <span className='text-xs'>Violation</span>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <div className='w-3 h-3 rounded-full bg-emerald-500 border-2 border-white' />
+                      <span className='text-xs'>Site Boundary</span>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <div className='w-3 h-3 rounded-full bg-blue-500 border-2 border-white' />
+                      <span className='text-xs'>Geofence</span>
                     </div>
                   </div>
                 </CardContent>
