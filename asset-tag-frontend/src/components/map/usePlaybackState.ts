@@ -136,7 +136,7 @@ export function usePlaybackState(): UsePlaybackStateReturn {
     }));
   }, []);
 
-  // Skip backward (1 hour)
+  // Skip backward (1 hour of real time = 6 seconds of playback)
   const skipBack = useCallback(() => {
     setState(prev => {
       const newTime = Math.max(prev.timeRange.start, prev.currentTime - (3600000 * prev.playbackSpeed));
@@ -144,7 +144,7 @@ export function usePlaybackState(): UsePlaybackStateReturn {
     });
   }, []);
 
-  // Skip forward (1 hour)
+  // Skip forward (1 hour of real time = 6 seconds of playback)
   const skipForward = useCallback(() => {
     setState(prev => {
       const newTime = Math.min(prev.timeRange.end, prev.currentTime + (3600000 * prev.playbackSpeed));
@@ -229,7 +229,7 @@ export function usePlaybackState(): UsePlaybackStateReturn {
     if (state.isPlaying && state.timeRange.end > state.timeRange.start) {
       intervalRef.current = setInterval(() => {
         setState(prev => {
-          const nextTime = prev.currentTime + (1000 * prev.playbackSpeed); // 1 second per interval
+          const nextTime = prev.currentTime + (600000 * prev.playbackSpeed); // 10 minutes per second (600 seconds = 600000ms)
           if (nextTime >= prev.timeRange.end) {
             return { ...prev, currentTime: prev.timeRange.end, isPlaying: false };
           }

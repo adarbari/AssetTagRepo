@@ -224,6 +224,7 @@ export function PlaybackControlPanel({
                   variant={playbackSpeed === speed ? "default" : "ghost"}
                   className="h-7 px-2 text-xs"
                   onClick={() => onSpeedChange(speed)}
+                  title={`${speed * 10} min/sec`}
                 >
                   {speed}x
                 </Button>
