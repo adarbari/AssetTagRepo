@@ -234,9 +234,14 @@ export function UnifiedAssetMap({
 
   // Playback mode handlers
   const handleEnterPlaybackMode = () => {
-    console.log('🎬 Entering playback mode with assets:', filteredAssets.map(a => ({ id: a.id, name: a.name })));
-    const assetIds = filteredAssets.map(asset => asset.id);
-    playbackState.loadHistoricalData(assetIds);
+    // Only load historical data for focused assets (selectedAssets), not all filtered assets
+    const focusedAssetIds = selectedAssets.length > 0 ? selectedAssets : filteredAssets.map(asset => asset.id);
+    console.log('🎬 Entering playback mode with focused assets:', focusedAssetIds.map(id => {
+      const asset = filteredAssets.find(a => a.id === id);
+      return { id, name: asset?.name || 'Unknown' };
+    }));
+    
+    playbackState.loadHistoricalData(focusedAssetIds);
     setViewMode('playback');
     setShowPlaybackPanel(true);
     // Auto-collapse asset panel when entering playback mode
