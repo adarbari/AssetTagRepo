@@ -254,7 +254,7 @@ export function ReactLeafletMap({
               style={{ minHeight: '600px' }}
             >
               <MapContainer
-                center={[51.505, -0.09]}
+                center={[37.7749, -122.4194]}
                 zoom={13}
                 style={{ height: '100%', width: '100%', backgroundColor: '#e5e7eb' }}
                 key="main-map" // Key ensures proper re-initialization
@@ -279,12 +279,12 @@ export function ReactLeafletMap({
                 {/* Update map bounds when assets change */}
                 <MapUpdater assets={filteredAssets} />
                 
-                {/* Test Marker - London */}
-                <Marker position={[51.505, -0.09]}>
+                {/* Test Marker - San Francisco */}
+                <Marker position={[37.7749, -122.4194]}>
                   <Popup>
                     <div className="p-2">
                       <h3 className="font-semibold">Test Marker</h3>
-                      <p className="text-sm">London [51.505, -0.09]</p>
+                      <p className="text-sm">San Francisco [37.7749, -122.4194]</p>
                     </div>
                   </Popup>
                 </Marker>
