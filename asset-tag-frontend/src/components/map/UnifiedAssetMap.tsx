@@ -418,7 +418,7 @@ export function UnifiedAssetMap({
               {/* Live Mode: Show current asset positions */}
               {viewMode === 'live' && (
                 <>
-                  <LiveMapUpdater assets={filteredAssets} />
+                  <LiveMapUpdater assets={filteredAssets.filter(asset => selectedAssets.length === 0 || selectedAssets.includes(asset.id))} />
                   
                   {/* Geofences */}
                   {showGeofences && sharedMockGeofences.map(geofence => {
@@ -476,30 +476,32 @@ export function UnifiedAssetMap({
                     return null;
                   })}
 
-                  {/* Asset Markers */}
-                  {filteredAssets.map(asset => {
-                    if (!asset.coordinates || asset.coordinates.length < 2) return null;
-                    
-                    return (
-                      <Marker
-                        key={asset.id}
-                        position={[asset.coordinates[0], asset.coordinates[1]]}
-                        eventHandlers={{
-                          click: () => flyToAsset(asset),
-                        }}
-                      >
-                        <Popup>
-                          <div className="p-2">
-                            <h3 className="font-semibold">{asset.name}</h3>
-                            <p className="text-sm text-muted-foreground">ID: {asset.id}</p>
-                            <p className="text-sm">Type: {asset.type}</p>
-                            <p className="text-sm">Status: {asset.status}</p>
-                            <p className="text-sm">Battery: {asset.battery}%</p>
-              </div>
-                        </Popup>
-                      </Marker>
-                    );
-                  })}
+                  {/* Asset Markers - Only show selected/focused assets */}
+                  {filteredAssets
+                    .filter(asset => selectedAssets.length === 0 || selectedAssets.includes(asset.id))
+                    .map(asset => {
+                      if (!asset.coordinates || asset.coordinates.length < 2) return null;
+                      
+                      return (
+                        <Marker
+                          key={asset.id}
+                          position={[asset.coordinates[0], asset.coordinates[1]]}
+                          eventHandlers={{
+                            click: () => flyToAsset(asset),
+                          }}
+                        >
+                          <Popup>
+                            <div className="p-2">
+                              <h3 className="font-semibold">{asset.name}</h3>
+                              <p className="text-sm text-muted-foreground">ID: {asset.id}</p>
+                              <p className="text-sm">Type: {asset.type}</p>
+                              <p className="text-sm">Status: {asset.status}</p>
+                              <p className="text-sm">Battery: {asset.battery}%</p>
+                            </div>
+                          </Popup>
+                        </Marker>
+                      );
+                    })}
                 </>
               )}
 
