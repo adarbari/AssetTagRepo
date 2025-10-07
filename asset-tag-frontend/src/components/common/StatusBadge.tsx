@@ -53,12 +53,13 @@ export function StatusBadge({
   type: _type,
   className,
 }: StatusBadgeProps) {
-  const statusLower = status.toLowerCase();
+  // Fixed: Added null safety for status parameter
+  const statusLower = status?.toLowerCase() || 'unknown';
   const colorClass = statusColors[statusLower] || statusColors['default'];
 
   return (
     <Badge variant='outline' className={`${colorClass} ${className || ''}`}>
-      {status}
+      {status || 'Unknown'}
     </Badge>
   );
 }

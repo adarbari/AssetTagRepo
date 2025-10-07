@@ -4,7 +4,7 @@ import { SidebarProvider } from './components/ui/sidebar';
 import { Button } from './components/ui/button';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { AssetInventory } from './components/assets/AssetInventory';
-import { UnifiedAssetMap } from './components/map/UnifiedAssetMap';
+import { ReactLeafletMap } from './components/map/ReactLeafletMap';
 import { AssetDetails } from './components/assets/AssetDetails';
 import { CreateAsset } from './components/assets/CreateAsset';
 import { CreateCheckInOut } from './components/check-in-out/CreateCheckInOut';
@@ -173,8 +173,8 @@ function AppContent() {
         );
       case 'map':
         return (
-          <UnifiedAssetMap
-            onAssetClick={handleAssetClick}
+          <ReactLeafletMap
+            onAssetSelect={handleAssetClick}
             onTrackHistory={handleTrackHistory}
             highlightAsset={navigation.highlightAsset}
             onClearHighlight={handleClearHighlight}
