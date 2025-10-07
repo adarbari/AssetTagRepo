@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { PageLayout } from '../common/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -193,8 +194,8 @@ export function ReactLeafletMap({
   };
 
   return (
-    <div className="h-screen w-full p-4 md:p-6 lg:p-8 flex flex-col">
-      <div className="flex-1 flex flex-col space-y-6">
+    <PageLayout variant="full" padding="sm">
+      <div className="h-screen flex flex-col space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -514,6 +515,6 @@ export function ReactLeafletMap({
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
