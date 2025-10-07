@@ -24,13 +24,20 @@ export function AnimatedMarkers({
   currentTime, 
   selectedAssets 
 }: AnimatedMarkersProps) {
+  console.log('📍 AnimatedMarkers component called with:', {
+    historiesCount: histories.length,
+    selectedAssets: selectedAssets,
+    currentTime: new Date(currentTime).toISOString()
+  });
+  
   const visibleHistories = histories.filter(h => selectedAssets.includes(h.assetId));
   
-  console.log('📍 AnimatedMarkers rendering:', {
+  console.log('📍 AnimatedMarkers filtering result:', {
     totalHistories: histories.length,
     selectedAssets: selectedAssets,
     visibleHistories: visibleHistories.length,
-    visibleAssetIds: visibleHistories.map(h => h.assetId)
+    visibleAssetIds: visibleHistories.map(h => h.assetId),
+    allHistoryIds: histories.map(h => h.assetId)
   });
   
   return (

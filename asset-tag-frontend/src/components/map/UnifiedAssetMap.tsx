@@ -671,19 +671,37 @@ export function UnifiedAssetMap({
                   />
                   
                   {playbackState.showPaths && (
-                    <PathPolylines
-                      histories={playbackState.histories}
-                      currentTime={playbackState.currentTime}
-                      selectedAssets={selectedAssets}
-                    />
+                    <>
+                      {console.log('🎬 Rendering PathPolylines with:', {
+                        historiesCount: playbackState.histories.length,
+                        selectedAssets: selectedAssets,
+                        showPaths: playbackState.showPaths,
+                        currentTime: new Date(playbackState.currentTime).toISOString()
+                      })}
+                      <PathPolylines
+                        key={`paths-${selectedAssets.join(',')}`}
+                        histories={playbackState.histories}
+                        currentTime={playbackState.currentTime}
+                        selectedAssets={selectedAssets}
+                      />
+                    </>
                   )}
                   
                   {playbackState.showMarkers && (
-                    <AnimatedMarkers
-                      histories={playbackState.histories}
-                      currentTime={playbackState.currentTime}
-                      selectedAssets={selectedAssets}
-                    />
+                    <>
+                      {console.log('🎬 Rendering AnimatedMarkers with:', {
+                        historiesCount: playbackState.histories.length,
+                        selectedAssets: selectedAssets,
+                        showMarkers: playbackState.showMarkers,
+                        currentTime: new Date(playbackState.currentTime).toISOString()
+                      })}
+                      <AnimatedMarkers
+                        key={`markers-${selectedAssets.join(',')}`}
+                        histories={playbackState.histories}
+                        currentTime={playbackState.currentTime}
+                        selectedAssets={selectedAssets}
+                      />
+                    </>
                   )}
 
                   {/* Site Boundaries - Also show in playback mode */}
