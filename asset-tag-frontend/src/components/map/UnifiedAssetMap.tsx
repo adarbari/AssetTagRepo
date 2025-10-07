@@ -234,12 +234,18 @@ export function UnifiedAssetMap({
 
   // Playback mode handlers
   const handleEnterPlaybackMode = () => {
-    // Only load historical data for focused assets (selectedAssets), not all filtered assets
+    // Only load historical data for focused assets (selectedAssets)
+    // If no assets are focused, show a message or focus all assets
     const focusedAssetIds = selectedAssets.length > 0 ? selectedAssets : filteredAssets.map(asset => asset.id);
-    console.log('🎬 Entering playback mode with focused assets:', focusedAssetIds.map(id => {
-      const asset = filteredAssets.find(a => a.id === id);
-      return { id, name: asset?.name || 'Unknown' };
-    }));
+    
+    console.log('🎬 Entering playback mode with focused assets:', {
+      focusedCount: selectedAssets.length,
+      totalFilteredCount: filteredAssets.length,
+      focusedAssets: focusedAssetIds.map(id => {
+        const asset = filteredAssets.find(a => a.id === id);
+        return { id, name: asset?.name || 'Unknown' };
+      })
+    });
     
     playbackState.loadHistoricalData(focusedAssetIds);
     setViewMode('playback');
