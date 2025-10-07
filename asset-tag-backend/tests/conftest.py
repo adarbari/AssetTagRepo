@@ -9,11 +9,12 @@ from typing import AsyncGenerator, Generator
 
 # Set test environment BEFORE any imports
 os.environ["ASSET_TAG_ENVIRONMENT"] = "test"
-os.environ["ASSET_TAG_POSTGRES_HOST"] = "sqlite"
-os.environ["ASSET_TAG_DATABASE_URL"] = "sqlite+aiosqlite:///./test_integration.db"
+os.environ["ASSET_TAG_POSTGRES_HOST"] = "localhost"
+os.environ["ASSET_TAG_DATABASE_URL"] = "postgresql+asyncpg://dev_user:dev_pass@localhost:5432/asset_tag_test"
 
 import pytest
 import pytest_asyncio
+import sqlalchemy as sa
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -94,25 +95,76 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
         await conn.run_sync(Base.metadata.drop_all)
 
 
-@pytest.fixture(scope="function")
-def client() -> None:
-    """Create a test client with database override."""
-
+@pytest_asyncio.fixture(scope="function")
+async def async_client() -> AsyncGenerator[AsyncClient, None]:
+    """Create an async test client with database override."""
+    
     # Clean up database before each test
-    async def cleanup_db() -> None:
-        async with test_engine.begin() as conn:
-            await conn.run_sync(Base.metadata.drop_all)
-        async with test_engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-
-    # Run cleanup synchronously
-    import asyncio
-
-    asyncio.run(cleanup_db())
+    async with test_engine.begin() as conn:
+        # Drop all tables individually to avoid circular dependency issues
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS geofence_events CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS alerts CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS estimated_locations CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS observations CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS maintenance_records CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS job_assets CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS vehicle_asset_pairings CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS assets CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS jobs CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS geofences CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS sites CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS vehicles CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS users CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS organizations CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS gateways CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS personnel CASCADE")))
+        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS personnel_activities CASCADE")))
+        # Create tables using SQLAlchemy instead of migrations
+        await conn.run_sync(Base.metadata.create_all)
 
     # Override database dependency
     from config.test_database import get_test_db
+    app.dependency_overrides[get_db] = get_test_db
 
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        yield ac
+
+    # Clean up override
+    app.dependency_overrides.clear()
+
+@pytest.fixture(scope="function")
+def client(event_loop) -> TestClient:
+    """Create a synchronous test client for backward compatibility."""
+    
+    # Clean up database before each test using existing event loop
+    async def cleanup_db() -> None:
+        async with test_engine.begin() as conn:
+            # Drop all tables individually to avoid circular dependency issues
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS geofence_events CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS alerts CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS estimated_locations CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS observations CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS maintenance_records CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS job_assets CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS vehicle_asset_pairings CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS assets CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS jobs CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS geofences CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS sites CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS vehicles CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS users CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS organizations CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS gateways CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS personnel CASCADE")))
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS personnel_activities CASCADE")))
+            # Create tables using SQLAlchemy instead of migrations
+            await conn.run_sync(Base.metadata.create_all)
+
+    # Run cleanup using the existing event loop
+    event_loop.run_until_complete(cleanup_db())
+
+    # Override database dependency
+    from config.test_database import get_test_db
     app.dependency_overrides[get_db] = get_test_db
 
     with TestClient(app) as tc:

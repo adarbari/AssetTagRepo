@@ -11,8 +11,8 @@ from alembic import op
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = "004_create_all_tables"
-down_revision = "003_create_analytics_views"
+revision = "003_create_all_tables"
+down_revision = "002_create_hypertables"
 branch_labels = None
 depends_on = None
 

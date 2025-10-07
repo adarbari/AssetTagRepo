@@ -10,14 +10,24 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "003_create_analytics_views"
-down_revision = "002_create_hypertables"
+revision = "005_create_analytics_views"
+down_revision = "004_create_issues_tables"
 branch_labels = None
 depends_on = None
 
 
 def upgrade() -> None:
     """Create materialized views for analytics"""
+    
+    # Check if required tables exist
+    connection = op.get_bind()
+    inspector = sa.inspect(connection)
+    tables = inspector.get_table_names()
+    
+    # Only create views if base tables exist
+    if 'estimated_locations' not in tables:
+        # Skip - tables will be created in later migration run
+        return
 
     # Daily utilization rollup
     op.execute(

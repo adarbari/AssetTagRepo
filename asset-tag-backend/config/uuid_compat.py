@@ -25,9 +25,12 @@ class GUID(TypeDecorator):
 
     def load_dialect_impl(self, dialect) -> None:
         if dialect.name == "postgresql":
-            return dialect.type_descriptor(postgresql.UUID(as_uuid=self.as_uuid))
+            # Create a new UUID type without triggering recursion
+            uuid_type = postgresql.UUID()
+            uuid_type.as_uuid = self.as_uuid
+            return uuid_type
         else:
-            return dialect.type_descriptor(String(36))
+            return String(36)
 
     def process_bind_param(self, value, dialect) -> None:
         if value is None:
@@ -56,11 +59,8 @@ class GUID(TypeDecorator):
 def setup_uuid_compatibility() -> None:
     """
     Set up UUID compatibility for testing.
-    This replaces PostgreSQL's UUID type with our GUID type.
+    This adds SQLite support for UUID types.
     """
-    # Replace PostgreSQL UUID with our GUID type
-    postgresql.UUID = GUID
-
     # Add visit_UUID method to SQLite type compiler
     from sqlalchemy.dialects.sqlite.base import SQLiteTypeCompiler
 
