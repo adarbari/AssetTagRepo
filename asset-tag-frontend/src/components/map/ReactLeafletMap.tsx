@@ -254,8 +254,8 @@ export function ReactLeafletMap({
               style={{ minHeight: '600px' }}
             >
               <MapContainer
-                center={[37.7749, -122.4194]}
-                zoom={13}
+                center={[0, 0]}
+                zoom={2}
                 style={{ height: '100%', width: '100%', backgroundColor: '#e5e7eb' }}
                 key="main-map" // Key ensures proper re-initialization
                 whenReady={() => {
@@ -279,6 +279,16 @@ export function ReactLeafletMap({
                 {/* Update map bounds when assets change */}
                 <MapUpdater assets={filteredAssets} />
                 
+                {/* Test Marker - Equator */}
+                <Marker position={[0, 0]}>
+                  <Popup>
+                    <div className="p-2">
+                      <h3 className="font-semibold">Test Marker</h3>
+                      <p className="text-sm">Equator [0, 0]</p>
+                    </div>
+                  </Popup>
+                </Marker>
+
                 {/* Asset Markers */}
                 {filteredAssets.map(asset => {
                   if (!asset.coordinates || asset.coordinates.length < 2) {
