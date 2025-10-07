@@ -187,6 +187,7 @@ export function UnifiedAssetMap({
   const markersRef = useRef<unknown[]>([]);
   const pathLinesRef = useRef<unknown[]>([]);
   const leafletRef = useRef<any>(null);
+  const isMountedRef = useRef<boolean>(true);
 
   // Core state
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
@@ -208,9 +209,25 @@ export function UnifiedAssetMap({
   const [showClusters, setShowClusters] = useState(true);
   const [showSites, setShowSites] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapInitFailed, setMapInitFailed] = useState(false);
   
   // Historical data
   const [historicalData, setHistoricalData] = useState<Map<string, LocationPoint[]>>(new Map());
+
+  // Reset mounted ref on component mount
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // Track mapRef changes
+  useEffect(() => {
+    if (mapRef.current) {
+      // Map div is ready
+    }
+  }, [mapRef.current]);
 
   // Helper functions
   const findSharedAsset = (localAsset: Asset): SharedAsset | undefined => {
@@ -288,29 +305,16 @@ export function UnifiedAssetMap({
 
   // Initialize map
   useEffect(() => {
-    console.log('Map initialization useEffect running', { mapRef: mapRef.current, mapLoaded });
-    
-    // Wait for mapRef to be available
-    const initMapWhenReady = () => {
-      if (!mapRef.current) {
-        console.log('mapRef not ready, retrying in 100ms...');
-        setTimeout(initMapWhenReady, 100);
-        return;
-      }
-      
-      if (mapLoaded) {
-        console.log('Map already loaded, skipping initialization');
-        return;
-      }
-      
-      console.log('mapRef is ready, starting initialization...');
-      initMap();
-    };
+    if (mapLoaded) return;
 
     const initMap = async () => {
       try {
-        console.log('Starting map initialization...');
-        
+        // Wait for mapRef to be available
+        if (!mapRef.current) {
+          setTimeout(initMap, 100);
+          return;
+        }
+
         // Load Leaflet CSS
         if (!document.getElementById('leaflet-css')) {
           const link = document.createElement('link');
@@ -318,13 +322,11 @@ export function UnifiedAssetMap({
           link.rel = 'stylesheet';
           link.href = 'https://unpkg.com/leaflet/dist/leaflet.css';
           document.head.appendChild(link);
-          console.log('Leaflet CSS loaded');
         }
 
-        console.log('Importing Leaflet...');
+        // Import Leaflet
         const L = await import('leaflet');
-        console.log('Leaflet imported successfully', L);
-        leafletRef.current = L; // Store for later use
+        leafletRef.current = L;
 
         // Fix for default marker icons
         L.Icon.Default.mergeOptions({
@@ -338,23 +340,31 @@ export function UnifiedAssetMap({
           mapInstanceRef.current.remove();
         }
 
-        console.log('Creating map instance...');
+        // Create map
         const map = L.map(mapRef.current).setView([37.7749, -122.4194], 13);
 
+        // Add tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '© OpenStreetMap contributors',
         }).addTo(map);
 
         mapInstanceRef.current = map;
-        console.log('Map created successfully, setting mapLoaded to true');
         setMapLoaded(true);
+
+        // Invalidate size after a short delay
+        setTimeout(() => {
+          if (mapInstanceRef.current) {
+            mapInstanceRef.current.invalidateSize();
+          }
+        }, 100);
+
       } catch (error) {
         console.error('Failed to initialize map:', error);
+        setMapInitFailed(true);
       }
     };
 
-    // Start the initialization process
-    initMapWhenReady();
+    initMap();
 
     // Cleanup function
     return () => {
@@ -369,7 +379,7 @@ export function UnifiedAssetMap({
   useEffect(() => {
     if (!mapLoaded || !mapInstanceRef.current || !leafletRef.current) return;
 
-    const L = leafletRef.current; // Use stored reference instead of require/import
+    const L = leafletRef.current;
 
     // Clear existing markers and paths
     markersRef.current.forEach(marker => {
@@ -561,28 +571,13 @@ export function UnifiedAssetMap({
   const assetStates = getAssetDisplayStates();
   const maxHistoricalLength = Math.max(...Array.from(historicalData.values()).map(path => path.length));
 
-  // Add error boundary for debugging
-  console.log('Component render - mapLoaded:', mapLoaded);
-  if (!mapLoaded) {
-    return (
-      <PageLayout variant='full' padding='md'>
-        <div className='flex items-center justify-center h-96'>
-          <div className='text-center'>
-            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-            <p className='text-muted-foreground'>Loading Asset Intelligence Map...</p>
-            <p className='text-xs text-muted-foreground mt-2'>Debug: mapLoaded = {mapLoaded.toString()}</p>
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
-
+  // Component render
   return (
-    <PageLayout variant='full' padding='md'>
-      {/* Header */}
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-4'>
-          {onBack && (
+      <PageLayout variant='full' padding='md'>
+        {/* Header */}
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-4'>
+            {onBack && (
             <Button variant='ghost' size='icon' onClick={onBack}>
               <ArrowLeft className='h-5 w-5' />
             </Button>
@@ -626,28 +621,78 @@ export function UnifiedAssetMap({
         <Card className='lg:col-span-2'>
           <CardContent className='p-0'>
             <div className='h-[600px] relative'>
-              <div ref={mapRef} className='h-full w-full rounded-lg overflow-hidden' />
+              <div 
+                ref={mapRef} 
+                className='h-full w-full rounded-lg overflow-hidden'
+                style={{ 
+                  backgroundColor: mapLoaded ? 'transparent' : '#f0f0f0',
+                  border: mapLoaded ? 'none' : '2px dashed #ccc',
+                  minHeight: '600px',
+                  minWidth: '100%'
+                }}
+              />
+              
+              {/* Loading/Failed overlay */}
+              {(!mapLoaded || mapInitFailed) && (
+                <div className='absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50'>
+                  <div className='text-center'>
+                    {mapInitFailed ? (
+                      <>
+                        <div className='text-red-500 mb-4'>
+                          <svg className='w-12 h-12 mx-auto' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z' />
+                          </svg>
+                        </div>
+                        <h3 className='text-lg font-semibold text-red-600 mb-2'>Map Initialization Failed</h3>
+                        <p className='text-muted-foreground mb-4'>
+                          Unable to initialize the map. This might be due to network issues or browser compatibility.
+                        </p>
+                        <Button 
+                          onClick={() => {
+                            setMapInitFailed(false);
+                            setMapLoaded(false);
+                            // Trigger re-initialization by updating a dependency
+                            window.location.reload();
+                          }}
+                        >
+                          Retry
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
+                        <p className='text-muted-foreground'>Loading Asset Intelligence Map...</p>
+                        <p className='text-xs text-muted-foreground mt-2'>
+                          Initializing map components...
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Map Controls */}
-              <div className='absolute top-4 right-4 flex flex-col gap-2 z-[1000]'>
-                <Button
-                  size='icon'
-                  variant='secondary'
-                  className='bg-background shadow-lg'
-                  onClick={recenterMap}
-                  title='Recenter map'
-                >
-                  <Navigation className='h-4 w-4' />
-                </Button>
-                <Button
-                  size='icon'
-                  variant='secondary'
-                  className='bg-background shadow-lg'
-                  title='Fullscreen'
-                >
-                  <Maximize2 className='h-4 w-4' />
-                </Button>
-              </div>
+              {mapLoaded && (
+                <div className='absolute top-4 right-4 flex flex-col gap-2 z-[1000]'>
+                  <Button
+                    size='icon'
+                    variant='secondary'
+                    className='bg-background shadow-lg'
+                    onClick={recenterMap}
+                    title='Recenter map'
+                  >
+                    <Navigation className='h-4 w-4' />
+                  </Button>
+                  <Button
+                    size='icon'
+                    variant='secondary'
+                    className='bg-background shadow-lg'
+                    title='Fullscreen'
+                  >
+                    <Maximize2 className='h-4 w-4' />
+                  </Button>
+                </div>
+              )}
 
               {/* Selected Asset Info Card */}
               {selectedAsset && (
@@ -1016,10 +1061,10 @@ export function UnifiedAssetMap({
                   const assetState = assetStates.find(state => state.id === asset.id);
                   
                   return (
-                    <button
+                    <div
                       key={asset.id}
                       onClick={() => flyToAsset(asset)}
-                      className={`w-full text-left p-3 rounded-lg border transition-all ${
+                      className={`w-full text-left p-3 rounded-lg border transition-all cursor-pointer ${
                         selectedAsset?.id === asset.id
                           ? 'bg-primary/5 border-primary shadow-sm'
                           : isSelected
@@ -1064,7 +1109,7 @@ export function UnifiedAssetMap({
                           {isSelected ? 'Focused' : 'Focus'}
                         </Button>
                       </div>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
