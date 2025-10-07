@@ -248,14 +248,14 @@ export function UnifiedAssetMap({
     playbackState.reset();
   };
 
-  // Map container class - use flexible height to match asset list
-  const mapContainerClass = 'min-h-[600px] flex-1';
+  // Map container class - use full height of available space
+  const mapContainerClass = 'h-full';
 
   return (
-    <>
-      <PageLayout variant='full' padding='md' className={`min-h-screen flex flex-col ${showPlaybackPanel ? 'pb-32' : ''}`}>
-      {/* Header */}
-      <div className='flex items-center justify-between'>
+    <div className="h-screen flex flex-col">
+      {/* Fixed Header */}
+      <div className='flex-shrink-0 border-b bg-background'>
+        <div className='flex items-center justify-between p-4'>
         <div className='flex items-center gap-4'>
           {onBack && (
             <Button variant='ghost' size='icon' onClick={onBack}>
@@ -308,10 +308,11 @@ export function UnifiedAssetMap({
             {viewMode === 'playback' ? 'Live View' : 'Playback'}
           </Button>
         </div>
+        </div>
       </div>
 
-      {/* Top Search Bar - Single Line Layout */}
-      <div className='border-b bg-background p-4 -mx-6 mb-6'>
+      {/* Fixed Search Bar */}
+      <div className='flex-shrink-0 border-b bg-background p-4'>
         <div className='flex items-center gap-4'>
           {/* Search Input - Takes remaining space */}
           <div className='flex-1 relative min-w-0'>
@@ -370,8 +371,8 @@ export function UnifiedAssetMap({
         </div>
       </div>
 
-      {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+      {/* Flexible Content Area - Map and Asset Panels */}
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         {/* Map Area with Overlays - lg:col-span-2 */}
         <div className='lg:col-span-2 relative flex flex-col'>
           {/* Map Container */}
@@ -605,7 +606,7 @@ export function UnifiedAssetMap({
                   </div>
                   
         {/* Right Panel - Collapsible Asset List - lg:col-span-1 */}
-        <div className='lg:col-span-1 flex flex-col'>
+        <div className='lg:col-span-1 flex flex-col h-full'>
           <CollapsibleAssetList
             assets={filteredAssets}
             selectedAssets={selectedAssets}
@@ -630,34 +631,32 @@ export function UnifiedAssetMap({
         </div>
       </div>
 
-    </PageLayout>
-
-    {/* Playback Control Panel - Fixed at bottom of page */}
-    {showPlaybackPanel && (
-      <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom-4 duration-300">
-        <PlaybackControlPanel
-          isPlaying={playbackState.isPlaying}
-          playbackSpeed={playbackState.playbackSpeed}
-          currentTime={playbackState.currentTime}
-          timeRange={playbackState.timeRange}
-          progress={playbackState.progress}
-          showPaths={playbackState.showPaths}
-          showMarkers={playbackState.showMarkers}
-          selectedAssetsCount={playbackState.selectedAssets.length}
-          onPlayPause={playbackState.playPause}
-          onSkipBack={playbackState.skipBack}
-          onSkipForward={playbackState.skipForward}
-          onReset={playbackState.reset}
-          onSpeedChange={playbackState.setPlaybackSpeed}
-          onTimeChange={playbackState.setCurrentTime}
-          onShowPathsChange={playbackState.setShowPaths}
-          onShowMarkersChange={playbackState.setShowMarkers}
-          onDateRangeChange={playbackState.setDateRange}
-          onClose={handleExitPlaybackMode}
-          selectedDateRange={playbackState.selectedDateRange}
-        />
-      </div>
-    )}
-    </>
+      {/* Fixed Playback Control Panel - Bottom of page */}
+      {showPlaybackPanel && (
+        <div className="flex-shrink-0 border-t bg-background">
+          <PlaybackControlPanel
+            isPlaying={playbackState.isPlaying}
+            playbackSpeed={playbackState.playbackSpeed}
+            currentTime={playbackState.currentTime}
+            timeRange={playbackState.timeRange}
+            progress={playbackState.progress}
+            showPaths={playbackState.showPaths}
+            showMarkers={playbackState.showMarkers}
+            selectedAssetsCount={playbackState.selectedAssets.length}
+            onPlayPause={playbackState.playPause}
+            onSkipBack={playbackState.skipBack}
+            onSkipForward={playbackState.skipForward}
+            onReset={playbackState.reset}
+            onSpeedChange={playbackState.setPlaybackSpeed}
+            onTimeChange={playbackState.setCurrentTime}
+            onShowPathsChange={playbackState.setShowPaths}
+            onShowMarkersChange={playbackState.setShowMarkers}
+            onDateRangeChange={playbackState.setDateRange}
+            onClose={handleExitPlaybackMode}
+            selectedDateRange={playbackState.selectedDateRange}
+          />
+        </div>
+      )}
+    </div>
   );
 }
