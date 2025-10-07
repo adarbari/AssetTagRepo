@@ -248,6 +248,17 @@ export function UnifiedAssetMap({
     playbackState.reset();
   };
 
+  // Invalidate map size when view mode or playback panel visibility changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    }, 100); // Small delay to ensure DOM updates are complete
+
+    return () => clearTimeout(timer);
+  }, [viewMode, showPlaybackPanel, isAssetListCollapsed]);
+
   // Map container class - use full height of available space
   const mapContainerClass = 'h-full';
 
@@ -384,6 +395,7 @@ export function UnifiedAssetMap({
           {/* Map Container */}
           <div className={`${mapContainerClass} rounded-lg border overflow-hidden relative flex-1`}>
             <MapContainer
+              key={`map-${viewMode}-${showPlaybackPanel}`}
               center={[37.7749, -122.4194]}
               zoom={13}
               style={{ height: '100%', width: '100%' }}
