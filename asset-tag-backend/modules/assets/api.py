@@ -366,9 +366,11 @@ async def create_asset(asset_data: AssetCreate, db: AsyncSession = Depends(get_d
 
         # Create new asset
         asset = Asset(
-            organization_id=uuid.UUID(
-                "00000000-0000-0000-0000-000000000000"
-            ),  # Default org for now
+            organization_id=(
+                uuid.UUID(asset_data.organization_id)
+                if asset_data.organization_id
+                else uuid.UUID("00000000-0000-0000-0000-000000000000")
+            ),
             name=asset_data.name,
             serial_number=asset_data.serial_number,
             asset_type=asset_data.asset_type,

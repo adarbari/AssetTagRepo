@@ -41,7 +41,7 @@ class AlertBase(BaseModel):
 class AlertCreate(AlertBase):
     """Schema for creating an alert"""
 
-    pass
+    organization_id: Optional[str] = Field(None, max_length=100)
 
 
 class AlertUpdate(BaseModel):

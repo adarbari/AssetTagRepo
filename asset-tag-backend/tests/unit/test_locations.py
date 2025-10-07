@@ -23,11 +23,11 @@ class TestLocationModel:
     """Test EstimatedLocation model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_location(self, db_session) -> None:
+    async def test_create_location(self, db_session, test_organization_sync, test_asset_sync) -> None:
         """Test creating a location estimate"""
         location = EstimatedLocation(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            asset_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440000"),
+            organization_id=test_organization_sync.id,
+            asset_id=test_asset_sync.id,
             latitude=40.7128,
             longitude=-74.0060,
             uncertainty_radius=10.0,
@@ -43,7 +43,7 @@ class TestLocationModel:
         await db_session.refresh(location)
 
         assert location.id is not None
-        assert location.asset_id == uuid.UUID("550e8400-e29b-41d4-a716-446655440000")
+        assert location.asset_id == test_asset_sync.id
         from decimal import Decimal
 
         assert location.latitude == Decimal("40.7128")
@@ -52,11 +52,11 @@ class TestLocationModel:
         assert len(location.gateway_ids) == 2
 
     @pytest.mark.asyncio
-    async def test_location_with_distance(self, db_session) -> None:
+    async def test_location_with_distance(self, db_session, test_organization_sync, test_asset_sync) -> None:
         """Test location with distance calculation"""
         location = EstimatedLocation(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            asset_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440000"),
+            organization_id=test_organization_sync.id,
+            asset_id=test_asset_sync.id,
             latitude=40.7128,
             longitude=-74.0060,
             uncertainty_radius=10.0,

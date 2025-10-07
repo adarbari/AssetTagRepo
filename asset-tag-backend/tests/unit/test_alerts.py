@@ -17,19 +17,19 @@ class TestAlertModel:
     """Test Alert model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_alert(self, db_session, sample_alert_data) -> None:
+    async def test_create_alert(self, db_session, test_organization_sync, test_asset_sync) -> None:
         """Test creating an alert"""
         from datetime import datetime
 
-        # Convert string timestamp to datetime object
-        alert_data = sample_alert_data.copy()
-        alert_data["triggered_at"] = datetime.fromisoformat(
-            alert_data["triggered_at"].replace("Z", "+00:00")
-        )
-
         alert = Alert(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **alert_data,
+            organization_id=test_organization_sync.id,
+            alert_type="battery_low",
+            severity="warning",
+            asset_id=test_asset_sync.id,
+            asset_name="Test Asset",
+            message="Battery level is low",
+            description="Asset battery has dropped below 20%",
+            triggered_at=datetime.now()
         )
 
         db_session.add(alert)
@@ -37,26 +37,25 @@ class TestAlertModel:
         await db_session.refresh(alert)
 
         assert alert.id is not None
-        assert alert.alert_type == sample_alert_data["alert_type"]
-        assert alert.severity == sample_alert_data["severity"]
-        assert alert.asset_id == uuid.UUID(sample_alert_data["asset_id"])
-        assert alert.message == sample_alert_data["message"]
+        assert alert.alert_type == "battery_low"
+        assert alert.severity == "warning"
+        assert alert.asset_id == test_asset_sync.id
+        assert alert.message == "Battery level is low"
         assert alert.status == "active"  # Default status
 
     @pytest.mark.asyncio
-    async def test_alert_status_transitions(self, db_session, sample_alert_data) -> None:
+    async def test_alert_status_transitions(self, db_session, test_organization_sync, test_asset_sync) -> None:
         """Test alert status transitions"""
         from datetime import datetime
 
-        # Convert string timestamp to datetime object
-        alert_data = sample_alert_data.copy()
-        alert_data["triggered_at"] = datetime.fromisoformat(
-            alert_data["triggered_at"].replace("Z", "+00:00")
-        )
-
         alert = Alert(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **alert_data,
+            organization_id=test_organization_sync.id,
+            alert_type="battery_low",
+            severity="warning",
+            asset_id=test_asset_sync.id,
+            asset_name="Test Asset",
+            message="Battery level is low",
+            triggered_at=datetime.now()
         )
 
         db_session.add(alert)
@@ -80,29 +79,28 @@ class TestAlertModel:
         assert alert.resolved_at is not None
 
     @pytest.mark.asyncio
-    async def test_alert_metadata(self, db_session, sample_alert_data) -> None:
+    async def test_alert_metadata(self, db_session, test_organization_sync, test_asset_sync) -> None:
         """Test alert metadata handling"""
         from datetime import datetime
 
-        # Convert string timestamp to datetime object
-        alert_data = sample_alert_data.copy()
-        alert_data["triggered_at"] = datetime.fromisoformat(
-            alert_data["triggered_at"].replace("Z", "+00:00")
-        )
-
         metadata = {"rule_id": "battery_low", "threshold": 20}
         alert = Alert(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **alert_data,
-            metadata=metadata,
+            organization_id=test_organization_sync.id,
+            alert_type="battery_low",
+            severity="warning",
+            asset_id=test_asset_sync.id,
+            asset_name="Test Asset",
+            message="Battery level is low",
+            triggered_at=datetime.now(),
+            alert_metadata=metadata
         )
 
         db_session.add(alert)
         await db_session.commit()
         await db_session.refresh(alert)
 
-        assert alert.metadata == metadata
-        assert alert.metadata["rule_id"] == "battery_low"
+        assert alert.alert_metadata == metadata
+        assert alert.alert_metadata["rule_id"] == "battery_low"
 
 
 class TestAlertSchemas:

@@ -16,11 +16,18 @@ class TestAssetModel:
     """Test Asset model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_asset(self, db_session, sample_asset_data) -> None:
+    async def test_create_asset(self, db_session, test_organization_sync, test_site_sync, test_user_sync) -> None:
         """Test creating an asset"""
         asset = Asset(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_asset_data,
+            organization_id=test_organization_sync.id,
+            name="Test Excavator",
+            serial_number="EXC-001",
+            asset_type="excavator",
+            status="active",
+            current_site_id=test_site_sync.id,
+            assigned_to_user_id=test_user_sync.id,
+            battery_level=85,
+            asset_metadata={"model": "CAT 320", "year": 2020}
         )
 
         db_session.add(asset)
@@ -28,17 +35,23 @@ class TestAssetModel:
         await db_session.refresh(asset)
 
         assert asset.id is not None
-        assert asset.name == sample_asset_data["name"]
-        assert asset.asset_type == sample_asset_data["asset_type"]
-        assert asset.status == sample_asset_data["status"]
-        assert asset.battery_level == sample_asset_data["battery_level"]
+        assert asset.name == "Test Excavator"
+        assert asset.asset_type == "excavator"
+        assert asset.status == "active"
+        assert asset.battery_level == 85
 
     @pytest.mark.asyncio
-    async def test_asset_soft_delete(self, db_session, sample_asset_data) -> None:
+    async def test_asset_soft_delete(self, db_session, test_organization_sync, test_site_sync, test_user_sync) -> None:
         """Test soft delete functionality"""
         asset = Asset(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_asset_data,
+            organization_id=test_organization_sync.id,
+            name="Test Excavator",
+            serial_number="EXC-002",
+            asset_type="excavator",
+            status="active",
+            current_site_id=test_site_sync.id,
+            assigned_to_user_id=test_user_sync.id,
+            battery_level=85
         )
 
         db_session.add(asset)
@@ -52,18 +65,26 @@ class TestAssetModel:
         assert asset.deleted_at is not None
 
     @pytest.mark.asyncio
-    async def test_asset_metadata(self, db_session, sample_asset_data) -> None:
+    async def test_asset_metadata(self, db_session, test_organization_sync, test_site_sync, test_user_sync) -> None:
         """Test asset metadata handling"""
+        metadata = {"model": "CAT 320", "year": 2020}
         asset = Asset(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_asset_data,
+            organization_id=test_organization_sync.id,
+            name="Test Excavator",
+            serial_number="EXC-003",
+            asset_type="excavator",
+            status="active",
+            current_site_id=test_site_sync.id,
+            assigned_to_user_id=test_user_sync.id,
+            battery_level=85,
+            asset_metadata=metadata
         )
 
         db_session.add(asset)
         await db_session.commit()
         await db_session.refresh(asset)
 
-        assert asset.asset_metadata == sample_asset_data["asset_metadata"]
+        assert asset.asset_metadata == metadata
         assert asset.asset_metadata["model"] == "CAT 320"
         assert asset.asset_metadata["year"] == 2020
 

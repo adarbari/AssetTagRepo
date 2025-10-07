@@ -362,9 +362,11 @@ async def create_alert(alert_data: AlertCreate, db: AsyncSession = Depends(get_d
             )
 
         alert = Alert(
-            organization_id=uuid.UUID(
-                "00000000-0000-0000-0000-000000000000"
-            ),  # Default org for now
+            organization_id=(
+                uuid.UUID(alert_data.organization_id)
+                if alert_data.organization_id
+                else uuid.UUID("00000000-0000-0000-0000-000000000000")
+            ),
             alert_type=alert_data.alert_type,
             severity=alert_data.severity,
             status=alert_data.status or "active",

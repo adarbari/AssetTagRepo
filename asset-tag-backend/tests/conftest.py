@@ -90,9 +90,18 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
     async with TestSessionLocal() as session:
         yield session
 
-    # Clean up
+    # Clean up - drop tables in reverse dependency order to avoid circular dependency issues
     async with test_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+        # Drop tables in specific order to avoid circular dependencies
+        drop_order = [
+            "geofence_events", "alerts", "estimated_locations", "observations", 
+            "maintenance_records", "job_assets", "vehicle_asset_pairings", 
+            "assets", "jobs", "geofences", "sites", "vehicles", "users", 
+            "organizations", "audit_logs"
+        ]
+        
+        for table in drop_order:
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text(f"DROP TABLE IF EXISTS {table} CASCADE")))
 
 
 @pytest_asyncio.fixture(scope="function")
@@ -101,24 +110,17 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
     
     # Clean up database before each test
     async with test_engine.begin() as conn:
-        # Drop all tables individually to avoid circular dependency issues
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS geofence_events CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS alerts CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS estimated_locations CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS observations CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS maintenance_records CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS job_assets CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS vehicle_asset_pairings CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS assets CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS jobs CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS geofences CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS sites CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS vehicles CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS users CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS organizations CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS gateways CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS personnel CASCADE")))
-        await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS personnel_activities CASCADE")))
+        # Drop tables in specific order to avoid circular dependencies
+        drop_order = [
+            "geofence_events", "alerts", "estimated_locations", "observations", 
+            "maintenance_records", "job_assets", "vehicle_asset_pairings", 
+            "assets", "jobs", "geofences", "sites", "vehicles", "users", 
+            "organizations", "audit_logs", "gateways", "personnel", "personnel_activities"
+        ]
+        
+        for table in drop_order:
+            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text(f"DROP TABLE IF EXISTS {table} CASCADE")))
+        
         # Create tables using SQLAlchemy instead of migrations
         await conn.run_sync(Base.metadata.create_all)
 
@@ -133,36 +135,8 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
     app.dependency_overrides.clear()
 
 @pytest.fixture(scope="function")
-def client(event_loop) -> TestClient:
+def client() -> TestClient:
     """Create a synchronous test client for backward compatibility."""
-    
-    # Clean up database before each test using existing event loop
-    async def cleanup_db() -> None:
-        async with test_engine.begin() as conn:
-            # Drop all tables individually to avoid circular dependency issues
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS geofence_events CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS alerts CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS estimated_locations CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS observations CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS maintenance_records CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS job_assets CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS vehicle_asset_pairings CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS assets CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS jobs CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS geofences CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS sites CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS vehicles CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS users CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS organizations CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS gateways CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS personnel CASCADE")))
-            await conn.run_sync(lambda sync_conn: sync_conn.execute(sa.text("DROP TABLE IF EXISTS personnel_activities CASCADE")))
-            # Create tables using SQLAlchemy instead of migrations
-            await conn.run_sync(Base.metadata.create_all)
-
-    # Run cleanup using the existing event loop
-    event_loop.run_until_complete(cleanup_db())
-
     # Override database dependency
     from config.test_database import get_test_db
     app.dependency_overrides[get_db] = get_test_db
@@ -340,3 +314,200 @@ def sample_personnel_data() -> None:
         "contact_info": {"email": "test@example.com", "phone": "555-0123"},
         "metadata": {"department": "operations"},
     }
+
+
+@pytest.fixture
+async def test_organization(db_session) -> None:
+    """Create a test organization."""
+    from modules.shared.database.models import Organization
+    
+    org = Organization(
+        id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+        name="Test Organization",
+        is_active=True
+    )
+    db_session.add(org)
+    await db_session.commit()
+    return org
+
+
+@pytest.fixture
+async def test_user(db_session, test_organization) -> None:
+    """Create a test user."""
+    from modules.shared.database.models import User
+    
+    # Await the async fixture
+    organization = await test_organization
+    
+    user = User(
+        id=uuid.UUID("550e8400-e29b-41d4-a716-446655440002"),
+        organization_id=organization.id,
+        username="testuser",
+        email="test@example.com",
+        full_name="Test User",
+        hashed_password="hashed_password_here",
+        role="operator",
+        is_active=True
+    )
+    db_session.add(user)
+    await db_session.commit()
+    return user
+
+
+@pytest.fixture
+async def test_site(db_session, test_organization) -> None:
+    """Create a test site."""
+    from modules.sites.models import Site
+    
+    # Await the async fixture
+    organization = await test_organization
+    
+    site = Site(
+        id=uuid.UUID("550e8400-e29b-41d4-a716-446655440001"),
+        organization_id=organization.id,
+        name="Test Site",
+        location="Test Location",
+        status="active",
+        address="123 Test St",
+        latitude=40.7128,
+        longitude=-74.0060
+    )
+    db_session.add(site)
+    await db_session.commit()
+    return site
+
+
+@pytest.fixture
+async def test_asset(db_session, test_organization, test_site, test_user) -> None:
+    """Create a test asset."""
+    from modules.assets.models import Asset
+
+    # Await the async fixtures
+    organization = await test_organization
+    site = await test_site
+    user = await test_user
+
+    asset = Asset(
+        id=uuid.UUID("550e8400-e29b-41d4-a716-446655440000"),
+        organization_id=organization.id,
+        name="Test Asset",
+        serial_number="TEST-001",
+        asset_type="excavator",
+        status="active",
+        current_site_id=site.id,
+        assigned_to_user_id=user.id,
+        battery_level=85
+    )
+    db_session.add(asset)
+    await db_session.commit()
+    return asset
+
+
+# Synchronous versions of test fixtures for integration tests
+@pytest.fixture
+def test_organization_sync():
+    """Create a test organization for sync tests."""
+    from modules.shared.database.models import Organization
+    import uuid
+    from datetime import datetime
+    
+    organization = Organization(
+            id=uuid.uuid4(),
+            name=f"Test Organization {uuid.uuid4().hex[:8]}",
+            is_active=True,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+    
+    # Add to database using sync session
+    from config.test_database import TestSessionLocalSync
+    with TestSessionLocalSync() as session:
+        session.add(organization)
+        session.commit()
+        session.refresh(organization)
+        return organization
+
+
+@pytest.fixture
+def test_user_sync(test_organization_sync):
+    """Create a test user for sync tests."""
+    from modules.shared.database.models import User
+    import uuid
+    from datetime import datetime
+    
+    user = User(
+        id=uuid.uuid4(),
+        organization_id=test_organization_sync.id,
+        username=f"testuser_{uuid.uuid4().hex[:8]}",
+        email=f"test_{uuid.uuid4().hex[:8]}@example.com",
+        full_name="Test User",
+        role="operator",
+        is_active=True,
+        hashed_password="hashed_password_here",
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    
+    from config.test_database import TestSessionLocalSync
+    with TestSessionLocalSync() as session:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return user
+
+
+@pytest.fixture
+def test_site_sync(test_organization_sync):
+    """Create a test site for sync tests."""
+    from modules.sites.models import Site
+    import uuid
+    from datetime import datetime
+    
+    site = Site(
+        id=uuid.uuid4(),
+        organization_id=test_organization_sync.id,
+        name=f"Test Site {uuid.uuid4().hex[:8]}",
+        location="Test Location",
+        address="123 Test St",
+        latitude=40.7128,
+        longitude=-74.0060,
+        status="active",
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    
+    from config.test_database import TestSessionLocalSync
+    with TestSessionLocalSync() as session:
+        session.add(site)
+        session.commit()
+        session.refresh(site)
+        return site
+
+
+@pytest.fixture
+def test_asset_sync(test_organization_sync, test_site_sync, test_user_sync):
+    """Create a test asset for sync tests."""
+    from modules.assets.models import Asset
+    import uuid
+    from datetime import datetime
+    
+    asset = Asset(
+        id=uuid.uuid4(),
+        organization_id=test_organization_sync.id,
+        name=f"Test Asset {uuid.uuid4().hex[:8]}",
+        serial_number=f"TEST-{uuid.uuid4().hex[:8]}",
+        asset_type="excavator",
+        status="active",
+        current_site_id=test_site_sync.id,
+        assigned_to_user_id=test_user_sync.id,
+        battery_level=85,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    
+    from config.test_database import TestSessionLocalSync
+    with TestSessionLocalSync() as session:
+        session.add(asset)
+        session.commit()
+        session.refresh(asset)
+        return asset

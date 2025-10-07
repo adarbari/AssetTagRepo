@@ -7,12 +7,14 @@ import os
 
 from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
                                     create_async_engine)
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import create_engine
 
 from config.database import Base
 
 # Test database URL - use PostgreSQL to support UUID types
 TEST_DATABASE_URL = "postgresql+asyncpg://dev_user:dev_pass@localhost:5432/asset_tag_test"
+TEST_DATABASE_URL_SYNC = "postgresql://dev_user:dev_pass@localhost:5432/asset_tag_test"
 
 # Create test engine with PostgreSQL configuration
 test_engine = create_async_engine(
@@ -25,9 +27,25 @@ test_engine = create_async_engine(
     pool_recycle=3600,  # Recycle connections hourly
 )
 
+# Create sync test engine
+test_engine_sync = create_engine(
+    TEST_DATABASE_URL_SYNC,
+    echo=False,
+    future=True,
+    pool_size=20,
+    max_overflow=10,
+    pool_pre_ping=True,
+    pool_recycle=3600,
+)
+
 # Create test session factory
 TestSessionLocal = async_sessionmaker(
     test_engine, class_=AsyncSession, expire_on_commit=False
+)
+
+# Create sync test session factory
+TestSessionLocalSync = sessionmaker(
+    test_engine_sync, expire_on_commit=False
 )
 
 

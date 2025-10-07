@@ -17,11 +17,19 @@ class TestGeofenceModel:
     """Test Geofence model functionality"""
 
     @pytest.mark.asyncio
-    async def test_create_geofence(self, db_session, sample_geofence_data) -> None:
+    async def test_create_geofence(self, db_session, test_organization_sync, test_site_sync) -> None:
         """Test creating a geofence"""
         geofence = Geofence(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_geofence_data,
+            organization_id=test_organization_sync.id,
+            name="Test Geofence",
+            geofence_type="circular",
+            status="active",
+            center_latitude=40.7128,
+            center_longitude=-74.0060,
+            radius=100,
+            coordinates=[[40.7128, -74.0060]],
+            site_id=test_site_sync.id,
+            geofence_classification="authorized"
         )
 
         db_session.add(geofence)
@@ -29,17 +37,25 @@ class TestGeofenceModel:
         await db_session.refresh(geofence)
 
         assert geofence.id is not None
-        assert geofence.name == sample_geofence_data["name"]
-        assert geofence.geofence_type == sample_geofence_data["geofence_type"]
-        assert geofence.status == sample_geofence_data["status"]
-        assert geofence.coordinates == sample_geofence_data["coordinates"]
+        assert geofence.name == "Test Geofence"
+        assert geofence.geofence_type == "circular"
+        assert geofence.status == "active"
+        assert geofence.coordinates == [[40.7128, -74.0060]]
 
     @pytest.mark.asyncio
-    async def test_geofence_soft_delete(self, db_session, sample_geofence_data) -> None:
+    async def test_geofence_soft_delete(self, db_session, test_organization_sync, test_site_sync) -> None:
         """Test soft delete functionality"""
         geofence = Geofence(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            **sample_geofence_data,
+            organization_id=test_organization_sync.id,
+            name="Test Geofence 2",
+            geofence_type="circular",
+            status="active",
+            center_latitude=40.7128,
+            center_longitude=-74.0060,
+            radius=100,
+            coordinates=[[40.7128, -74.0060]],
+            site_id=test_site_sync.id,
+            geofence_classification="authorized"
         )
 
         db_session.add(geofence)
@@ -53,28 +69,25 @@ class TestGeofenceModel:
         assert geofence.deleted_at is not None
 
     @pytest.mark.asyncio
-    async def test_geofence_geometry_validation(self, db_session) -> None:
+    async def test_geofence_geometry_validation(self, db_session, test_organization_sync, test_site_sync) -> None:
         """Test geofence geometry validation"""
         # Test with valid polygon geometry
-        valid_geometry = {
-            "type": "Polygon",
-            "coordinates": [
-                [
-                    [-74.0060, 40.7128],
-                    [-74.0050, 40.7128],
-                    [-74.0050, 40.7138],
-                    [-74.0060, 40.7138],
-                    [-74.0060, 40.7128],
-                ]
-            ],
-        }
+        valid_geometry = [
+            [-74.0060, 40.7128],
+            [-74.0050, 40.7128],
+            [-74.0050, 40.7138],
+            [-74.0060, 40.7138],
+            [-74.0060, 40.7128],
+        ]
 
         geofence = Geofence(
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            name="Test Geofence",
-            geofence_type="authorized",
+            organization_id=test_organization_sync.id,
+            name="Test Geofence 3",
+            geofence_type="polygon",
             status="active",
             coordinates=valid_geometry,
+            site_id=test_site_sync.id,
+            geofence_classification="authorized"
         )
 
         db_session.add(geofence)

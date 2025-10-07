@@ -8,25 +8,45 @@ import pytest
 class TestAlertsAPI:
     """Test Alerts API endpoints"""
 
-    def test_create_alert(self, client, sample_alert_data) -> None:
+    def test_create_alert(self, client, test_organization_sync, test_asset_sync) -> None:
         """Test creating an alert via API"""
-        response = client.post("/api/v1/alerts", json=sample_alert_data)
+        alert_data = {
+            "alert_type": "battery_low",
+            "severity": "warning",
+            "organization_id": str(test_organization_sync.id),
+            "asset_id": str(test_asset_sync.id),
+            "asset_name": "Test Asset",
+            "message": "Battery level is low",
+            "description": "Asset battery has dropped below 20%",
+            "triggered_at": "2024-01-01T12:00:00Z",
+        }
+        response = client.post("/api/v1/alerts", json=alert_data)
 
         assert response.status_code == 201
         data = response.json()
 
-        assert data["alert_type"] == sample_alert_data["alert_type"]
-        assert data["severity"] == sample_alert_data["severity"]
-        assert data["asset_id"] == sample_alert_data["asset_id"]
-        assert data["message"] == sample_alert_data["message"]
+        assert data["alert_type"] == alert_data["alert_type"]
+        assert data["severity"] == alert_data["severity"]
+        assert data["asset_id"] == alert_data["asset_id"]
+        assert data["message"] == alert_data["message"]
         assert data["status"] == "active"  # Default status
         assert "id" in data
         assert "created_at" in data
 
-    def test_get_alerts(self, client, sample_alert_data) -> None:
+    def test_get_alerts(self, client, test_organization_sync, test_asset_sync) -> None:
         """Test getting list of alerts"""
         # Create a test alert first
-        client.post("/api/v1/alerts", json=sample_alert_data)
+        alert_data = {
+            "alert_type": "battery_low",
+            "severity": "warning",
+            "organization_id": str(test_organization_sync.id),
+            "asset_id": str(test_asset_sync.id),
+            "asset_name": "Test Asset",
+            "message": "Battery level is low",
+            "description": "Asset battery has dropped below 20%",
+            "triggered_at": "2024-01-01T12:00:00Z",
+        }
+        client.post("/api/v1/alerts", json=alert_data)
 
         response = client.get("/api/v1/alerts")
 
@@ -38,12 +58,22 @@ class TestAlertsAPI:
 
         # Check that our created alert is in the list
         alert_types = [alert["alert_type"] for alert in data]
-        assert sample_alert_data["alert_type"] in alert_types
+        assert alert_data["alert_type"] in alert_types
 
-    def test_get_alert_by_id(self, client, sample_alert_data) -> None:
+    def test_get_alert_by_id(self, client, test_organization_sync, test_asset_sync) -> None:
         """Test getting a specific alert by ID"""
         # Create a test alert first
-        create_response = client.post("/api/v1/alerts", json=sample_alert_data)
+        alert_data = {
+            "alert_type": "battery_low",
+            "severity": "warning",
+            "organization_id": str(test_organization_sync.id),
+            "asset_id": str(test_asset_sync.id),
+            "asset_name": "Test Asset",
+            "message": "Battery level is low",
+            "description": "Asset battery has dropped below 20%",
+            "triggered_at": "2024-01-01T12:00:00Z",
+        }
+        create_response = client.post("/api/v1/alerts", json=alert_data)
         alert_id = create_response.json()["id"]
 
         response = client.get(f"/api/v1/alerts/{alert_id}")
@@ -52,13 +82,23 @@ class TestAlertsAPI:
         data = response.json()
 
         assert data["id"] == alert_id
-        assert data["alert_type"] == sample_alert_data["alert_type"]
-        assert data["severity"] == sample_alert_data["severity"]
+        assert data["alert_type"] == alert_data["alert_type"]
+        assert data["severity"] == alert_data["severity"]
 
-    def test_acknowledge_alert(self, client, sample_alert_data) -> None:
+    def test_acknowledge_alert(self, client, test_organization_sync, test_asset_sync) -> None:
         """Test acknowledging an alert"""
         # Create a test alert first
-        create_response = client.post("/api/v1/alerts", json=sample_alert_data)
+        alert_data = {
+            "alert_type": "battery_low",
+            "severity": "warning",
+            "organization_id": str(test_organization_sync.id),
+            "asset_id": str(test_asset_sync.id),
+            "asset_name": "Test Asset",
+            "message": "Battery level is low",
+            "description": "Asset battery has dropped below 20%",
+            "triggered_at": "2024-01-01T12:00:00Z",
+        }
+        create_response = client.post("/api/v1/alerts", json=alert_data)
         alert_id = create_response.json()["id"]
 
         # Acknowledge the alert
@@ -70,10 +110,20 @@ class TestAlertsAPI:
         assert data["status"] == "acknowledged"
         assert data["acknowledged_at"] is not None
 
-    def test_resolve_alert(self, client, sample_alert_data) -> None:
+    def test_resolve_alert(self, client, test_organization_sync, test_asset_sync) -> None:
         """Test resolving an alert"""
         # Create a test alert first
-        create_response = client.post("/api/v1/alerts", json=sample_alert_data)
+        alert_data = {
+            "alert_type": "battery_low",
+            "severity": "warning",
+            "organization_id": str(test_organization_sync.id),
+            "asset_id": str(test_asset_sync.id),
+            "asset_name": "Test Asset",
+            "message": "Battery level is low",
+            "description": "Asset battery has dropped below 20%",
+            "triggered_at": "2024-01-01T12:00:00Z",
+        }
+        create_response = client.post("/api/v1/alerts", json=alert_data)
         alert_id = create_response.json()["id"]
 
         # Resolve the alert
@@ -85,16 +135,30 @@ class TestAlertsAPI:
         assert data["status"] == "resolved"
         assert data["resolved_at"] is not None
 
-    def test_alert_filtering(self, client, sample_alert_data) -> None:
+    def test_alert_filtering(self, client, test_organization_sync, test_asset_sync) -> None:
         """Test filtering alerts by various criteria"""
         # Create test alerts with different properties
-        alert1_data = sample_alert_data.copy()
-        alert1_data["alert_type"] = "battery_low"
-        alert1_data["severity"] = "warning"
+        alert1_data = {
+            "alert_type": "battery_low",
+            "severity": "warning",
+            "organization_id": str(test_organization_sync.id),
+            "asset_id": str(test_asset_sync.id),
+            "asset_name": "Test Asset",
+            "message": "Battery level is low",
+            "description": "Asset battery has dropped below 20%",
+            "triggered_at": "2024-01-01T12:00:00Z",
+        }
 
-        alert2_data = sample_alert_data.copy()
-        alert2_data["alert_type"] = "maintenance_due"
-        alert2_data["severity"] = "info"
+        alert2_data = {
+            "alert_type": "maintenance_due",
+            "severity": "info",
+            "organization_id": str(test_organization_sync.id),
+            "asset_id": str(test_asset_sync.id),
+            "asset_name": "Test Asset",
+            "message": "Maintenance is due",
+            "description": "Scheduled maintenance is approaching",
+            "triggered_at": "2024-01-01T12:00:00Z",
+        }
 
         client.post("/api/v1/alerts", json=alert1_data)
         client.post("/api/v1/alerts", json=alert2_data)
@@ -170,10 +234,20 @@ class TestAlertsAPI:
         response = client.post("/api/v1/alerts", json=invalid_data)
         assert response.status_code == 422  # Validation error
 
-    def test_alert_workflow(self, client, sample_alert_data) -> None:
+    def test_alert_workflow(self, client, test_organization_sync, test_asset_sync) -> None:
         """Test complete alert workflow: create -> acknowledge -> resolve"""
         # Create alert
-        create_response = client.post("/api/v1/alerts", json=sample_alert_data)
+        alert_data = {
+            "alert_type": "battery_low",
+            "severity": "warning",
+            "organization_id": str(test_organization_sync.id),
+            "asset_id": str(test_asset_sync.id),
+            "asset_name": "Test Asset",
+            "message": "Battery level is low",
+            "description": "Asset battery has dropped below 20%",
+            "triggered_at": "2024-01-01T12:00:00Z",
+        }
+        create_response = client.post("/api/v1/alerts", json=alert_data)
         assert create_response.status_code == 201
         alert_id = create_response.json()["id"]
 
