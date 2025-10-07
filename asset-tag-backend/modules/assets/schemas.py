@@ -31,7 +31,7 @@ class AssetBase(BaseModel):
 class AssetCreate(AssetBase):
     """Schema for creating an asset"""
 
-    organization_id: Optional[str] = Field(None, max_length=100)
+    organization_id: str = Field(..., max_length=100)
 
 
 class AssetUpdate(BaseModel):

@@ -32,6 +32,44 @@ from config.test_database import TestSessionLocal, test_engine
 from main import app
 # Import all models to ensure they're registered with SQLAlchemy
 from modules.shared.database import models
+from modules.shared.database.models import Organization, Site, User
+
+
+async def create_test_data():
+    """Create required test data for integration tests."""
+    async with TestSessionLocal() as session:
+        # Create test organization
+        test_org = Organization(
+            id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+            name="Test Organization",
+            domain="test.example.com"
+        )
+        session.add(test_org)
+        
+        # Create test site
+        test_site = Site(
+            id=uuid.UUID("550e8400-e29b-41d4-a716-446655440001"),
+            name="Test Site",
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+            address="123 Test St, Test City, TC 12345",
+            latitude=40.7128,
+            longitude=-74.0060
+        )
+        session.add(test_site)
+        
+        # Create test user
+        test_user = User(
+            id=uuid.UUID("550e8400-e29b-41d4-a716-446655440002"),
+            username="testuser",
+            email="test@example.com",
+            full_name="Test User",
+            hashed_password="hashed_password_placeholder",
+            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
+            role="user"
+        )
+        session.add(test_user)
+        
+        await session.commit()
 
 
 @pytest.fixture(scope="session")
@@ -124,6 +162,9 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
         # Create tables using SQLAlchemy instead of migrations
         await conn.run_sync(Base.metadata.create_all)
 
+    # Create required test data
+    await create_test_data()
+
     # Override database dependency
     from config.test_database import get_test_db
     app.dependency_overrides[get_db] = get_test_db
@@ -164,6 +205,7 @@ def sample_asset_data() -> None:
         "serial_number": "EXC-001",
         "asset_type": "excavator",
         "status": "active",
+        "organization_id": "550e8400-e29b-41d4-a716-446655440003",  # Test organization ID
         "current_site_id": "550e8400-e29b-41d4-a716-446655440001",
         "assigned_to_user_id": "550e8400-e29b-41d4-a716-446655440002",
         "battery_level": 85,

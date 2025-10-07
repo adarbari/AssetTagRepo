@@ -113,6 +113,7 @@ class TestAssetSchemas:
             "serial_number": "TEST-001",
             "asset_type": "excavator",
             "status": "active",
+            "organization_id": "550e8400-e29b-41d4-a716-446655440003",
         }
         asset_create = AssetCreate(**valid_data)
         assert asset_create.name == "Test Asset"
@@ -148,6 +149,7 @@ class TestAssetBusinessLogic:
             "serial_number": "TEST-001",
             "asset_type": "excavator",
             "battery_level": 50,
+            "organization_id": "550e8400-e29b-41d4-a716-446655440003",
         }
         asset = AssetCreate(**valid_data)
         assert asset.battery_level == 50
@@ -171,6 +173,7 @@ class TestAssetBusinessLogic:
                 "serial_number": "TEST-001",
                 "asset_type": "excavator",
                 "status": status,
+                "organization_id": "550e8400-e29b-41d4-a716-446655440003",
             }
             asset = AssetCreate(**data)
             assert asset.status == status
@@ -185,6 +188,7 @@ class TestAssetBusinessLogic:
                 "serial_number": "TEST-001",
                 "asset_type": asset_type,
                 "status": "active",
+                "organization_id": "550e8400-e29b-41d4-a716-446655440003",
             }
             asset = AssetCreate(**data)
             assert asset.asset_type == asset_type
