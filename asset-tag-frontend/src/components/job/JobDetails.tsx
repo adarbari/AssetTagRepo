@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Separator } from '../ui/separator';
-import { Progress } from '../ui/progress';
+// import { Progress } from '../ui/progress'; // Temporarily disabled
 import { PageHeader, PageLayout, StatusBadge, PriorityBadge } from '../common';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import {
@@ -467,10 +467,16 @@ export function JobDetails({ job, onBack, onEdit }: JobDetailsProps) {
                     %
                   </span>
                 </div>
-                <Progress
+                {/* <Progress
                   value={(job.actualCosts.total / job.budget.total) * 100}
                   className='h-2'
-                />
+                /> */}
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full" 
+                    style={{ width: `${(job.actualCosts.total / job.budget.total) * 100}%` }}
+                  ></div>
+                </div>
               </div>
 
               <Separator />

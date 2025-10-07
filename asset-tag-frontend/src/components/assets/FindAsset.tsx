@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
-import { Progress } from '../ui/progress';
+// import { Progress } from '../ui/progress'; // Temporarily disabled
 import {
   Search,
   MapPin,
@@ -213,10 +213,16 @@ export function FindAsset({ onShowOnMap }: FindAssetProps) {
                     {getProximityLevel(selectedAsset.distance).level}
                   </span>
                 </div>
-                <Progress
+                {/* <Progress
                   value={getProximityLevel(selectedAsset.distance).progress}
                   className='h-2'
-                />
+                /> */}
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-green-600 h-2 rounded-full" 
+                    style={{ width: `${getProximityLevel(selectedAsset.distance).progress}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
 

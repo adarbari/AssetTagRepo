@@ -881,6 +881,157 @@ mockAssets.forEach(asset => {
   assetActivityMap.set(asset.id, generateActivityHistory(asset.id, asset.site));
 });
 
+// Enhanced location history for playback functionality
+export interface LocationHistoryPoint {
+  id: string;
+  assetId: string;
+  timestamp: string;
+  location: string;
+  lat: number;
+  lng: number;
+  event: 'arrived' | 'departed' | 'moving' | 'idle' | 'stopped';
+  speed?: number; // mph or km/h
+  heading?: number; // degrees
+  distance?: number; // cumulative distance traveled
+  accuracy?: number; // meters
+  battery?: number; // battery level at this point
+}
+
+export interface AssetLocationHistory {
+  assetId: string;
+  assetName: string;
+  assetType: string;
+  color: string; // Unique color for this asset
+  startDate: string;
+  endDate: string;
+  trackingPoints: LocationHistoryPoint[];
+  totalDistance?: number;
+  averageSpeed?: number;
+  maxSpeed?: number;
+}
+
+// Generate realistic location history for playback
+function generateLocationHistory(asset: Asset): AssetLocationHistory {
+  const now = new Date();
+  const startTime = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+  const points: LocationHistoryPoint[] = [];
+  
+  // Define color palette for assets
+  const colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
+  ];
+  const colorIndex = mockAssets.indexOf(asset) % colors.length;
+  
+  // Start from current position
+  let currentLat = asset.coordinates?.[0] || 37.7749;
+  let currentLng = asset.coordinates?.[1] || -122.4194;
+  let currentTime = new Date(startTime);
+  let totalDistance = 0;
+  let maxSpeed = 0;
+  let speedSum = 0;
+  let speedCount = 0;
+  
+  // Generate points every 30 minutes for 7 days
+  const intervalMs = 30 * 60 * 1000; // 30 minutes
+  const totalPoints = Math.floor((now.getTime() - startTime.getTime()) / intervalMs);
+  
+  for (let i = 0; i < totalPoints; i++) {
+    const timestamp = new Date(currentTime.getTime() + i * intervalMs);
+    
+    // Simulate realistic movement patterns
+    const isMoving = Math.random() > 0.7; // 30% chance of movement
+    let newLat = currentLat;
+    let newLng = currentLng;
+    let speed = 0;
+    let event: LocationHistoryPoint['event'] = 'idle';
+    
+    if (isMoving) {
+      // Generate movement within reasonable bounds
+      const latChange = (Math.random() - 0.5) * 0.01; // ~0.5km max change
+      const lngChange = (Math.random() - 0.5) * 0.01;
+      
+      newLat = Math.max(37.7, Math.min(37.9, currentLat + latChange));
+      newLng = Math.max(-122.5, Math.min(-122.3, currentLng + lngChange));
+      
+      // Calculate speed based on distance and time
+      const distance = Math.sqrt(
+        Math.pow((newLat - currentLat) * 111000, 2) + 
+        Math.pow((newLng - currentLng) * 111000 * Math.cos(newLat * Math.PI / 180), 2)
+      );
+      speed = distance / (30 * 60) * 3.6; // Convert to km/h
+      
+      if (speed > 1) {
+        event = 'moving';
+        totalDistance += distance;
+        maxSpeed = Math.max(maxSpeed, speed);
+        speedSum += speed;
+        speedCount++;
+      } else {
+        event = 'idle';
+      }
+      
+      currentLat = newLat;
+      currentLng = newLng;
+    }
+    
+    // Simulate battery drain
+    const batteryDrain = Math.random() * 0.1; // 0-0.1% per 30min
+    const currentBattery = Math.max(0, (asset.battery || 100) - (i * batteryDrain));
+    
+    points.push({
+      id: `${asset.id}-${i}`,
+      assetId: asset.id,
+      timestamp: timestamp.toISOString(),
+      location: asset.location,
+      lat: newLat,
+      lng: newLng,
+      event,
+      speed: speed > 0 ? Math.round(speed) : undefined,
+      heading: isMoving ? Math.random() * 360 : undefined,
+      distance: totalDistance,
+      accuracy: 5 + Math.random() * 10, // 5-15m accuracy
+      battery: Math.round(currentBattery)
+    });
+  }
+  
+  return {
+    assetId: asset.id,
+    assetName: asset.name,
+    assetType: asset.type,
+    color: colors[colorIndex],
+    startDate: startTime.toISOString(),
+    endDate: now.toISOString(),
+    trackingPoints: points,
+    totalDistance: Math.round(totalDistance),
+    averageSpeed: speedCount > 0 ? Math.round(speedSum / speedCount) : 0,
+    maxSpeed: Math.round(maxSpeed)
+  };
+}
+
+// Generate location history for all assets
+export const assetLocationHistoryMap = new Map<string, AssetLocationHistory>();
+mockAssets.forEach(asset => {
+  assetLocationHistoryMap.set(asset.id, generateLocationHistory(asset));
+});
+
+// Helper function to get location history for an asset
+export function getAssetLocationHistory(assetId: string): AssetLocationHistory | undefined {
+  return assetLocationHistoryMap.get(assetId);
+}
+
+// Helper function to get all location histories
+export function getAllAssetLocationHistories(): AssetLocationHistory[] {
+  const histories = Array.from(assetLocationHistoryMap.values());
+  console.log('📊 Generated location histories:', histories.length, histories.map(h => ({
+    assetId: h.assetId,
+    assetName: h.assetName,
+    pointsCount: h.trackingPoints.length,
+    timeRange: { start: h.startDate, end: h.endDate }
+  })));
+  return histories;
+}
+
 // Mock personnel with activity tracking
 export const mockPersonnel: Personnel[] = [
   {

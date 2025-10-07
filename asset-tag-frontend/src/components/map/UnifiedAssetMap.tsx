@@ -14,6 +14,7 @@ import { StatusBadge } from '../common/StatusBadge';
 import { useOverlayState } from '../../hooks/useOverlayState';
 import { mockAssets as sharedMockAssets, mockGeofences as sharedMockGeofences, mockSites as sharedMockSites } from '../../data/mockData';
 import { Asset, Geofence } from '../../types/asset';
+import { AssetPlaybackMap } from './AssetPlaybackMap';
 import { format } from 'date-fns';
 import {
   Search,
@@ -48,6 +49,7 @@ import {
   EyeOff,
   Info,
   GripVertical,
+  History,
 } from 'lucide-react';
 
 interface UnifiedAssetMapProps {
@@ -104,6 +106,7 @@ export function UnifiedAssetMap({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [maxHistoricalLength] = useState(100); // Mock data length
+  const [showPlaybackMode, setShowPlaybackMode] = useState(false);
 
   // Overlay state management with localStorage persistence (removed focus state)
   const [isLayerControlsExpanded, setIsLayerControlsExpanded] = useOverlayState('map-layers-expanded', false);
@@ -452,6 +455,15 @@ export function UnifiedAssetMap({
               )}
             </>
           )}
+          <Button
+            variant={showPlaybackMode ? 'default' : 'outline'}
+            size='sm'
+            onClick={() => setShowPlaybackMode(!showPlaybackMode)}
+            className='flex items-center gap-2'
+          >
+            <History className='w-4 h-4' />
+            {showPlaybackMode ? 'Live View' : 'Playback'}
+          </Button>
         </div>
       </div>
 
@@ -507,8 +519,13 @@ export function UnifiedAssetMap({
         </div>
       </div>
 
-      {/* Main Grid Layout - EXACT same pattern as UnifiedAssetMap.tsx */}
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+      {/* Conditional Rendering: Playback Mode or Live View */}
+      {showPlaybackMode ? (
+        <AssetPlaybackMap onBack={onBack} />
+      ) : (
+        <>
+          {/* Main Grid Layout - EXACT same pattern as UnifiedAssetMap.tsx */}
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
         {/* Map Area with Overlays - lg:col-span-2 */}
         <div className='lg:col-span-2 relative'>
           {/* Map Container */}
@@ -845,6 +862,8 @@ export function UnifiedAssetMap({
           </Card>
         </div>
       </div>
+        </>
+      )}
     </PageLayout>
   );
 }

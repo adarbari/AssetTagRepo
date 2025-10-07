@@ -1,0 +1,47 @@
+/* Custom styles for asset playback map */
+
+.custom-asset-marker {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.custom-asset-marker div {
+  transition: all 0.3s ease;
+}
+
+.custom-asset-marker:hover div {
+  transform: scale(1.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4) !important;
+}
+
+/* Animation for moving markers */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.moving-marker {
+  animation: pulse 2s infinite;
+}
+
+/* Path animation */
+.leaflet-interactive {
+  transition: opacity 0.3s ease;
+}
+
+/* Timeline controls */
+.playback-timeline {
+  background: linear-gradient(90deg, 
+    rgba(59, 130, 246, 0.1) 0%, 
+    rgba(59, 130, 246, 0.3) 50%, 
+    rgba(59, 130, 246, 0.1) 100%
+  );
+}

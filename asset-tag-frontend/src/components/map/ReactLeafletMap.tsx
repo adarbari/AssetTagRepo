@@ -11,6 +11,7 @@ import { Calendar } from '../ui/calendar';
 import { useOverlayState } from '../../hooks/useOverlayState';
 import { mockAssets as sharedMockAssets, mockGeofences as sharedMockGeofences } from '../../data/mockData';
 import { Asset, Geofence } from '../../types';
+import { AssetPlaybackMap } from './AssetPlaybackMap';
 import { format } from 'date-fns';
 import {
   Search,
@@ -28,6 +29,7 @@ import {
   SkipForward,
   SkipBack,
   CalendarIcon,
+  History,
   Settings,
   Filter,
   List,
@@ -112,8 +114,6 @@ export function ReactLeafletMap({
   expectedAssetIds,
   actualAssetIds,
 }: ReactLeafletMapProps = {}) {
-  console.log('🚀 ReactLeafletMap component rendering...');
-  
   const [searchText, setSearchText] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -139,6 +139,14 @@ export function ReactLeafletMap({
 
   // Overlay states (keeping for potential future use)
   const [isPlaybackOpen, togglePlayback] = useOverlayState('playback', false);
+  const [showPlaybackMode, setShowPlaybackMode] = useState(false);
+  
+  console.log('🚀 ReactLeafletMap component rendering...', { showPlaybackMode });
+  
+  // Debug: Log when component mounts
+  useEffect(() => {
+    console.log('🎯 ReactLeafletMap mounted!', { showPlaybackMode });
+  }, [showPlaybackMode]);
 
   console.log('🚀 Component state:', { 
     searchText, 
@@ -272,7 +280,32 @@ export function ReactLeafletMap({
             <h1 className="text-3xl font-bold tracking-tight">Asset Intelligence Map</h1>
             <p className="text-muted-foreground">
               Real-time asset tracking and geofence monitoring
+              {showPlaybackMode && <span className="ml-2 text-blue-600 font-semibold">(Playback Mode)</span>}
             </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant={showPlaybackMode ? 'default' : 'outline'}
+              size='sm'
+              onClick={() => {
+                console.log('🎯 Playback button clicked!', { currentMode: showPlaybackMode });
+                setShowPlaybackMode(!showPlaybackMode);
+              }}
+              className='flex items-center gap-2'
+            >
+              📹
+              {showPlaybackMode ? 'Live View' : 'Playback'}
+            </Button>
+            <Button
+              variant="destructive"
+              size='sm'
+              onClick={() => {
+                console.log('🚨 Test button clicked!');
+                alert('Test button works!');
+              }}
+            >
+              Test
+            </Button>
           </div>
         </div>
 
@@ -344,10 +377,18 @@ export function ReactLeafletMap({
           </div>
         </div>
 
-        {/* Main Content */}
-        <div 
-          className="gap-6 flex-1 min-h-0 flex flex-col" 
-        >
+        {/* Conditional Rendering: Playback Mode or Live View */}
+        {showPlaybackMode ? (
+          <>
+            {console.log('🎬 Rendering AssetPlaybackMap')}
+            <AssetPlaybackMap onBack={onBack} />
+          </>
+        ) : (
+          <>
+            {/* Main Content */}
+            <div 
+              className="gap-6 flex-1 min-h-0 flex flex-col" 
+            >
           {/* Map and Asset Panel Row */}
           <div 
             className="gap-6 flex-1 min-h-0" 
@@ -917,6 +958,8 @@ export function ReactLeafletMap({
             </Card>
           </div>
         </div>
+          </>
+        )}
       </div>
     </PageLayout>
   );
