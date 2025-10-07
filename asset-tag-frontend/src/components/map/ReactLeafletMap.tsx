@@ -64,7 +64,11 @@ interface ReactLeafletMapProps {
   assets?: Asset[];
   geofences?: Geofence[];
   selectedAssetId?: string;
-  onAssetSelect?: (assetId: string) => void;
+  onAssetSelect?: (asset: Asset) => void;
+  onTrackHistory?: (asset: Asset) => void;
+  highlightAsset?: Asset | null;
+  onClearHighlight?: () => void;
+  onBack?: () => void;
   showGeofences?: boolean;
   showPaths?: boolean;
   timeRange?: { start: Date; end: Date };
@@ -104,6 +108,10 @@ export function ReactLeafletMap({
   geofences = sharedMockGeofences,
   selectedAssetId,
   onAssetSelect,
+  onTrackHistory,
+  highlightAsset,
+  onClearHighlight,
+  onBack,
   showGeofences = true,
   showPaths = false,
   timeRange,
@@ -155,12 +163,12 @@ export function ReactLeafletMap({
         ? prev.filter(id => id !== assetId)
         : [...prev, assetId]
     );
-    onAssetSelect?.(assetId);
   };
 
   const handleAssetClick = (asset: Asset) => {
     setSelectedAsset(asset);
     handleAssetSelect(asset.id);
+    onAssetSelect?.(asset);
   };
 
   // Get asset icon based on type
