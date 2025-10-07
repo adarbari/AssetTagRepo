@@ -278,6 +278,32 @@ export function UnifiedAssetMap({
     return () => clearTimeout(timer);
   }, [viewMode, showPlaybackPanel, isAssetListCollapsed]);
 
+  // Update playback selected assets when main map selection changes during playback
+  useEffect(() => {
+    if (viewMode === 'playback') {
+      // Get all assets that are currently selected in the main map AND have historical data loaded
+      const validSelectedAssets = selectedAssets.filter(assetId => 
+        playbackState.histories.some(history => history.assetId === assetId)
+      );
+      
+      // Only update if the selection has actually changed
+      const hasChanged = validSelectedAssets.length !== playbackState.selectedAssets.length ||
+        !validSelectedAssets.every(assetId => playbackState.selectedAssets.includes(assetId));
+      
+      if (hasChanged) {
+        console.log('🔄 Updating playback selected assets:', {
+          previousPlaybackAssets: playbackState.selectedAssets,
+          currentMainMapAssets: selectedAssets,
+          newPlaybackAssets: validSelectedAssets,
+          availableHistories: playbackState.histories.map(h => h.assetId)
+        });
+        
+        // Update playback state with the new selection
+        playbackState.setSelectedAssets(validSelectedAssets);
+      }
+    }
+  }, [selectedAssets, viewMode, playbackState]);
+
   // Map container class - use full height of available space with consistent sizing
   const mapContainerClass = 'h-full max-h-full';
 
