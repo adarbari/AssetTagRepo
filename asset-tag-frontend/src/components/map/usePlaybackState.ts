@@ -173,11 +173,55 @@ export function usePlaybackState(): UsePlaybackStateReturn {
 
   // Set date range
   const setDateRange = useCallback((from: Date, to: Date) => {
-    setState(prev => ({ 
-      ...prev, 
-      selectedDateRange: { from, to },
-      isPlaying: false // Stop playback when changing date range
-    }));
+    setState(prev => {
+      // Filter histories based on the new date range
+      const filteredHistories = prev.histories.map(history => ({
+        ...history,
+        trackingPoints: history.trackingPoints.filter(point => {
+          const pointTime = new Date(point.timestamp).getTime();
+          return pointTime >= from.getTime() && pointTime <= to.getTime();
+        })
+      })).filter(history => history.trackingPoints.length > 0);
+
+      // Calculate new time range based on filtered data
+      let newTimeRange = prev.timeRange;
+      let newCurrentTime = prev.currentTime;
+
+      if (filteredHistories.length > 0) {
+        // Find the overall time range from filtered data
+        const allTimes = filteredHistories.flatMap(h => 
+          h.trackingPoints.map(p => new Date(p.timestamp).getTime())
+        );
+        
+        if (allTimes.length > 0) {
+          const startTime = Math.min(...allTimes);
+          const endTime = Math.max(...allTimes);
+          
+          newTimeRange = { start: startTime, end: endTime };
+          newCurrentTime = startTime; // Reset to start of new range
+          
+          console.log('📅 Date range updated:', {
+            from: from.toISOString(),
+            to: to.toISOString(),
+            newTimeRange: {
+              start: new Date(startTime).toISOString(),
+              end: new Date(endTime).toISOString()
+            },
+            filteredPoints: allTimes.length,
+            histories: filteredHistories.length
+          });
+        }
+      }
+
+      return { 
+        ...prev, 
+        histories: filteredHistories,
+        selectedDateRange: { from, to },
+        timeRange: newTimeRange,
+        currentTime: newCurrentTime,
+        isPlaying: false // Stop playback when changing date range
+      };
+    });
   }, []);
 
   // Playback animation effect
