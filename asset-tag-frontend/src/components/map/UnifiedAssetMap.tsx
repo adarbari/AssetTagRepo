@@ -129,7 +129,6 @@ export function UnifiedAssetMap({
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [showGeofences, setShowGeofences] = useState(true);
   const [showSites, setShowSites] = useState(true);
-  const [showClusters, setShowClusters] = useState(false);
 
   // Playback state
   const playbackState = usePlaybackState();
@@ -777,16 +776,6 @@ export function UnifiedAssetMap({
                         />
                         <label htmlFor='sites' className='text-sm cursor-pointer'>
                           Site Boundaries
-                        </label>
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        <Checkbox
-                          id='clusters'
-                          checked={showClusters}
-                          onCheckedChange={checked => setShowClusters(checked as boolean)}
-                        />
-                        <label htmlFor='clusters' className='text-sm cursor-pointer'>
-                          Clusters
                         </label>
                       </div>
                     </div>
