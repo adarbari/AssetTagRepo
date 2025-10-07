@@ -119,13 +119,6 @@ export function ReactLeafletMap({
   actualAssetIds,
 }: ReactLeafletMapProps = {}) {
   console.log('🚀 ReactLeafletMap component rendering...');
-  console.log('🚀 Component state:', { 
-    searchTerm, 
-    selectedAsset, 
-    showLayers, 
-    showPlayback,
-    filteredAssetsCount: filteredAssets.length 
-  });
   
   const [searchText, setSearchText] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -137,10 +130,18 @@ export function ReactLeafletMap({
   const { isOpen: isLayersOpen, toggle: toggleLayers } = useOverlayState('layers');
   const { isOpen: isPlaybackOpen, toggle: togglePlayback } = useOverlayState('playback');
 
+  console.log('🚀 Component state:', { 
+    searchText, 
+    selectedAsset, 
+    isLayersOpen, 
+    isPlaybackOpen,
+    assetsCount: assets.length 
+  });
+
   // Filter assets based on search and filters
   const filteredAssets = assets.filter(asset => {
-    const matchesSearch = asset.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                         asset.id.toLowerCase().includes(searchText.toLowerCase());
+    const matchesSearch = asset.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+                         asset.id?.toLowerCase().includes(searchText.toLowerCase());
     const matchesType = typeFilter === 'all' || asset.type === typeFilter;
     const matchesStatus = statusFilter === 'all' || asset.status === statusFilter;
     const matchesFilteredIds = !filteredAssetIds || filteredAssetIds.includes(asset.id);
@@ -165,7 +166,7 @@ export function ReactLeafletMap({
 
   // Get asset icon based on type
   const getAssetIcon = (type: string) => {
-    switch (type.toLowerCase()) {
+    switch (type?.toLowerCase() || 'unknown') {
       case 'vehicle': return <Truck className="h-4 w-4" />;
       case 'equipment': return <Wrench className="h-4 w-4" />;
       case 'container': return <Container className="h-4 w-4" />;

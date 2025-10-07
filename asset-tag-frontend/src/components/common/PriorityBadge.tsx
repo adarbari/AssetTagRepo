@@ -14,12 +14,12 @@ const priorityColors: Record<string, string> = {
 };
 
 export function PriorityBadge({ priority, className }: PriorityBadgeProps) {
-  const priorityLower = priority.toLowerCase();
+  const priorityLower = priority?.toLowerCase() || 'unknown';
   const colorClass = priorityColors[priorityLower] || priorityColors['default'];
 
   return (
     <Badge variant='outline' className={`${colorClass} ${className || ''}`}>
-      {priority}
+      {priority || 'Unknown'}
     </Badge>
   );
 }

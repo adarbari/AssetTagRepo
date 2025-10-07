@@ -110,8 +110,8 @@ export function UnifiedAssetMap({
 
   // Filter assets based on search and filters
   const filteredAssets = sharedMockAssets.filter(asset => {
-    const matchesSearch = asset.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                         asset.id.toLowerCase().includes(searchText.toLowerCase());
+    const matchesSearch = asset.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+                         asset.id?.toLowerCase().includes(searchText.toLowerCase());
     const matchesType = typeFilter === 'all' || asset.type === typeFilter;
     const matchesStatus = statusFilter === 'all' || asset.status === statusFilter;
     const matchesFilteredIds = !filteredAssetIds || filteredAssetIds.includes(asset.id);

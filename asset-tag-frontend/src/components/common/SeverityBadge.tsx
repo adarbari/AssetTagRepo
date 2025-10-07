@@ -14,12 +14,12 @@ const severityColors: Record<string, string> = {
 };
 
 export function SeverityBadge({ severity, className }: SeverityBadgeProps) {
-  const severityLower = severity.toLowerCase();
+  const severityLower = severity?.toLowerCase() || 'unknown';
   const colorClass = severityColors[severityLower] || severityColors['medium'];
 
   return (
     <Badge variant='outline' className={`${colorClass} ${className || ''}`}>
-      {severity}
+      {severity || 'Unknown'}
     </Badge>
   );
 }

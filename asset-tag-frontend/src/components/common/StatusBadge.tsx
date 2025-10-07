@@ -53,13 +53,29 @@ export function StatusBadge({
   type: _type,
   className,
 }: StatusBadgeProps) {
-  // Fixed: Added null safety for status parameter
-  const statusLower = status?.toLowerCase() || 'unknown';
+  // Debug: Log the status value to help identify the issue
+  console.log('StatusBadge received status:', status, 'type:', typeof status);
+  
+  // Completely safe approach - handle all edge cases
+  let statusLower = 'unknown';
+  let displayText = 'Unknown';
+  
+  if (status && typeof status === 'string' && status.trim()) {
+    try {
+      statusLower = status.toLowerCase().trim();
+      displayText = status;
+    } catch (error) {
+      console.warn('Error processing status:', error);
+      statusLower = 'unknown';
+      displayText = 'Unknown';
+    }
+  }
+  
   const colorClass = statusColors[statusLower] || statusColors['default'];
 
   return (
     <Badge variant='outline' className={`${colorClass} ${className || ''}`}>
-      {status || 'Unknown'}
+      {displayText}
     </Badge>
   );
 }
