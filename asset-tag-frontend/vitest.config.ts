@@ -9,20 +9,29 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     css: true,
     
-    // Add timeout configurations
-    testTimeout: 10000,        // 10 seconds per test
-    hookTimeout: 10000,        // 10 seconds for setup/teardown
-    teardownTimeout: 5000,     // 5 seconds for cleanup
+    // Add timeout configurations - reduced for faster CI
+    testTimeout: 5000,         // 5 seconds per test (reduced from 10s)
+    hookTimeout: 5000,         // 5 seconds for setup/teardown (reduced from 10s)
+    teardownTimeout: 3000,     // 3 seconds for cleanup (reduced from 5s)
     
     // Limit concurrency to prevent resource exhaustion
     pool: 'threads',
     poolOptions: {
       threads: {
         singleThread: false,
-        maxThreads: 4,         // Limit to 4 threads
+        maxThreads: 2,         // Reduced to 2 threads for CI stability
         minThreads: 1,
       },
     },
+    
+    // Add bail option to stop on first failure in CI
+    bail: process.env.CI ? 5 : 0,  // Stop after 5 failures in CI
+    
+    // Add retry configuration
+    retry: process.env.CI ? 1 : 0,  // Retry once in CI
+    
+    // Add file timeout
+    fileParallelism: false,    // Disable file parallelism for stability
     
     env: {
       VITE_API_BASE_URL: 'http://localhost:3000',

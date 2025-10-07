@@ -135,6 +135,7 @@ export const Alerts = forwardRef<AlertsRef, AlertsProps>(
         : userPrefs.defaultView || 'all'
     );
     const [alerts, setAlerts] = useState<Alert[]>([]);
+    const [loading, setLoading] = useState(false);
     const [activeStatFilter, setActiveStatFilter] = useState<string | null>(
       null
     );
