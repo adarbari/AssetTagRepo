@@ -372,7 +372,13 @@ export function UnifiedAssetMap({
       </div>
 
       {/* Flexible Content Area - Map and Asset Panels */}
-      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+      <div 
+        className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6 min-h-0"
+        style={{ 
+          height: showPlaybackPanel ? 'calc(100vh - 200px - 120px)' : 'calc(100vh - 200px)',
+          maxHeight: showPlaybackPanel ? 'calc(100vh - 200px - 120px)' : 'calc(100vh - 200px)'
+        }}
+      >
         {/* Map Area with Overlays - lg:col-span-2 */}
         <div className='lg:col-span-2 relative flex flex-col'>
           {/* Map Container */}
