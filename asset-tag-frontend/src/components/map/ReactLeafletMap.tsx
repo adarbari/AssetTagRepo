@@ -245,22 +245,26 @@ export function ReactLeafletMap({
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0">
           {/* Map Area with Overlays - lg:col-span-2 */}
-          <div className="lg:col-span-2 relative">
+          <div className="lg:col-span-2 relative flex flex-col">
             {/* Map Container */}
             <div 
-              className="h-[600px] rounded-lg border overflow-hidden relative bg-gray-100"
-              style={{ minHeight: '600px' }}
+              className="flex-1 rounded-lg border overflow-hidden relative bg-gray-100"
+              style={{ minHeight: '600px', height: '600px' }}
             >
               <MapContainer
                 center={[37.7749, -122.4194]}
                 zoom={13}
                 style={{ height: '100%', width: '100%', backgroundColor: '#e5e7eb' }}
-                key="main-map" // Key ensures proper re-initialization
+                key={`main-map-${filteredAssets.length}`} // Key ensures proper re-initialization when assets change
                 whenReady={(map) => {
                   console.log('🗺️ Map is ready!');
                   console.log('🗺️ Map container size:', document.querySelector('.leaflet-container')?.getBoundingClientRect());
+                  // Force map to invalidate size after a short delay to ensure proper rendering
+                  setTimeout(() => {
+                    map.invalidateSize();
+                  }, 100);
                 }}
               >
                 <TileLayer
@@ -434,16 +438,16 @@ export function ReactLeafletMap({
           </div>
 
           {/* Right Panel - Asset List */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
+          <div className="lg:col-span-1 flex flex-col">
+            <Card className="flex-1 flex flex-col">
+              <CardHeader className="flex-shrink-0">
                 <CardTitle className="flex items-center">
                   <List className="h-5 w-5 mr-2" />
                   Assets ({filteredAssets.length})
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-0">
-                <div className="max-h-[600px] overflow-y-auto">
+              <CardContent className="p-0 flex-1 flex flex-col">
+                <div className="flex-1 overflow-y-auto" style={{ maxHeight: '600px' }}>
                   {filteredAssets.map(asset => (
                     <div
                       key={asset.id}
