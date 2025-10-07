@@ -30,6 +30,7 @@ interface NavigationState {
   expectedAssetIds?: string[];
   actualAssetIds?: string[];
   selectedAlertForWorkflow?: Alert | null;
+  mapAccessedDirectly?: boolean;
 }
 
 interface MaintenanceCreationData {
@@ -117,6 +118,7 @@ interface NavigationContextType {
   expectedAssetIds: string[] | undefined;
   actualAssetIds: string[] | undefined;
   selectedAlertForWorkflow: Alert | null;
+  mapAccessedDirectly: boolean;
 
   // Navigation functions
   handleViewChange: (view: ViewType) => void;
@@ -149,6 +151,7 @@ interface NavigationContextType {
   navigateToCheckInOut: (data: CheckInOutData) => void;
   navigateToReportIssue: (data: IssueData) => void;
   handleShowOnMap: (asset: Asset) => void;
+  handleDirectMapNavigation: () => void;
   handleViewHistoricalPlayback: (asset?: Asset) => void;
   handleViewViolatingAssets: (
     geofenceId: string,
@@ -262,6 +265,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   );
   const [selectedAlertForWorkflow, setSelectedAlertForWorkflow] =
     useState<Alert | null>(null);
+  const [mapAccessedDirectly, setMapAccessedDirectly] = useState(false);
 
   const pushNavigationState = () => {
     // console.log('📚 Pushing navigation state, current view:', currentView);
@@ -283,6 +287,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
           expectedAssetIds: expectedAssetIds,
           actualAssetIds: actualAssetIds,
           selectedAlertForWorkflow: selectedAlertForWorkflow,
+          mapAccessedDirectly: mapAccessedDirectly,
         },
       ];
       // console.log(
@@ -322,12 +327,24 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     setExpectedAssetIds(previousState.expectedAssetIds);
     setActualAssetIds(previousState.actualAssetIds);
     setSelectedAlertForWorkflow(previousState.selectedAlertForWorkflow || null);
+    setMapAccessedDirectly(previousState.mapAccessedDirectly || false);
   };
 
   const handleViewChange = (view: ViewType) => {
     if (view === 'alert-configuration') {
       navigateToAlertConfiguration();
       return;
+    }
+
+    // If navigating to map from a non-map view, push current state to navigation stack
+    if (view === 'map' && currentView !== 'map') {
+      pushNavigationState();
+      setMapAccessedDirectly(false); // Map accessed from another view, not directly
+    } else if (view === 'map' && currentView === 'map') {
+      // Already on map, keep current flag
+    } else if (view !== 'map') {
+      // Navigating away from map, reset the flag
+      setMapAccessedDirectly(false);
     }
 
     if (view !== 'map') {
@@ -386,6 +403,12 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     pushNavigationState();
     setHighlightAsset(asset);
     setFilteredAssetIds([asset.id]); // Show only this asset on the map
+    setMapAccessedDirectly(false); // Map accessed from another view, not directly
+    setCurrentView('map');
+  };
+
+  const handleDirectMapNavigation = () => {
+    setMapAccessedDirectly(true); // Map accessed directly from sidebar
     setCurrentView('map');
   };
 
@@ -713,6 +736,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     expectedAssetIds,
     actualAssetIds,
     selectedAlertForWorkflow,
+    mapAccessedDirectly,
 
     handleViewChange,
     navigateToAlerts,
@@ -737,6 +761,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     navigateToCheckInOut,
     navigateToReportIssue,
     handleShowOnMap,
+    handleDirectMapNavigation,
     handleViewHistoricalPlayback,
     handleViewViolatingAssets,
     handleAlertTypeClick,

@@ -102,7 +102,12 @@ function AppContent() {
   const currentView = navigation.currentView;
 
   const handleViewChange = (view: ViewType) => {
-    navigation.handleViewChange(view);
+    if (view === 'map') {
+      // Use direct map navigation for sidebar clicks
+      navigation.handleDirectMapNavigation();
+    } else {
+      navigation.handleViewChange(view);
+    }
   };
 
   const handleAssetClick = (asset: Asset) => {
@@ -178,7 +183,12 @@ function AppContent() {
             onTrackHistory={handleTrackHistory}
             highlightAsset={navigation.highlightAsset}
             onClearHighlight={handleClearHighlight}
-            onBack={handleBackToDashboard}
+            onBack={navigation.mapAccessedDirectly ? undefined : (navigation.geofenceViolationMode ? navigation.handleBackFromViolationMap : navigation.handleBackFromMap)}
+            violationMode={navigation.geofenceViolationMode}
+            violatingGeofenceId={navigation.violatingGeofenceId}
+            expectedAssetIds={navigation.expectedAssetIds}
+            actualAssetIds={navigation.actualAssetIds}
+            filteredAssetIds={navigation.filteredAssetIds}
           />
         );
       case 'asset-details':
