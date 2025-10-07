@@ -240,6 +240,8 @@ export function UnifiedAssetMap({
     playbackState.loadHistoricalData(assetIds);
     setViewMode('playback');
     setShowPlaybackPanel(true);
+    // Auto-collapse asset panel when entering playback mode
+    setIsAssetListCollapsed(true);
   };
 
   const handleExitPlaybackMode = () => {
@@ -259,8 +261,8 @@ export function UnifiedAssetMap({
     return () => clearTimeout(timer);
   }, [viewMode, showPlaybackPanel, isAssetListCollapsed]);
 
-  // Map container class - use full height of available space
-  const mapContainerClass = 'h-full';
+  // Map container class - use full height of available space with consistent sizing
+  const mapContainerClass = 'h-full max-h-full';
 
   return (
     <div className="h-screen flex flex-col">
@@ -387,11 +389,12 @@ export function UnifiedAssetMap({
         className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6 min-h-0"
         style={{ 
           height: showPlaybackPanel ? 'calc(100vh - 200px - 120px)' : 'calc(100vh - 200px)',
-          maxHeight: showPlaybackPanel ? 'calc(100vh - 200px - 120px)' : 'calc(100vh - 200px)'
+          maxHeight: showPlaybackPanel ? 'calc(100vh - 200px - 120px)' : 'calc(100vh - 200px)',
+          overflow: 'hidden' // Prevent content from overflowing
         }}
       >
         {/* Map Area with Overlays - lg:col-span-2 */}
-        <div className='lg:col-span-2 relative flex flex-col'>
+        <div className='lg:col-span-2 relative flex flex-col h-full max-h-full'>
           {/* Map Container */}
           <div className={`${mapContainerClass} rounded-lg border overflow-hidden relative flex-1`}>
             <MapContainer
@@ -624,7 +627,7 @@ export function UnifiedAssetMap({
                   </div>
                   
         {/* Right Panel - Collapsible Asset List - lg:col-span-1 */}
-        <div className='lg:col-span-1 flex flex-col h-full'>
+        <div className='lg:col-span-1 flex flex-col h-full max-h-full'>
           <CollapsibleAssetList
             assets={filteredAssets}
             selectedAssets={selectedAssets}
