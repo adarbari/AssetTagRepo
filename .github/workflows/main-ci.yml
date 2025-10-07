@@ -135,7 +135,7 @@ jobs:
         ASSET_TAG_POSTGRES_DB: asset_tag_test
     
     - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         file: ./asset-tag-backend/coverage.xml
         flags: test-mode
