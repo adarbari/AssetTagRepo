@@ -193,8 +193,8 @@ export function ReactLeafletMap({
   };
 
   return (
-    <div className="h-full w-full p-4 md:p-6 lg:p-8">
-      <div className="space-y-6">
+    <div className="h-screen w-full p-4 md:p-6 lg:p-8 flex flex-col">
+      <div className="flex-1 flex flex-col space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -253,9 +253,8 @@ export function ReactLeafletMap({
 
         {/* Main Content */}
         <div 
-          className="gap-6 min-h-0" 
+          className="gap-6 flex-1 min-h-0" 
           style={{ 
-            height: '600px',
             display: 'flex',
             flexDirection: window.innerWidth >= 1024 ? 'row' : 'column'
           }}
@@ -271,7 +270,7 @@ export function ReactLeafletMap({
             {/* Map Container */}
             <div 
               className="w-full h-full rounded-lg border overflow-hidden relative bg-gray-100"
-              style={{ minHeight: '400px', height: '100%' }}
+              style={{ minHeight: '400px' }}
             >
               <MapContainer
                 center={[37.7749, -122.4194]}
