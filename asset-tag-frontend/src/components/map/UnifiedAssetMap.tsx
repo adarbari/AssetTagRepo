@@ -193,11 +193,26 @@ export function UnifiedAssetMap({
 
   // Asset selection handlers
   const handleAssetSelect = (assetId: string) => {
-    setSelectedAssets(prev => 
-      prev.includes(assetId) 
+    console.log('🎯 Asset selection changed:', {
+      assetId,
+      currentSelected: selectedAssets,
+      viewMode,
+      isPlayback: viewMode === 'playback'
+    });
+    
+    setSelectedAssets(prev => {
+      const newSelection = prev.includes(assetId) 
         ? prev.filter(id => id !== assetId)
-        : [...prev, assetId]
-    );
+        : [...prev, assetId];
+      
+      console.log('🎯 New selection:', {
+        previous: prev,
+        new: newSelection,
+        action: prev.includes(assetId) ? 'removed' : 'added'
+      });
+      
+      return newSelection;
+    });
   };
 
   const handleSelectAllAssets = () => {
@@ -280,15 +295,30 @@ export function UnifiedAssetMap({
 
   // Update playback selected assets when main map selection changes during playback
   useEffect(() => {
+    console.log('🔍 useEffect triggered:', {
+      viewMode,
+      selectedAssets,
+      playbackSelectedAssets: playbackState.selectedAssets,
+      historiesCount: playbackState.histories.length
+    });
+    
     if (viewMode === 'playback') {
       // Get all assets that are currently selected in the main map AND have historical data loaded
       const validSelectedAssets = selectedAssets.filter(assetId => 
         playbackState.histories.some(history => history.assetId === assetId)
       );
       
+      console.log('🔍 Filtered valid assets:', {
+        selectedAssets,
+        validSelectedAssets,
+        histories: playbackState.histories.map(h => h.assetId)
+      });
+      
       // Only update if the selection has actually changed
       const hasChanged = validSelectedAssets.length !== playbackState.selectedAssets.length ||
         !validSelectedAssets.every(assetId => playbackState.selectedAssets.includes(assetId));
+      
+      console.log('🔍 Has changed?', hasChanged);
       
       if (hasChanged) {
         console.log('🔄 Updating playback selected assets:', {
@@ -302,7 +332,7 @@ export function UnifiedAssetMap({
         playbackState.setSelectedAssets(validSelectedAssets);
       }
     }
-  }, [selectedAssets, viewMode, playbackState]);
+  }, [selectedAssets, viewMode]);
 
   // Map container class - use full height of available space with consistent sizing
   const mapContainerClass = 'h-full max-h-full';
@@ -644,7 +674,7 @@ export function UnifiedAssetMap({
                     <PathPolylines
                       histories={playbackState.histories}
                       currentTime={playbackState.currentTime}
-                      selectedAssets={playbackState.selectedAssets}
+                      selectedAssets={selectedAssets}
                     />
                   )}
                   
@@ -652,7 +682,7 @@ export function UnifiedAssetMap({
                     <AnimatedMarkers
                       histories={playbackState.histories}
                       currentTime={playbackState.currentTime}
-                      selectedAssets={playbackState.selectedAssets}
+                      selectedAssets={selectedAssets}
                     />
                   )}
 
@@ -868,7 +898,7 @@ export function UnifiedAssetMap({
             progress={playbackState.progress}
             showPaths={playbackState.showPaths}
             showMarkers={playbackState.showMarkers}
-            selectedAssetsCount={playbackState.selectedAssets.length}
+            selectedAssetsCount={selectedAssets.length}
             onPlayPause={playbackState.playPause}
             onSkipBack={playbackState.skipBack}
             onSkipForward={playbackState.skipForward}
