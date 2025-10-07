@@ -668,15 +668,16 @@ export function AssetMap({
 
         {/* Controls */}
         <div className='space-y-4'>
-            {violationMode &&
-              violatingGeofenceId &&
-              (() => {
-                const geofence = sharedMockGeofences.find(
-                  g => g.id === violatingGeofenceId
-                );
+          {violationMode &&
+            violatingGeofenceId &&
+            (() => {
+              const geofence = sharedMockGeofences.find(
+                g => g.id === violatingGeofenceId
+              );
 
-                return geofence ? (
-                  <div className='p-4 bg-red-50 border border-red-200 rounded-lg space-y-3'>
+              return geofence ? (
+                <Card className='p-4 bg-red-50 border border-red-200'>
+                  <div className='space-y-3'>
                     <div className='flex items-start gap-2'>
                       <div className='flex items-center gap-2'>
                         <MapPin className='h-4 w-4 text-red-600' />
@@ -833,321 +834,214 @@ export function AssetMap({
                       {filteredAssets.length !== 1 ? 's' : ''}
                     </p>
                   </div>
-                ) : null;
-              })()}
+                </Card>
+              ) : null;
+            })()}
 
-            {highlightAsset && (
-              <div className='p-4 bg-blue-50 border border-blue-200 rounded-lg'>
-                <div className='flex items-start justify-between gap-2 mb-2'>
-                  <div className='flex items-center gap-2'>
-                    <MapPin className='h-4 w-4 text-blue-600' />
-                    <span className='text-sm text-blue-900'>
-                      Showing single asset
-                    </span>
-                  </div>
-                  <Button
-                    variant='ghost'
-                    size='sm'
-                    className='h-6 w-6 p-0'
-                    onClick={onClearHighlight}
-                    title='Show all assets'
-                  >
-                    <X className='h-4 w-4' />
-                  </Button>
+          {highlightAsset && (
+            <Card className='p-4 bg-blue-50 border border-blue-200'>
+              <div className='flex items-start justify-between gap-2 mb-2'>
+                <div className='flex items-center gap-2'>
+                  <MapPin className='h-4 w-4 text-blue-600' />
+                  <span className='text-sm text-blue-900'>
+                    Showing single asset
+                  </span>
                 </div>
-                <p className='text-xs text-blue-700'>
-                  Click × to show all assets
-                </p>
-              </div>
-            )}
-
-            <div>
-              <label className='text-sm mb-2 block'>Search Assets</label>
-              <div className='relative'>
-                <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
-                <Input
-                  placeholder='Search by name or ID...'
-                  className='pl-9'
-                  value={searchText}
-                  onChange={e => setSearchText(e.target.value)}
-                  disabled={!!highlightAsset || violationMode}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className='text-sm mb-2 block'>Asset Type</label>
-              <Select
-                value={typeFilter}
-                onValueChange={setTypeFilter}
-                disabled={!!highlightAsset || violationMode}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='all'>All Types</SelectItem>
-                  <SelectItem value='tools'>Tools</SelectItem>
-                  <SelectItem value='vehicles'>Vehicles</SelectItem>
-                  <SelectItem value='equipment'>Equipment</SelectItem>
-                  <SelectItem value='containers'>Containers</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className='text-sm mb-2 block'>Status</label>
-              <Select
-                value={statusFilter}
-                onValueChange={setStatusFilter}
-                disabled={!!highlightAsset || violationMode}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='all'>All Statuses</SelectItem>
-                  <SelectItem value='active'>Active</SelectItem>
-                  <SelectItem value='idle'>Idle</SelectItem>
-                  <SelectItem value='in-transit'>In Transit</SelectItem>
-                  <SelectItem value='offline'>Offline</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {!violationMode && (
-              <div className='pt-4 border-t'>
-                <div className='flex items-center justify-between mb-3'>
-                  <span className='text-sm'>Map Layers</span>
-                  <Layers className='h-4 w-4 text-muted-foreground' />
-                </div>
-                <div className='space-y-3'>
-                  <div className='flex items-center gap-2'>
-                    <Checkbox
-                      id='geofences'
-                      checked={showGeofences}
-                      onCheckedChange={checked =>
-                        setShowGeofences(checked as boolean)
-                      }
-                    />
-                    <label
-                      htmlFor='geofences'
-                      className='text-sm cursor-pointer'
-                    >
-                      Geofences
-                    </label>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                    <Checkbox
-                      id='sites'
-                      checked={showSites}
-                      onCheckedChange={checked =>
-                        setShowSites(checked as boolean)
-                      }
-                    />
-                    <label htmlFor='sites' className='text-sm cursor-pointer'>
-                      Site Boundaries
-                    </label>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                    <Checkbox
-                      id='clusters'
-                      checked={showClusters}
-                      onCheckedChange={checked =>
-                        setShowClusters(checked as boolean)
-                      }
-                    />
-                    <label
-                      htmlFor='clusters'
-                      className='text-sm cursor-pointer'
-                    >
-                      Asset Clusters
-                    </label>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Legend */}
-            <div className='pt-4 border-t'>
-              <div className='text-sm mb-3'>Status Legend</div>
-              <div className='space-y-2'>
-                <div className='flex items-center gap-2 text-sm'>
-                  <div className='w-3 h-3 rounded-full bg-green-500'></div>
-                  <span>Active</span>
-                </div>
-                <div className='flex items-center gap-2 text-sm'>
-                  <div className='w-3 h-3 rounded-full bg-yellow-500'></div>
-                  <span>Idle</span>
-                </div>
-                <div className='flex items-center gap-2 text-sm'>
-                  <div className='w-3 h-3 rounded-full bg-blue-500'></div>
-                  <span>In Transit</span>
-                </div>
-                <div className='flex items-center gap-2 text-sm'>
-                  <div className='w-3 h-3 rounded-full bg-red-500'></div>
-                  <span>Offline</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Asset List */}
-          <div className='border-t p-4'>
-            <div className='flex items-center justify-between mb-3'>
-              <h3>Assets ({filteredAssets.length})</h3>
-            </div>
-            <div className='space-y-2'>
-              {filteredAssets.map(asset => (
-                <button
-                  key={asset.id}
-                  onClick={() => flyToAsset(asset)}
-                  className={`w-full text-left p-3 rounded-lg border transition-all ${
-                    selectedAsset?.id === asset.id
-                      ? 'bg-primary/5 border-primary shadow-sm'
-                      : 'bg-card hover:bg-accent hover:shadow-sm'
-                  }`}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-6 w-6 p-0'
+                  onClick={onClearHighlight}
+                  title='Show all assets'
                 >
-                  <div className='flex items-start justify-between gap-2'>
-                    <div className='flex-1 min-w-0'>
-                      <div className='flex items-center gap-2 mb-1'>
-                        {getAssetIcon(asset.type)}
-                        <div className='text-sm truncate'>{asset.name}</div>
-                      </div>
-                      <div className='text-xs text-muted-foreground mb-2'>
-                        {asset.id}
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        <StatusBadge
-                          status={asset.status}
-                          className='text-xs'
-                        />
-                        <span className='text-xs text-muted-foreground flex items-center gap-1'>
-                          <Battery className='h-3 w-3' />
-                          {asset.battery}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Map Area */}
-        <div className='flex-1 relative'>
-          <div ref={mapRef} className='absolute inset-0' />
-
-          {/* Map Controls */}
-          <div className='absolute top-4 right-4 flex flex-col gap-2 z-[1000]'>
-            <Button
-              size='icon'
-              variant='secondary'
-              className='bg-background shadow-lg'
-              onClick={recenterMap}
-              title='Recenter map'
-            >
-              <Navigation className='h-4 w-4' />
-            </Button>
-            <Button
-              size='icon'
-              variant='secondary'
-              className='bg-background shadow-lg'
-              title='Fullscreen'
-            >
-              <Maximize2 className='h-4 w-4' />
-            </Button>
-          </div>
-
-          {/* Selected Asset Info Card */}
-          {selectedAsset && (
-            <Card className='absolute bottom-4 left-4 w-96 z-[1000] shadow-xl'>
-              <CardHeader className='pb-3'>
-                <div className='flex items-start justify-between'>
-                  <div className='flex items-center gap-2'>
-                    {getAssetIcon(selectedAsset.type)}
-                    <CardTitle className='text-base'>
-                      {selectedAsset.name}
-                    </CardTitle>
-                  </div>
-                  <Button
-                    size='icon'
-                    variant='ghost'
-                    className='h-6 w-6'
-                    onClick={() => setSelectedAsset(null)}
-                  >
-                    <X className='h-4 w-4' />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className='space-y-3'>
-                <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Asset ID:</span>
-                  <span className='font-mono'>{selectedAsset.id}</span>
-                </div>
-                <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Type:</span>
-                  <span className='capitalize'>{selectedAsset.type}</span>
-                </div>
-                <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Status:</span>
-                  <StatusBadge status={selectedAsset.status} />
-                </div>
-                <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Battery:</span>
-                  <span
-                    className={
-                      selectedAsset.battery < 20
-                        ? 'text-red-600'
-                        : 'text-green-600'
-                    }
-                  >
-                    {selectedAsset.battery}%
-                  </span>
-                </div>
-                <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Last Update:</span>
-                  <span className='flex items-center gap-1'>
-                    <Clock className='h-3 w-3' />
-                    {selectedAsset.lastUpdate}
-                  </span>
-                </div>
-                <div className='flex justify-between text-sm'>
-                  <span className='text-muted-foreground'>Location:</span>
-                  <span className='text-xs'>
-                    {selectedAsset.lat.toFixed(4)},{' '}
-                    {selectedAsset.lng.toFixed(4)}
-                  </span>
-                </div>
-                <div className='pt-3 border-t flex gap-2'>
-                  <Button
-                    size='sm'
-                    className='flex-1'
-                    onClick={() => {
-                      const sharedAsset = findSharedAsset(selectedAsset);
-                      if (sharedAsset) onAssetClick?.(sharedAsset);
-                    }}
-                  >
-                    View Details
-                  </Button>
-                  <Button
-                    size='sm'
-                    variant='outline'
-                    className='flex-1'
-                    onClick={() => {
-                      const sharedAsset = findSharedAsset(selectedAsset);
-                      if (sharedAsset) onTrackHistory?.(sharedAsset);
-                    }}
-                  >
-                    Track History
-                  </Button>
-                </div>
-              </CardContent>
+                  <X className='h-4 w-4' />
+                </Button>
+              </div>
+              <p className='text-xs text-blue-700'>
+                Click × to show all assets
+              </p>
             </Card>
           )}
+
+          <Card className='p-4'>
+            <div className='space-y-4'>
+              <div>
+                <label className='text-sm mb-2 block'>Search Assets</label>
+                <div className='relative'>
+                  <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground' />
+                  <Input
+                    placeholder='Search by name or ID...'
+                    className='pl-9'
+                    value={searchText}
+                    onChange={e => setSearchText(e.target.value)}
+                    disabled={!!highlightAsset || violationMode}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className='text-sm mb-2 block'>Asset Type</label>
+                <Select
+                  value={typeFilter}
+                  onValueChange={setTypeFilter}
+                  disabled={!!highlightAsset || violationMode}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='all'>All Types</SelectItem>
+                    <SelectItem value='tools'>Tools</SelectItem>
+                    <SelectItem value='vehicles'>Vehicles</SelectItem>
+                    <SelectItem value='equipment'>Equipment</SelectItem>
+                    <SelectItem value='containers'>Containers</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className='text-sm mb-2 block'>Status</label>
+                <Select
+                  value={statusFilter}
+                  onValueChange={setStatusFilter}
+                  disabled={!!highlightAsset || violationMode}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='all'>All Statuses</SelectItem>
+                    <SelectItem value='active'>Active</SelectItem>
+                    <SelectItem value='idle'>Idle</SelectItem>
+                    <SelectItem value='in-transit'>In Transit</SelectItem>
+                    <SelectItem value='offline'>Offline</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {!violationMode && (
+                <div className='pt-4 border-t'>
+                  <div className='flex items-center justify-between mb-3'>
+                    <span className='text-sm'>Map Layers</span>
+                    <Layers className='h-4 w-4 text-muted-foreground' />
+                  </div>
+                  <div className='space-y-3'>
+                    <div className='flex items-center gap-2'>
+                      <Checkbox
+                        id='geofences'
+                        checked={showGeofences}
+                        onCheckedChange={checked =>
+                          setShowGeofences(checked as boolean)
+                        }
+                      />
+                      <label
+                        htmlFor='geofences'
+                        className='text-sm cursor-pointer'
+                      >
+                        Geofences
+                      </label>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <Checkbox
+                        id='sites'
+                        checked={showSites}
+                        onCheckedChange={checked =>
+                          setShowSites(checked as boolean)
+                        }
+                      />
+                      <label htmlFor='sites' className='text-sm cursor-pointer'>
+                        Site Boundaries
+                      </label>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <Checkbox
+                        id='clusters'
+                        checked={showClusters}
+                        onCheckedChange={checked =>
+                          setShowClusters(checked as boolean)
+                        }
+                      />
+                      <label
+                        htmlFor='clusters'
+                        className='text-sm cursor-pointer'
+                      >
+                        Asset Clusters
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Legend */}
+              <div className='pt-4 border-t'>
+                <div className='text-sm mb-3'>Status Legend</div>
+                <div className='space-y-2'>
+                  <div className='flex items-center gap-2 text-sm'>
+                    <div className='w-3 h-3 rounded-full bg-green-500'></div>
+                    <span>Active</span>
+                  </div>
+                  <div className='flex items-center gap-2 text-sm'>
+                    <div className='w-3 h-3 rounded-full bg-yellow-500'></div>
+                    <span>Idle</span>
+                  </div>
+                  <div className='flex items-center gap-2 text-sm'>
+                    <div className='w-3 h-3 rounded-full bg-blue-500'></div>
+                    <span>In Transit</span>
+                  </div>
+                  <div className='flex items-center gap-2 text-sm'>
+                    <div className='w-3 h-3 rounded-full bg-red-500'></div>
+                    <span>Offline</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Asset List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Assets ({filteredAssets.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='space-y-2'>
+                {filteredAssets.map(asset => (
+                  <button
+                    key={asset.id}
+                    onClick={() => flyToAsset(asset)}
+                    className={`w-full text-left p-3 rounded-lg border transition-all ${
+                      selectedAsset?.id === asset.id
+                        ? 'bg-primary/5 border-primary shadow-sm'
+                        : 'bg-card hover:bg-accent hover:shadow-sm'
+                    }`}
+                  >
+                    <div className='flex items-start justify-between gap-2'>
+                      <div className='flex-1 min-w-0'>
+                        <div className='flex items-center gap-2 mb-1'>
+                          {getAssetIcon(asset.type)}
+                          <div className='text-sm truncate'>{asset.name}</div>
+                        </div>
+                        <div className='text-xs text-muted-foreground mb-2'>
+                          {asset.id}
+                        </div>
+                        <div className='flex items-center gap-2'>
+                          <StatusBadge
+                            status={asset.status}
+                            className='text-xs'
+                          />
+                          <span className='text-xs text-muted-foreground flex items-center gap-1'>
+                            <Battery className='h-3 w-3' />
+                            {asset.battery}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
