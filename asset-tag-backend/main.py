@@ -41,7 +41,20 @@ async def lifespan(app: FastAPI):
     logger.info("Database initialized")
 
     # Initialize services based on environment configuration
-    from config.settings import settings
+    from config.settings import settings, Environment
+    
+    # Beta environment auto-seeding
+    if settings.environment == Environment.BETA:
+        from config.database import get_db
+        from modules.shared.seed_data.seeder import seed_beta_data
+        
+        async with get_db() as session:
+            try:
+                summary = await seed_beta_data(session)
+                logger.info(f"Beta seed data loaded successfully: {summary}")
+            except Exception as e:
+                logger.error(f"Failed to seed beta data: {e}")
+                # Don't fail startup if seeding fails
 
     if settings.environment.value != "test":
         # Start streaming services if enabled

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, Circle, Polygon } from 'react-leaflet';
 import { PageLayout } from '../common/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -14,7 +14,7 @@ import { Calendar } from '../ui/calendar';
 import { StatusBadge } from '../common/StatusBadge';
 import { useOverlayState } from '../../hooks/useOverlayState';
 import { mockAssets as sharedMockAssets, mockGeofences as sharedMockGeofences } from '../../data/mockData';
-import { Asset, Geofence } from '../../types/asset';
+import { Asset, Geofence } from '../../types';
 import { format } from 'date-fns';
 import {
   Search,
@@ -37,7 +37,6 @@ import {
   SkipBack,
   CalendarIcon,
   Activity,
-  Settings,
   Filter,
   Focus,
   List,
@@ -133,10 +132,13 @@ export function ReactLeafletMap({
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+  const [showAssetMarkers, setShowAssetMarkers] = useState(true);
+  const [localShowGeofences, setLocalShowGeofences] = useState(showGeofences);
+  const [localShowPaths, setLocalShowPaths] = useState(showPaths);
 
   // Overlay states
-  const { isOpen: isLayersOpen, toggle: toggleLayers } = useOverlayState('layers');
-  const { isOpen: isPlaybackOpen, toggle: togglePlayback } = useOverlayState('playback');
+  const [isLayersOpen, toggleLayers] = useOverlayState('layers', false);
+  const [isPlaybackOpen, togglePlayback] = useOverlayState('playback', false);
 
   console.log('🚀 Component state:', { 
     searchText, 
@@ -154,8 +156,77 @@ export function ReactLeafletMap({
     const matchesStatus = statusFilter === 'all' || asset.status === statusFilter;
     const matchesFilteredIds = !filteredAssetIds || filteredAssetIds.includes(asset.id);
     
-    return matchesSearch && matchesType && matchesStatus && matchesFilteredIds;
+    const matches = matchesSearch && matchesType && matchesStatus && matchesFilteredIds;
+    
+    // Debug logging
+    if (!matches && (searchText || typeFilter !== 'all' || statusFilter !== 'all')) {
+      console.log(`❌ Asset ${asset.id} filtered out:`, {
+        name: asset.name,
+        type: asset.type,
+        status: asset.status,
+        matchesSearch,
+        matchesType,
+        matchesStatus,
+        searchText,
+        typeFilter,
+        statusFilter
+      });
+    }
+    
+    return matches;
   });
+
+  // Debug: Log filtered results
+  console.log(`🔍 Filtered ${filteredAssets.length} assets from ${assets.length} total`, {
+    searchText,
+    typeFilter,
+    statusFilter,
+    filteredCount: filteredAssets.length
+  });
+
+  // Utility function to generate filter options from asset data
+  // This can be reused when backend integration is added
+  const generateFilterOptions = (assets: Asset[], field: keyof Asset) => {
+    const counts = assets.reduce((acc, asset) => {
+      const value = asset[field];
+      if (value && typeof value === 'string') {
+        acc[value] = (acc[value] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+    
+    return Object.entries(counts)
+      .map(([value, count]) => ({ value, count }))
+      .sort((a, b) => a.value.localeCompare(b.value));
+  };
+
+  // Generate filter options dynamically from data
+  // Note: Using 'assets' prop which can be from mock data or backend API
+  // TODO: When backend integration is added, this will be replaced with:
+  // - API call to get unique asset types and statuses
+  // - Or computed from the assets data received from backend
+  
+  // Base types from all assets
+  const availableTypes = React.useMemo(() => 
+    generateFilterOptions(assets, 'type').map(({ value, count }) => ({ type: value, count }))
+  , [assets]);
+
+  // Statuses should be filtered based on current type selection
+  const availableStatuses = React.useMemo(() => {
+    // If a specific type is selected, filter assets by that type first
+    const assetsForStatusFilter = typeFilter === 'all' 
+      ? assets 
+      : assets.filter(asset => asset.type === typeFilter);
+    
+    return generateFilterOptions(assetsForStatusFilter, 'status').map(({ value, count }) => ({ status: value, count }));
+  }, [assets, typeFilter]);
+
+  // Reset status filter if current selection is not available in the filtered statuses
+  React.useEffect(() => {
+    if (statusFilter !== 'all' && !availableStatuses.some(s => s.status === statusFilter)) {
+      setStatusFilter('all');
+    }
+  }, [availableStatuses, statusFilter]);
 
   // Asset selection handlers
   const handleAssetSelect = (assetId: string) => {
@@ -204,12 +275,6 @@ export function ReactLeafletMap({
               Real-time asset tracking and geofence monitoring
             </p>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
-          </div>
         </div>
 
         {/* Top Search Bar */}
@@ -224,29 +289,57 @@ export function ReactLeafletMap({
                 className="pl-10"
               />
             </div>
+            {/* Filter Results Indicator */}
+            {(searchText || typeFilter !== 'all' || statusFilter !== 'all') && (
+              <div className="mt-2 flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Showing {filteredAssets.length} of {assets.length} assets
+                  {searchText && ` matching "${searchText}"`}
+                  {typeFilter !== 'all' && ` • Type: ${typeFilter}`}
+                  {statusFilter !== 'all' && ` • Status: ${statusFilter}`}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSearchText('');
+                    setTypeFilter('all');
+                    setStatusFilter('all');
+                  }}
+                  className="text-xs h-6 px-2"
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            )}
           </div>
           <div className="flex gap-2">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="vehicle">Vehicle</SelectItem>
-                <SelectItem value="equipment">Equipment</SelectItem>
-                <SelectItem value="container">Container</SelectItem>
+                <SelectItem value="all">All Types ({assets.length})</SelectItem>
+                {availableTypes.map(({ type, count }) => (
+                  <SelectItem key={type} value={type}>
+                    {type} ({count})
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
-                <SelectItem value="error">Error</SelectItem>
+                <SelectItem value="all">
+                  All Status ({typeFilter === 'all' ? assets.length : availableStatuses.reduce((sum, s) => sum + s.count, 0)})
+                </SelectItem>
+                {availableStatuses.map(({ status, count }) => (
+                  <SelectItem key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ')} ({count})
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -278,7 +371,7 @@ export function ReactLeafletMap({
                 zoom={13}
                 style={{ height: '100%', width: '100%', backgroundColor: '#e5e7eb' }}
                 key="main-map" // Static key to prevent unnecessary re-renders
-                whenReady={(map) => {
+                whenReady={() => {
                   console.log('🗺️ Map is ready!');
                   console.log('🗺️ Map container size:', document.querySelector('.leaflet-container')?.getBoundingClientRect());
                 }}
@@ -299,8 +392,64 @@ export function ReactLeafletMap({
                 {/* Update map bounds when assets change */}
                 <MapUpdater assets={filteredAssets} />
                 
+                {/* Geofences */}
+                {localShowGeofences && geofences.map(geofence => {
+                  if (geofence.type === 'circular' && geofence.center && geofence.radius) {
+                    return (
+                      <Circle
+                        key={geofence.id}
+                        center={[geofence.center[0], geofence.center[1]]}
+                        radius={geofence.radius * 0.3048} // Convert feet to meters
+                        pathOptions={{
+                          color: geofence.geofenceType === 'restricted' ? '#ef4444' : '#3b82f6',
+                          weight: 2,
+                          opacity: 0.8,
+                          fillColor: geofence.geofenceType === 'restricted' ? '#fecaca' : '#dbeafe',
+                          fillOpacity: 0.2,
+                        }}
+                      >
+                        <Popup>
+                          <div className="p-2">
+                            <h3 className="font-semibold">{geofence.name}</h3>
+                            <p className="text-sm text-muted-foreground">Type: {geofence.type}</p>
+                            <p className="text-sm">Status: {geofence.status}</p>
+                            <p className="text-sm">Assets: {geofence.assets}</p>
+                            <p className="text-sm">Geofence Type: {geofence.geofenceType}</p>
+                          </div>
+                        </Popup>
+                      </Circle>
+                    );
+                  } else if (geofence.type === 'polygon' && geofence.coordinates) {
+                    const positions = geofence.coordinates.map(coord => [coord[0], coord[1]] as [number, number]);
+                    return (
+                      <Polygon
+                        key={geofence.id}
+                        positions={positions}
+                        pathOptions={{
+                          color: geofence.geofenceType === 'restricted' ? '#ef4444' : '#3b82f6',
+                          weight: 2,
+                          opacity: 0.8,
+                          fillColor: geofence.geofenceType === 'restricted' ? '#fecaca' : '#dbeafe',
+                          fillOpacity: 0.2,
+                        }}
+                      >
+                        <Popup>
+                          <div className="p-2">
+                            <h3 className="font-semibold">{geofence.name}</h3>
+                            <p className="text-sm text-muted-foreground">Type: {geofence.type}</p>
+                            <p className="text-sm">Status: {geofence.status}</p>
+                            <p className="text-sm">Assets: {geofence.assets}</p>
+                            <p className="text-sm">Geofence Type: {geofence.geofenceType}</p>
+                          </div>
+                        </Popup>
+                      </Polygon>
+                    );
+                  }
+                  return null;
+                })}
+
                 {/* Asset Markers */}
-                {filteredAssets.map(asset => {
+                {showAssetMarkers && filteredAssets.map(asset => {
                   if (!asset.coordinates || asset.coordinates.length < 2) {
                     console.log(`❌ Asset ${asset.id} has invalid coordinates:`, asset.coordinates);
                     return null;
@@ -374,15 +523,27 @@ export function ReactLeafletMap({
                       <h4 className="font-medium">Map Layers</h4>
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
-                          <Checkbox id="assets" defaultChecked />
+                          <Checkbox 
+                            id="assets" 
+                            checked={showAssetMarkers}
+                            onCheckedChange={(checked) => setShowAssetMarkers(checked as boolean)}
+                          />
                           <label htmlFor="assets" className="text-sm">Asset Markers</label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Checkbox id="geofences" defaultChecked={showGeofences} />
+                          <Checkbox 
+                            id="geofences" 
+                            checked={localShowGeofences}
+                            onCheckedChange={(checked) => setLocalShowGeofences(checked as boolean)}
+                          />
                           <label htmlFor="geofences" className="text-sm">Geofences</label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Checkbox id="paths" defaultChecked={showPaths} />
+                          <Checkbox 
+                            id="paths" 
+                            checked={localShowPaths}
+                            onCheckedChange={(checked) => setLocalShowPaths(checked as boolean)}
+                          />
                           <label htmlFor="paths" className="text-sm">Asset Paths</label>
                         </div>
                       </div>

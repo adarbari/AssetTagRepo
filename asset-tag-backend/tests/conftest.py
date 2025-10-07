@@ -36,40 +36,16 @@ from modules.shared.database.models import Organization, Site, User
 
 
 async def create_test_data():
-    """Create required test data for integration tests."""
+    """Create required test data for integration tests using comprehensive seeder."""
+    from modules.shared.seed_data.seeder import seed_test_data
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
     async with TestSessionLocal() as session:
-        # Create test organization
-        test_org = Organization(
-            id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            name="Test Organization",
-            domain="test.example.com"
-        )
-        session.add(test_org)
-        
-        # Create test site
-        test_site = Site(
-            id=uuid.UUID("550e8400-e29b-41d4-a716-446655440001"),
-            name="Test Site",
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            address="123 Test St, Test City, TC 12345",
-            latitude=40.7128,
-            longitude=-74.0060
-        )
-        session.add(test_site)
-        
-        # Create test user
-        test_user = User(
-            id=uuid.UUID("550e8400-e29b-41d4-a716-446655440002"),
-            username="testuser",
-            email="test@example.com",
-            full_name="Test User",
-            hashed_password="hashed_password_placeholder",
-            organization_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440003"),
-            role="user"
-        )
-        session.add(test_user)
-        
-        await session.commit()
+        # Use the comprehensive seeder for test data
+        summary = await seed_test_data(session)
+        logger.info(f"Test data seeded: {summary}")
 
 
 @pytest.fixture(scope="session")

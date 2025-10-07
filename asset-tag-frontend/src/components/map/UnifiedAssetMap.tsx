@@ -12,7 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Calendar } from '../ui/calendar';
 import { StatusBadge } from '../common/StatusBadge';
 import { useOverlayState } from '../../hooks/useOverlayState';
-import { mockAssets as sharedMockAssets, mockGeofences as sharedMockGeofences } from '../../data/mockData';
+import { mockAssets as sharedMockAssets, mockGeofences as sharedMockGeofences, mockSites as sharedMockSites } from '../../data/mockData';
 import { Asset, Geofence } from '../../types/asset';
 import { format } from 'date-fns';
 import {
@@ -238,6 +238,115 @@ export function UnifiedAssetMap({
       clearTimeout(timer);
     };
   }, []); // Empty dependency array - runs only once on mount
+
+  // Update geofences when showGeofences state changes
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
+
+    const map = mapInstanceRef.current;
+    
+    // Remove existing geofence layers
+    map.eachLayer((layer: any) => {
+      if (layer.options && layer.options.isGeofence) {
+        map.removeLayer(layer);
+      }
+    });
+
+    // Add geofences if enabled
+    if (showGeofences) {
+      sharedMockGeofences.forEach(geofence => {
+        let geofenceLayer;
+        
+        if (geofence.type === 'circular' && geofence.center && geofence.radius) {
+          // Create circular geofence
+          geofenceLayer = L.circle([geofence.center[0], geofence.center[1]], {
+            radius: geofence.radius * 0.3048, // Convert feet to meters
+            color: geofence.geofenceType === 'restricted' ? '#ef4444' : '#3b82f6',
+            weight: 2,
+            opacity: 0.8,
+            fillColor: geofence.geofenceType === 'restricted' ? '#fecaca' : '#dbeafe',
+            fillOpacity: 0.2,
+            isGeofence: true
+          });
+        } else if (geofence.type === 'polygon' && geofence.coordinates) {
+          // Create polygon geofence
+          const latLngs = geofence.coordinates.map(coord => [coord[0], coord[1]]);
+          geofenceLayer = L.polygon(latLngs, {
+            color: geofence.geofenceType === 'restricted' ? '#ef4444' : '#3b82f6',
+            weight: 2,
+            opacity: 0.8,
+            fillColor: geofence.geofenceType === 'restricted' ? '#fecaca' : '#dbeafe',
+            fillOpacity: 0.2,
+            isGeofence: true
+          });
+        }
+
+        if (geofenceLayer) {
+          geofenceLayer.addTo(map);
+          geofenceLayer.bindPopup(`
+            <div>
+              <h3>${geofence.name}</h3>
+              <p>Type: ${geofence.type}</p>
+              <p>Status: ${geofence.status}</p>
+              <p>Assets: ${geofence.assets}</p>
+              <p>Geofence Type: ${geofence.geofenceType}</p>
+            </div>
+          `);
+        }
+      });
+    }
+  }, [showGeofences, mapLoaded]);
+
+  // Update sites when showSites state changes
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
+
+    const map = mapInstanceRef.current;
+    
+    // Remove existing site layers
+    map.eachLayer((layer: any) => {
+      if (layer.options && layer.options.isSite) {
+        map.removeLayer(layer);
+      }
+    });
+
+    // Add sites if enabled
+    if (showSites) {
+      sharedMockSites.forEach(site => {
+        if (site.coordinates) {
+          // Create site marker
+          const siteMarker = L.marker([site.coordinates.lat, site.coordinates.lng], {
+            isSite: true
+          }).addTo(map);
+          
+          // Add site icon (you can customize this)
+          siteMarker.bindPopup(`
+            <div>
+              <h3>${site.name}</h3>
+              <p>Location: ${site.location}</p>
+              <p>Assets: ${site.assets}</p>
+              <p>Area: ${site.area}</p>
+              <p>Manager: ${site.manager}</p>
+              <p>Status: ${site.status}</p>
+            </div>
+          `);
+
+          // Add site boundary circle if radius is available
+          if (site.coordinates.radius) {
+            const siteCircle = L.circle([site.coordinates.lat, site.coordinates.lng], {
+              radius: site.coordinates.radius * 0.3048, // Convert feet to meters
+              color: '#10b981',
+              weight: 2,
+              opacity: 0.6,
+              fillColor: '#d1fae5',
+              fillOpacity: 0.1,
+              isSite: true
+            }).addTo(map);
+          }
+        }
+      });
+    }
+  }, [showSites, mapLoaded]);
 
   // Cleanup on unmount
   useEffect(() => {
