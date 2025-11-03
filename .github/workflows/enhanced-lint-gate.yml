@@ -84,7 +84,7 @@ jobs:
 
     - name: Cache npm dependencies
       if: needs.changes.outputs.frontend == 'true'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.npm
         key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
